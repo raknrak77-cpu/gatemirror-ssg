@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write   # Bu çok önemli!
     steps:
       - uses: actions/checkout@v4
       
@@ -24,11 +24,3 @@ jobs:
           
       - name: Klasor Yapisini Olustur ve Git'e Kaydet
         run: python bots/setup.py
-        
-      - name: Creator Bot (Taslak)
-        run: |
-          echo "✅ Creator bot henüz yazılmadı. İleride eklenecek."
-          
-      - name: Builder Bot (Taslak)
-        run: |
-          echo "✅ Builder bot henüz yazılmadı. İleride eklenecek."
