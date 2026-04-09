@@ -25,7 +25,7 @@ jobs:
       - name: Klasor Yapisini Kontrol Et (Yoksa Olustur)
         run: python bots/setup.py
         
-      # Creator bot henüz yazılmadı, geçici olarak pas geçiyoruz
+      # Creator bot henüz yazılmadı, pas geçiyoruz
       # - name: Creator Bot (tasks.json -> Markdown)
       #   env:
       #     GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -42,14 +42,6 @@ jobs:
       # Builder bot henüz yazılmadı, pas geçiyoruz
       # - name: Builder Bot (Markdown -> HTML)
       #   run: python bots/builder.py
-        
-      - name: Public klasor kontrolu
-        run: |
-          if [ ! -d "public" ]; then
-            mkdir -p public
-            echo "<h1>Gatemirror SSG - Yapim Asamasinda</h1>" > public/index.html
-            echo "✅ public klasoru olusturuldu ve gecici index.html eklendi."
-          fi
         
       - name: Cloudflare Pages Deploy
         uses: cloudflare/wrangler-action@v3
