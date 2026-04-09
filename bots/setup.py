@@ -33,18 +33,14 @@ def create_folders():
     for folder in folders:
         os.makedirs(folder, exist_ok=True)
         print(f"   ✅ {folder}/")
+        
+        # Her klasöre .gitkeep dosyası ekle (Git'in görmesi için)
+        gitkeep_path = os.path.join(folder, ".gitkeep")
+        with open(gitkeep_path, "w") as f:
+            f.write("# Bu klasörün Git tarafından takip edilmesi için eklendi.")
+        print(f"      📄 {folder}/.gitkeep")
     
-    # .gitkeep dosyaları oluştur (boş klasörlerin git'e eklenmesi için)
-    with open("content/.gitkeep", "w") as f:
-        f.write("# Boş klasör")
-    with open("templates/.gitkeep", "w") as f:
-        f.write("# Boş klasör")
-    with open("public/.gitkeep", "w") as f:
-        f.write("# Boş klasör")
-    with open("bots/.gitkeep", "w") as f:
-        f.write("# Boş klasör")
-    
-    print("\n✅ Tüm klasörler oluşturuldu.")
+    print("\n✅ Tüm klasörler ve .gitkeep dosyaları oluşturuldu.")
 
 if __name__ == "__main__":
     create_folders()
