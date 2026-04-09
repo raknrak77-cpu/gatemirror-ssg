@@ -115,7 +115,7 @@ def builder():
         return
     
     languages = ['en', 'es', 'de', 'fr']
-    r2_base = "https://r2.gatemirror.com"  # Değişecek
+    r2_base = os.getenv('R2_PUBLIC_URL', 'https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev')
     
     all_articles = {lang: [] for lang in languages}
     
