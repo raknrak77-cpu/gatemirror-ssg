@@ -1,13 +1,9 @@
 name: SSG Build & Deploy
 
 on:
-  workflow_dispatch:        # Manuel tetikleme (test için)
+  workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - 'content/**'
-      - 'templates/**'
-      - 'bots/**'
 
 jobs:
   build:
@@ -29,20 +25,23 @@ jobs:
       - name: Klasor Yapisini Kontrol Et (Yoksa Olustur)
         run: python bots/setup.py
         
-      - name: Creator Bot (tasks.json -> Markdown)
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: python bots/creator.py
+      # Creator bot henüz yazılmadı, geçici olarak pas geçiyoruz
+      # - name: Creator Bot (tasks.json -> Markdown)
+      #   env:
+      #     GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      #   run: python bots/creator.py
         
-      - name: Translator Bot (en -> es, de, fr)
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python bots/translator.py
+      # Translator bot henüz yazılmadı, pas geçiyoruz
+      # - name: Translator Bot (en -> es, de, fr)
+      #   env:
+      #     GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      #   run: python bots/translator.py
         
-      - name: Builder Bot (Markdown -> HTML)
-        run: python bots/builder.py
+      # Builder bot henüz yazılmadı, pas geçiyoruz
+      # - name: Builder Bot (Markdown -> HTML)
+      #   run: python bots/builder.py
         
       - name: Cloudflare Pages Deploy
         uses: cloudflare/wrangler-action@v3
