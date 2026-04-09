@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- SIDE MENU (SABIT, DINAMIK OLACAK) -->
+<!-- SIDE MENU (SABIT) -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="lang-section">
@@ -50,6 +50,13 @@
     <!-- BAŞLIK -->
     <h1>{{ title }}</h1>
 
+    <!-- META BİLGİSİ (Yazar, Tarih, Review) -->
+    <div class="meta-info">
+        <span class="author">✍️ {{ author }}</span>
+        <span class="date">📅 {{ date }}</span>
+        <span class="review">✅ Medically reviewed by {{ reviewer }}</span>
+    </div>
+
     <!-- KEY TAKEAWAYS (ÖZET KUTUSU) -->
     <div class="summary">
         <div class="summary-title"><i class="fas fa-bolt"></i> KEY TAKEAWAYS</div>
@@ -65,9 +72,17 @@
         <img src="{{ content_image_2 }}" alt="Content Image 2" class="inline-image" onerror="this.style.display='none'">
     </div>
 
+    <!-- KAYNAKLAR (SOURCES) -->
+    <div class="sources">
+        <h3>📚 Sources</h3>
+        <ul class="sources-list">
+            {{ sources }}
+        </ul>
+    </div>
+
     <!-- READ THIS NEXT (BENZER MAKALELER) -->
     <div class="read-next">
-        <h3>READ THIS NEXT</h3>
+        <h3>📖 READ THIS NEXT</h3>
         <div class="read-next-grid">
             {% for article in related_articles %}
             <div class="read-next-card">
