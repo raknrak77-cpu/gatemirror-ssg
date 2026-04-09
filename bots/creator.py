@@ -22,19 +22,10 @@ def markdown_yaz(hash_id, task, makale_html, kategori):
     date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     author = task.get('author_persona', 'Expert Analyst')
     
-    # Summary'yi düzenli hale getir
-    summary_lines = []
-    if task.get('summary'):
-        for item in task.get('summary', []):
-            summary_lines.append(f"  - {item}")
-    else:
-        summary_lines = ["  - Topic: " + topic, "  - Analysis: High-Fidelity"]
-    
+    summary_lines = ["  - Topic: " + topic, "  - Analysis: High-Fidelity"]
     summary_yaml = "\n".join(summary_lines)
-    
     sources = task.get('reference_link', '')
     
-    # Frontmatter (YAML)
     frontmatter = f"""---
 title: "{topic}"
 date: "{date}"
@@ -57,11 +48,8 @@ sources:
 ![icerik_2](./assets/{hash_id}_icerik_2.png)
 """
     
-    # Klasörü oluştur
     md_dir = f"content/en/{kategori}"
     os.makedirs(md_dir, exist_ok=True)
-    
-    # Dosyayı yaz
     md_path = os.path.join(md_dir, f"{hash_id}.md")
     with open(md_path, "w", encoding="utf-8") as f:
         f.write(frontmatter)
@@ -80,9 +68,8 @@ def isle_gorev(task):
     reference_link = task.get('reference_link', '')
     kategori = task.get('category', 'general').lower()
     
-    # Benzersiz hash üret
-    hash_id = create_hash()
-    print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
+    print(f"🚀 HEDEF: {topic} (ID: {task_id})")
+    print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
     
     # GÜÇLENDİRİLMİŞ PROMPT
     prompt_emri = f"""
@@ -94,7 +81,7 @@ REQUIREMENTS:
 - Length: Minimum 1500 words, maximum 2500 words.
 - Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
 - DO NOT use Markdown (no **bold**, no ## headings).
-- Start directly with the first HTML tag (no introductions like "Here is the article").
+- Start directly with the first HTML tag (no introductions).
 - Write in a professional, analytical, yet engaging tone.
 - Include real-world examples, data points, and case studies where relevant.
 - Use short paragraphs (2-3 sentences) for better readability.
@@ -123,27 +110,25 @@ OUTPUT FORMAT (start directly with HTML):
         }
     }
     
-    print(f"🚀 HEDEF: {topic} (ID: {task_id}, Hash: {hash_id})")
-    print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
-    
     try:
         response = requests.post(GEMINI_URL, json=payload, timeout=120)
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             makale_html = res_data['candidates'][0]['content']['parts'][0]['text']
-            # Temizlik
-            makale_html = makale_html.replace('```html', '').replace('```', '')
-            makale_html = makale_html.replace('\n', '<br>')
+            makale_html = makale_html.replace('```html', '').replace('```', '').replace('\n', '<br>')
             print(f"✅ Makale alındı: {len(makale_html)} karakter.")
             
-            # --- GÖRSEL BOT'U ÇAĞIR (visual_factory.py ile) ---
+            # BAŞARILI OLUNCA HASH ÜRET
+            hash_id = create_hash()
+            print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
+            
+            # Görsel bot'u çağır
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
                     visuals_json = json.dumps(visuals)
-                    # YENİ: visual_factory.py, task_id, hash_id, visuals_json ile çağrılıyor
                     subprocess.run(['python', 'visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
                     print("✅ Görsel bot tamamlandı.")
                 except subprocess.TimeoutExpired:
@@ -153,10 +138,10 @@ OUTPUT FORMAT (start directly with HTML):
             else:
                 print("⚠️ Görsel açıklaması yok, görseller atlanıyor.")
             
-            # --- MARKDOWN DOSYASINI OLUŞTUR ---
+            # Markdown dosyasını oluştur
             md_path = markdown_yaz(hash_id, task, makale_html, kategori)
             
-            # --- GÖREVİ GÜNCELLE ---
+            # Görevi güncelle (SADECE BAŞARILI OLUNCA)
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             task["hash"] = hash_id
@@ -195,6 +180,8 @@ def operasyon_baslat():
             print(f"❌ Görev {task.get('task_id')} başarısız, workflow durduruluyor.")
             task["status"] = "failed"
             task["error"] = "API hatası veya zaman aşımı"
+            task["hash"] = None
+            task["processed_at"] = ""
             with open("tasks.json", "w", encoding="utf-8") as f:
                 json.dump(tasks, f, indent=4, ensure_ascii=False)
             sys.exit(1)
@@ -204,7 +191,7 @@ def operasyon_baslat():
             json.dump(tasks, f, indent=4, ensure_ascii=False)
         
         if i < len(pending_tasks) - 1:
-            print("⏳ 10 saniye bekleniyor, sonraki göreve geçiliyor...")
+            print("⏳ 10 saniye bekleniyor...")
             time.sleep(10)
     
     print("\n🏁 Tüm görevler tamamlandı.")
