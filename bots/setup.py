@@ -1,6 +1,7 @@
 import os
+import subprocess
+import time
 
-# Oluşturulacak klasörler (dizinler ve alt dizinler)
 folders = [
     "content/en/wellness",
     "content/en/tech",
@@ -34,14 +35,20 @@ def create_folders():
         os.makedirs(folder, exist_ok=True)
         print(f"   ✅ {folder}/")
         
-        # Her klasöre info.txt dosyası ekle (Git'in görmesi için)
+        # Her klasöre info.txt dosyası ekle
         info_path = os.path.join(folder, "info.txt")
         with open(info_path, "w") as f:
-            f.write(f"Bu klasör: {folder}\nOluşturulma tarihi: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"      📄 {folder}/info.txt")
+            f.write(f"Klasör: {folder}\nOluşturulma: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     
-    print("\n✅ Tüm klasörler ve info.txt dosyaları oluşturuldu.")
+    # Değişiklikleri Git'e ekle ve commit yap
+    print("\n📤 Değişiklikler Git'e ekleniyor...")
+    subprocess.run(["git", "config", "--local", "user.email", "action@github.com"])
+    subprocess.run(["git", "config", "--local", "user.name", "GitHub Action"])
+    subprocess.run(["git", "add", "."])
+    subprocess.run(["git", "commit", "-m", "📁 Klasör yapısı oluşturuldu", "--allow-empty"])
+    subprocess.run(["git", "push"])
+    
+    print("\n✅ Tüm klasörler oluşturuldu ve GitHub'a kaydedildi.")
 
 if __name__ == "__main__":
-    import time
     create_folders()
