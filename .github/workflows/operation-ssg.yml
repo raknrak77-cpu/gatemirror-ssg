@@ -18,10 +18,11 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Kutuphaneleri Yukle
+      - name: Kutuphaneleri Yukle (Hizlandirilmis)
         run: |
           python -m pip install --upgrade pip
-          pip install requests boto3 beautifulsoup4 markdown jinja2
+          pip install --default-timeout=100 --retries=5 \
+            requests boto3 beautifulsoup4 markdown jinja2
           
       - name: 1. Creator Bot (Makale Uretimi + Hash)
         env:
@@ -51,44 +52,21 @@ jobs:
           sleep 30
           echo "✅ Bekleme tamamlandı."
           
-      - name: 5. Translator (Coklu Dil Cevirisi) [OPSIYONEL]
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          echo "⚠️ Translator bot henüz aktif değil. İleride eklenecek."
-          # python bots/translator.py
-          
-      - name: 6. Builder (Markdown -> HTML)
+      - name: 5. Builder (Markdown -> HTML)
         run: python bots/builder.py
         
-      - name: 7. Statik Sayfalari Kopyala
+      - name: 6. Statik Sayfalari Kopyala
         run: |
-          # about-us, contact, privacy-policy sayfalarını public/ altına kopyala
           cp about-us.html public/ 2>/dev/null || echo "about-us.html yok"
           cp contact.html public/ 2>/dev/null || echo "contact.html yok"
           cp privacy-policy.html public/ 2>/dev/null || echo "privacy-policy.html yok"
           
-          # Dil bazlı statik sayfalar (isteğe bağlı)
-          for lang in en es de fr; do
-            mkdir -p public/$lang
-            cp about-us.html public/$lang/ 2>/dev/null || true
-            cp contact.html public/$lang/ 2>/dev/null || true
-            cp privacy-policy.html public/$lang/ 2>/dev/null || true
-          done
-          echo "✅ Statik sayfalar kopyalandı."
-          
-      - name: 8. Hassas Kayit (Sadece Gerekli Dosyalar)
+      - name: 7. Hassas Kayit (Sadece Gerekli Dosyalar)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # Remote değişikliklerini çek
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          
-          # Sadece değişen dosyaları ekle
           git add content/ public/ tasks.json
-          
-          # Değişiklik varsa commit ve push yap
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
@@ -96,7 +74,7 @@ jobs:
             git push origin main || git push --force origin main
           fi
           
-      - name: 9. Cloudflare Pages Deploy
+      - name: 8. Cloudflare Pages Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
