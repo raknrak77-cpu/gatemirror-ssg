@@ -21,7 +21,17 @@ def markdown_yaz(hash_id, task, makale_html, kategori):
     topic = task['topic']
     date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     author = task.get('author_persona', 'Expert Analyst')
-    summary = f"<li>Topic: {topic}</li><li>Analysis: High-Fidelity</li>"
+    
+    # Summary'yi düzenli hale getir
+    summary_lines = []
+    if task.get('summary'):
+        for item in task.get('summary', []):
+            summary_lines.append(f"  - {item}")
+    else:
+        summary_lines = ["  - Topic: " + topic, "  - Analysis: High-Fidelity"]
+    
+    summary_yaml = "\n".join(summary_lines)
+    
     sources = task.get('reference_link', '')
     
     # Frontmatter (YAML)
@@ -33,8 +43,8 @@ task_id: "{task.get('task_id')}"
 category: "{kategori}"
 author: "{author}"
 summary: |
-  {summary}
-sources: |
+{summary_yaml}
+sources: 
   - {sources}
 ---
 
@@ -74,50 +84,67 @@ def isle_gorev(task):
     hash_id = create_hash()
     print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
     
-    # Gemini prompt'u
+    # GÜÇLENDİRİLMİŞ PROMPT
     prompt_emri = f"""
-    ROLE: You are an expert {persona}.
-    TASK: Write a comprehensive, deep-dive article in {language} about: '{topic}'.
-    
-    {f"REFERENCE: Use this as source material - {reference_link}" if reference_link else ""}
-    {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
-    
-    STRICT REQUIREMENTS:
-    - Length: Minimum 1000 words.
-    - Format: Use ONLY HTML tags (<h3>, <p>, <ul>, <li>). Do not use Markdown.
-    - Tone: Highly professional and analytical.
-    - No chatter: Start directly with the first HTML tag.
-    """
+ROLE: You are an expert {persona}.
+
+TASK: Write a comprehensive, deep-dive article in {language} about: '{topic}'.
+
+REQUIREMENTS:
+- Length: Minimum 1500 words, maximum 2500 words.
+- Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
+- DO NOT use Markdown (no **bold**, no ## headings).
+- Start directly with the first HTML tag (no introductions like "Here is the article").
+- Write in a professional, analytical, yet engaging tone.
+- Include real-world examples, data points, and case studies where relevant.
+- Use short paragraphs (2-3 sentences) for better readability.
+- Add a strong conclusion that summarizes key takeaways.
+
+{f"REFERENCE: Use this as source material - {reference_link}" if reference_link else ""}
+
+{f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
+
+OUTPUT FORMAT (start directly with HTML):
+<h2>Introduction</h2>
+<p>...</p>
+<h3>Subheading</h3>
+<p>...</p>
+<ul><li>...</li></ul>
+<h2>Conclusion</h2>
+<p>...</p>
+"""
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
         "generationConfig": {
-            "temperature": 0.8,
-            "maxOutputTokens": 4096,
+            "temperature": 0.7,
+            "maxOutputTokens": 6000,
             "topP": 0.95
         }
     }
     
     print(f"🚀 HEDEF: {topic} (ID: {task_id}, Hash: {hash_id})")
-    print("🤖 Gemini'den yanıt bekleniyor (90sn limit)...")
+    print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
     
     try:
-        response = requests.post(GEMINI_URL, json=payload, timeout=90)
+        response = requests.post(GEMINI_URL, json=payload, timeout=120)
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             makale_html = res_data['candidates'][0]['content']['parts'][0]['text']
-            makale_html = makale_html.replace('```html', '').replace('```', '').replace('\n', '<br>')
+            # Temizlik
+            makale_html = makale_html.replace('```html', '').replace('```', '')
+            makale_html = makale_html.replace('\n', '<br>')
             print(f"✅ Makale alındı: {len(makale_html)} karakter.")
             
-            # --- GÖRSEL BOT'U ÇAĞIR (hash ve task_id ile) ---
+            # --- GÖRSEL BOT'U ÇAĞIR (visual_factory.py ile) ---
             visuals = task.get('visuals', {})
             if visuals:
-                print("🎨 Görsel bot çağrılıyor...")
+                print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
-                    # visuals objesini ve hash'i gönder
                     visuals_json = json.dumps(visuals)
-                    subprocess.run(['python', 'gorsel_bot.py', task_id, hash_id, visuals_json], timeout=180)
+                    # YENİ: visual_factory.py, task_id, hash_id, visuals_json ile çağrılıyor
+                    subprocess.run(['python', 'visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
                     print("✅ Görsel bot tamamlandı.")
                 except subprocess.TimeoutExpired:
                     print("⚠️ Görsel bot zaman aşımı, görseller olmadan devam...")
