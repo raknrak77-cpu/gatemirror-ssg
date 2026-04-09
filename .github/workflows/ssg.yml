@@ -1,4 +1,4 @@
-name: SSG Build (Cloudflare Yok)
+name: SSG Build & Deploy
 
 on:
   workflow_dispatch:
@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       
@@ -20,22 +22,13 @@ jobs:
         run: |
           pip install requests boto3 beautifulsoup4 markdown jinja2
           
-      - name: Klasor Yapisini Kontrol Et
+      - name: Klasor Yapisini Olustur ve Git'e Kaydet
         run: python bots/setup.py
         
-      - name: Creator Bot (tasks.json -> Markdown) [TASLAK]
+      - name: Creator Bot (Taslak)
         run: |
-          echo "Creator bot henüz yazılmadı. Bu adım şimdilik boş."
-          # python bots/creator.py
-        
-      - name: Builder Bot (Markdown -> HTML) [TASLAK]
+          echo "✅ Creator bot henüz yazılmadı. İleride eklenecek."
+          
+      - name: Builder Bot (Taslak)
         run: |
-          echo "Builder bot henüz yazılmadı. Bu adım şimdilik boş."
-          # python bots/builder.py
-        
-      - name: public klasorunu kontrol et (geçici)
-        run: |
-          if [ ! -d "public" ]; then
-            mkdir -p public
-            echo "<h1>Gatemirror SSG</h1><p>Yapım aşamasında. Yakında içerikler gelecek.</p>" > public/index.html
-          fi
+          echo "✅ Builder bot henüz yazılmadı. İleride eklenecek."
