@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{{ title }} | Gatemirror</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- SIDE MENU (SABIT, DINAMIK OLACAK) -->
+<div class="side-menu" id="sideMenu">
+    <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <div class="lang-section">
+        <div class="lang-title">READ IN</div>
+        <div class="flags">
+            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/es/" class="flag-link">🇪🇸 ES</a>
+            <a href="/de/" class="flag-link">🇩🇪 DE</a>
+            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
+    <div class="footer-links">
+        <a href="/about-us.html">About Gatemirror</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/contact.html">Contact Us</a>
+        <p>&copy; 2026 Gatemirror Media</p>
+    </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+</nav>
+
+<!-- MAKALE İÇERİĞİ -->
+<div class="container">
+    <!-- KAPAK GÖRSELİ -->
+    <img src="{{ cover_image }}" alt="{{ title }}" class="hero-image" onerror="this.style.display='none'">
+
+    <!-- BAŞLIK -->
+    <h1>{{ title }}</h1>
+
+    <!-- KEY TAKEAWAYS (ÖZET KUTUSU) -->
+    <div class="summary">
+        <div class="summary-title"><i class="fas fa-bolt"></i> KEY TAKEAWAYS</div>
+        <ul class="summary-list">
+            {{ summary }}
+        </ul>
+    </div>
+
+    <!-- MAKALE İÇERİĞİ (HTML OLARAK) -->
+    <div class="article-content">
+        <img src="{{ content_image_1 }}" alt="Content Image 1" class="inline-image" onerror="this.style.display='none'">
+        {{ content }}
+        <img src="{{ content_image_2 }}" alt="Content Image 2" class="inline-image" onerror="this.style.display='none'">
+    </div>
+
+    <!-- READ THIS NEXT (BENZER MAKALELER) -->
+    <div class="read-next">
+        <h3>READ THIS NEXT</h3>
+        <div class="read-next-grid">
+            {% for article in related_articles %}
+            <div class="read-next-card">
+                <a href="{{ article.url }}">
+                    <img src="{{ article.image }}" alt="{{ article.title }}">
+                    <h4>{{ article.title }}</h4>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+</script>
+</body>
+</html>
