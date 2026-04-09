@@ -1,0 +1,104 @@
+name: SSG Build & Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests boto3 beautifulsoup4 markdown jinja2
+          
+      - name: 1. Creator Bot (Makale Uretimi + Hash)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python bots/creator.py
+        
+      - name: 2. Gorsellerin Hazır Olması Icin Bekle
+        run: |
+          echo "⏳ Görsel bot'un işlemesi için 90 saniye bekleniyor..."
+          sleep 90
+          echo "✅ Bekleme tamamlandı."
+          
+      - name: 3. Uploader (Gorselleri R2'ye Yukle)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/uploader.py
+        
+      - name: 4. API Kotasini Toparlamak Icin Bekle
+        run: |
+          echo "⏳ Gemini'nin toparlanması için 30 saniye bekleniyor..."
+          sleep 30
+          echo "✅ Bekleme tamamlandı."
+          
+      - name: 5. Translator (Coklu Dil Cevirisi) [OPSIYONEL]
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "⚠️ Translator bot henüz aktif değil. İleride eklenecek."
+          # python bots/translator.py
+          
+      - name: 6. Builder (Markdown -> HTML)
+        run: python bots/builder.py
+        
+      - name: 7. Statik Sayfalari Kopyala
+        run: |
+          # about-us, contact, privacy-policy sayfalarını public/ altına kopyala
+          cp about-us.html public/ 2>/dev/null || echo "about-us.html yok"
+          cp contact.html public/ 2>/dev/null || echo "contact.html yok"
+          cp privacy-policy.html public/ 2>/dev/null || echo "privacy-policy.html yok"
+          
+          # Dil bazlı statik sayfalar (isteğe bağlı)
+          for lang in en es de fr; do
+            mkdir -p public/$lang
+            cp about-us.html public/$lang/ 2>/dev/null || true
+            cp contact.html public/$lang/ 2>/dev/null || true
+            cp privacy-policy.html public/$lang/ 2>/dev/null || true
+          done
+          echo "✅ Statik sayfalar kopyalandı."
+          
+      - name: 8. Hassas Kayit (Sadece Gerekli Dosyalar)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Remote değişikliklerini çek
+          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
+          
+          # Sadece değişen dosyaları ekle
+          git add content/ public/ tasks.json
+          
+          # Değişiklik varsa commit ve push yap
+          if git diff --staged --quiet; then
+            echo "📭 Değişiklik yok, commit atlanıyor."
+          else
+            git commit -m "📦 SSG build tamamlandı"
+            git push origin main || git push --force origin main
+          fi
+          
+      - name: 9. Cloudflare Pages Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy public --project-name=gatemirror-ssg --branch=main
