@@ -1,9 +1,7 @@
 name: SSG Build & Deploy
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
+  workflow_dispatch:  # Sadece manuel tetikleme
 
 jobs:
   build:
