@@ -43,6 +43,14 @@ jobs:
       # - name: Builder Bot (Markdown -> HTML)
       #   run: python bots/builder.py
         
+      - name: Public klasor kontrolu
+        run: |
+          if [ ! -d "public" ]; then
+            mkdir -p public
+            echo "<h1>Gatemirror SSG - Yapim Asamasinda</h1>" > public/index.html
+            echo "✅ public klasoru olusturuldu ve gecici index.html eklendi."
+          fi
+        
       - name: Cloudflare Pages Deploy
         uses: cloudflare/wrangler-action@v3
         with:
