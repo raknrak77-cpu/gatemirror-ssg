@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gatemirror | Global Insights & Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --dark: #0a0a0a;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --gray: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background: var(--white);
+            line-height: 1.5;
+        }
+        
+        /* NAVBAR */
+        nav {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        /* DESKTOP MENU */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* MOBILE MENU BUTTON */
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        /* SIDE MENU (MOBILE) */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: var(--dark);
+            color: white;
+            transition: left 0.3s;
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .side-menu.active {
+            left: 0;
+        }
+        
+        .close-menu {
+            text-align: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+        
+        .side-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%);
+            color: white;
+            padding: 4rem 5%;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* GRID CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .article-card {
+            background: var(--white);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .article-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .article-card h3 {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .article-card p {
+            padding: 0 1rem 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+            
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .article-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDE MENU (MOBILE) -->
+<div class="side-menu" id="sideMenu">
+    <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <a href="/">HOME</a>
+    <a href="/en/wellness/">WELLNESS</a>
+    <a href="/en/tech/">TECH & AI</a>
+    <a href="/en/future-economy/">FUTURE ECONOMY</a>
+    <a href="/en/eco/">ECO & SUSTAINABLE</a>
+    <a href="/en/elearning/">E-LEARNING</a>
+    <div style="margin-top: 2rem;">
+        <a href="/es/">🇪🇸 ESPAÑOL</a>
+        <a href="/de/">🇩🇪 DEUTSCH</a>
+        <a href="/fr/">🇫🇷 FRANÇAIS</a>
+    </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    <div class="nav-links">
+        <a href="/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Gatemirror</h1>
+    <p>Reflecting reality in 5 languages. Deep insights on wellness, tech, future economy, and sustainable living.</p>
+</div>
+
+<!-- MAKALE GRID (DİNAMİK - builder.py doldurur) -->
+<div class="container">
+    <h2 class="section-title">Latest Stories</h2>
+    <div class="article-grid">
+        
+        <a href="/en/future-economy/f6533200.html" class="article-card">
+            <img src="https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev/images/future-economy/f6533200_kapak.webp" alt="DeFi Yield Farming Strategies: Risks and Rewards in 2026" onerror="this.style.display='none'">
+            <h3>DeFi Yield Farming Strategies: Risks and Rewards in 2026</h3>
+            <p>DeFi Yield Farming Strategies: Risks and Rewards in 2026</p>
+        </a>
+        
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('sideMenu').classList.toggle('active');
+    }
+    
+    // Menü dışına tıklayınca kapat
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('sideMenu');
+        const menuBtn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(event.target) && !menuBtn.contains(event.target)) {
+            menu.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>
