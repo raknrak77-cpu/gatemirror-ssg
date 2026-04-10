@@ -16,7 +16,7 @@ def create_hash():
     return uuid.uuid4().hex[:8]
 
 def html_yaz(hash_id, task, makale_html, kategori):
-    """HTML dosyasını doğrudan public/ altına yazar (geçici, uploader R2'ye atacak)"""
+    """HTML dosyasını doğrudan content/ altına yazar (geçici, uploader R2'ye atacak)"""
     
     topic = task['topic']
     date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
@@ -41,8 +41,8 @@ def html_yaz(hash_id, task, makale_html, kategori):
     # Editor's Note: makale_html içinde <div class="editors-note"> varsa, onu al
     # Şimdilik basit, ileride düzenlenebilir
     
-    # Hedef dizin: public/en/{kategori}/{hash_id}.html
-    target_dir = os.path.join("public", "en", kategori)
+    # Hedef dizin: content/en/{kategori}/{hash_id}.html
+    target_dir = os.path.join("content", "en", kategori)
     os.makedirs(target_dir, exist_ok=True)
     target_path = os.path.join(target_dir, f"{hash_id}.html")
     
