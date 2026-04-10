@@ -3,7 +3,64 @@ import re
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
-# ... (get_menu_texts, get_category_name, get_category_description fonksiyonları aynı) ...
+def get_menu_texts(lang):
+    texts = {
+        'en': {'home': 'HOME', 'wellness': 'WELLNESS', 'tech': 'TECH & AI', 
+               'future-economy': 'FUTURE ECONOMY', 'eco': 'ECO & SUSTAINABLE', 'elearning': 'E-LEARNING'},
+        'es': {'home': 'INICIO', 'wellness': 'BIENESTAR', 'tech': 'TECNOLOGÍA & IA',
+               'future-economy': 'ECONOMÍA FUTURA', 'eco': 'ECO & SOSTENIBLE', 'elearning': 'E-APRENDIZAJE'},
+        'de': {'home': 'STARTSEITE', 'wellness': 'WOHLBEFINDEN', 'tech': 'TECHNOLOGIE & KI',
+               'future-economy': 'ZUKUNFTSWIRTSCHAFT', 'eco': 'ÖKO & NACHHALTIG', 'elearning': 'E-LEARNING'},
+        'fr': {'home': 'ACCUEIL', 'wellness': 'BIEN-ÊTRE', 'tech': 'TECHNOLOGIE & IA',
+               'future-economy': 'ÉCONOMIE FUTURE', 'eco': 'ÉCO & DURABLE', 'elearning': 'E-APPRENTISSAGE'}
+    }
+    return texts.get(lang, texts['en'])
+
+def get_category_name(lang, category):
+    names = {
+        'en': {'wellness': 'WELLNESS', 'tech': 'TECH & AI', 'future-economy': 'FUTURE ECONOMY',
+               'eco': 'ECO & SUSTAINABLE', 'elearning': 'E-LEARNING'},
+        'es': {'wellness': 'BIENESTAR', 'tech': 'TECNOLOGÍA & IA', 'future-economy': 'ECONOMÍA FUTURA',
+               'eco': 'ECO & SOSTENIBLE', 'elearning': 'E-APRENDIZAJE'},
+        'de': {'wellness': 'WOHLBEFINDEN', 'tech': 'TECHNOLOGIE & KI', 'future-economy': 'ZUKUNFTSWIRTSCHAFT',
+               'eco': 'ÖKO & NACHHALTIG', 'elearning': 'E-LEARNING'},
+        'fr': {'wellness': 'BIEN-ÊTRE', 'tech': 'TECHNOLOGIE & IA', 'future-economy': 'ÉCONOMIE FUTURE',
+               'eco': 'ÉCO & DURABLE', 'elearning': 'E-APPRENTISSAGE'}
+    }
+    return names.get(lang, names['en']).get(category, category.upper())
+
+def get_category_description(lang, category):
+    descriptions = {
+        'en': {
+            'wellness': 'Deep insights on physical, mental, and emotional well-being.',
+            'tech': 'Latest developments in AI, software, and digital transformation.',
+            'future-economy': 'Finance, DeFi, tokenomics, and algorithmic trading.',
+            'eco': 'Sustainable living, green energy, and climate solutions.',
+            'elearning': 'Online education, career development, and digital skills.'
+        },
+        'es': {
+            'wellness': 'Perspectivas profundas sobre bienestar físico, mental y emocional.',
+            'tech': 'Últimos avances en IA, software y transformación digital.',
+            'future-economy': 'Finanzas, DeFi, tokenomics y trading algorítmico.',
+            'eco': 'Vida sostenible, energía verde y soluciones climáticas.',
+            'elearning': 'Educación en línea, desarrollo profesional y habilidades digitales.'
+        },
+        'de': {
+            'wellness': 'Tiefe Einblicke in körperliches, geistiges und emotionales Wohlbefinden.',
+            'tech': 'Neueste Entwicklungen in KI, Software und digitaler Transformation.',
+            'future-economy': 'Finanzen, DeFi, Tokenomics und algorithmischer Handel.',
+            'eco': 'Nachhaltiges Leben, grüne Energie und Klimaschutzlösungen.',
+            'elearning': 'Online-Bildung, Karriereentwicklung und digitale Kompetenzen.'
+        },
+        'fr': {
+            'wellness': 'Aperçus approfondis sur le bien-être physique, mental et émotionnel.',
+            'tech': 'Derniers développements en IA, logiciels et transformation numérique.',
+            'future-economy': 'Finance, DeFi, tokenomics et trading algorithmique.',
+            'eco': 'Vie durable, énergie verte et solutions climatiques.',
+            'elearning': 'Éducation en ligne, développement de carrière et compétences numériques.'
+        }
+    }
+    return descriptions.get(lang, descriptions.get('en', {})).get(category, '')
 
 def builder():
     """content/ altındaki ham HTML'leri template ile birleştirip yine content/ altına yazar"""
