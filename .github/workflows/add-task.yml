@@ -1,0 +1,28 @@
+name: Add New Task
+
+on:
+  workflow_dispatch:
+
+jobs:
+  add-task:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Task Ekle
+        run: python bots/task_manager.py
+        
+      - name: Değişiklikleri Kaydet
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add tasks.json
+          git commit -m "➕ Yeni task eklendi" || echo "Değişiklik yok"
+          git push
