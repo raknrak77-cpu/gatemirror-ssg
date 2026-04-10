@@ -1,8 +1,8 @@
-category: future-economy
-topic: Tokenomics Beyond Crypto: How Real-World Asset Tokenization Will Democratize Investment
-reference_link: https://www.coindesk.com/learn/what-is-real-world-asset-tokenization-rwa/
-author_persona: Tokenomics Researcher & DeFi Strategist
-special_instructions: Analyze how real-world assets (real estate, art, commodities) are being tokenized on blockchain. Discuss benefits (liquidity, fractional ownership), challenges (regulation, custody), and future potential.
-kapak_prompt: A futuristic digital dashboard showing tokenized real-world assets: a building, a painting, and gold bars represented as glowing digital tokens
-icerik_1_prompt: An infographic showing the tokenization process: physical asset -> digital representation -> fractional ownership
-icerik_2_prompt: A global map with connected nodes representing cross-border trading of tokenized assets
+category: eco
+topic: Vertical Farming and the Future of Food Security: Can Indoor Agriculture Feed the World?
+reference_link: https://www.nationalgeographic.com/environment/article/vertical-farming
+author_persona: Sustainable Agriculture & Urban Farming Expert
+special_instructions: Analyze how vertical farming can address food security in urban areas. Discuss benefits (water conservation, year-round production, reduced transport), challenges (energy consumption, high initial costs), and future potential with renewable energy integration.
+kapak_prompt: A futuristic vertical farm inside a glass skyscraper, glowing purple and pink LED lights, lush green lettuce and herbs growing in stacked trays, robotic arms harvesting, city skyline visible through windows
+icerik_1_prompt: An infographic comparing traditional farming vs vertical farming: land use, water consumption, transport distance, and yield per square foot
+icerik_2_prompt: A cross-section of a vertical farm showing different floors: bottom floor with fish farming (aquaponics), middle floors with leafy greens, top floor with fruiting plants (tomatoes, peppers), with labels showing temperature and humidity
