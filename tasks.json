@@ -300,29 +300,30 @@
         "hash": "31acdb10"
     },
     {
-    "task_id": "0012",
-    "category": "tech",
-    "topic": "The Future of Work: How AI is Transforming Jobs and Skills",
-    "reference_link": "https://www.weforum.org/ai-work/",
-    "visual_description": "A futuristic office with humans and AI robots collaborating, glowing screens, no text, no diagrams, photorealistic, 8k.",
-    "language": "en",
-    "author_persona": "Future of Work & AI Economist",
-    "special_instructions": "Analyze how AI is reshaping job markets. Discuss which jobs are at risk, which new roles emerge, and how education must adapt.",
-    "visuals": {
-        "kapak": {
-            "prompt": "A futuristic office with humans and AI robots collaborating, no text, no diagrams, photorealistic, 4k.",
-            "width": 1024,
-            "height": 768
+        "task_id": "0012",
+        "category": "tech",
+        "topic": "The Future of Work: How AI is Transforming Jobs and Skills",
+        "reference_link": "https://www.weforum.org/ai-work/",
+        "visual_description": "A futuristic office with humans and AI robots collaborating, glowing screens, no text, no diagrams, photorealistic, 8k.",
+        "language": "en",
+        "author_persona": "Future of Work & AI Economist",
+        "special_instructions": "Analyze how AI is reshaping job markets. Discuss which jobs are at risk, which new roles emerge, and how education must adapt.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic office with humans and AI robots collaborating, no text, no diagrams, photorealistic, 4k.",
+                "width": 1024,
+                "height": 768
+            },
+            "icerik_1": {
+                "prompt": "A human worker learning from a holographic AI tutor, no text, no diagrams, photorealistic, 4k, square format.",
+                "width": 1024,
+                "height": 1024
+            }
         },
-        "icerik_1": {
-            "prompt": "A human worker learning from a holographic AI tutor, no text, no diagrams, photorealistic, 4k, square format.",
-            "width": 1024,
-            "height": 1024
-        }
-    },
-    "status": "pending",
-    "created_at": "2026-04-10",
-    "display_date": "10 April 2026",
-    "processed_at": ""
+        "status": "processed",
+        "created_at": "2026-04-10",
+        "display_date": "10 April 2026",
+        "processed_at": "2026-04-10 12:30:27",
+        "hash": "83a821c9"
     }
 ]
