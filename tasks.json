@@ -350,5 +350,35 @@
         "display_date": "10 April 2026",
         "processed_at": "2026-04-10 14:09:41",
         "hash": "6eaa5261"
+    },
+    {
+        "task_id": "0014",
+        "category": "future-economy",
+        "topic": "Tokenomics Beyond Crypto: How Real-World Asset Tokenization Will Democratize Investment",
+        "reference_link": "https://www.coindesk.com/learn/what-is-real-world-asset-tokenization-rwa/",
+        "language": "en",
+        "author_persona": "Tokenomics Researcher & DeFi Strategist",
+        "special_instructions": "Analyze how real-world assets (real estate, art, commodities) are being tokenized on blockchain. Discuss benefits (liquidity, fractional ownership), challenges (regulation, custody), and future potential.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic digital dashboard showing tokenized real-world assets: a building, a painting, and gold bars represented as glowing digital tokens",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "An infographic showing the tokenization process: physical asset -> digital representation -> fractional ownership",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A global map with connected nodes representing cross-border trading of tokenized assets",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-10",
+        "display_date": "10 April 2026",
+        "processed_at": ""
     }
 ]
