@@ -64,6 +64,17 @@ def upload_to_r2(local_path, r2_key):
         return True
     return False
 
+def enrich_prompt(base_prompt):
+    """Sabit kuralları base prompt'a ekler (stil hariç, stil task'tan gelir)"""
+    rules = [
+        "square format 1:1",
+        "1024x1024 pixels",
+        "ultra-detailed, 8k, photorealistic",
+        "cinematic lighting, vibrant colors",
+        "no text, no diagrams, no watermarks, no labels"
+    ]
+    return base_prompt + " " + ", ".join(rules)
+
 def generate_image(prompt, model, width, height, output_png):
     print(f"🎨 [{output_png}] {width}x{height} formatında görsel üretiliyor...")
     
@@ -124,7 +135,8 @@ def visual_factory():
     # 1. Kapak Görseli (1024x1024)
     kapak = visuals.get("kapak", {})
     if kapak:
-        if generate_image(kapak.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
+        full_prompt = enrich_prompt(kapak.get("prompt", ""))
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
             kapak_webp = f"{hash_id}_kapak.webp"
             if convert_to_webp(kapak_png, kapak_webp):
                 r2_key = f"images/{kategori}/{hash_id}_kapak.webp"
@@ -137,7 +149,8 @@ def visual_factory():
     # 2. İç Görsel 1 (1024x1024)
     icerik1 = visuals.get("icerik_1", {})
     if icerik1:
-        if generate_image(icerik1.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
+        full_prompt = enrich_prompt(icerik1.get("prompt", ""))
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
             icerik1_webp = f"{hash_id}_icerik_1.webp"
             if convert_to_webp(icerik1_png, icerik1_webp):
                 r2_key = f"images/{kategori}/{hash_id}_icerik_1.webp"
@@ -150,7 +163,8 @@ def visual_factory():
     # 3. İç Görsel 2 (1024x1024)
     icerik2 = visuals.get("icerik_2", {})
     if icerik2:
-        if generate_image(icerik2.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
+        full_prompt = enrich_prompt(icerik2.get("prompt", ""))
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
             icerik2_webp = f"{hash_id}_icerik_2.webp"
             if convert_to_webp(icerik2_png, icerik2_webp):
                 r2_key = f"images/{kategori}/{hash_id}_icerik_2.webp"
