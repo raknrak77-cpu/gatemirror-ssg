@@ -144,7 +144,7 @@ def builder():
                 
                 all_articles[lang].append({
                     'title': title,
-                    'url': f"/{lang}/{category}/{hash_id}.html",
+                    'url': f"/articles/{lang}/{category}/{hash_id}.html",
                     'image': cover_image,
                     'excerpt': title[:100],
                     'date': date,
