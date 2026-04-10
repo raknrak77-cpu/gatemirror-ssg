@@ -4,30 +4,253 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ title }} | Gatemirror</title>
-    <link rel="stylesheet" href="/css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --dark: #0a0a0a;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --gray: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background: var(--white);
+            line-height: 1.6;
+        }
+        
+        /* NAVBAR */
+        nav {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        /* SIDE MENU */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: var(--dark);
+            color: white;
+            transition: left 0.3s;
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .side-menu.active {
+            left: 0;
+        }
+        
+        .close-menu {
+            text-align: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+        
+        .side-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .lang-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .lang-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+        }
+        
+        .flags {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .flag-link {
+            font-size: 1.2rem;
+            text-decoration: none;
+            opacity: 0.7;
+        }
+        
+        .nav-links {
+            margin: 2rem 0;
+        }
+        
+        .nav-links a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .footer-links {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            display: block;
+            padding: 0.3rem 0;
+        }
+        
+        /* MAIN CONTENT */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .meta-info {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .summary {
+            background: var(--gray);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .summary-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-list {
+            list-style: none;
+        }
+        
+        .summary-list li {
+            padding: 0.3rem 0;
+        }
+        
+        .article-content {
+            font-size: 1.05rem;
+        }
+        
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        
         /* EDITOR'S NOTE */
         .editors-note {
             background: #f0f7f0;
-            border-left: 4px solid #2ecc71;
+            border-left: 4px solid var(--primary);
             padding: 1rem 1.5rem;
             margin: 1.5rem 0;
             font-style: italic;
             font-size: 0.95rem;
-            color: #1a1a1a;
             border-radius: 0 0.75rem 0.75rem 0;
         }
+        
         .editors-note::before {
             content: "✍️ Editor's Note: ";
             font-weight: 700;
             font-style: normal;
-            color: #2ecc71;
+            color: var(--primary);
+        }
+        
+        .sources {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .read-next {
+            margin-top: 2rem;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .container { padding: 0 1rem; }
         }
     </style>
 </head>
 <body>
 
-<!-- SIDE MENU (SABIT) -->
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="lang-section">
@@ -69,18 +292,18 @@
     <!-- BAŞLIK -->
     <h1>{{ title }}</h1>
 
-    <!-- EDITOR'S NOTE (GEMINI TARAFINDAN DOLDURULACAK) -->
+    <!-- EDITOR'S NOTE -->
     {% if editors_note %}
     <div class="editors-note">{{ editors_note }}</div>
     {% endif %}
 
-    <!-- META BİLGİSİ (Yazar, Tarih) -->
+    <!-- META BİLGİSİ -->
     <div class="meta-info">
         <span class="author">✍️ {{ author }}</span>
         <span class="date">📅 {{ date }}</span>
     </div>
 
-    <!-- KEY TAKEAWAYS (ÖZET KUTUSU) -->
+    <!-- KEY TAKEAWAYS -->
     <div class="summary">
         <div class="summary-title"><i class="fas fa-bolt"></i> KEY TAKEAWAYS</div>
         <ul class="summary-list">
@@ -88,14 +311,13 @@
         </ul>
     </div>
 
-    <!-- MAKALE İÇERİĞİ (HTML OLARAK) -->
+    <!-- MAKALE İÇERİĞİ (TEK İÇ GÖRSEL) -->
     <div class="article-content">
-        <img src="{{ content_image_1 }}" alt="Content Image 1" class="inline-image" onerror="this.style.display='none'">
+        <img src="{{ content_image }}" alt="Content Image" class="inline-image" onerror="this.style.display='none'">
         {{ content }}
-        <img src="{{ content_image_2 }}" alt="Content Image 2" class="inline-image" onerror="this.style.display='none'">
     </div>
 
-    <!-- KAYNAKLAR (SOURCES) -->
+    <!-- KAYNAKLAR -->
     <div class="sources">
         <h3>📚 Sources</h3>
         <ul class="sources-list">
@@ -103,7 +325,7 @@
         </ul>
     </div>
 
-    <!-- READ THIS NEXT (BENZER MAKALELER) -->
+    <!-- READ THIS NEXT -->
     <div class="read-next">
         <h3>📖 READ THIS NEXT</h3>
         <div class="read-next-grid">
@@ -125,7 +347,18 @@
 </footer>
 
 <script>
-    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    function toggleMenu() {
+        document.getElementById('sideMenu').classList.toggle('active');
+    }
+    
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('sideMenu');
+        const menuBtn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(event.target) && !menuBtn.contains(event.target)) {
+            menu.classList.remove('active');
+        }
+    });
 </script>
+
 </body>
     </html>
