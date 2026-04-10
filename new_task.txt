@@ -1,8 +1,8 @@
-category: tech
-topic: The Rise of Autonomous AI Agents: How They Will Reshape the Global Economy
-reference_link: https://www.weforum.org/stories/2024/04/ai-agents-autonomous-economy/
-author_persona: AI Economist & Tech Futurist
-special_instructions: Analyze how autonomous AI agents (AutoGPT, etc.) will impact labor markets, productivity, and economic structures.
-kapak_prompt: A futuristic digital ecosystem with autonomous AI agents as glowing entities, trading and collaborating
-icerik_1_prompt: An AI agent managing a futuristic dashboard with data streams
-icerik_2_prompt: A network of AI agents connected by light beams, representing collaboration and trade
+category: future-economy
+topic: Tokenomics Beyond Crypto: How Real-World Asset Tokenization Will Democratize Investment
+reference_link: https://www.coindesk.com/learn/what-is-real-world-asset-tokenization-rwa/
+author_persona: Tokenomics Researcher & DeFi Strategist
+special_instructions: Analyze how real-world assets (real estate, art, commodities) are being tokenized on blockchain. Discuss benefits (liquidity, fractional ownership), challenges (regulation, custody), and future potential.
+kapak_prompt: A futuristic digital dashboard showing tokenized real-world assets: a building, a painting, and gold bars represented as glowing digital tokens
+icerik_1_prompt: An infographic showing the tokenization process: physical asset -> digital representation -> fractional ownership
+icerik_2_prompt: A global map with connected nodes representing cross-border trading of tokenized assets
