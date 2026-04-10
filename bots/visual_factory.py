@@ -68,14 +68,13 @@ def generate_image(prompt, model, width, height, output_filename):
 def visual_factory():
     """
     Creator bot'tan gelen parametrelerle çalışır:
-    - argv[1]: task_id (0007)
-    - argv[2]: hash (a3f5c2d1)
-    - argv[3]: visuals (JSON string)
+    - argv[1]: task_id
+    - argv[2]: hash
+    - argv[3]: visuals (JSON string) -> {kapak, icerik_1}
     """
     
     if len(sys.argv) < 4:
         print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json>")
-        print("   Örnek: python visual_factory.py 0007 a3f5c2d1 '{\"kapak\":{...}}'")
         return
     
     task_id = sys.argv[1]
@@ -92,8 +91,7 @@ def visual_factory():
     
     # Görsel dosya adları (hash ile)
     kapak_dosya = f"{hash_id}_kapak.png"
-    icerik1_dosya = f"{hash_id}_icerik_1.png"
-    icerik2_dosya = f"{hash_id}_icerik_2.png"
+    icerik_dosya = f"{hash_id}_icerik.png"  # Tek iç görsel
     
     # 1. Kapak Görseli (16:9)
     kapak = visuals.get("kapak", {})
@@ -107,27 +105,15 @@ def visual_factory():
         )
         time.sleep(5)
     
-    # 2. İç Görsel 1 (Kare)
-    icerik1 = visuals.get("icerik_1", {})
-    if icerik1:
+    # 2. İç Görsel (Kare veya Yatay) - tasks.json'daki icerik_1 kullanılacak
+    icerik = visuals.get("icerik_1", {})
+    if icerik:
         generate_image(
-            icerik1.get("prompt", ""),
+            icerik.get("prompt", ""),
             "@cf/stabilityai/stable-diffusion-xl-base-1.0",
-            icerik1.get("width", 1024),
-            icerik1.get("height", 1024),
-            icerik1_dosya
-        )
-        time.sleep(5)
-    
-    # 3. İç Görsel 2 (Yatay)
-    icerik2 = visuals.get("icerik_2", {})
-    if icerik2:
-        generate_image(
-            icerik2.get("prompt", ""),
-            "@cf/bytedance/stable-diffusion-xl-lightning",
-            icerik2.get("width", 1280),
-            icerik2.get("height", 720),
-            icerik2_dosya
+            icerik.get("width", 1024),
+            icerik.get("height", 1024),
+            icerik_dosya
         )
     
     # Metadata JSON (uploader bot için)
@@ -135,8 +121,7 @@ def visual_factory():
         "task_id": task_id,
         "hash": hash_id,
         "kapak": kapak_dosya,
-        "icerik_1": icerik1_dosya,
-        "icerik_2": icerik2_dosya
+        "icerik": icerik_dosya
     }
     with open(f"{hash_id}_gorseller.json", "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=4)
