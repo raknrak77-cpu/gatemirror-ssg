@@ -217,5 +217,32 @@
         "display_date": "10 April 2026",
         "processed_at": "2026-04-10 06:34:54",
         "hash": "6af03d83"
+    },
+    {
+    "task_id": "0009",
+    "category": "future-economy",
+    "topic": "DeFi Yield Farming Strategies: Risks and Rewards in 2026",
+    "reference_link": "https://defillama.com/",
+    "visual_description": "A futuristic DeFi dashboard with yield graphs, staking pools, and glowing token icons, cyberpunk aesthetic, 8k.",
+    "language": "en",
+    "author_persona": "DeFi Protocol Analyst",
+    "special_instructions": "Analyze yield farming strategies, impermanent loss, and security risks. Compare different protocols (Uniswap, Aave, Curve).",
+    "visuals": {
+        "kapak": {
+            "prompt": "A hyperrealistic cinematic wide shot of a futuristic DeFi dashboard: floating yield graphs, staking pools with neon colors, glowing token icons, 16:9, 4k.",
+            "width": 1280,
+            "height": 720
+        },
+        "icerik_1": {
+            "prompt": "An infographic comparing yield farming strategies: liquidity pools, staking, lending. Square format, futuristic, educational.",
+            "width": 1024,
+            "height": 1024
+        }
+    },
+    "status": "pending",
+    "created_at": "2026-04-10",
+    "display_date": "10 April 2026",
+    "processed_at": ""
     }
+    
 ]
