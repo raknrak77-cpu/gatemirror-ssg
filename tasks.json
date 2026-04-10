@@ -244,5 +244,31 @@
         "display_date": "10 April 2026",
         "processed_at": "2026-04-10 10:11:57",
         "hash": "f6533200"
+    },
+    {
+    "task_id": "0010",
+    "category": "tech",
+    "topic": "Quantum Computing and the Future of Cryptography: Are Your Assets Safe in 2030?",
+    "reference_link": "https://www.nist.gov/quantum-cryptography",
+    "visual_description": "A futuristic quantum computer with glowing qubits, breaking a digital lock, cyberpunk aesthetic, neon blue and purple, 8k, cinematic lighting.",
+    "language": "en",
+    "author_persona": "Quantum Cryptography Researcher",
+    "special_instructions": "Analyze how quantum computing threatens current encryption standards (RSA, ECC). Discuss post-quantum cryptography (PQC) and quantum key distribution (QKD). Explain the timeline and what industries should do now to prepare.",
+    "visuals": {
+        "kapak": {
+            "prompt": "A hyperrealistic cinematic wide shot of a futuristic quantum computer with glowing qubits, breaking a digital lock made of light. 16:9, cyberpunk, neon blue and purple, 4k, ultra-detailed.",
+            "width": 1280,
+            "height": 720
+        },
+        "icerik_1": {
+            "prompt": "An infographic comparing classical encryption (RSA) vs quantum-resistant algorithms. Side by side, educational, futuristic, square format, high resolution.",
+            "width": 1024,
+            "height": 1024
+        }
+    },
+    "status": "pending",
+    "created_at": "2026-04-10",
+    "display_date": "10 April 2026",
+    "processed_at": ""
     }
 ]
