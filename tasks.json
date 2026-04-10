@@ -330,26 +330,19 @@
     "task_id": "0013",
     "category": "tech",
     "topic": "The Rise of Autonomous AI Agents: How They Will Reshape the Global Economy",
-    "reference_link": "https://www.forbes.com/ai-agents-economy/",
-    "visual_description": "A futuristic digital ecosystem with autonomous AI agents trading and collaborating, glowing data streams, no text, no diagrams, photorealistic, 8k.",
+    "reference_link": "https://www.weforum.org/stories/2024/04/ai-agents-autonomous-economy/",
     "language": "en",
     "author_persona": "AI Economist & Tech Futurist",
     "special_instructions": "Analyze how autonomous AI agents (AutoGPT, etc.) will impact labor markets, productivity, and economic structures. Discuss potential risks and regulatory needs.",
     "visuals": {
         "kapak": {
-            "prompt": "A futuristic digital ecosystem with autonomous AI agents as glowing entities, trading and collaborating, no text, no diagrams, photorealistic, 4k, square format.",
-            "width": 1024,
-            "height": 1024
+            "prompt": "A futuristic digital ecosystem with autonomous AI agents as glowing entities, trading and collaborating"
         },
         "icerik_1": {
-            "prompt": "An AI agent managing a futuristic dashboard with data streams, no text, no diagrams, photorealistic, 4k, square format.",
-            "width": 1024,
-            "height": 1024
+            "prompt": "An AI agent managing a futuristic dashboard with data streams"
         },
         "icerik_2": {
-            "prompt": "A network of AI agents connected by light beams, representing collaboration and trade, no text, no diagrams, photorealistic, 4k, square format.",
-            "width": 1024,
-            "height": 1024
+            "prompt": "A network of AI agents connected by light beams, representing collaboration and trade"
         }
     },
     "status": "pending",
