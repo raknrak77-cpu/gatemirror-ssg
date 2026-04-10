@@ -381,5 +381,35 @@
         "display_date": "10 April 2026",
         "processed_at": "2026-04-10 15:22:18",
         "hash": "2de58da0"
+    },
+    {
+        "task_id": "0015",
+        "category": "eco",
+        "topic": "Vertical Farming and the Future of Food Security: Can Indoor Agriculture Feed the World?",
+        "reference_link": "https://www.nationalgeographic.com/environment/article/vertical-farming",
+        "language": "en",
+        "author_persona": "Sustainable Agriculture & Urban Farming Expert",
+        "special_instructions": "Analyze how vertical farming can address food security in urban areas. Discuss benefits (water conservation, year-round production, reduced transport), challenges (energy consumption, high initial costs), and future potential with renewable energy integration.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic vertical farm inside a glass skyscraper, glowing purple and pink LED lights, lush green lettuce and herbs growing in stacked trays, robotic arms harvesting, city skyline visible through windows",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "An infographic comparing traditional farming vs vertical farming: land use, water consumption, transport distance, and yield per square foot",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A cross-section of a vertical farm showing different floors: bottom floor with fish farming (aquaponics), middle floors with leafy greens, top floor with fruiting plants (tomatoes, peppers), with labels showing temperature and humidity",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-10",
+        "display_date": "10 April 2026",
+        "processed_at": ""
     }
 ]
