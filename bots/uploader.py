@@ -27,21 +27,38 @@ def upload_file_to_r2(local_path, r2_key):
     return False
 
 def uploader():
-    """content/ altındaki tüm dosyaları R2'ye (articles/ altına) yükler"""
+    """content/ altındaki HTML dosyalarını R2'ye yükler, sonra siler (klasörler ve .gitkeep kalır)"""
     
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
         return
     
+    uploaded_files = []
+    
     for root, dirs, files in os.walk(content_base):
         for file in files:
+            # Sadece .html dosyalarını işle
+            if not file.endswith('.html'):
+                continue
+            
             local_path = os.path.join(root, file)
             # content/en/wellness/xxx.html -> articles/en/wellness/xxx.html
             r2_key = local_path.replace("content/", "articles/")
-            upload_file_to_r2(local_path, r2_key)
+            if upload_file_to_r2(local_path, r2_key):
+                uploaded_files.append(local_path)
     
-    print("\n🏁 Tüm içerik R2'ye yüklendi.")
+    # Sadece yüklenen HTML dosyalarını sil
+    for file_path in uploaded_files:
+        try:
+            os.remove(file_path)
+            print(f"🗑️ Silindi: {file_path}")
+        except Exception as e:
+            print(f"⚠️ Silinemedi: {file_path} - {e}")
+    
+    # NOT: Klasörler ve .gitkeep dosyaları silinmez
+    print("\n🏁 Tüm HTML içerik R2'ye yüklendi ve local HTML'ler temizlendi.")
+    print("   (Klasörler ve .gitkeep dosyaları korundu)")
 
 if __name__ == "__main__":
     uploader()
