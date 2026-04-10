@@ -1,4 +1,4 @@
-name: SSG Build & Deploy
+name: SSG Build & Deploy publisher
 
 on:
   workflow_dispatch:
