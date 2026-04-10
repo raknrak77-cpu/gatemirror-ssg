@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ title }} | Gatemirror</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* EDITOR'S NOTE */
+        .editors-note {
+            background: #f0f7f0;
+            border-left: 4px solid #2ecc71;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+            border-radius: 0 0.75rem 0.75rem 0;
+        }
+        .editors-note::before {
+            content: "✍️ Editor's Note: ";
+            font-weight: 700;
+            font-style: normal;
+            color: #2ecc71;
+        }
+    </style>
 </head>
 <body>
 
@@ -50,11 +69,15 @@
     <!-- BAŞLIK -->
     <h1>{{ title }}</h1>
 
-    <!-- META BİLGİSİ (Yazar, Tarih, Review) -->
+    <!-- EDITOR'S NOTE (GEMINI TARAFINDAN DOLDURULACAK) -->
+    {% if editors_note %}
+    <div class="editors-note">{{ editors_note }}</div>
+    {% endif %}
+
+    <!-- META BİLGİSİ (Yazar, Tarih) -->
     <div class="meta-info">
         <span class="author">✍️ {{ author }}</span>
         <span class="date">📅 {{ date }}</span>
-        <span class="review">✅ Medically reviewed by {{ reviewer }}</span>
     </div>
 
     <!-- KEY TAKEAWAYS (ÖZET KUTUSU) -->
@@ -105,4 +128,4 @@
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
 </script>
 </body>
-</html>
+    </html>
