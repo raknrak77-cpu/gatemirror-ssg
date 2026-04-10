@@ -262,12 +262,17 @@
     <p>Reflecting reality in 5 languages. Deep insights on wellness, tech, future economy, and sustainable living.</p>
 </div>
 
-<!-- MAKALE GRID -->
+<!-- MAKALE GRID (DİNAMİK - builder.py doldurur) -->
 <div class="container">
     <h2 class="section-title">Latest Stories</h2>
-    <div class="article-grid" id="article-grid">
-        <!-- MAKALELER DİNAMİK OLARAK JAVASCRIPT İLE DOLDURULACAK -->
-        <!-- Veya builder.py ile statik HTML oluşturulacak -->
+    <div class="article-grid">
+        {% for article in articles %}
+        <a href="{{ article.url }}" class="article-card">
+            <img src="{{ article.image }}" alt="{{ article.title }}" onerror="this.style.display='none'">
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.excerpt | default(article.title) }}</p>
+        </a>
+        {% endfor %}
     </div>
 </div>
 
@@ -288,30 +293,6 @@
             menu.classList.remove('active');
         }
     });
-    
-    // MAKALELERİ YÜKLE (builder.py bu kısmı statik HTML ile değiştirecek)
-    // Şimdilik örnek veri
-    const articles = [
-        { title: "Biofeedback and Digital Detox", url: "/en/wellness/biofeedback.html", image: "/assets/0002_kapak.png", excerpt: "Scientific methods to lower cortisol..." },
-        { title: "The Surrealist Algorithm", url: "/en/tech/surrealist-algorithm.html", image: "/assets/0005_kapak.png", excerpt: "How AI is reimagining art..." },
-        { title: "Vertical Farming", url: "/en/eco/vertical-farming.html", image: "/assets/0004_kapak.png", excerpt: "Future of sustainable agriculture..." }
-    ];
-    
-    const grid = document.getElementById('article-grid');
-    if (grid && articles.length > 0) {
-        articles.forEach(article => {
-            const card = document.createElement('a');
-            card.href = article.url;
-            card.className = 'article-card';
-            card.innerHTML = `
-                <img src="${article.image}" alt="${article.title}" onerror="this.src='/assets/fallback.png'">
-                <h3>${article.title}</h3>
-                <p>${article.excerpt}</p>
-            `;
-            grid.appendChild(card);
-        });
-    }
 </script>
-
 </body>
 </html>
