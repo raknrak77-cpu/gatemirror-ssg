@@ -273,29 +273,30 @@
         "hash": "f0041207"
     },
     {
-    "task_id": "0011",
-    "category": "tech",
-    "topic": "Artificial Intelligence in Healthcare: Revolutionizing Diagnosis and the Ethical Dilemmas",
-    "reference_link": "https://www.who.int/news-room/artificial-intelligence-health",
-    "visual_description": "A futuristic AI brain analyzing medical scans, glowing blue and green, no text, no diagrams, photorealistic, 8k.",
-    "language": "en",
-    "author_persona": "AI Healthcare Researcher & Bioethicist",
-    "special_instructions": "Analyze how AI is transforming medical diagnosis (radiology, pathology). Discuss real-world examples (AI detecting cancer, eye diseases). Address ethical challenges: data privacy, algorithmic bias, liability. Conclude with future outlook and regulatory needs.",
-    "visuals": {
-        "kapak": {
-            "prompt": "A futuristic AI brain made of light analyzing a glowing human body scan, medical holograms floating around, no text, no diagrams, photorealistic, 4k, square format 1024x1024.",
-            "width": 1024,
-            "height": 1024
+        "task_id": "0011",
+        "category": "tech",
+        "topic": "Artificial Intelligence in Healthcare: Revolutionizing Diagnosis and the Ethical Dilemmas",
+        "reference_link": "https://www.who.int/news-room/artificial-intelligence-health",
+        "visual_description": "A futuristic AI brain analyzing medical scans, glowing blue and green, no text, no diagrams, photorealistic, 8k.",
+        "language": "en",
+        "author_persona": "AI Healthcare Researcher & Bioethicist",
+        "special_instructions": "Analyze how AI is transforming medical diagnosis (radiology, pathology). Discuss real-world examples (AI detecting cancer, eye diseases). Address ethical challenges: data privacy, algorithmic bias, liability. Conclude with future outlook and regulatory needs.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic AI brain made of light analyzing a glowing human body scan, medical holograms floating around, no text, no diagrams, photorealistic, 4k, square format 1024x1024.",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A doctor working alongside a glowing AI hologram displaying patient data, futuristic hospital room, no text, no diagrams, photorealistic, 4k, square format 1024x1024.",
+                "width": 1024,
+                "height": 1024
+            }
         },
-        "icerik_1": {
-            "prompt": "A doctor working alongside a glowing AI hologram displaying patient data, futuristic hospital room, no text, no diagrams, photorealistic, 4k, square format 1024x1024.",
-            "width": 1024,
-            "height": 1024
-        }
-    },
-    "status": "pending",
-    "created_at": "2026-04-10",
-    "display_date": "10 April 2026",
-    "processed_at": ""
+        "status": "processed",
+        "created_at": "2026-04-10",
+        "display_date": "10 April 2026",
+        "processed_at": "2026-04-10 12:07:14",
+        "hash": "31acdb10"
     }
 ]
