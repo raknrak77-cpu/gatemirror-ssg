@@ -110,8 +110,10 @@ OUTPUT FORMAT:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
                     visuals_json = json.dumps(visuals)
-                    subprocess.run(['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
+                    
+                    subprocess.run(['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori], timeout=180)
                     print("✅ Görsel bot tamamlandı.")
+                                                                         
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
             
