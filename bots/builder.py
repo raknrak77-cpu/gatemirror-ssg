@@ -156,6 +156,7 @@ def builder():
                 title = frontmatter.get('title', 'Untitled')
                 date = frontmatter.get('date', datetime.now().strftime("%d %B %Y"))
                 author = frontmatter.get('author', 'Expert Analyst')
+                editors_note = frontmatter.get('editors_note', '')  # YENİ
                 
                 summary_raw = frontmatter.get('summary', '')
                 summary_items = extract_summary_items(summary_raw)
@@ -166,9 +167,10 @@ def builder():
                 if sources_raw and sources_raw != '- ' and 'http' in sources_raw:
                     sources_html = f'<li><a href="{sources_raw}" target="_blank">Reference</a></li>'
                 
-                cover_image = f"{r2_base}/{frontmatter.get('hash', '')}_kapak.png"
-                content_image_1 = f"{r2_base}/{frontmatter.get('hash', '')}_icerik_1.png"
-                content_image_2 = f"{r2_base}/{frontmatter.get('hash', '')}_icerik_2.png"
+                # R2 görsel linkleri (kategori bazlı, WebP)
+                cover_image = f"{r2_base}/images/{category}/{slug}_kapak.webp"
+                content_image_1 = f"{r2_base}/images/{category}/{slug}_icerik_1.webp"
+                content_image_2 = f"{r2_base}/images/{category}/{slug}_icerik_2.webp"
                 
                 menu_texts = get_menu_texts(lang)
                 
@@ -178,7 +180,7 @@ def builder():
                         title=title,
                         author=author,
                         date=date,
-                        reviewer='Gatemirror Editorial Team',
+                        editors_note=editors_note,  # YENİ
                         summary=summary_html,
                         content=html_body,
                         sources=sources_html,
