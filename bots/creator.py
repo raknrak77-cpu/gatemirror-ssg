@@ -72,6 +72,8 @@ def isle_gorev(task):
     print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
     
     # GÜÇLENDİRİLMİŞ PROMPT
+ 
+
     prompt_emri = f"""
 ROLE: You are an expert {persona}.
 
@@ -81,7 +83,7 @@ REQUIREMENTS:
 - Length: Minimum 1500 words, maximum 2500 words.
 - Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
 - DO NOT use Markdown (no **bold**, no ## headings).
-- Start directly with the first HTML tag (no introductions).
+- Start directly with the first HTML tag (no introductions like "Here is the article").
 - Write in a professional, analytical, yet engaging tone.
 - Include real-world examples, data points, and case studies where relevant.
 - Use short paragraphs (2-3 sentences) for better readability.
@@ -91,15 +93,22 @@ REQUIREMENTS:
 
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
+**EDITOR'S NOTE (CRITICAL):** After writing the article, add a short, insightful "Editor's Note" at the very beginning of the article (right after the <h1> tag, before any other content). 
+- It must be wrapped in <div class="editors-note">...</div>.
+- The note should be 2-3 sentences (20-30 words total) written in first-person singular as if a senior editor is commenting on the article's importance or a key takeaway.
+- Keep the tone thoughtful, not promotional. Example: "Editor's Note: What strikes me most about this research is how AI is quietly reshaping not just markets, but our very understanding of risk.".
+
 OUTPUT FORMAT (start directly with HTML):
+<h1>...</h1>
+<div class="editors-note">Editor's Note: ...</div>
 <h2>Introduction</h2>
 <p>...</p>
-<h3>Subheading</h3>
-<p>...</p>
-<ul><li>...</li></ul>
+... (rest of the article)
 <h2>Conclusion</h2>
 <p>...</p>
 """
+
+
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
