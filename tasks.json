@@ -185,5 +185,37 @@
         "display_date": "9 April 2026",
         "processed_at": "2026-04-09 16:19:28",
         "hash": "07a1661f"
+    },
+    {
+        "task_id": "0008",
+        "category": "future-economy",
+        "topic": "Bitcoin, Ethereum, and XRP: Mid-Term Outlook and Market Dynamics After the 2026 Halving",
+        "reference_link": "https://www.coingecko.com/en/global-charts",
+        "visual_description": "A hyperrealistic futuristic crypto trading desk: holographic candlesticks of BTC, ETH, XRP floating in the air, a glowing digital brain analyzing market data, neon green and purple lights, cyberpunk aesthetic, 8k, cinematic lighting.",
+        "language": "en",
+        "author_persona": "Cryptocurrency Market Analyst & On-Chain Researcher",
+        "special_instructions": "Analyze the mid-term outlook for Bitcoin, Ethereum, and XRP after the 2026 halving. Discuss: 1) Historical post-halving cycles and current deviations, 2) Ethereum's layer-2 growth and institutional adoption (ETFs), 3) XRP's legal clarity and cross-border payment resurgence, 4) Macroeconomic factors (interest rates, liquidity) affecting crypto markets. Use on-chain data (MVRV, SOPR, exchange reserves) and technical analysis (support/resistance, RSI). Provide a balanced view of bullish and bearish scenarios.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A hyperrealistic cinematic wide shot of a futuristic crypto trading desk: three holographic candlestick charts floating in the air for BTC, ETH, and XRP, each with different neon colors (orange, blue, green). A digital brain made of circuit boards analyzes the data in the background. 16:9, cyberpunk, neon lights, 4k, ultra-detailed.",
+                "width": 1280,
+                "height": 720
+            },
+            "icerik_1": {
+                "prompt": "A hyperrealistic split infographic comparing the three assets: Bitcoin as digital gold (orange), Ethereum as a smart contract platform (blue), XRP as a payment network (green). Each section shows key metrics: market cap, transaction speed, energy consumption. Below, a timeline showing post-halving years. Square format, futuristic, educational, ultra-detailed.",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A hyperrealistic surreal image: a giant Bitcoin coin floating in a futuristic city, with Ethereum's network nodes glowing like stars and XRP's payment paths as light beams connecting buildings. A clock showing 2026-2027 in the background. Dreamlike lighting, thought-provoking, ultra-detailed, horizontal banner, 8k.",
+                "width": 1280,
+                "height": 720
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-10",
+        "display_date": "10 April 2026",
+        "processed_at": "",
+        "hash": null
     }
-]
+    ]
