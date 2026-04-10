@@ -39,7 +39,7 @@ def get_category_description(lang, category):
             'elearning': 'Online education, career development, and digital skills.'
         },
         'es': {
-            'wellness': 'Perspectivas profundas sobre bienestar físico, mental y emocional.',
+            'wellness': 'Perspectivas profundas sobre bienestar físico, mental y emotional.',
             'tech': 'Últimos avances en IA, software y transformación digital.',
             'future-economy': 'Finanzas, DeFi, tokenomics y trading algorítmico.',
             'eco': 'Vida sostenible, energía verde y soluciones climáticas.',
@@ -144,7 +144,7 @@ def builder():
                 
                 all_articles[lang].append({
                     'title': title,
-                    'url': f"/articles/{lang}/{category}/{hash_id}.html",
+                    'url': f"/articles/{lang}/{category}/{hash_id}.html",  # ✅ /articles/ eklendi
                     'image': cover_image,
                     'excerpt': title[:100],
                     'date': date,
