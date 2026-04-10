@@ -1,11 +1,8 @@
 import os
-import re
-import json
 import time
 import boto3
-from datetime import datetime
 from botocore.client import Config
-from PIL import Image  # WebP dönüşümü için
+from PIL import Image
 
 # R2 Secrets
 R2_ID = os.getenv('R2_ACCOUNT_ID')
@@ -28,7 +25,6 @@ def convert_to_webp(input_path, output_path):
     """PNG/JPEG dosyasını WebP'ye dönüştürür"""
     try:
         with Image.open(input_path) as img:
-            # RGB'a çevir (şeffaflık varsa beyaz arka plan)
             if img.mode in ('RGBA', 'LA', 'P'):
                 background = Image.new('RGB', img.size, (255, 255, 255))
                 background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
@@ -45,52 +41,46 @@ def upload_file_to_r2(local_path, r2_key):
         print(f"🚀 Yükleniyor: {local_path} -> {r2_key}")
         s3.upload_file(local_path, R2_BUCKET, r2_key)
         print(f"✅ Yüklendi: {r2_key}")
-        return f"{R2_PUBLIC_URL}/{r2_key}"
+        return True
     else:
         print(f"⚠️ Dosya yok: {local_path}")
-        return None
+        return False
 
-def process_image(local_path, hash_id, img_type, kategori):
-    """Görseli WebP'ye dönüştürüp R2'ye yükler, R2 linkini döndürür"""
+def upload_images():
+    """assets/ altındaki görselleri WebP'ye dönüştürüp R2'ye yükler"""
     
-    # WebP dosya adı (kategori bazlı)
-    webp_filename = f"{hash_id}_{img_type}.webp"
-    r2_key = f"images/{kategori}/{webp_filename}"
-    webp_path = f"assets/{webp_filename}"
+    assets_dir = "assets"
+    if not os.path.exists(assets_dir):
+        print(f"⚠️ {assets_dir} klasörü yok, görsel yükleme atlanıyor.")
+        return
     
-    # Dönüştür ve yükle
-    if convert_to_webp(local_path, webp_path):
-        r2_url = upload_file_to_r2(webp_path, r2_key)
-        os.remove(webp_path)  # Geçici WebP dosyasını sil
-        return r2_url
-    else:
-        # Dönüşüm başarısızsa orijinal PNG'yi yükle
-        r2_key = f"images/{kategori}/{hash_id}_{img_type}.png"
-        return upload_file_to_r2(local_path, r2_key)
-
-def markdown_oku_ve_guncelle(md_path, hash_id, kategori):
-    """Markdown dosyasını okur, görsel linklerini R2 WebP linki ile değiştirir"""
-    
-    with open(md_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    # Görsel dosyalarını kontrol et ve R2'ye yükle (WebP olarak)
-    for img_type in ['kapak', 'icerik_1', 'icerik_2']:
-        local_path = f"assets/{hash_id}_{img_type}.png"
-        if os.path.exists(local_path):
-            r2_url = process_image(local_path, hash_id, img_type, kategori)
-            if r2_url:
-                # Markdown içindeki local linki R2 linki ile değiştir
-                content = content.replace(f'./assets/{hash_id}_{img_type}.png', r2_url)
-                content = content.replace(f'assets/{hash_id}_{img_type}.png', r2_url)
-                content = content.replace(f'{hash_id}_{img_type}.png', r2_url)
-                print(f"✅ {img_type} linki güncellendi: {r2_url}")
-    
-    # Güncellenmiş Markdown'u kaydet
-    with open(md_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-    
-    print(f"✅ Markdown güncellendi: {md_path}")
+    for file in os.listdir(assets_dir):
+        if file.endswith('.png'):
+            # Dosya adından hash ve tipi çıkar (örn: 6af03d83_kapak.png)
+            parts = file.replace('.png', '').split('_')
+            if len(parts) == 2:
+                hash_id, img_type = parts
+            else:
+                print(f"⚠️ {file} adı hatalı, atlanıyor.")
+                continue
+            
+            # Kategori? Görselin kategorisini nereden alacağız?
+            # Şimdilik 'general' kullan, ileride düzenlenebilir
+            kategori = "general"
+            
+            local_path = os.path.join(assets_dir, file)
+            webp_path = os.path.join(assets_dir, f"{hash_id}_{img_type}.webp")
+            
+            # WebP'ye dönüştür
+            if convert_to_webp(local_path, webp_path):
+                # R2'ye yükle
+                r2_key = f"images/{kategori}/{hash_id}_{img_type}.webp"
+                upload_file_to_r2(webp_path, r2_key)
+                os.remove(webp_path)
+            else:
+                # Dönüşüm başarısızsa orijinal PNG'yi yükle
+                r2_key = f"images/{kategori}/{hash_id}_{img_type}.png"
+                upload_file_to_r2(local_path, r2_key)
 
 def upload_articles():
     """public/ altındaki tüm HTML dosyalarını R2'ye yükler"""
@@ -111,26 +101,13 @@ def upload_articles():
 def uploader():
     """Tüm içeriği R2'ye yükler: görseller (WebP) + HTML makaleler"""
     
-    print("🖼️ Görseller işleniyor (WebP dönüşümü ve yükleme)...")
-    
-    en_base = "content/en"
-    if os.path.exists(en_base):
-        for root, dirs, files in os.walk(en_base):
-            for file in files:
-                if file.endswith('.md'):
-                    md_path = os.path.join(root, file)
-                    hash_id = file.replace('.md', '')
-                    kategori = os.path.basename(root)
-                    print(f"\n📖 İşleniyor: {md_path} (Hash: {hash_id}, Kategori: {kategori})")
-                    markdown_oku_ve_guncelle(md_path, hash_id, kategori)
-                    time.sleep(1)
-    else:
-        print(f"⚠️ {en_base} klasörü yok, görsel işleme atlanıyor.")
+    print("🖼️ Görseller yükleniyor (WebP dönüşümü)...")
+    upload_images()
     
     print("\n📄 Makaleler yükleniyor (HTML)...")
     upload_articles()
     
-    print("\n🏁 Tüm içerik R2'ye yüklendi (görseller WebP, makaleler HTML).")
+    print("\n🏁 Tüm içerik R2'ye yüklendi.")
 
 if __name__ == "__main__":
     uploader()
