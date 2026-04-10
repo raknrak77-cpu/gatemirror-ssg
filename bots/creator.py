@@ -16,30 +16,17 @@ def create_hash():
     return uuid.uuid4().hex[:8]
 
 def html_yaz(hash_id, task, makale_html, kategori):
-    """HTML dosyasını doğrudan content/ altına yazar (geçici, uploader R2'ye atacak)"""
+    """Ham HTML dosyasını content/ altına yazar (template yok, sadece içerik)"""
     
     topic = task['topic']
     date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     author = task.get('author_persona', 'Expert Analyst')
     
-    # Template'i oku
-    template_path = "templates/single.html"
-    if not os.path.exists(template_path):
-        print(f"❌ {template_path} bulunamadı!")
-        return None
-    
-    with open(template_path, 'r', encoding='utf-8') as f:
-        template = f.read()
-    
-    # Basit değişken değiştirme (Jinja2 yerine geçici çözüm)
-    html_output = template.replace('{{ title }}', topic)
-    html_output = html_output.replace('{{ author }}', author)
-    html_output = html_output.replace('{{ date }}', date)
-    html_output = html_output.replace('{{ summary }}', '<li>Analysis: High-Fidelity</li>')
-    html_output = html_output.replace('{{ content }}', makale_html)
-    
-    # Editor's Note: makale_html içinde <div class="editors-note"> varsa, onu al
-    # Şimdilik basit, ileride düzenlenebilir
+    # Basit bir HTML yapısı (sadece içerik, template builder ekleyecek)
+    # Builder daha sonra bunu alıp template ile birleştirecek
+    ham_html = f"""<h1>{topic}</h1>
+{makale_html}
+"""
     
     # Hedef dizin: content/en/{kategori}/{hash_id}.html
     target_dir = os.path.join("content", "en", kategori)
@@ -47,13 +34,13 @@ def html_yaz(hash_id, task, makale_html, kategori):
     target_path = os.path.join(target_dir, f"{hash_id}.html")
     
     with open(target_path, 'w', encoding='utf-8') as f:
-        f.write(html_output)
+        f.write(ham_html)
     
-    print(f"✅ HTML kaydedildi: {target_path}")
+    print(f"✅ Ham HTML kaydedildi: {target_path}")
     return target_path
 
 def isle_gorev(task):
-    """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, HTML yazar"""
+    """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, ham HTML yazar"""
     
     task_id = task.get('task_id', '0000')
     topic = task['topic']
@@ -74,18 +61,17 @@ TASK: Write a comprehensive, deep-dive article in {language} about: '{topic}'.
 REQUIREMENTS:
 - Length: Minimum 1500 words, maximum 2500 words.
 - Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
-- DO NOT use Markdown (no **bold**, no ## headings).
-- Start directly with the first HTML tag (no introductions).
+- DO NOT use Markdown.
+- Start directly with the first HTML tag.
 - Write in a professional, analytical, yet engaging tone.
 - Include real-world examples, data points, and case studies.
-- Use short paragraphs (2-3 sentences).
 - Add a strong conclusion.
 
 {f"REFERENCE: Use this as source material - {reference_link}" if reference_link else ""}
 
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
-**EDITOR'S NOTE:** After writing the article, add a short "Editor's Note" right after the <h1> tag, wrapped in <div class="editors-note">. It should be 2-3 sentences, first-person singular, commenting on the article's importance.
+**EDITOR'S NOTE:** After writing the article, add a short "Editor's Note" right after the <h1> tag, wrapped in <div class="editors-note">. It should be 2-3 sentences, first-person singular.
 
 OUTPUT FORMAT:
 <h1>...</h1>
@@ -118,7 +104,7 @@ OUTPUT FORMAT:
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
-            # Görsel bot'u çağır (2 görsel için düzenlenecek)
+            # Görsel bot'u çağır (2 görsel için)
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
@@ -129,7 +115,7 @@ OUTPUT FORMAT:
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
             
-            # HTML dosyasını oluştur
+            # Ham HTML dosyasını oluştur
             html_path = html_yaz(hash_id, task, makale_html, kategori)
             
             # Görevi güncelle
