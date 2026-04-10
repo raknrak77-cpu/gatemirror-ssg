@@ -262,12 +262,35 @@
     <p>Reflecting reality in 5 languages. Deep insights on wellness, tech, future economy, and sustainable living.</p>
 </div>
 
-<!-- MAKALE GRID -->
+<!-- MAKALE GRID (DİNAMİK - builder.py doldurur) -->
 <div class="container">
     <h2 class="section-title">Latest Stories</h2>
-    <div class="article-grid" id="article-grid">
-        <!-- MAKALELER DİNAMİK OLARAK JAVASCRIPT İLE DOLDURULACAK -->
-        <!-- Veya builder.py ile statik HTML oluşturulacak -->
+    <div class="article-grid">
+        
+        <a href="/en/future-economy/2a7c69d0.html" class="article-card">
+            <img src="https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev/images/future-economy/2a7c69d0_kapak.webp" alt="Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed" onerror="this.style.display='none'">
+            <h3>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</h3>
+            <p>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</p>
+        </a>
+        
+        <a href="/en/future-economy/07a1661f.html" class="article-card">
+            <img src="https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev/images/future-economy/07a1661f_kapak.webp" alt="Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed" onerror="this.style.display='none'">
+            <h3>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</h3>
+            <p>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</p>
+        </a>
+        
+        <a href="/en/future-economy/a0e13ccd.html" class="article-card">
+            <img src="https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev/images/future-economy/a0e13ccd_kapak.webp" alt="Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed" onerror="this.style.display='none'">
+            <h3>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</h3>
+            <p>Algorithmic Trading and the Psychology of Emotion: When Code Meets Fear and Greed</p>
+        </a>
+        
+        <a href="/en/future-economy/6af03d83.html" class="article-card">
+            <img src="https://pub-f9790eb09fb8460a9ba4e1509db5b135.r2.dev/images/future-economy/6af03d83_kapak.webp" alt="Bitcoin, Ethereum, and XRP: Mid-Term Outlook and Market Dynamics After the 2026 Halving" onerror="this.style.display='none'">
+            <h3>Bitcoin, Ethereum, and XRP: Mid-Term Outlook and Market Dynamics After the 2026 Halving</h3>
+            <p>Bitcoin, Ethereum, and XRP: Mid-Term Outlook and Market Dynamics After the 2026 Halving</p>
+        </a>
+        
     </div>
 </div>
 
@@ -288,30 +311,6 @@
             menu.classList.remove('active');
         }
     });
-    
-    // MAKALELERİ YÜKLE (builder.py bu kısmı statik HTML ile değiştirecek)
-    // Şimdilik örnek veri
-    const articles = [
-        { title: "Biofeedback and Digital Detox", url: "/en/wellness/biofeedback.html", image: "/assets/0002_kapak.png", excerpt: "Scientific methods to lower cortisol..." },
-        { title: "The Surrealist Algorithm", url: "/en/tech/surrealist-algorithm.html", image: "/assets/0005_kapak.png", excerpt: "How AI is reimagining art..." },
-        { title: "Vertical Farming", url: "/en/eco/vertical-farming.html", image: "/assets/0004_kapak.png", excerpt: "Future of sustainable agriculture..." }
-    ];
-    
-    const grid = document.getElementById('article-grid');
-    if (grid && articles.length > 0) {
-        articles.forEach(article => {
-            const card = document.createElement('a');
-            card.href = article.url;
-            card.className = 'article-card';
-            card.innerHTML = `
-                <img src="${article.image}" alt="${article.title}" onerror="this.src='/assets/fallback.png'">
-                <h3>${article.title}</h3>
-                <p>${article.excerpt}</p>
-            `;
-            grid.appendChild(card);
-        });
-    }
 </script>
-
 </body>
 </html>
