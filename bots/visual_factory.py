@@ -45,7 +45,6 @@ def is_valid_image(filepath):
     return False
 
 def convert_to_webp(input_path, output_path):
-    """PNG/JPEG'i WebP'ye dönüştürür"""
     try:
         with Image.open(input_path) as img:
             if img.mode in ('RGBA', 'LA', 'P'):
@@ -70,9 +69,6 @@ def generate_image(prompt, model, width, height, output_png):
     
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
     payload = {"prompt": prompt, "width": width, "height": height, "num_steps": 20, "guidance": 7.5}
-    
-    if "flux" in model:
-        payload["num_steps"] = 8
     
     for attempt in range(3):
         try:
@@ -124,24 +120,22 @@ def visual_factory():
     kapak_png = f"{hash_id}_kapak.png"
     icerik_png = f"{hash_id}_icerik.png"
     
-    # 1. Kapak Görseli
+    # 1. Kapak Görseli (1024x1024, Stable Diffusion)
     kapak = visuals.get("kapak", {})
     if kapak:
-        if generate_image(kapak.get("prompt", ""), "@cf/black-forest-labs/flux-1-schnell", 1280, 720, kapak_png):
-            # WebP'ye dönüştür
+        if generate_image(kapak.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
             kapak_webp = f"{hash_id}_kapak.webp"
             if convert_to_webp(kapak_png, kapak_webp):
-                # R2'ye yükle
                 r2_key = f"images/{kategori}/{hash_id}_kapak.webp"
                 upload_to_r2(kapak_webp, r2_key)
                 os.remove(kapak_webp)
             os.remove(kapak_png)
         time.sleep(5)
     
-    # 2. İç Görsel
+    # 2. İç Görsel (640x640, Stable Diffusion)
     icerik = visuals.get("icerik_1", {})
     if icerik:
-        if generate_image(icerik.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik_png):
+        if generate_image(icerik.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 640, 640, icerik_png):
             icerik_webp = f"{hash_id}_icerik.webp"
             if convert_to_webp(icerik_png, icerik_webp):
                 r2_key = f"images/{kategori}/{hash_id}_icerik.webp"
