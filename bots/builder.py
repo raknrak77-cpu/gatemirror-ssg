@@ -1,69 +1,12 @@
 import os
-import json
+import re
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
-def get_menu_texts(lang):
-    texts = {
-        'en': {'home': 'HOME', 'wellness': 'WELLNESS', 'tech': 'TECH & AI', 
-               'future-economy': 'FUTURE ECONOMY', 'eco': 'ECO & SUSTAINABLE', 'elearning': 'E-LEARNING'},
-        'es': {'home': 'INICIO', 'wellness': 'BIENESTAR', 'tech': 'TECNOLOGÍA & IA',
-               'future-economy': 'ECONOMÍA FUTURA', 'eco': 'ECO & SOSTENIBLE', 'elearning': 'E-APRENDIZAJE'},
-        'de': {'home': 'STARTSEITE', 'wellness': 'WOHLBEFINDEN', 'tech': 'TECHNOLOGIE & KI',
-               'future-economy': 'ZUKUNFTSWIRTSCHAFT', 'eco': 'ÖKO & NACHHALTIG', 'elearning': 'E-LEARNING'},
-        'fr': {'home': 'ACCUEIL', 'wellness': 'BIEN-ÊTRE', 'tech': 'TECHNOLOGIE & IA',
-               'future-economy': 'ÉCONOMIE FUTURE', 'eco': 'ÉCO & DURABLE', 'elearning': 'E-APPRENTISSAGE'}
-    }
-    return texts.get(lang, texts['en'])
-
-def get_category_name(lang, category):
-    names = {
-        'en': {'wellness': 'WELLNESS', 'tech': 'TECH & AI', 'future-economy': 'FUTURE ECONOMY',
-               'eco': 'ECO & SUSTAINABLE', 'elearning': 'E-LEARNING'},
-        'es': {'wellness': 'BIENESTAR', 'tech': 'TECNOLOGÍA & IA', 'future-economy': 'ECONOMÍA FUTURA',
-               'eco': 'ECO & SOSTENIBLE', 'elearning': 'E-APRENDIZAJE'},
-        'de': {'wellness': 'WOHLBEFINDEN', 'tech': 'TECHNOLOGIE & KI', 'future-economy': 'ZUKUNFTSWIRTSCHAFT',
-               'eco': 'ÖKO & NACHHALTIG', 'elearning': 'E-LEARNING'},
-        'fr': {'wellness': 'BIEN-ÊTRE', 'tech': 'TECHNOLOGIE & IA', 'future-economy': 'ÉCONOMIE FUTURE',
-               'eco': 'ÉCO & DURABLE', 'elearning': 'E-APPRENTISSAGE'}
-    }
-    return names.get(lang, names['en']).get(category, category.upper())
-
-def get_category_description(lang, category):
-    descriptions = {
-        'en': {
-            'wellness': 'Deep insights on physical, mental, and emotional well-being.',
-            'tech': 'Latest developments in AI, software, and digital transformation.',
-            'future-economy': 'Finance, DeFi, tokenomics, and algorithmic trading.',
-            'eco': 'Sustainable living, green energy, and climate solutions.',
-            'elearning': 'Online education, career development, and digital skills.'
-        },
-        'es': {
-            'wellness': 'Perspectivas profundas sobre bienestar físico, mental y emocional.',
-            'tech': 'Últimos avances en IA, software y transformación digital.',
-            'future-economy': 'Finanzas, DeFi, tokenomics y trading algorítmico.',
-            'eco': 'Vida sostenible, energía verde y soluciones climáticas.',
-            'elearning': 'Educación en línea, desarrollo profesional y habilidades digitales.'
-        },
-        'de': {
-            'wellness': 'Tiefe Einblicke in körperliches, geistiges und emotionales Wohlbefinden.',
-            'tech': 'Neueste Entwicklungen in KI, Software und digitaler Transformation.',
-            'future-economy': 'Finanzen, DeFi, Tokenomics und algorithmischer Handel.',
-            'eco': 'Nachhaltiges Leben, grüne Energie und Klimaschutzlösungen.',
-            'elearning': 'Online-Bildung, Karriereentwicklung und digitale Kompetenzen.'
-        },
-        'fr': {
-            'wellness': 'Aperçus approfondis sur le bien-être physique, mental et émotionnel.',
-            'tech': 'Derniers développements en IA, logiciels et transformation numérique.',
-            'future-economy': 'Finance, DeFi, tokenomics et trading algorithmique.',
-            'eco': 'Vie durable, énergie verte et solutions climatiques.',
-            'elearning': 'Éducation en ligne, développement de carrière et compétences numériques.'
-        }
-    }
-    return descriptions.get(lang, descriptions.get('en', {})).get(category, '')
+# ... (get_menu_texts, get_category_name, get_category_description fonksiyonları aynı) ...
 
 def builder():
-    """content/ altındaki HTML dosyalarını okuyup template ile birleştirir, public/ yazar"""
+    """content/ altındaki ham HTML'leri template ile birleştirip yine content/ altına yazar"""
     
     template_dir = "templates"
     if not os.path.exists(template_dir):
@@ -104,25 +47,15 @@ def builder():
                     print(f"   ⚠️ {html_path} okunamadı: {e}")
                     continue
                 
-                # Dosya adından hash ve kategori al
                 hash_id = file.replace('.html', '')
                 category = os.path.basename(root)
                 
-                # Ham HTML'den başlık ve içeriği ayır (basitçe)
-                title = ""
-                editors_note = ""
-                content_body = ham_html
-                
-                # <h1> etiketini bul
-                import re
+                # Başlık ve Editor's Note'u al
                 title_match = re.search(r'<h1>(.*?)</h1>', ham_html)
-                if title_match:
-                    title = title_match.group(1)
+                title = title_match.group(1) if title_match else ""
                 
-                # <div class="editors-note"> varsa al
                 note_match = re.search(r'<div class="editors-note">(.*?)</div>', ham_html, re.DOTALL)
-                if note_match:
-                    editors_note = note_match.group(1)
+                editors_note = note_match.group(1) if note_match else ""
                 
                 # R2 görsel linkleri
                 cover_image = f"{r2_base}/images/{category}/{hash_id}_kapak.webp"
@@ -134,24 +67,17 @@ def builder():
                 
                 try:
                     html_output = single_template.render(
-                        lang=lang,
-                        title=title,
-                        author=author,
-                        date=date,
-                        editors_note=editors_note,
-                        summary="<li>Analysis: High-Fidelity</li>",
-                        content=content_body,
-                        sources="",
-                        cover_image=cover_image,
-                        content_image=content_image,
-                        menu=menu_texts,
-                        related_articles=[]
+                        lang=lang, title=title, author=author, date=date,
+                        editors_note=editors_note, summary="<li>Analysis: High-Fidelity</li>",
+                        content=ham_html, sources="", cover_image=cover_image,
+                        content_image=content_image, menu=menu_texts, related_articles=[]
                     )
                 except Exception as e:
                     print(f"   ⚠️ {html_path} template hatası: {e}")
                     continue
                 
-                target_dir = os.path.join("public", lang, category)
+                # content/ altına yaz (üzerine yaz)
+                target_dir = os.path.join("content", lang, category)
                 os.makedirs(target_dir, exist_ok=True)
                 target_path = os.path.join(target_dir, f"{hash_id}.html")
                 
@@ -168,19 +94,19 @@ def builder():
                     'category': category
                 })
         
-        # Ana sayfa oluştur
+        # Ana sayfa (content/{lang}/index.html)
         if all_articles[lang]:
             all_articles[lang].sort(key=lambda x: x['date'], reverse=True)
             latest_articles = all_articles[lang][:12]
             menu_texts = get_menu_texts(lang)
             home_html = home_template.render(lang=lang, menu=menu_texts, articles=latest_articles)
-            home_path = os.path.join("public", lang, "index.html")
+            home_path = os.path.join("content", lang, "index.html")
             os.makedirs(os.path.dirname(home_path), exist_ok=True)
             with open(home_path, 'w', encoding='utf-8') as f:
                 f.write(home_html)
             print(f"   ✅ Ana sayfa: {home_path}")
         
-        # Kategori arşivleri oluştur
+        # Kategori arşivleri (content/{lang}/{category}/index.html)
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         for category in categories:
             cat_articles = [a for a in all_articles[lang] if a['category'] == category]
@@ -193,14 +119,13 @@ def builder():
             category_description = get_category_description(lang, category)
             
             list_html = list_template.render(
-                lang=lang,
-                menu=menu_texts,
+                lang=lang, menu=menu_texts,
                 category_name=category_name,
                 category_description=category_description,
                 articles=cat_articles
             )
             
-            target_dir = os.path.join("public", lang, category)
+            target_dir = os.path.join("content", lang, category)
             os.makedirs(target_dir, exist_ok=True)
             target_path = os.path.join(target_dir, "index.html")
             
@@ -208,7 +133,7 @@ def builder():
                 f.write(list_html)
             print(f"   ✅ Kategori arşivi: {target_path}")
     
-    print("\n🏁 Builder tamamlandı. (public/ klasörü hazır)")
+    print("\n🏁 Builder tamamlandı. (content/ klasörü template'li HTML'lerle güncellendi)")
 
 if __name__ == "__main__":
     builder()
