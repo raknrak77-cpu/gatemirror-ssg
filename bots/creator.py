@@ -129,7 +129,7 @@ OUTPUT FORMAT (start directly with HTML):
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
                     visuals_json = json.dumps(visuals)
-                    subprocess.run(['python', 'visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
+                    subprocess.run(['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
                     print("✅ Görsel bot tamamlandı.")
                 except subprocess.TimeoutExpired:
                     print("⚠️ Görsel bot zaman aşımı, görseller olmadan devam...")
