@@ -15,50 +15,45 @@ def create_hash():
     """Benzersiz 8 karakterli hash üretir (UUID'nin ilk 8 karakteri)"""
     return uuid.uuid4().hex[:8]
 
-def markdown_yaz(hash_id, task, makale_html, kategori):
-    """Markdown dosyasını content/en/{kategori}/{hash}.md olarak oluşturur"""
+def html_yaz(hash_id, task, makale_html, kategori):
+    """HTML dosyasını doğrudan public/ altına yazar (geçici, uploader R2'ye atacak)"""
     
     topic = task['topic']
     date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     author = task.get('author_persona', 'Expert Analyst')
     
-    summary_lines = ["  - Topic: " + topic, "  - Analysis: High-Fidelity"]
-    summary_yaml = "\n".join(summary_lines)
-    sources = task.get('reference_link', '')
+    # Template'i oku
+    template_path = "templates/single.html"
+    if not os.path.exists(template_path):
+        print(f"❌ {template_path} bulunamadı!")
+        return None
     
-    frontmatter = f"""---
-title: "{topic}"
-date: "{date}"
-hash: "{hash_id}"
-task_id: "{task.get('task_id')}"
-category: "{kategori}"
-author: "{author}"
-summary: |
-{summary_yaml}
-sources: 
-  - {sources}
----
-
-![kapak](./assets/{hash_id}_kapak.png)
-
-{makale_html}
-
-![icerik_1](./assets/{hash_id}_icerik_1.png)
-
-![icerik_2](./assets/{hash_id}_icerik_2.png)
-"""
+    with open(template_path, 'r', encoding='utf-8') as f:
+        template = f.read()
     
-    md_dir = f"content/en/{kategori}"
-    os.makedirs(md_dir, exist_ok=True)
-    md_path = os.path.join(md_dir, f"{hash_id}.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(frontmatter)
+    # Basit değişken değiştirme (Jinja2 yerine geçici çözüm)
+    html_output = template.replace('{{ title }}', topic)
+    html_output = html_output.replace('{{ author }}', author)
+    html_output = html_output.replace('{{ date }}', date)
+    html_output = html_output.replace('{{ summary }}', '<li>Analysis: High-Fidelity</li>')
+    html_output = html_output.replace('{{ content }}', makale_html)
     
-    print(f"✅ Markdown kaydedildi: {md_path}")
-    return md_path
+    # Editor's Note: makale_html içinde <div class="editors-note"> varsa, onu al
+    # Şimdilik basit, ileride düzenlenebilir
+    
+    # Hedef dizin: public/en/{kategori}/{hash_id}.html
+    target_dir = os.path.join("public", "en", kategori)
+    os.makedirs(target_dir, exist_ok=True)
+    target_path = os.path.join(target_dir, f"{hash_id}.html")
+    
+    with open(target_path, 'w', encoding='utf-8') as f:
+        f.write(html_output)
+    
+    print(f"✅ HTML kaydedildi: {target_path}")
+    return target_path
 
 def isle_gorev(task):
-    """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, .md yazar"""
+    """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, HTML yazar"""
     
     task_id = task.get('task_id', '0000')
     topic = task['topic']
@@ -71,9 +66,6 @@ def isle_gorev(task):
     print(f"🚀 HEDEF: {topic} (ID: {task_id})")
     print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
     
-    # GÜÇLENDİRİLMİŞ PROMPT
- 
-
     prompt_emri = f"""
 ROLE: You are an expert {persona}.
 
@@ -83,32 +75,26 @@ REQUIREMENTS:
 - Length: Minimum 1500 words, maximum 2500 words.
 - Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
 - DO NOT use Markdown (no **bold**, no ## headings).
-- Start directly with the first HTML tag (no introductions like "Here is the article").
+- Start directly with the first HTML tag (no introductions).
 - Write in a professional, analytical, yet engaging tone.
-- Include real-world examples, data points, and case studies where relevant.
-- Use short paragraphs (2-3 sentences) for better readability.
-- Add a strong conclusion that summarizes key takeaways.
+- Include real-world examples, data points, and case studies.
+- Use short paragraphs (2-3 sentences).
+- Add a strong conclusion.
 
 {f"REFERENCE: Use this as source material - {reference_link}" if reference_link else ""}
 
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
-**EDITOR'S NOTE (CRITICAL):** After writing the article, add a short, insightful "Editor's Note" at the very beginning of the article (right after the <h1> tag, before any other content). 
-- It must be wrapped in <div class="editors-note">...</div>.
-- The note should be 2-3 sentences (20-30 words total) written in first-person singular as if a senior editor is commenting on the article's importance or a key takeaway.
-- Keep the tone thoughtful, not promotional. Example: "Editor's Note: What strikes me most about this research is how AI is quietly reshaping not just markets, but our very understanding of risk.".
+**EDITOR'S NOTE:** After writing the article, add a short "Editor's Note" right after the <h1> tag, wrapped in <div class="editors-note">. It should be 2-3 sentences, first-person singular, commenting on the article's importance.
 
-OUTPUT FORMAT (start directly with HTML):
+OUTPUT FORMAT:
 <h1>...</h1>
 <div class="editors-note">Editor's Note: ...</div>
 <h2>Introduction</h2>
-<p>...</p>
-... (rest of the article)
+...
 <h2>Conclusion</h2>
-<p>...</p>
+...
 """
-
-
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
@@ -128,11 +114,11 @@ OUTPUT FORMAT (start directly with HTML):
             makale_html = makale_html.replace('```html', '').replace('```', '').replace('\n', '<br>')
             print(f"✅ Makale alındı: {len(makale_html)} karakter.")
             
-            # BAŞARILI OLUNCA HASH ÜRET
+            # Hash üret
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
-            # Görsel bot'u çağır
+            # Görsel bot'u çağır (2 görsel için düzenlenecek)
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
@@ -140,17 +126,13 @@ OUTPUT FORMAT (start directly with HTML):
                     visuals_json = json.dumps(visuals)
                     subprocess.run(['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json], timeout=180)
                     print("✅ Görsel bot tamamlandı.")
-                except subprocess.TimeoutExpired:
-                    print("⚠️ Görsel bot zaman aşımı, görseller olmadan devam...")
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
-            else:
-                print("⚠️ Görsel açıklaması yok, görseller atlanıyor.")
             
-            # Markdown dosyasını oluştur
-            md_path = markdown_yaz(hash_id, task, makale_html, kategori)
+            # HTML dosyasını oluştur
+            html_path = html_yaz(hash_id, task, makale_html, kategori)
             
-            # Görevi güncelle (SADECE BAŞARILI OLUNCA)
+            # Görevi güncelle
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             task["hash"] = hash_id
