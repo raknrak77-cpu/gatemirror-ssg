@@ -26,8 +26,23 @@ def upload_file_to_r2(local_path, r2_key):
         return True
     return False
 
+def upload_templates():
+    """templates/ klasöründeki dosyaları R2'ye yedekler"""
+    templates_dir = "templates"
+    if not os.path.exists(templates_dir):
+        return
+    
+    for file in os.listdir(templates_dir):
+        if file.endswith('.html'):
+            local_path = os.path.join(templates_dir, file)
+            r2_key = f"templates/{file}"
+            upload_file_to_r2(local_path, r2_key)
+
 def uploader():
-    """content/ altındaki HTML dosyalarını R2'ye yükler, sonra siler (klasörler ve .gitkeep kalır)"""
+    """content/ altındaki HTML'leri R2'ye yükler, sonra siler"""
+    
+    # Önce template'leri yedekle
+    upload_templates()
     
     content_base = "content"
     if not os.path.exists(content_base):
@@ -38,17 +53,14 @@ def uploader():
     
     for root, dirs, files in os.walk(content_base):
         for file in files:
-            # Sadece .html dosyalarını işle
             if not file.endswith('.html'):
                 continue
             
             local_path = os.path.join(root, file)
-            # content/en/wellness/xxx.html -> articles/en/wellness/xxx.html
             r2_key = local_path.replace("content/", "articles/")
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # Sadece yüklenen HTML dosyalarını sil
     for file_path in uploaded_files:
         try:
             os.remove(file_path)
@@ -56,9 +68,7 @@ def uploader():
         except Exception as e:
             print(f"⚠️ Silinemedi: {file_path} - {e}")
     
-    # NOT: Klasörler ve .gitkeep dosyaları silinmez
-    print("\n🏁 Tüm HTML içerik R2'ye yüklendi ve local HTML'ler temizlendi.")
-    print("   (Klasörler ve .gitkeep dosyaları korundu)")
+    print("\n🏁 Tüm içerik R2'ye yüklendi ve local HTML'ler temizlendi.")
 
 if __name__ == "__main__":
     uploader()
