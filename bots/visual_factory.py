@@ -118,9 +118,10 @@ def visual_factory():
     
     # Geçici PNG dosyaları
     kapak_png = f"{hash_id}_kapak.png"
-    icerik_png = f"{hash_id}_icerik.png"
+    icerik1_png = f"{hash_id}_icerik_1.png"
+    icerik2_png = f"{hash_id}_icerik_2.png"
     
-    # 1. Kapak Görseli (1024x1024, Stable Diffusion)
+    # 1. Kapak Görseli (1024x1024)
     kapak = visuals.get("kapak", {})
     if kapak:
         if generate_image(kapak.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
@@ -130,20 +131,34 @@ def visual_factory():
                 upload_to_r2(kapak_webp, r2_key)
                 os.remove(kapak_webp)
             os.remove(kapak_png)
-        time.sleep(5)
+        print("⏳ 15 saniye bekleniyor (API kotası)...")
+        time.sleep(15)
     
-    # 2. İç Görsel (640x640, Stable Diffusion)
-    icerik = visuals.get("icerik_1", {})
-    if icerik:
-        if generate_image(icerik.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 640, 640, icerik_png):
-            icerik_webp = f"{hash_id}_icerik.webp"
-            if convert_to_webp(icerik_png, icerik_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik.webp"
-                upload_to_r2(icerik_webp, r2_key)
-                os.remove(icerik_webp)
-            os.remove(icerik_png)
+    # 2. İç Görsel 1 (1024x1024)
+    icerik1 = visuals.get("icerik_1", {})
+    if icerik1:
+        if generate_image(icerik1.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
+            icerik1_webp = f"{hash_id}_icerik_1.webp"
+            if convert_to_webp(icerik1_png, icerik1_webp):
+                r2_key = f"images/{kategori}/{hash_id}_icerik_1.webp"
+                upload_to_r2(icerik1_webp, r2_key)
+                os.remove(icerik1_webp)
+            os.remove(icerik1_png)
+        print("⏳ 15 saniye bekleniyor (API kotası)...")
+        time.sleep(15)
     
-    print(f"\n✅ Görsel işlemleri tamamlandı. (WebP, R2'de)")
+    # 3. İç Görsel 2 (1024x1024)
+    icerik2 = visuals.get("icerik_2", {})
+    if icerik2:
+        if generate_image(icerik2.get("prompt", ""), "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
+            icerik2_webp = f"{hash_id}_icerik_2.webp"
+            if convert_to_webp(icerik2_png, icerik2_webp):
+                r2_key = f"images/{kategori}/{hash_id}_icerik_2.webp"
+                upload_to_r2(icerik2_webp, r2_key)
+                os.remove(icerik2_webp)
+            os.remove(icerik2_png)
+    
+    print(f"\n✅ Görsel işlemleri tamamlandı. (3 WebP, R2'de)")
 
 if __name__ == "__main__":
     visual_factory()
