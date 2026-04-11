@@ -412,5 +412,35 @@
         "display_date": "10 April 2026",
         "processed_at": "2026-04-10 16:37:14",
         "hash": "58881db3"
+    },
+    {
+        "task_id": "0016",
+        "category": "wellness",
+        "topic": "Mindfulness and Digital Detox: Reclaiming Mental Health in the Age of Screens",
+        "reference_link": "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/digital-detox/art-20464887",
+        "language": "en",
+        "author_persona": "Clinical Psychologist & Digital Wellness Expert",
+        "special_instructions": "Explore the psychological impact of excessive screen time on stress, anxiety, and sleep quality. Provide actionable steps for a successful digital detox (e.g., screen-free mornings, notification management, nature exposure). Discuss how companies and schools can implement digital wellness policies. Include real-world case studies (e.g., a tech executive's 30-day detox) and mention scientific studies on neuroplasticity and reduced screen time.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A serene home office with a smartphone lying face-down on a wooden desk, a cup of green tea, a small potted plant, soft natural light from a window, outside view of trees, calm and minimalist atmosphere, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "An infographic showing \"Before and After Digital Detox\" with two columns: left side shows a stressed person with notifications popups, high cortisol symbol, blue light eye strain; right side shows the same person relaxed, reading a book, walking in a park, with symbols of better sleep, lower anxiety, increased focus. Clean design, pastel colors.",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person sitting on a yoga mat in a peaceful room, eyes closed, meditating, with a smartphone placed in a drawer across the room, a small timer visible showing 20 minutes, on the wall a handwritten note \"Offline Hours: 8–10 PM\", warm lighting, calm and focused expression",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
