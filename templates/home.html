@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Gatemirror | Global Insights & Analysis</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- SEO Meta Tags -->
+    <title>Gatemirror | Global Insights on Tech, Wellness & Future Economy</title>
+    <meta name="description" content="Global insights on technology, wellness, future economy, and sustainable living. Gatemirror delivers deep analysis in 5 languages.">
+    <link rel="canonical" href="{{ canonical_url }}">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Gatemirror | Global Insights & Analysis">
+    <meta property="og:description" content="Deep insights on tech, wellness, future economy, and sustainable living. Read in 5 languages.">
+    <meta property="og:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Gatemirror">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gatemirror | Global Insights & Analysis">
+    <meta name="twitter:description" content="Deep insights on tech, wellness, future economy, and sustainable living.">
+    <meta name="twitter:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
+    
+    <!-- Hreflang (Alternate Languages) -->
+    {% for alt in alternate_langs %}
+    <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.url }}">
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -137,6 +164,57 @@
             margin: 0 auto;
         }
         
+        /* FEATURED ARTICLE */
+        .featured {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .featured-card {
+            display: flex;
+            gap: 2rem;
+            background: var(--white);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s;
+        }
+        
+        .featured-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .featured-card img {
+            width: 50%;
+            object-fit: cover;
+        }
+        
+        .featured-content {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .featured-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .featured-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .featured-excerpt {
+            margin-top: 1rem;
+            color: var(--text-light);
+        }
+        
         /* GRID CONTAINER */
         .container {
             max-width: 1200px;
@@ -183,8 +261,16 @@
             font-size: 1.2rem;
         }
         
+        .article-meta {
+            padding: 0 1rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
         .article-card p {
-            padding: 0 1rem 1rem;
+            padding: 0.5rem 1rem 1rem;
             color: var(--text-light);
             font-size: 0.9rem;
         }
@@ -193,9 +279,42 @@
         footer {
             background: var(--dark);
             color: white;
-            padding: 3rem;
-            text-align: center;
+            padding: 3rem 5%;
             margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .footer-column a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+            color: #aaa;
         }
         
         /* RESPONSIVE */
@@ -203,17 +322,27 @@
             .nav-links {
                 display: none;
             }
-            
             .menu-btn {
                 display: block;
             }
-            
             .hero {
                 padding: 2rem 1rem;
             }
-            
             .article-grid {
                 grid-template-columns: 1fr;
+            }
+            .featured-card {
+                flex-direction: column;
+            }
+            .featured-card img {
+                width: 100%;
+                height: 200px;
+            }
+            .featured-content {
+                padding: 1.5rem;
+            }
+            .featured-content h2 {
+                font-size: 1.4rem;
             }
         }
         
@@ -258,34 +387,104 @@
 
 <!-- HERO -->
 <div class="hero">
-    <h1>Gatemirror</h1>
-    <p>Reflecting reality in 5 languages. Deep insights on wellness, tech, future economy, and sustainable living.</p>
+    <h1>Global Insights on Tech, Wellness & Future Economy</h1>
+    <p>Deep analysis. Multi‑language. Reflecting reality in 5 languages.</p>
 </div>
 
-<!-- MAKALE GRID (DİNAMİK - builder.py doldurur) -->
+<!-- FEATURED ARTICLE (if exists) -->
+{% if featured_article %}
+<div class="featured">
+    <a href="{{ featured_article.url }}" class="featured-card">
+        <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" width="600" height="400" onerror="this.style.display='none'">
+        <div class="featured-content">
+            <div class="featured-meta">
+                <span>📅 {{ featured_article.date }}</span>
+                <span>⏱️ {{ featured_article.reading_time }} min read</span>
+                <span>👁️ {{ featured_article.views }} views</span>
+            </div>
+            <h2>{{ featured_article.title }}</h2>
+            <p class="featured-excerpt">{{ featured_article.excerpt }}</p>
+        </div>
+    </a>
+</div>
+{% endif %}
+
+<!-- LATEST STORIES GRID -->
 <div class="container">
     <h2 class="section-title">Latest Stories</h2>
     <div class="article-grid">
         {% for article in articles %}
-        <a href="{{ article.url }}" class="article-card">
-            <img src="{{ article.image }}" alt="{{ article.title }}" onerror="this.style.display='none'">
-            <h3>{{ article.title }}</h3>
-            <p>{{ article.excerpt | default(article.title) }}</p>
-        </a>
+        <article class="article-card">
+            <a href="{{ article.url }}">
+                <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" width="400" height="200" onerror="this.style.display='none'">
+                <div class="article-meta">
+                    {% if article.reading_time %}
+                    <span>⏱️ {{ article.reading_time }} min read</span>
+                    {% endif %}
+                    {% if article.views %}
+                    <span>👁️ {{ article.views }} views</span>
+                    {% endif %}
+                </div>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.excerpt | default(article.title) }}</p>
+            </a>
+        </article>
         {% endfor %}
     </div>
 </div>
 
+<!-- FOOTER (Güçlendirilmiş) -->
 <footer>
-    <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="/about-us.html">About Us</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="/en/tech/">Tech & AI</a>
+            <a href="/en/future-economy/">Future Economy</a>
+            <a href="/en/wellness/">Wellness</a>
+            <a href="/en/eco/">Eco & Sustainable</a>
+            <a href="/en/elearning/">E-Learning</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="/">🇺🇸 English</a>
+            <a href="/es/">🇪🇸 Español</a>
+            <a href="/de/">🇩🇪 Deutsch</a>
+            <a href="/fr/">🇫🇷 Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
 </footer>
+
+<!-- STRUCTURED DATA (WebSite + SearchAction) -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Gatemirror",
+    "url": "{{ canonical_url }}",
+    "description": "Global insights on technology, wellness, future economy, and sustainable living.",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://gatemirror.com/search?q={query}",
+        "query-input": "required name=query"
+    },
+    "inLanguage": ["en", "es", "de", "fr"]
+}
+</script>
 
 <script>
     function toggleMenu() {
         document.getElementById('sideMenu').classList.toggle('active');
     }
     
-    // Menü dışına tıklayınca kapat
     document.addEventListener('click', function(event) {
         const menu = document.getElementById('sideMenu');
         const menuBtn = document.querySelector('.menu-btn');
@@ -294,5 +493,6 @@
         }
     });
 </script>
+
 </body>
-</html>
+                        </html>
