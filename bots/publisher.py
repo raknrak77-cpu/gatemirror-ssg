@@ -128,7 +128,11 @@ def image_exists(url):
     except:
         return False
 
-def parse_article_html(html_content, lang, category, hash_id, r2_base):
+def parse_article_html(html_content, lang, category, hash_id, yil, ay, r2_base):
+    """
+    HTML içeriğini parse eder.
+    Görseller için önce yıl/ay bazlı yeni yapıyı dener, yoksa eski yapıya düşer.
+    """
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
@@ -180,16 +184,41 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     if not description:
         description = title
     
-    base_img_url = f"{r2_base}/images/{category}/{hash_id}"
-    cover_image = f"{base_img_url}_kapak.webp"
-    
-    content_image_1_candidate = f"{base_img_url}_icerik_1.webp"
-    if image_exists(content_image_1_candidate):
-        content_image_1 = content_image_1_candidate
+    # Görsel URL'leri: Önce yeni yapıyı dene (yıl/ay), yoksa eski yapı
+    if yil and ay:
+        base_new = f"{r2_base}/images/{yil}/{ay}/{category}/{hash_id}"
+        base_old = f"{r2_base}/images/{category}/{hash_id}"
     else:
-        content_image_1 = f"{base_img_url}_icerik.webp"
+        base_new = None
+        base_old = f"{r2_base}/images/{category}/{hash_id}"
     
-    content_image_2 = f"{base_img_url}_icerik_2.webp"
+    # Kapak
+    if base_new and image_exists(f"{base_new}_kapak.webp"):
+        cover_image = f"{base_new}_kapak.webp"
+    else:
+        cover_image = f"{base_old}_kapak.webp"
+    
+    # İç görsel 1
+    if base_new:
+        if image_exists(f"{base_new}_icerik_1.webp"):
+            content_image_1 = f"{base_new}_icerik_1.webp"
+        elif image_exists(f"{base_new}_icerik.webp"):
+            content_image_1 = f"{base_new}_icerik.webp"
+        elif image_exists(f"{base_old}_icerik_1.webp"):
+            content_image_1 = f"{base_old}_icerik_1.webp"
+        else:
+            content_image_1 = f"{base_old}_icerik.webp"
+    else:
+        if image_exists(f"{base_old}_icerik_1.webp"):
+            content_image_1 = f"{base_old}_icerik_1.webp"
+        else:
+            content_image_1 = f"{base_old}_icerik.webp"
+    
+    # İç görsel 2
+    if base_new and image_exists(f"{base_new}_icerik_2.webp"):
+        content_image_2 = f"{base_new}_icerik_2.webp"
+    else:
+        content_image_2 = f"{base_old}_icerik_2.webp"
     
     return {
         'title': title,
@@ -228,17 +257,46 @@ def get_all_articles_all_langs():
             key = obj['Key']
             if not key.endswith('.html') or key.endswith('index.html'):
                 continue
-            parts = key.replace(prefix, '').split('/')
-            if len(parts) >= 2:
+            
+            # Parse path: articles/en/wellness/2026/04/hash-slug.html  veya eski: articles/en/wellness/hash.html
+            rel_path = key.replace(prefix, '')
+            parts = rel_path.split('/')
+            
+            # Yeni format (yıl/ay/slug)
+            if len(parts) >= 4:
                 category = parts[0]
-                hash_id = parts[1].replace('.html', '')
+                yil = parts[1]
+                ay = parts[2]
+                filename = parts[3]
+                if '-' in filename:
+                    hash_id = filename.split('-')[0]
+                    slug = filename.replace(hash_id + '-', '').replace('.html', '')
+                else:
+                    hash_id = filename.replace('.html', '')
+                    slug = None
+            # Eski format (düz hash.html)
+            elif len(parts) >= 2:
+                category = parts[0]
+                filename = parts[1]
+                hash_id = filename.replace('.html', '')
+                yil = None
+                ay = None
+                slug = None
             else:
                 continue
+            
             try:
                 file_obj = s3.get_object(Bucket=R2_BUCKET, Key=key)
                 html_content = file_obj['Body'].read().decode('utf-8')
-                parsed = parse_article_html(html_content, lang, category, hash_id, R2_PUBLIC_URL)
-                article_url = f"/articles/{lang}/{category}/{hash_id}.html"
+                
+                # Parse et (yıl/ay bilgisini de gönder)
+                parsed = parse_article_html(html_content, lang, category, hash_id, yil, ay, R2_PUBLIC_URL)
+                
+                # Article URL oluştur (yeni yapı varsa onu kullan)
+                if yil and ay and slug:
+                    article_url = f"/articles/{lang}/{category}/{yil}/{ay}/{hash_id}-{slug}.html"
+                else:
+                    article_url = f"/articles/{lang}/{category}/{hash_id}.html"
                 
                 sort_datetime = parsed['sort_datetime']
                 if sort_datetime is None:
@@ -251,6 +309,9 @@ def get_all_articles_all_langs():
                     'lang': lang,
                     'category': category,
                     'hash': hash_id,
+                    'yil': yil,
+                    'ay': ay,
+                    'slug': slug,
                     'parsed': parsed,
                     'url': article_url,
                     'sort_date': sort_date,
@@ -388,7 +449,6 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         pagination=None, guide_articles=[], alternate_langs=alternate_langs
     )
 
-#### 1. KISIM ####
 def publisher():
     print("🚀 Publisher Bot (Sitemap + Hreflang + robots.txt) başlatılıyor...")
     upload_templates_to_r2()
