@@ -6,6 +6,7 @@ import requests
 import boto3
 from botocore.client import Config
 from PIL import Image
+from datetime import datetime
 
 # ================= KONFIGURASYON =================
 CF_TOKEN = os.getenv('CLOUDFLARE_API_TOKEN')
@@ -175,14 +176,17 @@ def generate_image(prompt, model, width, height, output_png):
     return False
 
 def visual_factory():
-    if len(sys.argv) < 5:
-        print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json> <kategori>")
+    # Yeni parametreler: task_id, hash, visuals_json, kategori, yil, ay
+    if len(sys.argv) < 7:
+        print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json> <kategori> <yil> <ay>")
         return
     
     task_id = sys.argv[1]
     hash_id = sys.argv[2]
     visuals_json = sys.argv[3]
     kategori = sys.argv[4]
+    yil = sys.argv[5]
+    ay = sys.argv[6]
     
     try:
         visuals = json.loads(visuals_json)
@@ -190,12 +194,15 @@ def visual_factory():
         print("❌ visuals JSON parse edilemedi!")
         return
     
-    print(f"🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori})")
+    print(f"🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori}, Yıl: {yil}, Ay: {ay})")
     
     # Geçici PNG dosyaları
     kapak_png = f"{hash_id}_kapak.png"
     icerik1_png = f"{hash_id}_icerik_1.png"
     icerik2_png = f"{hash_id}_icerik_2.png"
+    
+    # R2 klasör yapısı: images/{yil}/{ay}/{kategori}/
+    r2_folder = f"images/{yil}/{ay}/{kategori}"
     
     # 1. KAPAK GÖRSELİ
     kapak = visuals.get("kapak", {})
@@ -205,7 +212,7 @@ def visual_factory():
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
             kapak_webp = f"{hash_id}_kapak.webp"
             if convert_to_webp(kapak_png, kapak_webp):
-                r2_key = f"images/{kategori}/{hash_id}_kapak.webp"
+                r2_key = f"{r2_folder}/{hash_id}_kapak.webp"
                 upload_to_r2(kapak_webp, r2_key)
                 os.remove(kapak_webp)
             os.remove(kapak_png)
@@ -220,7 +227,7 @@ def visual_factory():
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
             icerik1_webp = f"{hash_id}_icerik_1.webp"
             if convert_to_webp(icerik1_png, icerik1_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik_1.webp"
+                r2_key = f"{r2_folder}/{hash_id}_icerik_1.webp"
                 upload_to_r2(icerik1_webp, r2_key)
                 os.remove(icerik1_webp)
             os.remove(icerik1_png)
@@ -235,12 +242,14 @@ def visual_factory():
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
             icerik2_webp = f"{hash_id}_icerik_2.webp"
             if convert_to_webp(icerik2_png, icerik2_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik_2.webp"
+                r2_key = f"{r2_folder}/{hash_id}_icerik_2.webp"
                 upload_to_r2(icerik2_webp, r2_key)
                 os.remove(icerik2_webp)
             os.remove(icerik2_png)
     
-    print(f"\n✅ Görsel işlemleri tamamlandı. (1 kapak + 2 iç görsel WebP, R2'de)")
+    print(f"\n✅ Görsel işlemleri tamamlandı.")
+    print(f"   📁 R2 klasörü: {r2_folder}")
+    print(f"   🖼️ 1 kapak + 2 iç görsel WebP, R2'de")
 
 if __name__ == "__main__":
     visual_factory()
