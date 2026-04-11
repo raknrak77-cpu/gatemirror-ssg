@@ -388,6 +388,8 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         featured_article=featured_article, trending_articles=trending_articles,
         pagination=None, guide_articles=[], alternate_langs=alternate_langs
     )
+
+#### 1. KISIM ####
 def publisher():
     print("🚀 Publisher Bot (Sitemap + Hreflang + robots.txt) başlatılıyor...")
     upload_templates_to_r2()
