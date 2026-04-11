@@ -61,6 +61,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "ğŸ“­ DeÄŸiÅŸiklik yok, commit atlanÄ±yor."
           else
-            git commit -m "ğŸ“¦ SSG build tamamlandÄ± (Creator + Uploader + Publisher)"
+            git commit -m "ğŸ“¦ SSG build tamamlandÄ± (4lang + Creator + Uploader + Publisher)"
             git push origin main || git push --force origin main
           fi
