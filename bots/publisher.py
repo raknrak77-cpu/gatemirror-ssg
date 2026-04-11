@@ -127,18 +127,18 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
-    meta_match = re.search(r'<!-- META: author=(.*?), date=(.*?) -->', html_content)
-    if meta_match:
-        author = meta_match.group(1).strip()
-        sort_date_raw = meta_match.group(2).strip()  # "2026-04-11" formatında gelmeli
+    meta_match = re.search(r'<!-- META: author=(.*?), datetime=(.*?) -->', html_content)
+if meta_match:
+    author = meta_match.group(1).strip()
+    sort_datetime_raw = meta_match.group(2).strip()  # "2026-04-11 14:30:00"
+    
+    sort_datetime = sort_datetime_raw  # "2026-04-11 14:30:00"
+    sort_date = sort_datetime_raw[:10]  # "2026-04-11"
+    try:
+        display_date = datetime.strptime(sort_date, "%Y-%m-%d").strftime("%d %B %Y")
+    except:
+        display_date = sort_date
         
-        # sort_date zaten ISO formatında
-        sort_date = sort_date_raw
-        # Görüntüleme için formatla (İngilizce ay)
-        try:
-            display_date = datetime.strptime(sort_date_raw, "%Y-%m-%d").strftime("%d %B %Y")
-        except:
-            display_date = sort_date_raw
     else:
         author = "Gatemirror Expert"
         sort_date = datetime.now().strftime("%Y-%m-%d")
@@ -228,8 +228,9 @@ def get_all_articles_all_langs():
                 article_url = f"/articles/{lang}/{category}/{hash_id}.html"
                 all_articles.append({
                     'lang': lang, 'category': category, 'hash': hash_id,
-                    'parsed': parsed, 'url': article_url, 'sort_date': parsed['sort_date']
-                })
+                    'parsed': parsed, 'url': article_url,'sort_date': parsed['sort_date'],
+    'sort_datetime': parsed.get('sort_datetime', parsed['sort_date'] + " 00:00:00")
+})                
             except Exception as e:
                 print(f"⚠️ {key} okunamadı: {e}")
     return all_articles
@@ -395,9 +396,8 @@ def publisher():
         lang_articles = [a for a in all_articles if a['lang'] == lang]
         if not lang_articles:
             continue
-        
-        # ✅ DOĞRU SIRALAMA: sort_date ile (ISO formatı)
-        lang_articles.sort(key=lambda x: x['sort_date'], reverse=True)
+    # ✅ DOĞRU SIRALAMA: sort_date ile (ISO formatı)
+        lang_articles.sort(key=lambda x: x.get('sort_datetime', x['sort_date'] + " 00:00:00"), reverse=True)
         menu_texts = get_menu_texts(lang)
         
         # 1. Tekil makaleler
@@ -492,3 +492,6 @@ def publisher():
 
 if __name__ == "__main__":
     publisher()
+
+
+
