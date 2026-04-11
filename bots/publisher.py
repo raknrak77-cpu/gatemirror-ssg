@@ -504,4 +504,4 @@ def publisher():
     print("\n🏁 Publisher tamamlandı.")
 
 if __name__ == "__main__":
-    publisher()ke
+    publisher()
