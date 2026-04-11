@@ -667,5 +667,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 13:34:30",
         "hash": "f83df357"
+    },
+    {
+        "task_id": "0023",
+        "category": "eco",
+        "topic": "The End of the Combustion Era: How Electric Mobility and Smart Infrastructure Will Reshape Our Cities by 2035",
+        "reference_link": "https://www.iea.org/reports/global-ev-outlook-2026",
+        "language": "en",
+        "author_persona": "Sustainable Urban Mobility Expert & Transportation Economist",
+        "special_instructions": "Analyze the global transition from internal combustion engines to electric vehicles (EVs). Discuss the impact on urban design (charging infrastructure, reduced noise pollution, air quality), the energy grid (smart charging, V2G technology), and the automotive industry (battery supply chains, job shifts). Address challenges: rare earth mining, charging equity for apartment dwellers, and grid capacity. Include a case study of a city (Oslo or Shenzhen) that has successfully electrified transport. End with a 2035 forecast for autonomous electric fleets.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic city street in 2035, electric vehicles silently moving, wireless charging roads visible through glass panels, solar-powered bus stops with digital displays, trees and green spaces integrated into the roadway, pedestrians and cyclists sharing wide paths, clean air, cinematic golden hour lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen comparison: left side shows a congested 2025 city street with exhaust fumes, noise lines, grey sky, stressed drivers; right side shows the same street in 2035 with electric buses, cyclists, greenery, clear blue sky, relaxed pedestrians. Visual metaphor for transformation, clean design, no text labels, cinematic lighting",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up shot of a home EV charger with a smartphone app showing \"Smart Charging: Charging during off-peak, 80% complete\", a small house silhouette, a wind turbine and solar panels visible in the background through a window, warm evening light, photorealistic, shallow depth of field",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
