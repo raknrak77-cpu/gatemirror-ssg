@@ -122,7 +122,6 @@ def generate_views(hash_id):
     return random.randint(200, 5000)
 
 def image_exists(url):
-    """R2'de görselin var olup olmadığını kontrol eder"""
     try:
         resp = requests.head(url, timeout=5)
         return resp.status_code == 200
@@ -145,8 +144,8 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
             display_date = sort_date
     else:
         author = "Gatemirror Expert"
-        sort_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        sort_date = sort_datetime[:10]
+        sort_datetime = None   # None olarak işaretle, sonra fallback yapılacak
+        sort_date = None
         display_date = datetime.now().strftime("%d %B %Y")
     
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
@@ -181,18 +180,15 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     if not description:
         description = title
     
-    # Görsel URL'leri - FALLBACK ile
     base_img_url = f"{r2_base}/images/{category}/{hash_id}"
     cover_image = f"{base_img_url}_kapak.webp"
     
-    # İç görsel 1: önce _icerik_1 dene, yoksa _icerik dene
     content_image_1_candidate = f"{base_img_url}_icerik_1.webp"
     if image_exists(content_image_1_candidate):
         content_image_1 = content_image_1_candidate
     else:
         content_image_1 = f"{base_img_url}_icerik.webp"
     
-    # İç görsel 2: _icerik_2 dene
     content_image_2 = f"{base_img_url}_icerik_2.webp"
     
     return {
@@ -243,14 +239,24 @@ def get_all_articles_all_langs():
                 html_content = file_obj['Body'].read().decode('utf-8')
                 parsed = parse_article_html(html_content, lang, category, hash_id, R2_PUBLIC_URL)
                 article_url = f"/articles/{lang}/{category}/{hash_id}.html"
+                
+                # Eğer sort_datetime yoksa obj['LastModified']'i kullan
+                sort_datetime = parsed['sort_datetime']
+                if sort_datetime is None:
+                    # LastModified datetime objesini ISO string'e çevir
+                    sort_datetime = obj['LastModified'].strftime("%Y-%m-%d %H:%M:%S")
+                    sort_date = sort_datetime[:10]
+                else:
+                    sort_date = parsed['sort_date']
+                
                 all_articles.append({
                     'lang': lang,
                     'category': category,
                     'hash': hash_id,
                     'parsed': parsed,
                     'url': article_url,
-                    'sort_date': parsed['sort_date'],
-                    'sort_datetime': parsed['sort_datetime']
+                    'sort_date': sort_date,
+                    'sort_datetime': sort_datetime
                 })
             except Exception as e:
                 print(f"⚠️ {key} okunamadı: {e}")
@@ -409,7 +415,7 @@ def publisher():
         if not lang_articles:
             continue
         
-        # ✅ DOĞRU SIRALAMA: sort_datetime ile (en son en üstte)
+        # Sıralama: sort_datetime ile (en son en üstte)
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
@@ -489,13 +495,11 @@ def publisher():
                 s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ Kategori arşivi: articles/{lang}/{category}/index.html")
     
-    # 4. Sitemap.xml
     print("\n📊 Sitemap oluşturuluyor (hreflang ile)...")
     sitemap_xml = generate_sitemap(all_articles, alt_dict, R2_PUBLIC_URL)
     s3.put_object(Bucket=R2_BUCKET, Key='sitemap.xml', Body=sitemap_xml.encode('utf-8'), ContentType='application/xml')
     print("   ✅ Sitemap yüklendi: sitemap.xml")
     
-    # 5. robots.txt
     print("🤖 robots.txt oluşturuluyor...")
     robots_txt = generate_robots_txt(R2_PUBLIC_URL)
     s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
