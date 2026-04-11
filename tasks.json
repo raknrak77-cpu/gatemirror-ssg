@@ -731,5 +731,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 17:47:24",
         "hash": "44266548"
+    },
+    {
+        "task_id": "0025",
+        "category": "elearning",
+        "topic": "The Skills Gap Crisis: Why Universities Can't Keep Up with AI Job Market Demands",
+        "reference_link": "https://www.weforum.org/agenda/2026/02/ai-skills-gap-workforce-education",
+        "language": "en",
+        "author_persona": "Workforce Development Economist & Future of Education Researcher",
+        "special_instructions": "Analyze the widening gap between university curricula and AI-era job requirements. Discuss the half-life of technical skills (now under 2.5 years), the rise of alternative credentialing (bootcamps, corporate universities, apprenticeships), and the role of governments in funding reskilling. Include data on employer dissatisfaction with graduate preparedness. Compare three countries' approaches (Germany's dual system, Singapore's SkillsFuture, US micro-credential push). End with a 2030 forecast for hybrid education models.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A split-scene: left side shows a traditional lecture hall with bored students, outdated textbook titled \"2019 Edition\", professor writing on dusty blackboard; right side shows a modern AI-powered learning hub with holographic displays, students wearing AR glasses, real-time data dashboards showing job market trends. Contrast between old and new, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "An infographic-style chart showing \"Half-Life of Skills 2020 vs 2030\": left side shows longer bars for skills like Excel, Basic Coding (5-7 years); right side shows shorter bars for AI prompting, Data Analysis, ML Ops (under 2 years). Clean corporate design, blue and orange color scheme, no text labels, visual metaphor for accelerating change",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A professional sitting at a modern desk, laptop screen showing \"SkillsFuture\" dashboard with completed badges for \"AI Ethics\", \"Prompt Engineering\", \"Data Visualization\", a coffee cup, subtle plant in background, warm afternoon light, photorealistic, shallow depth of field, no visible text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
