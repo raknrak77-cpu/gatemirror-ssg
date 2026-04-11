@@ -1,0 +1,66 @@
+name: SSG Build & Deploy (Creator + Uploader + Publisher)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          python -m pip install --upgrade pip
+          pip install --default-timeout=100 --retries=5 \
+            requests boto3 beautifulsoup4 markdown jinja2 pillow
+          
+      - name: 1. Creator Bot (Makale Uretimi + Gorsel Bot Cagrisi)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/creator.py
+        
+      - name: 2. Uploader (Ham HTML'leri R2'ye Yukle)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/uploader.py
+        
+      - name: 3. Publisher (Tum Sayfalari R2'den Oku, Template ile Birlestir, Tekrar R2'ye Yaz)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/publisher.py
+        
+      - name: 4. Git Kayit (Sadece tasks.json - content/ uploader tarafindan silinir)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull --rebase origin main || echo "Pull yapÄ±lamadÄ±, devam..."
+          git add content/ tasks.json
+          if git diff --staged --quiet; then
+            echo "ğŸ“­ DeÄŸiÅŸiklik yok, commit atlanÄ±yor."
+          else
+            git commit -m "ğŸ“¦ SSG build tamamlandÄ± (Creator + Uploader + Publisher)"
+            git push origin main || git push --force origin main
+          fi
