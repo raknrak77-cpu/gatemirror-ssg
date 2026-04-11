@@ -539,5 +539,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 09:37:16",
         "hash": "c3104a00"
+    },
+    {
+        "task_id": "0020",
+        "category": "wellness",
+        "topic": "The Science of Sleep: How Circadian Rhythms Affect Mental Health and Cognitive Performance",
+        "reference_link": "https://www.sleepfoundation.org/circadian-rhythms",
+        "language": "en",
+        "author_persona": "Sleep Neuroscientist & Circadian Medicine Specialist",
+        "special_instructions": "Explain the biological mechanisms of circadian rhythms (suprachiasmatic nucleus, melatonin, cortisol). Discuss the impact of artificial light, shift work, and \"social jetlag\" on mental health (depression, anxiety, bipolar disorder). Provide evidence-based strategies for resetting circadian rhythms (morning light exposure, meal timing, temperature regulation). Include a case study of a corporate wellness program that improved sleep hygiene. Mention the role of chronotypes (larks vs owls) and personalized sleep scheduling.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A minimalist bedroom with a large window showing sunrise, warm golden light streaming in, a person sleeping peacefully under white linen, a digital clock showing 6:30 AM, a glass of water on a wooden nightstand, calm and serene atmosphere, photorealistic, cinematic composition",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen infographic showing \"Circadian Rhythm Disruption vs. Alignment\": left side shows a stressed person with red glow from phone at midnight, cortisol spike symbol, clock showing 3 AM, tired eyes; right side shows a relaxed person with morning sunlight, balanced cortisol curve, clock showing 7 AM well-rested, blue melatonin wave descending. Clean design, pastel colors, no text labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a person's face in profile, eyes closed, sleeping on a pillow with silk pillowcase, soft moonlight through window, brain activity visualized as gentle blue and purple waves floating above the head, representing deep REM sleep, peaceful expression, shallow depth of field, dreamy atmosphere",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
