@@ -65,7 +65,7 @@ def upload_to_r2(local_path, r2_key):
     return False
 
 def enrich_prompt(base_prompt):
-    """Sabit kuralları base prompt'a ekler (stil hariç, stil task'tan gelir)"""
+    """Sabit kuralları base prompt'a ekler"""
     rules = [
         "square format 1:1",
         "1024x1024 pixels",
@@ -129,8 +129,7 @@ def visual_factory():
     
     # Geçici PNG dosyaları
     kapak_png = f"{hash_id}_kapak.png"
-    icerik1_png = f"{hash_id}_icerik_1.png"
-    icerik2_png = f"{hash_id}_icerik_2.png"
+    icerik_png = f"{hash_id}_icerik.png"
     
     # 1. Kapak Görseli (1024x1024)
     kapak = visuals.get("kapak", {})
@@ -146,33 +145,19 @@ def visual_factory():
         print("⏳ 15 saniye bekleniyor (API kotası)...")
         time.sleep(15)
     
-    # 2. İç Görsel 1 (1024x1024)
-    icerik1 = visuals.get("icerik_1", {})
-    if icerik1:
-        full_prompt = enrich_prompt(icerik1.get("prompt", ""))
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
-            icerik1_webp = f"{hash_id}_icerik_1.webp"
-            if convert_to_webp(icerik1_png, icerik1_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik_1.webp"
-                upload_to_r2(icerik1_webp, r2_key)
-                os.remove(icerik1_webp)
-            os.remove(icerik1_png)
-        print("⏳ 15 saniye bekleniyor (API kotası)...")
-        time.sleep(15)
+    # 2. İç Görsel (sadece 1 tane, builder'ın beklediği isimle)
+    icerik = visuals.get("icerik_1", {}) or visuals.get("icerik", {})  # Önce icerik_1'i dene, yoksa icerik'i al
+    if icerik:
+        full_prompt = enrich_prompt(icerik.get("prompt", ""))
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik_png):
+            icerik_webp = f"{hash_id}_icerik.webp"
+            if convert_to_webp(icerik_png, icerik_webp):
+                r2_key = f"images/{kategori}/{hash_id}_icerik.webp"
+                upload_to_r2(icerik_webp, r2_key)
+                os.remove(icerik_webp)
+            os.remove(icerik_png)
     
-    # 3. İç Görsel 2 (1024x1024)
-    icerik2 = visuals.get("icerik_2", {})
-    if icerik2:
-        full_prompt = enrich_prompt(icerik2.get("prompt", ""))
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
-            icerik2_webp = f"{hash_id}_icerik_2.webp"
-            if convert_to_webp(icerik2_png, icerik2_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik_2.webp"
-                upload_to_r2(icerik2_webp, r2_key)
-                os.remove(icerik2_webp)
-            os.remove(icerik2_png)
-    
-    print(f"\n✅ Görsel işlemleri tamamlandı. (3 WebP, R2'de)")
+    print(f"\n✅ Görsel işlemleri tamamlandı. (1 kapak + 1 iç görsel WebP, R2'de)")
 
 if __name__ == "__main__":
     visual_factory()
