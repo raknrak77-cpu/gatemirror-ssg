@@ -24,9 +24,8 @@ def html_yaz(hash_id, task, makale_html, kategori):
     topic = task['topic']
     author = task.get('author_persona', 'Expert Analyst')
     
-  
-    date = task.get('display_date', datetime.now().strftime("%Y-%m-%d"))
-    
+    # ✅ FIX: task'te 'date' alanını kullan, yoksa bugünün tarihini ISO formatında al
+    date = task.get('date', datetime.now().strftime("%Y-%m-%d"))
     
     # Yorum satırı olarak meta bilgisi
     meta_comment = f"<!-- META: author={author}, date={date} -->\n"
@@ -209,4 +208,3 @@ def operasyon_baslat():
 
 if __name__ == "__main__":
     operasyon_baslat()
-    
