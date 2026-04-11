@@ -3,7 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
     <title>{{ title }} | Gatemirror</title>
+    <meta name="description" content="{{ description }}">
+    <meta name="author" content="{{ author }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:image" content="{{ cover_image }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Gatemirror">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ description }}">
+    <meta name="twitter:image" content="{{ cover_image }}">
+    
+    <!-- Hreflang (Alternate Languages) -->
+    {% for alt in alternate_langs %}
+    <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.url }}">
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -171,6 +200,7 @@
             margin-bottom: 1.5rem;
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
         
         .summary {
@@ -230,8 +260,45 @@
             border-top: 1px solid #ddd;
         }
         
+        /* READ NEXT */
         .read-next {
             margin-top: 2rem;
+        }
+        
+        .read-next-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .read-next-card {
+            background: var(--white);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+        
+        .read-next-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .read-next-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .read-next-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .read-next-card h4 {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
         
         footer {
@@ -245,6 +312,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
             .container { padding: 0 1rem; }
+            .read-next-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -297,10 +365,16 @@
     <div class="editors-note">{{ editors_note }}</div>
     {% endif %}
 
-    <!-- META BİLGİSİ -->
+    <!-- META BİLGİSİ + OKUMA SÜRESİ + GÖRÜNTÜLENME -->
     <div class="meta-info">
         <span class="author">✍️ {{ author }}</span>
         <span class="date">📅 {{ date }}</span>
+        {% if reading_time %}
+        <span class="reading-time">⏱️ {{ reading_time }} min read</span>
+        {% endif %}
+        {% if view_count %}
+        <span class="view-count">👁️ {{ view_count }} views</span>
+        {% endif %}
     </div>
 
     <!-- KEY TAKEAWAYS -->
@@ -311,10 +385,15 @@
         </ul>
     </div>
 
-    <!-- MAKALE İÇERİĞİ (TEK İÇ GÖRSEL) -->
+    <!-- MAKALE İÇERİĞİ (İKİ İÇ GÖRSEL) -->
     <div class="article-content">
-        <img src="{{ content_image }}" alt="Content Image" class="inline-image" onerror="this.style.display='none'">
+        {% if content_image_1 %}
+        <img src="{{ content_image_1 }}" alt="Content Image 1" class="inline-image" onerror="this.style.display='none'">
+        {% endif %}
         {{ content }}
+        {% if content_image_2 %}
+        <img src="{{ content_image_2 }}" alt="Content Image 2" class="inline-image" onerror="this.style.display='none'">
+        {% endif %}
     </div>
 
     <!-- KAYNAKLAR -->
@@ -332,7 +411,7 @@
             {% for article in related_articles %}
             <div class="read-next-card">
                 <a href="{{ article.url }}">
-                    <img src="{{ article.image }}" alt="{{ article.title }}">
+                    <img src="{{ article.image }}" alt="{{ article.title }}" onerror="this.style.display='none'">
                     <h4>{{ article.title }}</h4>
                 </a>
             </div>
@@ -345,6 +424,35 @@
 <footer>
     <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
 </footer>
+
+<!-- STRUCTURED DATA (JSON-LD) -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ title }}",
+    "description": "{{ description }}",
+    "image": "{{ cover_image }}",
+    "author": {
+        "@type": "Person",
+        "name": "{{ author }}"
+    },
+    "datePublished": "{{ date }}",
+    "dateModified": "{{ date }}",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ canonical_url }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Gatemirror",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/logo.png"
+        }
+    }
+}
+</script>
 
 <script>
     function toggleMenu() {
