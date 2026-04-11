@@ -121,6 +121,14 @@ def generate_views(hash_id):
     random.seed(hash_id)
     return random.randint(200, 5000)
 
+def image_exists(url):
+    """R2'de görselin var olup olmadığını kontrol eder"""
+    try:
+        resp = requests.head(url, timeout=5)
+        return resp.status_code == 200
+    except:
+        return False
+
 def parse_article_html(html_content, lang, category, hash_id, r2_base):
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
@@ -128,7 +136,7 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     meta_match = re.search(r'<!-- META: author=(.*?), datetime=(.*?) -->', html_content)
     if meta_match:
         author = meta_match.group(1).strip()
-        sort_datetime_raw = meta_match.group(2).strip()  # "2026-04-11 14:30:00"
+        sort_datetime_raw = meta_match.group(2).strip()
         sort_datetime = sort_datetime_raw
         sort_date = sort_datetime_raw[:10]
         try:
@@ -173,9 +181,19 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     if not description:
         description = title
     
-    cover_image = f"{r2_base}/images/{category}/{hash_id}_kapak.webp"
-    content_image_1 = f"{r2_base}/images/{category}/{hash_id}_icerik_1.webp"
-    content_image_2 = f"{r2_base}/images/{category}/{hash_id}_icerik_2.webp"
+    # Görsel URL'leri - FALLBACK ile
+    base_img_url = f"{r2_base}/images/{category}/{hash_id}"
+    cover_image = f"{base_img_url}_kapak.webp"
+    
+    # İç görsel 1: önce _icerik_1 dene, yoksa _icerik dene
+    content_image_1_candidate = f"{base_img_url}_icerik_1.webp"
+    if image_exists(content_image_1_candidate):
+        content_image_1 = content_image_1_candidate
+    else:
+        content_image_1 = f"{base_img_url}_icerik.webp"
+    
+    # İç görsel 2: _icerik_2 dene
+    content_image_2 = f"{base_img_url}_icerik_2.webp"
     
     return {
         'title': title,
@@ -391,7 +409,7 @@ def publisher():
         if not lang_articles:
             continue
         
-        # Sıralama: sort_datetime ile (en son en üstte)
+        # ✅ DOĞRU SIRALAMA: sort_datetime ile (en son en üstte)
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
@@ -486,4 +504,4 @@ def publisher():
     print("\n🏁 Publisher tamamlandı.")
 
 if __name__ == "__main__":
-    publisher()
+    publisher()ke
