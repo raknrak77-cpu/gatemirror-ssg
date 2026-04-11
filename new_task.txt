@@ -1,8 +1,8 @@
-category: eco
-topic: Vertical Farming and the Future of Food Security: Can Indoor Agriculture Feed the World?
-reference_link: https://www.nationalgeographic.com/environment/article/vertical-farming
-author_persona: Sustainable Agriculture & Urban Farming Expert
-special_instructions: Analyze how vertical farming can address food security in urban areas. Discuss benefits (water conservation, year-round production, reduced transport), challenges (energy consumption, high initial costs), and future potential with renewable energy integration.
-kapak_prompt: A futuristic vertical farm inside a glass skyscraper, glowing purple and pink LED lights, lush green lettuce and herbs growing in stacked trays, robotic arms harvesting, city skyline visible through windows
-icerik_1_prompt: An infographic comparing traditional farming vs vertical farming: land use, water consumption, transport distance, and yield per square foot
-icerik_2_prompt: A cross-section of a vertical farm showing different floors: bottom floor with fish farming (aquaponics), middle floors with leafy greens, top floor with fruiting plants (tomatoes, peppers), with labels showing temperature and humidity
+category: wellness
+topic: Mindfulness and Digital Detox: Reclaiming Mental Health in the Age of Screens
+reference_link: https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/digital-detox/art-20464887
+author_persona: Clinical Psychologist & Digital Wellness Expert
+special_instructions: Explore the psychological impact of excessive screen time on stress, anxiety, and sleep quality. Provide actionable steps for a successful digital detox (e.g., screen-free mornings, notification management, nature exposure). Discuss how companies and schools can implement digital wellness policies. Include real-world case studies (e.g., a tech executive's 30-day detox) and mention scientific studies on neuroplasticity and reduced screen time.
+kapak_prompt: A serene home office with a smartphone lying face-down on a wooden desk, a cup of green tea, a small potted plant, soft natural light from a window, outside view of trees, calm and minimalist atmosphere, photorealistic
+icerik_1_prompt: An infographic showing "Before and After Digital Detox" with two columns: left side shows a stressed person with notifications popups, high cortisol symbol, blue light eye strain; right side shows the same person relaxed, reading a book, walking in a park, with symbols of better sleep, lower anxiety, increased focus. Clean design, pastel colors.
+icerik_2_prompt: A person sitting on a yoga mat in a peaceful room, eyes closed, meditating, with a smartphone placed in a drawer across the room, a small timer visible showing 20 minutes, on the wall a handwritten note "Offline Hours: 8–10 PM", warm lighting, calm and focused expression
