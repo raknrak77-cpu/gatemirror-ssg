@@ -1,8 +1,11 @@
-category: wellness
-topic: Mindfulness and Digital Detox: Reclaiming Mental Health in the Age of Screens
-reference_link: https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/digital-detox/art-20464887
-author_persona: Clinical Psychologist & Digital Wellness Expert
-special_instructions: Explore the psychological impact of excessive screen time on stress, anxiety, and sleep quality. Provide actionable steps for a successful digital detox (e.g., screen-free mornings, notification management, nature exposure). Discuss how companies and schools can implement digital wellness policies. Include real-world case studies (e.g., a tech executive's 30-day detox) and mention scientific studies on neuroplasticity and reduced screen time.
-kapak_prompt: A serene home office with a smartphone lying face-down on a wooden desk, a cup of green tea, a small potted plant, soft natural light from a window, outside view of trees, calm and minimalist atmosphere, photorealistic
-icerik_1_prompt: An infographic showing "Before and After Digital Detox" with two columns: left side shows a stressed person with notifications popups, high cortisol symbol, blue light eye strain; right side shows the same person relaxed, reading a book, walking in a park, with symbols of better sleep, lower anxiety, increased focus. Clean design, pastel colors.
-icerik_2_prompt: A person sitting on a yoga mat in a peaceful room, eyes closed, meditating, with a smartphone placed in a drawer across the room, a small timer visible showing 20 minutes, on the wall a handwritten note "Offline Hours: 8–10 PM", warm lighting, calm and focused expression
+
+
+
+category: eco
+topic: The Rise of Circular Living: Transforming Your Home into a Zero-Waste Ecosystem
+reference_link: https://www.ellenmacarthurfoundation.org/topics/circular-economy-introduction/overview
+author_persona: Environmental Scientist & Sustainable Design Architect
+special_instructions: Explain the concept of the 'Circular Economy' in simple terms, focusing on how individuals can move beyond simple recycling to a 'reduce and reuse' philosophy. Cover topics like: 1. Sustainable kitchen tech (composting gadgets, plastic-free storage). 2. The 'Slow Fashion' movement and textile repair. 3. Reducing 'Vampire Energy' with smart home automation. Include a section on the economic benefits of a zero-waste lifestyle (ROI for the household). Mention a case study of a 'Zero-Waste City' initiative (like Kamikatsu, Japan) and cite recent data on carbon footprint reduction through circular consumption.
+kapak_prompt: A modern, sun-drenched eco-friendly kitchen interior, featuring indoor herb gardens on the walls, glass jars with bulk grains on wooden shelves, a small countertop electric composter, minimalist sustainable design, lush green plants, high-end architectural photography, 8k resolution, photorealistic.
+icerik_1_prompt: An infographic-style visual showing the 'Circular Life Cycle' of a household product. A circle divided into segments: Design, Use, Repair, Upcycle, and finally Compost/Regenerate. No trash bin in the cycle. Clean vector art style, earthy tones (terracotta, sage green, sand), minimalist icons, professional environmental design.
+icerik_2_prompt: A split-screen comparison: Left side shows a cluttered, plastic-heavy modern trash bin; right side shows a beautiful, organized zero-waste pantry with bamboo lids, glass containers, and a person placing a fresh honeycomb wrap over a bowl. Soft morning light, focus on textures of natural materials like linen and wood, serene atmosphere.
