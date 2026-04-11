@@ -699,5 +699,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 15:34:33",
         "hash": "f650cce6"
+    },
+    {
+        "task_id": "0024",
+        "category": "tech",
+        "topic": "The Rise of Generative Search: How AI-Powered Engines Are Killing the Traditional Search Results Page",
+        "reference_link": "https://www.theverge.com/2026/03/15/generative-search-ai-google-bing-perplexity",
+        "language": "en",
+        "author_persona": "AI Search Technology Analyst & Former Google Engineer",
+        "special_instructions": "Analyze how generative AI (Google SGE, Bing Copilot, Perplexity, You.com) is transforming search from \"10 blue links\" to conversational answers. Discuss the impact on SEO, content creators, publishers, and digital advertising. Compare retrieval-augmented generation (RAG) vs traditional indexing. Address challenges: hallucination, source attribution, and the \"zero-click\" crisis for publishers. Include a case study of a niche blog that lost 60% of traffic post-generative search. End with predictions for 2027 search landscape.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic computer screen showing a generative search interface, a glowing AI brain icon in the center, floating answer boxes with citations, a traditional search results page fading into the background as dust, contrast between old and new, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen comparison: left side shows a person typing \"best laptop for coding\" into a traditional Google search, seeing 10 blue links, stressed expression; right side shows the same person asking the same question to an AI chat interface, receiving a detailed conversational answer with pros and cons, relaxed and satisfied expression, visual metaphor for time saving, clean design, no text labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up shot of a smartphone screen showing an AI search result with source citations as small numbered bubbles, a \"Copy\" button, a \"Ask follow-up\" text box, a small warning text \"AI-generated, verify important information\", soft gradient background, shallow depth of field, modern UI design",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
