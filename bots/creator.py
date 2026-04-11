@@ -25,10 +25,13 @@ def html_yaz(hash_id, task, makale_html, kategori):
     author = task.get('author_persona', 'Expert Analyst')
     
     # ✅ FIX: task'te 'date' alanını kullan, yoksa bugünün tarihini ISO formatında al
-    date = task.get('date', datetime.now().strftime("%Y-%m-%d"))
+    date_only = task.get('date', datetime.now().strftime("%Y-%m-%d"))
+datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+  # Yorum satırı olarak meta bilgisi
+meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
     
-    # Yorum satırı olarak meta bilgisi
-    meta_comment = f"<!-- META: author={author}, date={date} -->\n"
+  
+    
     
     # İçeriğe meta yorumunu en üste ekle (başlıktan önce)
     final_html = meta_comment + makale_html
@@ -208,3 +211,4 @@ def operasyon_baslat():
 
 if __name__ == "__main__":
     operasyon_baslat()
+    
