@@ -15,7 +15,7 @@ def create_hash():
     """Benzersiz 8 karakterli hash üretir (UUID'nin ilk 8 karakteri)"""
     return uuid.uuid4().hex[:8]
 
- def html_yaz(hash_id, task, makale_html, kategori):
+def html_yaz(hash_id, task, makale_html, kategori):
     """
     Ham HTML dosyasını content/ altına yazar.
     """
@@ -24,7 +24,6 @@ def create_hash():
     
     # ISO formatında tarih + saat
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    date_only = datetime_full[:10]
     
     # Yorum satırı olarak meta bilgisi (saatli)
     meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
@@ -121,16 +120,12 @@ IMPORTANT:
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             makale_html = res_data['candidates'][0]['content']['parts'][0]['text']
-            # Temizlik: code block'ları kaldır
             makale_html = makale_html.replace('```html', '').replace('```', '')
-            # Yeni satırları koru (ama <br> ekleme, çünkü HTML tag'ler var)
             print(f"✅ Makale alındı: {len(makale_html)} karakter.")
             
-            # Hash üret
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
-            # Görsel bot'u çağır (2 iç görsel + kapak)
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
@@ -147,10 +142,8 @@ IMPORTANT:
             else:
                 print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
-            # Ham HTML dosyasını oluştur
             html_path = html_yaz(hash_id, task, makale_html, kategori)
             
-            # Görevi güncelle
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             task["hash"] = hash_id
@@ -195,7 +188,6 @@ def operasyon_baslat():
                 json.dump(tasks, f, indent=4, ensure_ascii=False)
             sys.exit(1)
         
-        # tasks.json'u güncelle
         with open("tasks.json", "w", encoding="utf-8") as f:
             json.dump(tasks, f, indent=4, ensure_ascii=False)
         
@@ -207,4 +199,3 @@ def operasyon_baslat():
 
 if __name__ == "__main__":
     operasyon_baslat()
-    
