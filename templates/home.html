@@ -355,22 +355,33 @@
 </head>
 <body>
 
-<!-- SIDE MENU (MOBILE) -->
+    <!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
-    <a href="/">HOME</a>
-    <a href="/en/wellness/">WELLNESS</a>
-    <a href="/en/tech/">TECH & AI</a>
-    <a href="/en/future-economy/">FUTURE ECONOMY</a>
-    <a href="/en/eco/">ECO & SUSTAINABLE</a>
-    <a href="/en/elearning/">E-LEARNING</a>
-    <div style="margin-top: 2rem;">
-        <a href="/es/">🇪🇸 ESPAÑOL</a>
-        <a href="/de/">🇩🇪 DEUTSCH</a>
-        <a href="/fr/">🇫🇷 FRANÇAIS</a>
+    <div class="lang-section">
+        <div class="lang-title">READ IN</div>
+        <div class="flags">
+            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/es/" class="flag-link">🇪🇸 ES</a>
+            <a href="/de/" class="flag-link">🇩🇪 DE</a>
+            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+        </div>
     </div>
-</div>
-
+    <div class="nav-links">
+        <a href="/">{{ menu.home }}</a>
+        <a href="/en/wellness/">{{ menu.wellness }}</a>
+        <a href="/en/tech/">{{ menu.tech }}</a>
+        <a href="/en/future-economy/">{{ menu.future_economy }}</a>
+        <a href="/en/eco/">{{ menu.eco }}</a>
+        <a href="/en/elearning/">{{ menu.elearning }}</a>
+    </div>
+    <div class="footer-links">
+        <a href="/about-us.html">About Gatemirror</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/contact.html">Contact Us</a>
+        <p>&copy; 2026 Gatemirror Media</p>
+    </div>
+</div> 
 <!-- NAVBAR -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
