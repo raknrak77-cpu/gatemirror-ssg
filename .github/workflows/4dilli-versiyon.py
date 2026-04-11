@@ -1,4 +1,4 @@
-name: SSG Build & Deploy (Creator + Uploader + Publisher)
+name: SSG Build & Deploy (Multilingual 4Lang)
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
           pip install --default-timeout=100 --retries=5 \
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
-      - name: 1. Creator Bot (Makale Uretimi + Gorsel Bot Cagrisi)
+      - name: 1. Creator Bot (4 Dil Tek Prompt + Gorseller)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -34,7 +34,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/creator.py
         
-      - name: 2. Uploader (Ham HTML'leri R2'ye Yukle)
+      - name: 2. Uploader (Ham HTML'leri R2'ye Yukle - Tüm Diller)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -43,7 +43,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/uploader.py
         
-      - name: 3. Publisher (Tum Sayfalari R2'den Oku, Template ile Birlestir, Tekrar R2'ye Yaz)
+      - name: 3. Publisher (Tum Sayfalari R2'den Oku, Template ile Birlestir - 4 Dil)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -52,15 +52,15 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/publisher.py
         
-      - name: 4. Git Kayit (Sadece tasks.json - content/ uploader tarafindan silinir)
+      - name: 4. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull --rebase origin main || echo "Pull yapÄ±lamadÄ±, devam..."
+          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
           git add content/ tasks.json
           if git diff --staged --quiet; then
-            echo "ğŸ“­ DeÄŸiÅŸiklik yok, commit atlanÄ±yor."
+            echo "📭 Değişiklik yok, commit atlanıyor."
           else
-            git commit -m "ğŸ“¦ SSG build tamamlandÄ± (4lang + Creator + Uploader + Publisher)"
+            git commit -m "🌍 SSG Multilingual 4Lang build tamamlandı (EN/ES/DE/FR)"
             git push origin main || git push --force origin main
           fi
