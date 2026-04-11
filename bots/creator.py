@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import uuid
+import re
 import requests
 import subprocess
 from datetime import datetime
@@ -15,15 +16,35 @@ def create_hash():
     """Benzersiz 8 karakterli hash üretir (UUID'nin ilk 8 karakteri)"""
     return uuid.uuid4().hex[:8]
 
+def create_slug(text):
+    """Topic'ten URL dostu slug üretir (sadece İngilizce karakterler)"""
+    # Küçük harfe çevir
+    slug = text.lower()
+    # Özel karakterleri kaldır (sadece harf, rakam, tire)
+    slug = re.sub(r'[^a-z0-9]+', '-', slug)
+    # Baştaki ve sondaki tireleri kaldır
+    slug = slug.strip('-')
+    # Çoklu tireleri tek tire yap
+    slug = re.sub(r'-+', '-', slug)
+    # 60 karakterle sınırla
+    return slug[:60]
+
 def html_yaz(hash_id, task, makale_html, kategori):
     """
     Ham HTML dosyasını content/ altına yazar.
+    Yeni yapı: content/en/{kategori}/{yıl}/{ay}/{hash}-{slug}.html
     """
     topic = task['topic']
     author = task.get('author_persona', 'Expert Analyst')
     
-    # ISO formatında tarih + saat
-    datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Tarih bilgileri
+    now = datetime.now()
+    yil = now.strftime("%Y")
+    ay = now.strftime("%m")
+    datetime_full = now.strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Slug üret
+    slug = create_slug(topic)
     
     # Yorum satırı olarak meta bilgisi (saatli)
     meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
@@ -31,16 +52,21 @@ def html_yaz(hash_id, task, makale_html, kategori):
     # İçeriğe meta yorumunu en üste ekle
     final_html = meta_comment + makale_html
     
-    # Hedef dizin: content/en/{kategori}/{hash_id}.html
-    target_dir = os.path.join("content", "en", kategori)
+    # Hedef dizin: content/en/{kategori}/{yıl}/{ay}/
+    target_dir = os.path.join("content", "en", kategori, yil, ay)
     os.makedirs(target_dir, exist_ok=True)
-    target_path = os.path.join(target_dir, f"{hash_id}.html")
+    
+    # Dosya adı: {hash}-{slug}.html
+    filename = f"{hash_id}-{slug}.html"
+    target_path = os.path.join(target_dir, filename)
     
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
     
-    print(f"✅ Ham HTML kaydedildi: {target_path} (yazar: {author}, datetime: {datetime_full})")
-    return target_path
+    print(f"✅ Ham HTML kaydedildi: {target_path}")
+    print(f"   📅 Tarih: {datetime_full}, Yazar: {author}")
+    print(f"   🔗 Slug: {slug}")
+    return target_path, yil, ay
 
 def isle_gorev(task):
     """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, ham HTML yazar"""
@@ -126,13 +152,17 @@ IMPORTANT:
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
+            # HTML dosyasını oluştur (yıl/ay bilgilerini al)
+            html_path, yil, ay = html_yaz(hash_id, task, makale_html, kategori)
+            
+            # Görsel bot'u çağır (yıl ve ay bilgilerini de gönder)
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
                     visuals_json = json.dumps(visuals)
                     subprocess.run(
-                        ['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori],
+                        ['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori, yil, ay],
                         timeout=180,
                         check=False
                     )
@@ -142,8 +172,7 @@ IMPORTANT:
             else:
                 print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
-            html_path = html_yaz(hash_id, task, makale_html, kategori)
-            
+            # Görevi güncelle
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             task["hash"] = hash_id
