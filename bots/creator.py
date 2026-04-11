@@ -15,25 +15,21 @@ def create_hash():
     """Benzersiz 8 karakterli hash üretir (UUID'nin ilk 8 karakteri)"""
     return uuid.uuid4().hex[:8]
 
-def html_yaz(hash_id, task, makale_html, kategori):
+ def html_yaz(hash_id, task, makale_html, kategori):
     """
     Ham HTML dosyasını content/ altına yazar.
-    - makale_html zaten tam HTML içeriğidir (başlık dahil).
-    - Yazar ve tarih bilgisini yorum satırı olarak ekler.
     """
     topic = task['topic']
     author = task.get('author_persona', 'Expert Analyst')
     
-    # ✅ FIX: task'te 'date' alanını kullan, yoksa bugünün tarihini ISO formatında al
-    date_only = task.get('date', datetime.now().strftime("%Y-%m-%d"))
-datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-  # Yorum satırı olarak meta bilgisi
-meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
+    # ISO formatında tarih + saat
+    datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    date_only = datetime_full[:10]
     
-  
+    # Yorum satırı olarak meta bilgisi (saatli)
+    meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
     
-    
-    # İçeriğe meta yorumunu en üste ekle (başlıktan önce)
+    # İçeriğe meta yorumunu en üste ekle
     final_html = meta_comment + makale_html
     
     # Hedef dizin: content/en/{kategori}/{hash_id}.html
@@ -44,7 +40,7 @@ meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
     
-    print(f"✅ Ham HTML kaydedildi: {target_path} (yazar: {author}, tarih: {date})")
+    print(f"✅ Ham HTML kaydedildi: {target_path} (yazar: {author}, datetime: {datetime_full})")
     return target_path
 
 def isle_gorev(task):
