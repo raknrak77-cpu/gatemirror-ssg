@@ -571,5 +571,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 10:16:30",
         "hash": "4d6a076a"
+    },
+    {
+        "task_id": "0021",
+        "category": "tech",
+        "topic": "The Rise of Agentic AI: How Autonomous Agents Will Reshape the Workforce and Business Models in 2027",
+        "reference_link": "https://www.forbes.com/sites/bernardmarr/2026/01/10/the-rise-of-agentic-ai-what-business-leaders-need-to-know/",
+        "language": "en",
+        "author_persona": "AI Workforce Strategist & Future of Work Economist",
+        "special_instructions": "Analyze the shift from generative AI (co-pilots) to agentic AI (autonomous agents). Discuss real-world applications in customer service, software development, supply chain, and finance. Compare potential impact to past industrial revolutions. Address concerns: job displacement, control, ethics, and security. Provide a framework for how businesses can prepare for agentic AI adoption. Include a case study of a company already deploying autonomous agents successfully. End with a 2027 forecast.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic office environment where human workers collaborate with floating holographic AI agents, each agent performing different tasks (data analysis, writing code, managing calendar), warm ambient lighting, diverse team, photorealistic, cinematic composition, no text or labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen visual comparison: left side shows a traditional office with humans doing repetitive tasks (data entry, scheduling, basic customer calls) with stressed expressions; right side shows the same office with humans doing creative strategy and relationship management while AI agents handle routine work, relaxed and engaged expressions, visual metaphor for job transformation, clean design, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a transparent glass screen displaying a dashboard of autonomous agent activity: several agent icons (shopping cart, code brackets, calendar, chat bubble) moving data between them, a success rate meter at 94%, a small alert saying \"Exception: requires human review\", soft blue and green interface colors, futuristic but clean UI, no text labels",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
