@@ -635,5 +635,38 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 11:21:32",
         "hash": "45af3970"
+    },
+    {
+    "task_id": "0018",
+    "category": "eco",
+    "topic": "Vertical Forests and Bio-Architecture: The Future of Urban Living in 2026",
+    "reference_link": "https://www.archdaily.com/tag/sustainable-architecture",
+    "language": "en",
+    "author_persona": "Urban Ecologist & Smart City Consultant",
+    "special_instructions": "Focus on how 'Vertical Forests' (like Bosco Verticale) are evolving into full-scale bio-architecture. Discuss: 1. Passive cooling systems integrated into building facades. 2. Self-sustaining rooftop gardens that provide local food security. 3. The psychological benefits of 'Biophilic Design' in workspace productivity. Include a section on 'Energy-Positive Buildings' that give back more power than they consume. Mention a real-world project from a diverse location (e.g., Singapore's Jewel Changi or Milan's green towers) and cite current 2026 trends in green building materials (like mycelium bricks or transparent wood).",
+    "visuals": {
+        "kapak": {
+            "prompt": "A futuristic high-rise residential building covered in lush greenery, trees growing from balconies, glass and natural wood facade, golden hour sunset lighting, birds flying around, hyper-realistic, architectural visualization, 8k resolution, cinematic atmosphere.",
+            "width": 1024,
+            "height": 1024
+        },
+        "icerik_1": {
+            "prompt": "A cross-section diagram of a 'Self-Sustaining Green Building'. Labels showing rainwater harvesting, solar panel skin, natural ventilation airflows, and vertical garden layers. Clean, professional architectural blueprint style, mixed with photorealistic natural elements, soft blueprints aesthetic.",
+            "width": 1024,
+            "height": 1024
+        },
+        "icerik_2": {
+            "prompt": "Inside a modern high-tech apartment with large windows overlooking a vertical forest. The interior features living moss walls, smart climate control panels, recycled furniture, and a high-end minimalist design. Soft natural light, high-end interior photography, peaceful and premium vibe.",
+            "width": 1024,
+            "height": 1024
+        }
+    },
+    "status": "pending",
+    "created_at": "2026-04-11",
+    "date": "2026-04-11",
+    "display_date": "11 April 2026",
+    "processed_at": "",
+    "hash": null
     }
+    
 ]
