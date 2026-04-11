@@ -7,17 +7,16 @@ import boto3
 from botocore.client import Config
 from PIL import Image
 
-# Cloudflare AI
+# ================= KONFIGURASYON =================
 CF_TOKEN = os.getenv('CLOUDFLARE_API_TOKEN')
 CF_ACCOUNT = os.getenv('CLOUDFLARE_ACCOUNT_ID')
 CF_AI_GATEWAY = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/"
 
-# R2
 R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
-R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL').rstrip('/')
+R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
 
 s3 = boto3.client(
     's3',
@@ -28,6 +27,28 @@ s3 = boto3.client(
     region_name='auto'
 )
 
+# ================= MASTER VISUAL ROLE (TEMİZ VE NET) =================
+MASTER_VISUAL_ROLE = """
+You are a world-class cinematic architectural photographer and visual storyteller.
+
+Style priorities (in order):
+1. Photorealistic realism
+2. Cinematic composition
+3. Emotional atmosphere
+4. Natural light behavior
+5. Museum-quality visual output
+
+Rules:
+- No text, typography, letters, or symbols
+- No logos, brands, or watermarks
+- No UI elements, diagrams, or overlays
+- No artificial labels or data visualization
+- No distorted anatomy or unrealistic structures
+
+Output must feel like a high-end editorial magazine photograph.
+"""
+
+# ================= YARDIMCI FONKSİYONLAR =================
 def is_valid_image(filepath):
     if not os.path.exists(filepath):
         return False
@@ -65,21 +86,65 @@ def upload_to_r2(local_path, r2_key):
     return False
 
 def enrich_prompt(base_prompt):
-    """Sabit kuralları base prompt'a ekler"""
-    rules = [
-        "square format 1:1",
-        "1024x1024 pixels",
-        "ultra-detailed, 8k, photorealistic",
-        "cinematic lighting, vibrant colors",
-        "no text, no diagrams, no watermarks, no labels"
-    ]
-    return base_prompt + " " + ", ".join(rules)
+    """Modüler prompt yapısı - Master Role + Stil + Teknik + Kompozisyon + Yasaklar"""
+    
+    style_block = """
+Style:
+- photorealistic
+- cinematic lighting
+- shallow depth of field
+- ultra-detailed
+- natural color grading
+"""
+
+    technical_block = """
+Technical:
+- square format (1:1)
+- 1024x1024 resolution
+- high dynamic range
+- soft film grain
+"""
+
+    negative_block = """
+Strict constraints:
+- no text, no typography, no letters
+- no logos, no brands, no watermarks
+- no diagrams, charts, UI, or overlays
+- no fake data or labels
+- no exaggerated CGI look
+"""
+
+    composition_block = """
+Composition:
+- strong subject focus
+- rule of thirds or centered symmetry
+- clear foreground, midground, background separation
+- cinematic depth and layering
+"""
+
+    return f"""
+{MASTER_VISUAL_ROLE}
+
+Subject:
+{base_prompt}
+
+{style_block}
+{technical_block}
+{composition_block}
+{negative_block}
+"""
 
 def generate_image(prompt, model, width, height, output_png):
     print(f"🎨 [{output_png}] {width}x{height} formatında görsel üretiliyor...")
     
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
-    payload = {"prompt": prompt, "width": width, "height": height, "num_steps": 20, "guidance": 7.5}
+    payload = {
+        "prompt": prompt,
+        "width": width,
+        "height": height,
+        "num_steps": 20,
+        "guidance": 7.5
+    }
     
     for attempt in range(3):
         try:
@@ -129,12 +194,14 @@ def visual_factory():
     
     # Geçici PNG dosyaları
     kapak_png = f"{hash_id}_kapak.png"
-    icerik_png = f"{hash_id}_icerik.png"
+    icerik1_png = f"{hash_id}_icerik_1.png"
+    icerik2_png = f"{hash_id}_icerik_2.png"
     
-    # 1. Kapak Görseli (1024x1024)
+    # 1. KAPAK GÖRSELİ
     kapak = visuals.get("kapak", {})
     if kapak:
-        full_prompt = enrich_prompt(kapak.get("prompt", ""))
+        base_prompt = kapak.get("prompt", "")
+        full_prompt = enrich_prompt(base_prompt)
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
             kapak_webp = f"{hash_id}_kapak.webp"
             if convert_to_webp(kapak_png, kapak_webp):
@@ -145,19 +212,35 @@ def visual_factory():
         print("⏳ 15 saniye bekleniyor (API kotası)...")
         time.sleep(15)
     
-    # 2. İç Görsel (sadece 1 tane, builder'ın beklediği isimle)
-    icerik = visuals.get("icerik_1", {}) or visuals.get("icerik", {})  # Önce icerik_1'i dene, yoksa icerik'i al
-    if icerik:
-        full_prompt = enrich_prompt(icerik.get("prompt", ""))
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik_png):
-            icerik_webp = f"{hash_id}_icerik.webp"
-            if convert_to_webp(icerik_png, icerik_webp):
-                r2_key = f"images/{kategori}/{hash_id}_icerik.webp"
-                upload_to_r2(icerik_webp, r2_key)
-                os.remove(icerik_webp)
-            os.remove(icerik_png)
+    # 2. İÇ GÖRSEL 1
+    icerik1 = visuals.get("icerik_1", {})
+    if icerik1:
+        base_prompt = icerik1.get("prompt", "")
+        full_prompt = enrich_prompt(base_prompt)
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
+            icerik1_webp = f"{hash_id}_icerik_1.webp"
+            if convert_to_webp(icerik1_png, icerik1_webp):
+                r2_key = f"images/{kategori}/{hash_id}_icerik_1.webp"
+                upload_to_r2(icerik1_webp, r2_key)
+                os.remove(icerik1_webp)
+            os.remove(icerik1_png)
+        print("⏳ 15 saniye bekleniyor (API kotası)...")
+        time.sleep(15)
     
-    print(f"\n✅ Görsel işlemleri tamamlandı. (1 kapak + 1 iç görsel WebP, R2'de)")
+    # 3. İÇ GÖRSEL 2
+    icerik2 = visuals.get("icerik_2", {})
+    if icerik2:
+        base_prompt = icerik2.get("prompt", "")
+        full_prompt = enrich_prompt(base_prompt)
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
+            icerik2_webp = f"{hash_id}_icerik_2.webp"
+            if convert_to_webp(icerik2_png, icerik2_webp):
+                r2_key = f"images/{kategori}/{hash_id}_icerik_2.webp"
+                upload_to_r2(icerik2_webp, r2_key)
+                os.remove(icerik2_webp)
+            os.remove(icerik2_png)
+    
+    print(f"\n✅ Görsel işlemleri tamamlandı. (1 kapak + 2 iç görsel WebP, R2'de)")
 
 if __name__ == "__main__":
     visual_factory()
