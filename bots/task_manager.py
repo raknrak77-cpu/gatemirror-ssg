@@ -53,6 +53,10 @@ def add_task():
     if not task_data:
         return
     
+    # ISO formatında bugünün tarihi
+    today_iso = datetime.now().strftime("%Y-%m-%d")
+    today_display = datetime.now().strftime("%d %B %Y")
+    
     # Yeni task objesini oluştur
     new_task = {
         "task_id": new_id,
@@ -80,8 +84,9 @@ def add_task():
             }
         },
         "status": "pending",
-        "created_at": datetime.now().strftime("%Y-%m-%d"),
-        "display_date": datetime.now().strftime("%d %B %Y"),
+        "created_at": today_iso,           # ISO formatı "2026-04-11"
+        "date": today_iso,                 # ✅ Creator'ın beklediği alan (ISO)
+        "display_date": today_display,     # Görüntüleme için "11 April 2026"
         "processed_at": ""
     }
     
@@ -92,6 +97,8 @@ def add_task():
         json.dump(tasks, f, indent=4, ensure_ascii=False)
     
     print(f"✅ Yeni task eklendi: ID {new_id} - {new_task['topic']}")
+    print(f"   📅 Tarih (ISO): {today_iso}")
+    print(f"   📅 Tarih (görüntüleme): {today_display}")
     print(f"📋 Toplam task sayısı: {len(tasks)}")
 
 if __name__ == "__main__":
