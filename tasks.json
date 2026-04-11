@@ -475,5 +475,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 08:02:52",
         "hash": "882fc020"
+    },
+    {
+        "task_id": "0018",
+        "category": "elearning",
+        "topic": "The Future of Micro-Credentials: Why Traditional Degrees Are Losing Ground to Skills-Based Certifications",
+        "reference_link": "https://www.weforum.org/agenda/2024/04/micro-credentials-future-of-work/",
+        "language": "en",
+        "author_persona": "Education Technology Strategist & Workforce Development Expert",
+        "special_instructions": "Analyze the global shift from traditional 4-year degrees to stackable micro-credentials. Discuss drivers (cost, speed to employment, employer demand), successful platforms (Coursera, edX, Google Career Certificates), and challenges (quality assurance, recognition by HR systems). Include data on ROI comparison between degrees and micro-credentials. Mention how AI is personalizing micro-learning paths.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic digital learning environment where a person wears augmented reality glasses, floating holographic badges and certificates surround them, a laptop with a \"Micro-Credential: AI Specialist\" screen visible, modern library ambiance with warm lighting, cinematic composition, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen comparison showing left side: a stressed student with a mountain of student loan papers, a traditional graduation cap, calendar showing 4 years; right side: a relaxed professional holding a tablet showing completed badges, a laptop with \"Job Offer\" screen, calendar showing 6 months. Visual metaphor for time and cost difference, cinematic lighting",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person sitting at a minimalist desk, laptop open to an AI-powered learning dashboard showing personalized course recommendations, progress bars at 85% completion, a glowing brain icon representing adaptive learning, warm desk lamp, coffee cup, late night study session vibe, photorealistic, shallow depth of field",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
