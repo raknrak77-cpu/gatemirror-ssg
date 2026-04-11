@@ -275,7 +275,7 @@
         
         .article-content {
             font-size: 1.05rem;
-            overflow: auto; /* float temizliği */
+            overflow: auto;
         }
         
         .article-content p, .article-content h2, .article-content h3, .article-content ul, .article-content ol {
@@ -438,7 +438,7 @@
 </head>
 <body>
 
-<!-- SIDE MENU (MOBILE) -->
+<!-- SIDE MENU (MOBILE) - DÜZELTİLDİ: HARDCODED -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="lang-section">
@@ -451,12 +451,12 @@
         </div>
     </div>
     <div class="nav-links">
-        <a href="/">{{ menu.home }}</a>
-        <a href="/en/wellness/">{{ menu.wellness }}</a>
-        <a href="/en/tech/">{{ menu.tech }}</a>
-        <a href="/en/future-economy/">{{ menu.future_economy }}</a>
-        <a href="/en/eco/">{{ menu.eco }}</a>
-        <a href="/en/elearning/">{{ menu.elearning }}</a>
+        <a href="/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
     </div>
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
@@ -466,17 +466,17 @@
     </div>
 </div>
 
-<!-- NAVBAR (DESKTOP SEKMELİ) -->
+<!-- NAVBAR (DESKTOP) - DÜZELTİLDİ: HARDCODED -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
     <div class="nav-links">
-        <a href="/">{{ menu.home }}</a>
-        <a href="/en/wellness/">{{ menu.wellness }}</a>
-        <a href="/en/tech/">{{ menu.tech }}</a>
-        <a href="/en/future-economy/">{{ menu.future_economy }}</a>
-        <a href="/en/eco/">{{ menu.eco }}</a>
-        <a href="/en/elearning/">{{ menu.elearning }}</a>
+        <a href="/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
     </div>
 </nav>
 
