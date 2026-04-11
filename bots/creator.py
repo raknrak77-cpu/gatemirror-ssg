@@ -8,90 +8,58 @@ import requests
 import subprocess
 from datetime import datetime
 
-# API Key
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_KEY}"
 
 def create_hash():
-    """Benzersiz 8 karakterli hash üretir (UUID'nin ilk 8 karakteri)"""
     return uuid.uuid4().hex[:8]
 
 def create_slug(text):
-    """Topic'ten URL dostu slug üretir (sadece İngilizce karakterler)"""
-    # Küçük harfe çevir
     slug = text.lower()
-    # Özel karakterleri kaldır (sadece harf, rakam, tire)
     slug = re.sub(r'[^a-z0-9]+', '-', slug)
-    # Baştaki ve sondaki tireleri kaldır
     slug = slug.strip('-')
-    # Çoklu tireleri tek tire yap
     slug = re.sub(r'-+', '-', slug)
-    # 60 karakterle sınırla
     return slug[:60]
 
-def html_yaz(hash_id, task, makale_html, kategori):
-    """
-    Ham HTML dosyasını content/ altına yazar.
-    Yeni yapı: content/en/{kategori}/{yıl}/{ay}/{hash}-{slug}.html
-    """
-    topic = task['topic']
+def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug):
     author = task.get('author_persona', 'Expert Analyst')
-    
-    # Tarih bilgileri
-    now = datetime.now()
-    yil = now.strftime("%Y")
-    ay = now.strftime("%m")
-    datetime_full = now.strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Slug üret
-    slug = create_slug(topic)
-    
-    # Yorum satırı olarak meta bilgisi (saatli)
+    datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     meta_comment = f"<!-- META: author={author}, datetime={datetime_full} -->\n"
-    
-    # İçeriğe meta yorumunu en üste ekle
     final_html = meta_comment + makale_html
     
-    # Hedef dizin: content/en/{kategori}/{yıl}/{ay}/
-    target_dir = os.path.join("content", "en", kategori, yil, ay)
+    target_dir = os.path.join("content", lang, kategori, yil, ay)
     os.makedirs(target_dir, exist_ok=True)
-    
-    # Dosya adı: {hash}-{slug}.html
     filename = f"{hash_id}-{slug}.html"
     target_path = os.path.join(target_dir, filename)
     
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
-    
-    print(f"✅ Ham HTML kaydedildi: {target_path}")
-    print(f"   📅 Tarih: {datetime_full}, Yazar: {author}")
-    print(f"   🔗 Slug: {slug}")
-    return target_path, yil, ay
+    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path}")
+    return target_path
 
 def isle_gorev(task):
-    """Tek bir görevi işler: makale üretir, görsel bot'u çağırır, ham HTML yazar"""
-    
     task_id = task.get('task_id', '0000')
     topic = task['topic']
-    language = task.get('language', 'en')
     persona = task.get('author_persona', 'Expert Analyst')
     special_instructions = task.get('special_instructions', '')
     reference_link = task.get('reference_link', '')
     kategori = task.get('category', 'general').lower()
     
     print(f"🚀 HEDEF: {topic} (ID: {task_id})")
-    print("🤖 Gemini'den yanıt bekleniyor (120sn limit)...")
+    print("🤖 Gemini'den 4 dilde (EN, ES, DE, FR) yanıt bekleniyor...")
     
     prompt_emri = f"""
 ROLE: You are an expert {persona}.
 
-TASK: Write a comprehensive, deep-dive article in {language} about: '{topic}'.
+TASK: Write the SAME comprehensive, deep-dive article in FOUR languages: English (en), Spanish (es), German (de), French (fr).
 
-REQUIREMENTS:
-- Length: Minimum 1500 words, maximum 2500 words.
+TOPIC: '{topic}'
+
+REQUIREMENTS FOR EACH LANGUAGE:
+- Length: Minimum 1500 words, maximum 2500 words per language.
 - Use ONLY HTML tags: <h1>, <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>, <div>.
 - DO NOT use Markdown.
-- Start directly with the first HTML tag.
+- Start directly with the first HTML tag for each language.
 - Write in a professional, analytical, yet engaging tone.
 - Include real-world examples, data points, and case studies.
 - Add a strong conclusion.
@@ -100,83 +68,84 @@ REQUIREMENTS:
 
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
-**REQUIRED SECTIONS (in this exact order):**
+**REQUIRED SECTIONS (in this exact order) for EACH language:**
 
-1. <h1>Title</h1>
-2. <div class="editors-note">Editor's Note: ... (2-3 sentences, first-person singular)</div>
+1. <h1>Title (translated appropriately)</h1>
+2. <div class="editors-note">Editor's Note: ... (2-3 sentences, first-person singular, translated)</div>
 3. <h2>Introduction</h2>
-   ... content ...
 4. <h2>Key Takeaways</h2>
-   <ul>
-     <li>Takeaway 1</li>
-     <li>Takeaway 2</li>
-     <li>Takeaway 3 (max 5 items)</li>
-   </ul>
+   <ul><li>Takeaway 1</li><li>Takeaway 2</li><li>Takeaway 3 (max 5 items)</li></ul>
 5. <h2>Main Analysis</h2>
-   ... (subsections with <h3> if needed) ...
 6. <h2>Conclusion</h2>
-   ... summary and final thoughts ...
-7. <div class="sources">
-     <h3>Sources</h3>
-     <ul>
-       <li>Source 1 (with URL or description)</li>
-       <li>Source 2</li>
-       <li>Source 3 (minimum 3, maximum 5)</li>
-     </ul>
-   </div>
+7. <div class="sources"><h3>Sources</h3><ul><li>Source 1</li><li>Source 2</li><li>Source 3</li></ul></div>
+
+OUTPUT FORMAT:
+Start with English version, then Spanish, then German, then French.
+Separate each language with a marker line exactly like this:
+<!-- LANG:EN -->
+... English HTML ...
+<!-- LANG:ES -->
+... Spanish HTML ...
+<!-- LANG:DE -->
+... German HTML ...
+<!-- LANG:FR -->
+... French HTML ...
 
 IMPORTANT:
-- Do NOT add any extra <h1> or duplicate title.
-- Do NOT add a separate author/date line (we will handle it via meta).
-- Keep the structure clean and semantic.
+- Do NOT add any extra explanations.
+- Keep HTML structure identical across languages.
 """
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
-        "generationConfig": {
-            "temperature": 0.7,
-            "maxOutputTokens": 6000,
-            "topP": 0.95
-        }
+        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 20000, "topP": 0.95}
     }
     
     try:
-        response = requests.post(GEMINI_URL, json=payload, timeout=120)
+        response = requests.post(GEMINI_URL, json=payload, timeout=240)
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
-            makale_html = res_data['candidates'][0]['content']['parts'][0]['text']
-            makale_html = makale_html.replace('```html', '').replace('```', '')
-            print(f"✅ Makale alındı: {len(makale_html)} karakter.")
+            full_response = res_data['candidates'][0]['content']['parts'][0]['text']
+            print(f"✅ Yanıt alındı: {len(full_response)} karakter")
+            
+            parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
+            lang_html = {}
+            for i in range(1, len(parts), 2):
+                lang_code = parts[i].lower()
+                html_content = parts[i+1].strip()
+                html_content = html_content.replace('```html', '').replace('```', '')
+                lang_html[lang_code] = html_content
             
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
-            # HTML dosyasını oluştur (yıl/ay bilgilerini al)
-            html_path, yil, ay = html_yaz(hash_id, task, makale_html, kategori)
+            now = datetime.now()
+            yil = now.strftime("%Y")
+            ay = now.strftime("%m")
+            slug = create_slug(topic)
             
-            # Görsel bot'u çağır (yıl ve ay bilgilerini de gönder)
+            # Görsel bot tek sefer çağrılır (dilden bağımsız)
             visuals = task.get('visuals', {})
             if visuals:
-                print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
+                print("🎨 Görsel bot çağrılıyor...")
                 try:
                     visuals_json = json.dumps(visuals)
                     subprocess.run(
                         ['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori, yil, ay],
-                        timeout=180,
-                        check=False
+                        timeout=180, check=False
                     )
                     print("✅ Görsel bot tamamlandı.")
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
-            else:
-                print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
-            # Görevi güncelle
+            # Her dil için HTML kaydet
+            for lang, html in lang_html.items():
+                html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug)
+            
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             task["hash"] = hash_id
-            
             return True, hash_id
         else:
             print(f"❌ GEMINI HATASI: {json.dumps(res_data, indent=2)}")
@@ -186,44 +155,31 @@ IMPORTANT:
         return False, None
 
 def operasyon_baslat():
-    print("🛰️ Creator Bot başlatılıyor...")
-    
+    print("🛰️ Creator Bot (4 Dil Tek Prompt) başlatılıyor...")
     if not os.path.exists("tasks.json"):
         print("❌ tasks.json bulunamadı!")
         sys.exit(1)
-    
     with open("tasks.json", "r", encoding="utf-8") as f:
         tasks = json.load(f)
-    
     pending_tasks = [t for t in tasks if t.get("status") == "pending"]
-    
     if not pending_tasks:
         print("💤 Bekleyen görev yok.")
         return
-    
     print(f"📋 Toplam {len(pending_tasks)} görev bulundu.")
-    
     for i, task in enumerate(pending_tasks):
         print(f"\n--- Görev {i+1}/{len(pending_tasks)} (ID: {task.get('task_id')}) ---")
         basarili, hash_id = isle_gorev(task)
-        
         if not basarili:
             print(f"❌ Görev {task.get('task_id')} başarısız, workflow durduruluyor.")
             task["status"] = "failed"
-            task["error"] = "API hatası veya zaman aşımı"
-            task["hash"] = None
-            task["processed_at"] = ""
             with open("tasks.json", "w", encoding="utf-8") as f:
                 json.dump(tasks, f, indent=4, ensure_ascii=False)
             sys.exit(1)
-        
         with open("tasks.json", "w", encoding="utf-8") as f:
             json.dump(tasks, f, indent=4, ensure_ascii=False)
-        
         if i < len(pending_tasks) - 1:
             print("⏳ 10 saniye bekleniyor...")
             time.sleep(10)
-    
     print("\n🏁 Tüm görevler tamamlandı.")
 
 if __name__ == "__main__":
