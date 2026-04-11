@@ -16,17 +16,20 @@ def create_hash():
     return uuid.uuid4().hex[:8]
 
 def html_yaz(hash_id, task, makale_html, kategori):
-    """Ham HTML dosyasını content/ altına yazar (template yok, sadece içerik)"""
-    
+    """
+    Ham HTML dosyasını content/ altına yazar.
+    - makale_html zaten tam HTML içeriğidir (başlık dahil).
+    - Yazar ve tarih bilgisini yorum satırı olarak ekler.
+    """
     topic = task['topic']
-    date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     author = task.get('author_persona', 'Expert Analyst')
+    date = task.get('display_date', datetime.now().strftime("%d %B %Y"))
     
-    # Basit bir HTML yapısı (sadece içerik, template builder ekleyecek)
-    # Builder daha sonra bunu alıp template ile birleştirecek
-    ham_html = f"""<h1>{topic}</h1>
-{makale_html}
-"""
+    # Yorum satırı olarak meta bilgisi (builder tarafından okunabilir)
+    meta_comment = f"<!-- META: author={author}, date={date} -->\n"
+    
+    # İçeriğe meta yorumunu en üste ekle (başlıktan önce)
+    final_html = meta_comment + makale_html
     
     # Hedef dizin: content/en/{kategori}/{hash_id}.html
     target_dir = os.path.join("content", "en", kategori)
@@ -34,9 +37,9 @@ def html_yaz(hash_id, task, makale_html, kategori):
     target_path = os.path.join(target_dir, f"{hash_id}.html")
     
     with open(target_path, 'w', encoding='utf-8') as f:
-        f.write(ham_html)
+        f.write(final_html)
     
-    print(f"✅ Ham HTML kaydedildi: {target_path}")
+    print(f"✅ Ham HTML kaydedildi: {target_path} (yazar: {author}, tarih: {date})")
     return target_path
 
 def isle_gorev(task):
@@ -60,7 +63,7 @@ TASK: Write a comprehensive, deep-dive article in {language} about: '{topic}'.
 
 REQUIREMENTS:
 - Length: Minimum 1500 words, maximum 2500 words.
-- Use ONLY HTML tags: <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>.
+- Use ONLY HTML tags: <h1>, <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>, <div>.
 - DO NOT use Markdown.
 - Start directly with the first HTML tag.
 - Write in a professional, analytical, yet engaging tone.
@@ -71,15 +74,35 @@ REQUIREMENTS:
 
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
-**EDITOR'S NOTE:** After writing the article, add a short "Editor's Note" right after the <h1> tag, wrapped in <div class="editors-note">. It should be 2-3 sentences, first-person singular.
+**REQUIRED SECTIONS (in this exact order):**
 
-OUTPUT FORMAT:
-<h1>...</h1>
-<div class="editors-note">Editor's Note: ...</div>
-<h2>Introduction</h2>
-...
-<h2>Conclusion</h2>
-...
+1. <h1>Title</h1>
+2. <div class="editors-note">Editor's Note: ... (2-3 sentences, first-person singular)</div>
+3. <h2>Introduction</h2>
+   ... content ...
+4. <h2>Key Takeaways</h2>
+   <ul>
+     <li>Takeaway 1</li>
+     <li>Takeaway 2</li>
+     <li>Takeaway 3 (max 5 items)</li>
+   </ul>
+5. <h2>Main Analysis</h2>
+   ... (subsections with <h3> if needed) ...
+6. <h2>Conclusion</h2>
+   ... summary and final thoughts ...
+7. <div class="sources">
+     <h3>Sources</h3>
+     <ul>
+       <li>Source 1 (with URL or description)</li>
+       <li>Source 2</li>
+       <li>Source 3 (minimum 3, maximum 5)</li>
+     </ul>
+   </div>
+
+IMPORTANT:
+- Do NOT add any extra <h1> or duplicate title.
+- Do NOT add a separate author/date line (we will handle it via meta).
+- Keep the structure clean and semantic.
 """
     
     payload = {
@@ -97,25 +120,31 @@ OUTPUT FORMAT:
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             makale_html = res_data['candidates'][0]['content']['parts'][0]['text']
-            makale_html = makale_html.replace('```html', '').replace('```', '').replace('\n', '<br>')
+            # Temizlik: code block'ları kaldır
+            makale_html = makale_html.replace('```html', '').replace('```', '')
+            # Yeni satırları koru (ama <br> ekleme, çünkü HTML tag'ler var)
             print(f"✅ Makale alındı: {len(makale_html)} karakter.")
             
             # Hash üret
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
             
-            # Görsel bot'u çağır (2 görsel için)
+            # Görsel bot'u çağır (2 iç görsel + kapak)
             visuals = task.get('visuals', {})
             if visuals:
                 print("🎨 Görsel bot çağrılıyor (visual_factory.py)...")
                 try:
                     visuals_json = json.dumps(visuals)
-                    
-                    subprocess.run(['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori], timeout=180)
+                    subprocess.run(
+                        ['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori],
+                        timeout=180,
+                        check=False
+                    )
                     print("✅ Görsel bot tamamlandı.")
-                                                                         
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
+            else:
+                print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
             # Ham HTML dosyasını oluştur
             html_path = html_yaz(hash_id, task, makale_html, kategori)
