@@ -603,5 +603,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 10:46:34",
         "hash": "15995c94"
+    },
+    {
+        "task_id": "0022",
+        "category": "wellness",
+        "topic": "Beyond the Screen: Rebuilding Attention, Creativity, and Deep Relationships in a Post-Digital World",
+        "reference_link": "https://www.psychologytoday.com/intl/blog/digital-world/202501/beyond-digital-detox",
+        "language": "en",
+        "author_persona": "Digital Wellness Coach & Cognitive Psychologist",
+        "special_instructions": "Write a forward-looking article that goes beyond simple digital detox. Explore how chronic screen use affects attention span, creative thinking, and real-life empathy. Introduce the concept of \"attention hygiene\" and \"slow media.\" Provide a practical 30-day plan for rebuilding focus (e.g., single-tasking, reading long-form, silence blocks, creative hobbies). Discuss the role of parents and educators in shaping healthier digital habits for Gen Alpha. End with a hopeful vision for a \"post-digital renaissance\" where technology serves deep human needs rather than replacing them.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A person sitting on a rock by a calm lake at sunset, reading a physical book, a smartphone lying face-down on the grass beside them, warm golden light, reflection of trees in water, peaceful and contemplative atmosphere, photorealistic, cinematic composition, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen visual: left side shows a cluttered mind with tangled wires, broken light bulbs, scattered puzzle pieces, faded colors, representing attention fragmentation; right side shows a clear mind with organized glowing neural pathways, a blooming flower, warm sunlight, representing restored focus and creativity, artistic but realistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A cozy living room scene at night: a family sitting together without phones, playing a board game, laughing, a fireplace glowing, a stack of books on the table, warm amber lighting, photorealistic, shallow depth of field, no visible screens or devices",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
