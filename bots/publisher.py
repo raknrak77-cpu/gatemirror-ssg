@@ -130,10 +130,19 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     meta_match = re.search(r'<!-- META: author=(.*?), date=(.*?) -->', html_content)
     if meta_match:
         author = meta_match.group(1).strip()
-        date = meta_match.group(2).strip()
+        sort_date_raw = meta_match.group(2).strip()  # "2026-04-11" formatında gelmeli
+        
+        # sort_date zaten ISO formatında
+        sort_date = sort_date_raw
+        # Görüntüleme için formatla (İngilizce ay)
+        try:
+            display_date = datetime.strptime(sort_date_raw, "%Y-%m-%d").strftime("%d %B %Y")
+        except:
+            display_date = sort_date_raw
     else:
         author = "Gatemirror Expert"
-        date = datetime.now().strftime("%d %B %Y")
+        sort_date = datetime.now().strftime("%Y-%m-%d")
+        display_date = datetime.now().strftime("%d %B %Y")
     
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
     editors_note = note_match.group(1).strip() if note_match else ""
@@ -171,19 +180,23 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
     content_image_1 = f"{r2_base}/images/{category}/{hash_id}_icerik_1.webp"
     content_image_2 = f"{r2_base}/images/{category}/{hash_id}_icerik_2.webp"
     
-    # Sort date için YYYY-MM-DD formatı
-    try:
-        sort_date = datetime.strptime(date, "%d %B %Y").strftime("%Y-%m-%d")
-    except:
-        sort_date = datetime.now().strftime("%Y-%m-%d")
-    
     return {
-        'title': title, 'author': author, 'date': date, 'sort_date': sort_date,
-        'editors_note': editors_note, 'summary': summary_html, 'sources': sources_html,
-        'content': content_clean, 'cover_image': cover_image,
-        'content_image_1': content_image_1, 'content_image_2': content_image_2,
-        'reading_time': reading_time, 'views': views, 'description': description,
-        'hash': hash_id, 'category': category, 'lang': lang
+        'title': title, 'author': author,
+        'date': display_date,        # görüntüleme için "11 April 2026"
+        'sort_date': sort_date,      # sıralama için "2026-04-11"
+        'editors_note': editors_note,
+        'summary': summary_html,
+        'sources': sources_html,
+        'content': content_clean,
+        'cover_image': cover_image,
+        'content_image_1': content_image_1,
+        'content_image_2': content_image_2,
+        'reading_time': reading_time,
+        'views': views,
+        'description': description,
+        'hash': hash_id,
+        'category': category,
+        'lang': lang
     }
 
 def get_all_articles_all_langs():
@@ -215,7 +228,7 @@ def get_all_articles_all_langs():
                 article_url = f"/articles/{lang}/{category}/{hash_id}.html"
                 all_articles.append({
                     'lang': lang, 'category': category, 'hash': hash_id,
-                    'parsed': parsed, 'url': article_url, 'date': parsed['sort_date']
+                    'parsed': parsed, 'url': article_url, 'sort_date': parsed['sort_date']
                 })
             except Exception as e:
                 print(f"⚠️ {key} okunamadı: {e}")
@@ -231,38 +244,43 @@ def build_alternate_langs_dict(all_articles):
         })
     return alt_dict
 
-def generate_sitemap(all_articles, base_url):
-    """Sitemap.xml dosyasını oluşturur."""
+def generate_sitemap(all_articles, alt_dict, base_url):
+    """Sitemap.xml dosyasını oluşturur - HREFLANG ile birlikte"""
     urls = []
-    
-    # Ana sayfa (her dil için)
     languages = ['en', 'es', 'de', 'fr']
+    categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
+    
+    # Ana sayfalar (her dil için)
     for lang in languages:
         urls.append({
             'loc': f"{base_url}/{lang}/",
             'priority': '1.0',
             'changefreq': 'daily',
-            'lastmod': datetime.now().strftime("%Y-%m-%d")
+            'lastmod': datetime.now().strftime("%Y-%m-%d"),
+            'alternates': [{'lang': l, 'url': f"{base_url}/{l}/"} for l in languages if l != lang]
         })
     
     # Kategori sayfaları (her dil için)
-    categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
     for lang in languages:
         for cat in categories:
             urls.append({
                 'loc': f"{base_url}/{lang}/{cat}/",
                 'priority': '0.8',
                 'changefreq': 'weekly',
-                'lastmod': datetime.now().strftime("%Y-%m-%d")
+                'lastmod': datetime.now().strftime("%Y-%m-%d"),
+                'alternates': [{'lang': l, 'url': f"{base_url}/{l}/{cat}/"} for l in languages if l != lang]
             })
     
-    # Makaleler
+    # Makaleler (HREFLANG ile)
     for article in all_articles:
+        key = (article['category'], article['hash'])
+        alternates = alt_dict.get(key, [])
         urls.append({
             'loc': f"{base_url}{article['url']}",
-            'lastmod': article['date'],
+            'lastmod': article['sort_date'],
             'priority': '0.6',
-            'changefreq': 'monthly'
+            'changefreq': 'monthly',
+            'alternates': alternates
         })
     
     # Statik sayfalar
@@ -275,12 +293,13 @@ def generate_sitemap(all_articles, base_url):
         urls.append({
             'loc': f"{base_url}{path}",
             'priority': priority,
-            'lastmod': datetime.now().strftime("%Y-%m-%d")
+            'lastmod': datetime.now().strftime("%Y-%m-%d"),
+            'alternates': []
         })
     
-    # XML oluştur
+    # XML oluştur (hreflang ile)
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for url in urls:
         xml += '    <url>\n'
         xml += f'        <loc>{url["loc"]}</loc>\n'
@@ -289,13 +308,16 @@ def generate_sitemap(all_articles, base_url):
         if 'changefreq' in url:
             xml += f'        <changefreq>{url["changefreq"]}</changefreq>\n'
         xml += f'        <priority>{url["priority"]}</priority>\n'
+        # Hreflang alternatifleri
+        for alt in url.get('alternates', []):
+            xml += f'        <xhtml:link rel="alternate" hreflang="{alt["lang"]}" href="{alt["url"]}"/>\n'
         xml += '    </url>\n'
     xml += '</urlset>'
     
     return xml
 
 def generate_robots_txt(base_url):
-    """robots.txt dosyasını oluşturur."""
+    """robots.txt dosyasını oluşturur"""
     return f"""# Tüm arama motorlarına izin ver
 User-agent: *
 Allow: /
@@ -306,9 +328,11 @@ Sitemap: {base_url}/sitemap.xml
 # Tarayıcı hız sınırı (isteğe bağlı)
 Crawl-delay: 1
 
-# Özel alanlar (yoksa boş)
-Disallow: /private/
+# Engellenen alanlar
+Disallow: /templates/
+Disallow: /*.json$
 Disallow: /tmp/
+Disallow: /private/
 """
 
 def render_single_page(article, alt_langs, template_str, menu_texts, related_articles):
@@ -348,7 +372,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     )
 
 def publisher():
-    print("🚀 Publisher Bot (Sitemap + Robots.txt entegre) başlatılıyor...")
+    print("🚀 Publisher Bot (Sitemap + Hreflang + robots.txt) başlatılıyor...")
     upload_templates_to_r2()
     
     single_tpl = get_template_from_r2("single.html")
@@ -371,7 +395,9 @@ def publisher():
         lang_articles = [a for a in all_articles if a['lang'] == lang]
         if not lang_articles:
             continue
-        lang_articles.sort(key=lambda x: x['date'], reverse=True)
+        
+        # ✅ DOĞRU SIRALAMA: sort_date ile (ISO formatı)
+        lang_articles.sort(key=lambda x: x['sort_date'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
         # 1. Tekil makaleler
@@ -416,7 +442,7 @@ def publisher():
             cat_articles = [a for a in lang_articles if a['category'] == category]
             if not cat_articles:
                 continue
-            cat_articles.sort(key=lambda x: x['date'], reverse=True)
+            cat_articles.sort(key=lambda x: x['sort_date'], reverse=True)
             featured_cat = cat_articles[0] if cat_articles else None
             featured_for_cat = None
             if featured_cat:
@@ -438,4 +464,31 @@ def publisher():
                 articles_for_list.append({
                     'url': a['url'], 'image': a['parsed']['cover_image'], 'title': a['parsed']['title'],
                     'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
-                    'excerpt': 
+                    'excerpt': a['parsed']['description']
+                })
+            cat_alt_langs = []
+            for other_lang in languages:
+                if other_lang == lang:
+                    continue
+                cat_alt_langs.append({'lang': other_lang, 'url': f"{R2_PUBLIC_URL}/{other_lang}/{category}/"})
+            list_html = render_list_page(lang, category, articles_for_list, featured_for_cat, trending, list_tpl, menu_texts, cat_alt_langs)
+            if list_html:
+                s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
+                print(f"   ✅ Kategori arşivi: articles/{lang}/{category}/index.html")
+    
+    # 4. Sitemap.xml oluştur ve yükle (HREFLANG ile)
+    print("\n📊 Sitemap oluşturuluyor (hreflang ile)...")
+    sitemap_xml = generate_sitemap(all_articles, alt_dict, R2_PUBLIC_URL)
+    s3.put_object(Bucket=R2_BUCKET, Key='sitemap.xml', Body=sitemap_xml.encode('utf-8'), ContentType='application/xml')
+    print("   ✅ Sitemap yüklendi: sitemap.xml")
+    
+    # 5. robots.txt oluştur ve yükle
+    print("🤖 robots.txt oluşturuluyor...")
+    robots_txt = generate_robots_txt(R2_PUBLIC_URL)
+    s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
+    print("   ✅ robots.txt yüklendi: robots.txt")
+    
+    print("\n🏁 Publisher tamamlandı.")
+
+if __name__ == "__main__":
+    publisher()
