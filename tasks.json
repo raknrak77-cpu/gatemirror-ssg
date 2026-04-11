@@ -795,5 +795,36 @@
         "display_date": "11 April 2026",
         "processed_at": "2026-04-11 20:00:36",
         "hash": "7599cfa8"
+    },
+    {
+        "task_id": "0027",
+        "category": "future-economy",
+        "topic": "The Tokenization of Everything: How Real-World Assets (RWAs) Are Democratizing Private Equity",
+        "reference_link": "https://www.coindesk.com/learn/2026/03/20/real-world-assets-rwa-tokenization-explained",
+        "language": "en",
+        "author_persona": "Tokenization Strategist & Digital Asset Economist",
+        "special_instructions": "Analyze how blockchain tokenization is transforming illiquid assets (real estate, art, private equity, commodities) into tradable digital tokens. Discuss the benefits: fractional ownership, 24/7 liquidity, global accessibility, lower entry barriers. Address regulatory challenges (SEC, MiCA), custody solutions, and the role of oracles for off-chain data. Include a case study of a real estate fund that successfully tokenized a $50M property. Compare permissioned vs permissionless RWA platforms. End with a 2028 adoption forecast.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic digital interface showing various real-world assets (house, painting, gold bar, company shares) transforming into glowing digital tokens floating upward, blockchain nodes in background, warm gradient lighting, cinematic composition, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split-screen comparison: left side shows traditional private equity with complex paperwork, high minimum investment ($1M+), slow process (months); right side shows tokenized asset with smartphone app showing fractional ownership ($100 entry), instant transfer, 24/7 trading dashboard. Visual metaphor for democratization, clean design, no text labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a smartphone screen displaying a tokenized real estate investment app: a property image, \"Own 0.001% of this building\", \"Daily yield: $0.42\", \"Total value locked: $12.4M\", subtle green and blue interface, warm ambient background light, shallow depth of field",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-11",
+        "date": "2026-04-11",
+        "display_date": "11 April 2026",
+        "processed_at": ""
     }
 ]
