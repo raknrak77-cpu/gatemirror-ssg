@@ -144,7 +144,7 @@ def parse_article_html(html_content, lang, category, hash_id, r2_base):
             display_date = sort_date
     else:
         author = "Gatemirror Expert"
-        sort_datetime = None   # None olarak işaretle, sonra fallback yapılacak
+        sort_datetime = None
         sort_date = None
         display_date = datetime.now().strftime("%d %B %Y")
     
@@ -240,10 +240,8 @@ def get_all_articles_all_langs():
                 parsed = parse_article_html(html_content, lang, category, hash_id, R2_PUBLIC_URL)
                 article_url = f"/articles/{lang}/{category}/{hash_id}.html"
                 
-                # Eğer sort_datetime yoksa obj['LastModified']'i kullan
                 sort_datetime = parsed['sort_datetime']
                 if sort_datetime is None:
-                    # LastModified datetime objesini ISO string'e çevir
                     sort_datetime = obj['LastModified'].strftime("%Y-%m-%d %H:%M:%S")
                     sort_date = sort_datetime[:10]
                 else:
@@ -369,11 +367,12 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
+    # menu_texts kullanılmıyor ama imza uyumu için duruyor
     tmpl = Template(template_str)
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
     return tmpl.render(
-        lang=lang, menu=menu_texts, articles=articles, featured_article=featured_article,
+        lang=lang, articles=articles, featured_article=featured_article,
         canonical_url=canonical, og_image=og_image, alternate_langs=alternate_langs
     )
 
@@ -384,12 +383,11 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
     return tmpl.render(
-        lang=lang, menu=menu_texts, category_name=category_name, category_description=category_description,
+        lang=lang, category_name=category_name, category_description=category_description,
         category_url=category_url, og_image=og_image, articles=cat_articles,
         featured_article=featured_article, trending_articles=trending_articles,
         pagination=None, guide_articles=[], alternate_langs=alternate_langs
     )
-
 def publisher():
     print("🚀 Publisher Bot (Sitemap + Hreflang + robots.txt) başlatılıyor...")
     upload_templates_to_r2()
@@ -415,11 +413,9 @@ def publisher():
         if not lang_articles:
             continue
         
-        # Sıralama: sort_datetime ile (en son en üstte)
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
-        # 1. Tekil makaleler
         for article in lang_articles:
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
@@ -432,7 +428,6 @@ def publisher():
                 s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ Makale: {target_key}")
         
-        # 2. Ana sayfa
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
         if featured:
@@ -455,7 +450,6 @@ def publisher():
             s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
             print(f"   ✅ Ana sayfa: articles/{lang}/index.html")
         
-        # 3. Kategori arşivleri
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         for category in categories:
             cat_articles = [a for a in lang_articles if a['category'] == category]
