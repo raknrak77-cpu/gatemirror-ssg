@@ -221,22 +221,27 @@ def operasyon_baslat():
     if not pending_tasks:
         print("💤 Bekleyen görev yok.")
         return
-    print(f"📋 Toplam {len(pending_tasks)} görev bulundu.")
-    for i, task in enumerate(pending_tasks):
-        print(f"\n--- Görev {i+1}/{len(pending_tasks)} (ID: {task.get('task_id')}) ---")
-        basarili, hash_id = isle_gorev(task)
-        if not basarili:
-            print(f"❌ Görev {task.get('task_id')} başarısız, workflow durduruluyor.")
-            task["status"] = "failed"
-            with open("tasks.json", "w", encoding="utf-8") as f:
-                json.dump(tasks, f, indent=4, ensure_ascii=False)
-            sys.exit(1)
+    print(f"📋 Toplam {len(pending_tasks)} pending görev var. Sadece 1 tanesi işlenecek.")
+    
+    # SADECE İLK PENDING TASK'İ İŞLE
+    task = pending_tasks[0]
+    print(f"\n--- Görev {task.get('task_id')} işleniyor ---")
+    
+    basarili, hash_id = isle_gorev(task)
+    
+    if not basarili:
+        print(f"❌ Görev {task.get('task_id')} başarısız, workflow durduruluyor.")
+        task["status"] = "failed"
         with open("tasks.json", "w", encoding="utf-8") as f:
             json.dump(tasks, f, indent=4, ensure_ascii=False)
-        if i < len(pending_tasks) - 1:
-            print("⏳ 10 saniye bekleniyor...")
-            time.sleep(10)
-    print("\n🏁 Tüm görevler tamamlandı.")
+        sys.exit(1)
+    
+    # tasks.json'u güncelle
+    with open("tasks.json", "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+    
+    print("\n🏁 Görev tamamlandı. Kalan pending görevler için workflow'u tekrar çalıştır.")
 
 if __name__ == "__main__":
     operasyon_baslat()
+    
