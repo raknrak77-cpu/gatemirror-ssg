@@ -1277,36 +1277,41 @@
         "hash": "491ef8c7"
     },
     {
-        "task_id": "0042",
-        "category": "future-economy",
-        "topic": "The Freelance Economy at Scale: How 50% of the US Workforce Going Independent Is Reshaping Capitalism",
-        "reference_link": "https://www.mckinsey.com/future-of-work",
-        "language": "en",
-        "author_persona": "Labor Economist & Future of Work Researcher",
-        "special_instructions": "Analyze the structural shift to independent work — by 2026, freelancers and independent contractors represent nearly 50% of the US workforce, with similar trends in UK and EU. Cover the drivers: AI-enabled solo productivity, corporate cost-cutting, Gen Z preference for autonomy, and platform economy maturation (Upwork, Toptal, Contra). Discuss the dark side: benefits gap (no healthcare, pension), income volatility, algorithmic management by platforms. Include data on freelance income surpassing traditional employment in tech and creative sectors. Case study: former Fortune 500 marketing director who built a $400K/year independent consulting practice using AI tools. Address the policy gap: portable benefits proposals, freelancer unions, and universal basic services. End with 2030 forecast for the \"post-employment\" economy.",
-        "visuals": {
-            "kapak": {
-                "prompt": "A freelancer working from a sunlit cafe terrace in a European city, laptop open, multiple client projects visible on screen, confident and relaxed posture — behind them a traditional office building with \"For Lease\" signs appearing, subtle visual metaphor for the corporate-to-independent shift, photorealistic, cinematic, no text",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "A visual network map showing one central freelancer node connected to 12 different client company logos arranged in a circle — each connection a different project thread — replacing the traditional single employer-employee line, clean dark background, glowing nodes, photorealistic style, no text labels",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "Split comparison: left side shows traditional employee benefits package (health insurance card, pension statement, office badge, fixed salary slip) stacked neatly; right side shows freelancer's reality (multiple income streams chart, portable health plan app, retirement self-contribution tracker, rate negotiation document) — honest and balanced portrayal, photorealistic, no text",
-                "width": 1024,
-                "height": 1024
-            }
+    "task_id": "0042",
+    "category": "elearning",
+    "cluster": "ai_tutors",
+    "intent": "commercial",
+    "cpc_min": 8,
+    "cpc_max": 22,
+    "monetization": "subscription_affiliate",
+    "topic": "The Rise of AI Tutors: How Personalized Learning Bots Are Replacing the Traditional Classroom",
+    "reference_link": "https://www.edsurge.com/news/2026/03/15/ai-tutors-personalized-learning-2026",
+    "language": "en",
+    "author_persona": "Educational Technology Researcher & Former Classroom Teacher",
+    "special_instructions": "Analyze the explosive growth of AI-powered tutoring platforms (Khanmigo, Socratic, Photomath, Duolingo Max, TutorAI) that are replacing traditional one-size-fits-all instruction. Cover the 2026 market size ($12B+), adoption rates in US/UK schools, and the venture capital frenzy. Discuss the efficacy data: students using AI tutors show 40% faster concept mastery and 60% higher engagement vs traditional methods. Include the teacher perspective: AI as assistant not replacement — 73% of teachers report reduced burnout with AI grading and planning tools. Address concerns: screen time, data privacy, algorithmic bias, and the digital divide. Case study: a rural Oklahoma school district that improved math scores from 45% to 78% proficiency using AI tutors. Compare approaches: US (platform-centric), Finland (gov-funded AI tutor for every student), China (regulatory crackdown then pivot). End with 2028 forecast: the hybrid classroom where AI tutors handle 60% of direct instruction and human teachers focus on mentorship and social-emotional learning.",
+    "visuals": {
+        "kapak": {
+            "prompt": "A bright modern classroom with a diverse group of students each wearing lightweight AR glasses, personalized holographic lesson content floating before each student — math formulas for one, historical timelines for another, a glowing friendly AI tutor avatar beside each student, warm natural light, photorealistic, cinematic composition, no text",
+            "width": 1024,
+            "height": 1024
         },
-        "status": "pending",
-        "created_at": "2026-04-12",
-        "date": "2026-04-12",
-        "display_date": "12 April 2026",
-        "processed_at": ""
+        "icerik_1": {
+            "prompt": "A split comparison: left side shows a traditional classroom with 30 identical desks facing a teacher at a chalkboard, stressed expressions, clock showing 3:45 PM, grey lighting; right side shows an AI-powered learning lab where each student works with a tablet and an AI avatar, diverse activities, engaged expressions, clock showing 2:15 PM (faster progress), warm lighting, visual metaphor for efficiency, photorealistic, no text",
+            "width": 1024,
+            "height": 1024
+        },
+        "icerik_2": {
+            "prompt": "A close-up of a tablet screen showing an AI tutor dashboard — a friendly robot avatar saying \"Great work! You've mastered 85% of Algebra 1\", a personalized learning path showing upcoming topics (Quadratic Equations next), a progress graph comparing student to their own past performance (not peers), subtle celebratory confetti animation, warm blue and gold color scheme, photorealistic, no text on screen",
+            "width": 1024,
+            "height": 1024
+        }
     },
+    "status": "pending",
+    "created_at": "2026-04-12",
+    "date": "2026-04-12",
+    "display_date": "12 April 2026",
+    "processed_at": ""
+    },        
     {
         "task_id": "0043",
         "category": "future-economy",
