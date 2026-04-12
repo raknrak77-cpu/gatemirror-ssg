@@ -169,12 +169,17 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay, r2_base):
     else:
         sources_html = "<li>Sources not available</li>"
     
-    content_clean = html_content
-    content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
-    content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
-    content_clean = re.sub(r'<h2>Key Takeaways</h2>\s*<ul>.*?</ul>', '', content_clean, flags=re.DOTALL)
-    content_clean = re.sub(r'<div class="sources">.*?</div>', '', content_clean, flags=re.DOTALL)
-    content_clean = content_clean.strip()
+    # publisher.py içindeki parse_article_html fonksiyonunda
+# content_clean bloğunu şununla değiştir (satır 172-177):
+
+content_clean = html_content
+content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
+content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
+content_clean = re.sub(r'<h2>Key Takeaways</h2>\s*<ul>.*?</ul>', '', content_clean, flags=re.DOTALL)
+content_clean = re.sub(r'<div class="sources">.*?</div>', '', content_clean, flags=re.DOTALL)
+# FIX: h1 başlık tekrarını kaldır
+content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
+content_clean = content_clean.strip()
     
     reading_time = calculate_reading_time(content_clean)
     views = generate_views(hash_id)
