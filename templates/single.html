@@ -64,7 +64,8 @@
         .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
         .nav-links a:hover { color: var(--primary); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
-        
+
+        /* SIDE MENU - her zaman koyu, dark mode override gerekmez */
         .side-menu {
             position: fixed;
             top: 0;
@@ -72,7 +73,7 @@
             width: 80%;
             max-width: 300px;
             height: 100%;
-            background: rgba(10, 10, 10, 0.85);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(12px);
             color: white;
             transition: left 0.3s ease-in-out;
@@ -84,21 +85,24 @@
             gap: 1.5rem;
         }
         .side-menu.active { left: 0; }
-        .close-menu { text-align: right; font-size: 1.5rem; cursor: pointer; }
+        .close-menu { text-align: right; font-size: 1.5rem; cursor: pointer; color: #aaa; }
         .side-menu .nav-links { display: flex; flex-direction: column; gap: 0; margin: 0; }
-        .side-menu .nav-links a { display: block; padding: 0.8rem 0; border-bottom: 1px solid #333; color: white; }
-        .lang-section { border-bottom: 1px solid #333; padding-bottom: 1rem; }
-        .lang-title { font-size: 0.8rem; text-transform: uppercase; color: #aaa; }
+        /* FIX: border her zaman açık renk, dark mode etkilemez */
+        .side-menu .nav-links a { display: block; padding: 0.8rem 0; border-bottom: 1px solid #444; color: white; text-decoration: none; }
+        .side-menu .nav-links a:hover { color: var(--primary); }
+        .lang-section { border-bottom: 1px solid #444; padding-bottom: 1rem; }
+        .lang-title { font-size: 0.8rem; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
         .flags { display: flex; gap: 1rem; margin-top: 0.5rem; }
         .flag-link { font-size: 1.2rem; text-decoration: none; opacity: 0.7; }
-        .footer-links { margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; font-size: 0.8rem; }
+        .footer-links { margin-top: auto; padding-top: 1rem; border-top: 1px solid #444; font-size: 0.8rem; }
         .footer-links a { display: block; color: #aaa; padding: 0.3rem 0; text-decoration: none; }
         .dark-mode-toggle {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #444;
+            color: #ccc;
         }
         .toggle-switch {
             width: 50px;
@@ -124,30 +128,23 @@
             font-size: 12px;
             transition: 0.2s;
         }
-        body.dark .toggle-switch:after {
-            content: "☀️";
-            left: 26px;
-        }
+        body.dark .toggle-switch:after { content: "☀️"; left: 26px; }
+
+        /* DARK MODE - sadece sayfa içeriği için */
         body.dark { background: #121212; color: #e0e0e0; }
         body.dark nav { background: rgba(18,18,18,0.98); border-bottom-color: #333; }
-        body.dark .logo, body.dark .nav-links a { color: #e0e0e0; }
+        body.dark .logo, body.dark nav .nav-links a { color: #e0e0e0; }
         body.dark .hero-image { opacity: 0.9; }
         body.dark .summary { background: #2a2a2a; border-left-color: var(--primary); }
         body.dark .editors-note { background: #1e3a2a; border-left-color: var(--primary); }
         body.dark .sources { border-top-color: #444; }
         body.dark .read-next-card { background: #1e1e1e; }
+        body.dark .read-next-card h4 { color: #e0e0e0; }
         body.dark footer { background: #0a0a0a; }
-        /* Dark mode side menu cizgileri */
-        body.dark .side-menu .nav-links a,
-        body.dark .side-menu .lang-section,
-        body.dark .side-menu .footer-links,
-        body.dark .side-menu .dark-mode-toggle {
-            border-bottom-color: #555;
-        }
-        body.dark .side-menu .footer-links {
-            border-top-color: #555;
-        }
-        
+        body.dark .article-content { color: #d0d0d0; }
+        body.dark .meta-info { color: #888; }
+        /* NOT: .side-menu dark mode override YOK - zaten koyu */
+
         .container { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
         .hero-image { width: 70%; max-width: 700px; border-radius: 1rem; margin: 0 auto 2rem auto; display: block; aspect-ratio: 16/9; object-fit: cover; }
         .content-image-1 { width: 60%; max-width: 600px; border-radius: 0.75rem; margin: 1.5rem auto; display: block; aspect-ratio: 16/9; object-fit: cover; }
@@ -193,6 +190,8 @@
     </style>
 </head>
 <body>
+
+<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="dark-mode-toggle">
@@ -202,19 +201,20 @@
     <div class="lang-section">
         <div class="lang-title">READ IN</div>
         <div class="flags">
-            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/en/" class="flag-link">🇺🇸 EN</a>
             <a href="/es/" class="flag-link">🇪🇸 ES</a>
             <a href="/de/" class="flag-link">🇩🇪 DE</a>
             <a href="/fr/" class="flag-link">🇫🇷 FR</a>
         </div>
     </div>
+    <!-- FIX: menu değişkeni ile dile göre isimler -->
     <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        <a href="/{{ lang }}/wellness/">WELLNESS</a>
-        <a href="/{{ lang }}/tech/">TECH & AI</a>
-        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
-        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
-        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
+        <a href="/{{ lang }}/">{{ menu.home }}</a>
+        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
+        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
+        <a href="/{{ lang }}/future-economy/">{{ menu['future-economy'] }}</a>
+        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
+        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
     </div>
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
@@ -223,20 +223,26 @@
         <p>&copy; 2026 Gatemirror Media</p>
     </div>
 </div>
+
+
+<!-- NAVBAR -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
-    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    <a href="/{{ lang }}/" class="logo">GATE<span>MIRROR</span></a>
+    <!-- FIX: menu değişkeni ile dile göre isimler -->
     <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        <a href="/{{ lang }}/wellness/">WELLNESS</a>
-        <a href="/{{ lang }}/tech/">TECH & AI</a>
-        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
-        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
-        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
+        <a href="/{{ lang }}/">{{ menu.home }}</a>
+        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
+        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
+        <a href="/{{ lang }}/future-economy/">{{ menu['future-economy'] }}</a>
+        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
+        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
     </div>
 </nav>
+
 <div class="container">
     <img src="{{ cover_image }}" alt="{{ title }}" class="hero-image" onerror="this.style.display='none'">
+    <!-- FIX: h1 burada, content içindeki h1 publisher tarafından siliniyor -->
     <h1>{{ title }}</h1>
     {% if editors_note %}<div class="editors-note">{{ editors_note }}</div>{% endif %}
     <div class="meta-info">
@@ -272,6 +278,8 @@
         </div>
     </div>
 </div>
+
+<!-- FOOTER - FIX: menu değişkeni ile dile göre isimler -->
 <footer>
     <div class="footer-content">
         <div class="footer-column">
@@ -282,15 +290,15 @@
         </div>
         <div class="footer-column">
             <h4>Categories</h4>
-            <a href="/{{ lang }}/tech/">Tech & AI</a>
-            <a href="/{{ lang }}/future-economy/">Future Economy</a>
-            <a href="/{{ lang }}/wellness/">Wellness</a>
-            <a href="/{{ lang }}/eco/">Eco & Sustainable</a>
-            <a href="/{{ lang }}/elearning/">E-Learning</a>
+            <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
+            <a href="/{{ lang }}/future-economy/">{{ menu['future-economy'] }}</a>
+            <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
+            <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
+            <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
         </div>
         <div class="footer-column">
             <h4>Read in</h4>
-            <a href="/">🇺🇸 English</a>
+            <a href="/en/">🇺🇸 English</a>
             <a href="/es/">🇪🇸 Español</a>
             <a href="/de/">🇩🇪 Deutsch</a>
             <a href="/fr/">🇫🇷 Français</a>
@@ -300,6 +308,7 @@
         <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
     </div>
 </footer>
+
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -331,3 +340,4 @@
 </script>
 </body>
         </html>
+        
