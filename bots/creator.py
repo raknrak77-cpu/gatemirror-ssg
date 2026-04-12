@@ -49,51 +49,94 @@ def isle_gorev(task):
     print("🤖 Gemini'den 4 dilde (EN, ES, DE, FR) yanıt bekleniyor...")
     
     prompt_emri = f"""
-ROLE: You are an expert {persona}.
+ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice. You write for Gatemirror, a premium multi-language analysis platform read by professionals globally.
 
-TASK: Write the SAME comprehensive, deep-dive article in FOUR languages: English (en), Spanish (es), German (de), French (fr).
+TASK: Write ONE article about '{topic}' in FOUR culturally adapted versions.
+This is NOT a translation job. Each version must feel ORIGINALLY WRITTEN for that audience.
 
-TOPIC: '{topic}'
-
-REQUIREMENTS FOR EACH LANGUAGE:
-- Length: Minimum 1500 words, maximum 2500 words per language.
-- Use ONLY HTML tags: <h1>, <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>, <div>.
-- DO NOT use Markdown.
-- Start directly with the first HTML tag for each language.
-- Write in a professional, analytical, yet engaging tone.
-- Include real-world examples, data points, and case studies.
-- Add a strong conclusion.
-
-{f"REFERENCE: Use this as source material - {reference_link}" if reference_link else ""}
-
+{f"REFERENCE MATERIAL: {reference_link}" if reference_link else ""}
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
 
-**REQUIRED SECTIONS (in this exact order) for EACH language:**
+---
 
-1. <h1>Title (translated appropriately)</h1>
-2. <div class="editors-note">Editor's Note: ... (2-3 sentences, first-person singular, translated)</div>
-3. <h2>Introduction</h2>
-4. <h2>Key Takeaways</h2>
-   <ul><li>Takeaway 1</li><li>Takeaway 2</li><li>Takeaway 3 (max 5 items)</li></ul>
-5. <h2>Main Analysis</h2>
-6. <h2>Conclusion</h2>
-7. <div class="sources"><h3>Sources</h3><ul><li>Source 1</li><li>Source 2</li><li>Source 3</li></ul></div>
+CULTURAL ADAPTATION RULES:
+- EN: Global perspective, US/UK/Australian examples, data from Western institutions
+- ES: Latin American OR Spanish context — use cities like Mexico City, Buenos Aires, Madrid; local brands and regional statistics
+- DE: DACH region focus — Germany, Austria, Switzerland examples; European regulatory angle (EU, DACH market data)
+- FR: French OR Francophone context — Paris, Montreal, Dakar where relevant; French institutional references
 
-OUTPUT FORMAT:
-Start with English version, then Spanish, then German, then French.
-Separate each language with a marker line exactly like this:
+---
+
+CONTENT REQUIREMENTS (per language):
+- Length: 1500-2000 words
+- Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question — never a generic statement
+- Tone: Analytical, opinionated, human — slightly varied rhythm and flow per language
+- Include: Named companies, real case studies, specific data points, expert perspectives
+- Avoid: "In today's rapidly evolving landscape", "It is worth noting", "In conclusion, it is clear that" — ban all AI filler phrases
+- E-E-A-T: Write from genuine expertise — share opinions, challenge industry assumptions, make bold predictions
+
+---
+
+REQUIRED STRUCTURE (identical across all 4 languages):
+
+<h1>[Title in target language]</h1>
+
+<div class="editors-note">[2-3 sentences. First-person. Establish your credibility and why this topic is urgent RIGHT NOW. In target language.]</div>
+
+<h2>Introduction</h2>
+[Hook + problem + stakes + what reader will learn. Min 2 paragraphs.]
+
+<h2>Key Takeaways</h2>
+⚠️ CRITICAL: Write EXACTLY <h2>Key Takeaways</h2> — do NOT translate this heading in ANY language version
+<ul>
+  <li><strong>[Bold key concept]:</strong> [One sharp, specific sentence]</li>
+  [3-5 items only]
+</ul>
+
+<h2>Main Analysis</h2>
+[Minimum 4 subsections using <h3>. Structure each as: context → evidence → implication]
+
+<h2>Practical Implications</h2>
+[What should the reader DO? Concrete, actionable steps for their specific regional context]
+
+<h2>Conclusion</h2>
+[Synthesis + bold prediction for 2027-2028 + memorable closing line that sticks]
+
+<div class="sources">
+<h3>Sources</h3>
+<ul>
+  <li>[Real, verifiable source — institution name + actual URL. Min 3, max 5. NO fake links.]</li>
+</ul>
+</div>
+
+---
+
+SEO RULES:
+- Naturally integrate topic keywords in <h1>, first paragraph, and 2-3 subheadings
+- Use semantic variations — avoid exact keyword repetition
+- Each language targets its own regional search intent
+
+---
+
+OUTPUT FORMAT (exact — no deviation):
 <!-- LANG:EN -->
-... English HTML ...
+[Full EN HTML here]
 <!-- LANG:ES -->
-... Spanish HTML ...
+[Full ES HTML here]
 <!-- LANG:DE -->
-... German HTML ...
+[Full DE HTML here]
 <!-- LANG:FR -->
-... French HTML ...
+[Full FR HTML here]
 
-IMPORTANT:
-- Do NOT add any extra explanations.
-- Keep HTML structure identical across languages.
+---
+
+STRICT RULES:
+- "Key Takeaways" heading: NEVER translate, ALWAYS keep in English across ALL 4 languages
+- <h1> title: NEVER repeat anywhere in body text
+- Author/date: NEVER add
+- Fake URLs: NEVER use — if unsure, cite institution name only
+- Markdown/code blocks: NEVER use
+- Explanations outside HTML blocks: NEVER add
 """
     
     payload = {
@@ -102,7 +145,7 @@ IMPORTANT:
     }
     
     try:
-        response = requests.post(GEMINI_URL, json=payload, timeout=240)
+        response = requests.post(GEMINI_URL, json=payload, timeout=300)
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
@@ -116,6 +159,12 @@ IMPORTANT:
                 html_content = parts[i+1].strip()
                 html_content = html_content.replace('```html', '').replace('```', '')
                 lang_html[lang_code] = html_content
+            
+            # Tüm dillerin geldiğini kontrol et
+            expected = ['en', 'es', 'de', 'fr']
+            for lang in expected:
+                if lang not in lang_html:
+                    print(f"⚠️ {lang.upper()} dili eksik, atlanıyor.")
             
             hash_id = create_hash()
             print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
@@ -138,10 +187,17 @@ IMPORTANT:
                     print("✅ Görsel bot tamamlandı.")
                 except Exception as e:
                     print(f"⚠️ Görsel bot hatası: {e}")
+            else:
+                print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
             # Her dil için HTML kaydet
+            saved_count = 0
             for lang, html in lang_html.items():
-                html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug)
+                if lang in expected:
+                    html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug)
+                    saved_count += 1
+            
+            print(f"📁 Toplam {saved_count} dil kaydedildi (EN/ES/DE/FR)")
             
             task["status"] = "processed"
             task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -155,7 +211,7 @@ IMPORTANT:
         return False, None
 
 def operasyon_baslat():
-    print("🛰️ Creator Bot (4 Dil Tek Prompt) başlatılıyor...")
+    print("🛰️ Creator Bot (4 Dil Tek Prompt - Profesyonel) başlatılıyor...")
     if not os.path.exists("tasks.json"):
         print("❌ tasks.json bulunamadı!")
         sys.exit(1)
