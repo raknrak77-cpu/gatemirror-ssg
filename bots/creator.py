@@ -159,7 +159,7 @@ STRICT RULES:
     }
     
     try:
-        response = requests.post(GEMINI_URL, json=payload, timeout=300)
+        response = requests.post(GEMINI_URL, json=payload, timeout=420)
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
