@@ -436,6 +436,15 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
         canonical_url=canonical, og_image=og_image, alternate_langs=alternate_langs
     )
 
+def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
+    tmpl = Template(template_str)
+    canonical = f"{R2_PUBLIC_URL}/{lang}/"
+    og_image = articles[0]['image'] if articles else ""
+    return tmpl.render(
+        lang=lang, menu=menu_texts, articles=articles, featured_article=featured_article,
+        canonical_url=canonical, og_image=og_image, alternate_langs=alternate_langs
+    )
+
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
     tmpl = Template(template_str)
     category_name = get_category_name(lang, category)
@@ -443,8 +452,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
     return tmpl.render(
-        lang=lang, menu=menu_texts, category=category,  # FIX: category eklendi
-        category_name=category_name, category_description=category_description,
+        lang=lang, menu=menu_texts, category_name=category_name, category_description=category_description,
         category_url=category_url, og_image=og_image, articles=cat_articles,
         featured_article=featured_article, trending_articles=trending_articles,
         pagination=None, guide_articles=[], alternate_langs=alternate_langs
