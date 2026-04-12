@@ -1277,41 +1277,42 @@
         "hash": "491ef8c7"
     },
     {
-    "task_id": "0042",
-    "category": "elearning",
-    "cluster": "ai_tutors",
-    "intent": "commercial",
-    "cpc_min": 8,
-    "cpc_max": 22,
-    "monetization": "subscription_affiliate",
-    "topic": "The Rise of AI Tutors: How Personalized Learning Bots Are Replacing the Traditional Classroom",
-    "reference_link": "https://www.edsurge.com/news/2026/03/15/ai-tutors-personalized-learning-2026",
-    "language": "en",
-    "author_persona": "Educational Technology Researcher & Former Classroom Teacher",
-    "special_instructions": "Analyze the explosive growth of AI-powered tutoring platforms (Khanmigo, Socratic, Photomath, Duolingo Max, TutorAI) that are replacing traditional one-size-fits-all instruction. Cover the 2026 market size ($12B+), adoption rates in US/UK schools, and the venture capital frenzy. Discuss the efficacy data: students using AI tutors show 40% faster concept mastery and 60% higher engagement vs traditional methods. Include the teacher perspective: AI as assistant not replacement — 73% of teachers report reduced burnout with AI grading and planning tools. Address concerns: screen time, data privacy, algorithmic bias, and the digital divide. Case study: a rural Oklahoma school district that improved math scores from 45% to 78% proficiency using AI tutors. Compare approaches: US (platform-centric), Finland (gov-funded AI tutor for every student), China (regulatory crackdown then pivot). End with 2028 forecast: the hybrid classroom where AI tutors handle 60% of direct instruction and human teachers focus on mentorship and social-emotional learning.",
-    "visuals": {
-        "kapak": {
-            "prompt": "A bright modern classroom with a diverse group of students each wearing lightweight AR glasses, personalized holographic lesson content floating before each student — math formulas for one, historical timelines for another, a glowing friendly AI tutor avatar beside each student, warm natural light, photorealistic, cinematic composition, no text",
-            "width": 1024,
-            "height": 1024
+        "task_id": "0042",
+        "category": "elearning",
+        "cluster": "ai_tutors",
+        "intent": "commercial",
+        "cpc_min": 8,
+        "cpc_max": 22,
+        "monetization": "subscription_affiliate",
+        "topic": "The Rise of AI Tutors: How Personalized Learning Bots Are Replacing the Traditional Classroom",
+        "reference_link": "https://www.edsurge.com/news/2026/03/15/ai-tutors-personalized-learning-2026",
+        "language": "en",
+        "author_persona": "Educational Technology Researcher & Former Classroom Teacher",
+        "special_instructions": "Analyze the explosive growth of AI-powered tutoring platforms (Khanmigo, Socratic, Photomath, Duolingo Max, TutorAI) that are replacing traditional one-size-fits-all instruction. Cover the 2026 market size ($12B+), adoption rates in US/UK schools, and the venture capital frenzy. Discuss the efficacy data: students using AI tutors show 40% faster concept mastery and 60% higher engagement vs traditional methods. Include the teacher perspective: AI as assistant not replacement — 73% of teachers report reduced burnout with AI grading and planning tools. Address concerns: screen time, data privacy, algorithmic bias, and the digital divide. Case study: a rural Oklahoma school district that improved math scores from 45% to 78% proficiency using AI tutors. Compare approaches: US (platform-centric), Finland (gov-funded AI tutor for every student), China (regulatory crackdown then pivot). End with 2028 forecast: the hybrid classroom where AI tutors handle 60% of direct instruction and human teachers focus on mentorship and social-emotional learning.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A bright modern classroom with a diverse group of students each wearing lightweight AR glasses, personalized holographic lesson content floating before each student — math formulas for one, historical timelines for another, a glowing friendly AI tutor avatar beside each student, warm natural light, photorealistic, cinematic composition, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split comparison: left side shows a traditional classroom with 30 identical desks facing a teacher at a chalkboard, stressed expressions, clock showing 3:45 PM, grey lighting; right side shows an AI-powered learning lab where each student works with a tablet and an AI avatar, diverse activities, engaged expressions, clock showing 2:15 PM (faster progress), warm lighting, visual metaphor for efficiency, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a tablet screen showing an AI tutor dashboard — a friendly robot avatar saying \"Great work! You've mastered 85% of Algebra 1\", a personalized learning path showing upcoming topics (Quadratic Equations next), a progress graph comparing student to their own past performance (not peers), subtle celebratory confetti animation, warm blue and gold color scheme, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
         },
-        "icerik_1": {
-            "prompt": "A split comparison: left side shows a traditional classroom with 30 identical desks facing a teacher at a chalkboard, stressed expressions, clock showing 3:45 PM, grey lighting; right side shows an AI-powered learning lab where each student works with a tablet and an AI avatar, diverse activities, engaged expressions, clock showing 2:15 PM (faster progress), warm lighting, visual metaphor for efficiency, photorealistic, no text",
-            "width": 1024,
-            "height": 1024
-        },
-        "icerik_2": {
-            "prompt": "A close-up of a tablet screen showing an AI tutor dashboard — a friendly robot avatar saying \"Great work! You've mastered 85% of Algebra 1\", a personalized learning path showing upcoming topics (Quadratic Equations next), a progress graph comparing student to their own past performance (not peers), subtle celebratory confetti animation, warm blue and gold color scheme, photorealistic, no text on screen",
-            "width": 1024,
-            "height": 1024
-        }
+        "status": "processed",
+        "created_at": "2026-04-12",
+        "date": "2026-04-12",
+        "display_date": "12 April 2026",
+        "processed_at": "2026-04-12 19:39:52",
+        "hash": "a2fc0a06"
     },
-    "status": "pending",
-    "created_at": "2026-04-12",
-    "date": "2026-04-12",
-    "display_date": "12 April 2026",
-    "processed_at": ""
-    },        
     {
         "task_id": "0043",
         "category": "future-economy",
