@@ -169,10 +169,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay, r2_base):
     else:
         sources_html = "<li>Sources not available</li>"
     
-    # publisher.py içindeki parse_article_html fonksiyonunda
-# content_clean bloğunu şununla değiştir (satır 172-177):
-
-content_clean = html_content
+    content_clean = html_content
 content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
 content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
 content_clean = re.sub(r'<h2>Key Takeaways</h2>\s*<ul>.*?</ul>', '', content_clean, flags=re.DOTALL)
