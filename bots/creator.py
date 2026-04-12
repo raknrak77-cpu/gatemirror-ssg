@@ -69,7 +69,7 @@ CULTURAL ADAPTATION RULES:
 ---
 
 CONTENT REQUIREMENTS (per language):
-- Length: 1500-2000 words
+- Length: 1777-2222 words
 - Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question — never a generic statement
 - Tone: Analytical, opinionated, human — slightly varied rhythm and flow per language
 - Include: Named companies, real case studies, specific data points, expert perspectives
