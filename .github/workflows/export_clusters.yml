@@ -1,0 +1,31 @@
+name: Export Clusters to Excel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          pip install pandas openpyxl
+          
+      - name: JSON to Excel
+        run: python bots/cluster_exporter.py
+        
+      - name: Excel Dosyasini Upload (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: clusters-export
+          path: clusters_export.xlsx
+          retention-days: 7
