@@ -1,6 +1,8 @@
 import os
 import re
 import boto3
+import requests
+from datetime import datetime
 from botocore.client import Config
 from bs4 import BeautifulSoup
 
@@ -20,13 +22,48 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= YARDIMCI FONKSİYONLAR =================
-def download_all_articles():
-    """R2'deki tüm makale HTML'lerini local 'recovery/' klasörüne indirir."""
-    base_dir = "recovery"
-    os.makedirs(base_dir, exist_ok=True)
+def clean_article(html_content):
+    """
+    Bozuk HTML'den sadece temiz içeriği ayıklar.
+    - Başlık (<h1>)
+    - Editor's Note (<div class="editors-note">)
+    - İçerik (<div class="article-content">)
+    - Kaynaklar (<div class="sources">)
+    """
+    soup = BeautifulSoup(html_content, 'html.parser')
     
+    # Başlık
+    title_tag = soup.find('h1')
+    title = str(title_tag) if title_tag else ""
+    
+    # Editor's Note
+    editors_note_tag = soup.find('div', class_='editors-note')
+    editors_note = str(editors_note_tag) if editors_note_tag else ""
+    
+    # İçerik (asıl makale metni)
+    content_tag = soup.find('div', class_='article-content')
+    content = str(content_tag) if content_tag else ""
+    
+    # Kaynaklar
+    sources_tag = soup.find('div', class_='sources')
+    sources = str(sources_tag) if sources_tag else ""
+    
+    # Ham HTML'i oluştur
+    clean_html = f"""{title}
+
+{editors_note}
+
+{content}
+
+{sources}
+"""
+    return clean_html
+
+def get_all_articles_from_r2():
+    """R2'deki tüm makalelerin listesini alır"""
+    all_articles = []
     languages = ['en', 'es', 'de', 'fr']
+    
     for lang in languages:
         prefix = f"articles/{lang}/"
         try:
@@ -41,111 +78,71 @@ def download_all_articles():
             key = obj['Key']
             if not key.endswith('.html') or key.endswith('index.html'):
                 continue
-            
-            local_path = os.path.join(base_dir, key)
-            os.makedirs(os.path.dirname(local_path), exist_ok=True)
-            
-            try:
-                file_obj = s3.get_object(Bucket=R2_BUCKET, Key=key)
-                with open(local_path, 'wb') as f:
-                    f.write(file_obj['Body'].read())
-                print(f"✅ İndirildi: {key} -> {local_path}")
-            except Exception as e:
-                print(f"❌ İndirme hatası {key}: {e}")
-
-def extract_clean_html(html_content):
-    """
-    Bozuk HTML'den sadece ham içeriği ayıklar.
-    Dönen içerik şu parçalardan oluşur:
-    - <h1>Başlık</h1>
-    - <div class="editors-note">...</div> (varsa)
-    - <div class="article-content">...</div>
-    - <div class="sources">...</div> (varsa)
-    """
-    soup = BeautifulSoup(html_content, 'html.parser')
+            all_articles.append({
+                'key': key,
+                'lang': lang,
+                'last_modified': obj['LastModified']
+            })
     
-    # Başlık
-    title_tag = soup.find('h1')
-    title_html = str(title_tag) if title_tag else ""
-    
-    # Editor's note
-    editors_note = soup.find('div', class_='editors-note')
-    editors_html = str(editors_note) if editors_note else ""
-    
-    # Ana içerik (article-content)
-    article_content = soup.find('div', class_='article-content')
-    if article_content:
-        # İçerikteki gereksiz img'lerin src'lerini temizleme (ama görseller korunsun)
-        content_html = str(article_content)
-    else:
-        content_html = ""
-    
-    # Kaynaklar
-    sources = soup.find('div', class_='sources')
-    sources_html = str(sources) if sources else ""
-    
-    # Birleştir
-    clean_html = f"{title_html}\n{editors_html}\n{content_html}\n{sources_html}".strip()
-    return clean_html
-
-def clean_all_recovered():
-    """recovery/ klasöründeki tüm HTML'leri oku, temizle, recovered_clean/ klasörüne yaz."""
-    recovery_dir = "recovery"
-    clean_dir = "recovered_clean"
-    
-    if not os.path.exists(recovery_dir):
-        print("❌ recovery/ klasörü bulunamadı. Önce download işlemini çalıştır.")
-        return
-    
-    for root, dirs, files in os.walk(recovery_dir):
-        for file in files:
-            if not file.endswith('.html'):
-                continue
-            src_path = os.path.join(root, file)
-            rel_path = os.path.relpath(src_path, recovery_dir)
-            dst_path = os.path.join(clean_dir, rel_path)
-            os.makedirs(os.path.dirname(dst_path), exist_ok=True)
-            
-            try:
-                with open(src_path, 'r', encoding='utf-8') as f:
-                    html = f.read()
-                clean_html = extract_clean_html(html)
-                with open(dst_path, 'w', encoding='utf-8') as f:
-                    f.write(clean_html)
-                print(f"✅ Temizlendi: {rel_path}")
-            except Exception as e:
-                print(f"❌ Temizleme hatası {rel_path}: {e}")
-
-def upload_clean_to_r2():
-    """recovered_clean/ klasöründeki temiz HTML'leri R2'ye articles/ klasörüne yükler."""
-    clean_dir = "recovered_clean"
-    if not os.path.exists(clean_dir):
-        print("❌ recovered_clean/ klasörü bulunamadı.")
-        return
-    
-    for root, dirs, files in os.walk(clean_dir):
-        for file in files:
-            if not file.endswith('.html'):
-                continue
-            local_path = os.path.join(root, file)
-            # relative path: recovered_clean/articles/en/tech/2026/04/hash.html
-            r2_key = local_path.replace(clean_dir + os.sep, "")
-            try:
-                with open(local_path, 'rb') as f:
-                    s3.put_object(Bucket=R2_BUCKET, Key=r2_key, Body=f.read(), ContentType='text/html')
-                print(f"✅ Yüklendi: {r2_key}")
-            except Exception as e:
-                print(f"❌ Yükleme hatası {r2_key}: {e}")
+    return all_articles
 
 def recovery_bot():
-    print("🚀 Recovery Bot başlatılıyor...")
-    print("📥 1. Adım: R2'deki tüm makaleler 'recovery/' klasörüne indiriliyor...")
-    download_all_articles()
-    print("\n🧹 2. Adım: İndirilen dosyalar temizleniyor (sadece ham içerik bırakılıyor)...")
-    clean_all_recovered()
-    print("\n📤 3. Adım: Temizlenmiş dosyalar 'recovered_clean/' klasörüne kaydedildi.")
-    print("🔁 NOT: R2'ye otomatik yükleme YAPILMADI. İstersen manuel yükle veya upload_clean_to_r2() çağır.")
-    print("🏁 Recovery Bot tamamlandı.")
+    print("\n" + "="*60)
+    print("🔧 RECOVERY BOT BAŞLATILIYOR")
+    print("📋 Görev: R2'deki bozuk makaleleri temizle, recovered/ klasörüne kaydet")
+    print("⚠️ NOT: R2'den dosya silinmez, sadece okunur ve yeni klasöre yazılır.")
+    print("="*60 + "\n")
+    
+    # R2'deki tüm makaleleri bul
+    print("🔍 R2 taranıyor...")
+    all_articles = get_all_articles_from_r2()
+    print(f"📊 Toplam {len(all_articles)} makale bulundu.\n")
+    
+    if not all_articles:
+        print("❌ Hiç makale bulunamadı!")
+        return
+    
+    # Local recovery klasörünü oluştur
+    recovery_dir = "recovered"
+    os.makedirs(recovery_dir, exist_ok=True)
+    
+    success_count = 0
+    fail_count = 0
+    
+    for article in all_articles:
+        key = article['key']
+        print(f"📖 İşleniyor: {key}")
+        
+        try:
+            # R2'den dosyayı oku
+            file_obj = s3.get_object(Bucket=R2_BUCKET, Key=key)
+            html_content = file_obj['Body'].read().decode('utf-8')
+            
+            # Temizle
+            clean_html = clean_article(html_content)
+            
+            # Local'e kaydet (aynı klasör yapısıyla)
+            # key: articles/en/wellness/2026/04/hash-slug.html
+            # local: recovered/en/wellness/2026/04/hash-slug.html
+            local_path = key.replace('articles/', 'recovered/')
+            local_dir = os.path.dirname(local_path)
+            os.makedirs(local_dir, exist_ok=True)
+            
+            with open(local_path, 'w', encoding='utf-8') as f:
+                f.write(clean_html)
+            
+            print(f"   ✅ Kaydedildi: {local_path}")
+            success_count += 1
+            
+        except Exception as e:
+            print(f"   ❌ Hata: {e}")
+            fail_count += 1
+    
+    print("\n" + "="*60)
+    print(f"🏁 RECOVERY BOT TAMAMLANDI")
+    print(f"📊 Başarılı: {success_count}, Başarısız: {fail_count}")
+    print(f"📁 Temizlenmiş dosyalar 'recovered/' klasöründe")
+    print("="*60 + "\n")
 
 if __name__ == "__main__":
     recovery_bot()
