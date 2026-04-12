@@ -1,4 +1,5 @@
-{
+[
+    {
     "version": "2.0",
     "categories": {
         "tech": {
@@ -353,3 +354,4 @@
         "aff_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
     }
 }
+]
