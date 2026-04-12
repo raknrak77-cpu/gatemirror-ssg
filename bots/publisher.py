@@ -171,7 +171,10 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay, r2_base):
     content_clean = html_content
     content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
-    content_clean = re.sub(r'<h2>Key Takeaways</h2>\s*<ul>.*?</ul>', '', content_clean, flags=re.DOTALL)
+    # Key Takeaways tekrarlarını temizle
+    content_clean = re.sub(r'(<h2>Key Takeaways</h2>\s*<ul>.*?</ul>){2,}', 
+                       r'<h2>Key Takeaways</h2>\n<ul>\n  <li>No summary available</li>\n</ul>', 
+                       content_clean, flags=re.DOTALL | re.IGNORECASE)
     content_clean = re.sub(r'<div class="sources">.*?</div>', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)  # h1 tekrarını engeller
     content_clean = content_clean.strip()
