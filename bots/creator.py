@@ -69,9 +69,9 @@ CULTURAL ADAPTATION RULES:
 ---
 
 CONTENT REQUIREMENTS (per language):
-- STRICT MINIMUM: 1800 words per language. MAXIMUM: 2200 words per language.
-- Total output (4 languages combined) MUST exceed 48,000 characters.
-- DO NOT stop before reaching 1800 words per language. Write MORE, not less.
+- STRICT MINIMUM: 2000 words per language. MAXIMUM: 2500 words per language.
+- Total output (4 languages combined) MUST exceed 56,000 characters.
+- DO NOT stop before reaching 2000 words per language. Write MORE, not less.
 - If you finish early, add more examples, case studies, or a deeper analysis section.
 - Quality and quantity are BOTH required.
 - Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question — never a generic statement
