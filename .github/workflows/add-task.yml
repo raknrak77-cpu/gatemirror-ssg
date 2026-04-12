@@ -1,28 +1,129 @@
-name: Add New Task
+import os
+import sys
+import json
+from datetime import datetime
 
-on:
-  workflow_dispatch:
+def get_next_task_id(tasks):
+    """Mevcut task'lerden en büyük task_id'yi bul, +1 yap"""
+    max_id = 0
+    for task in tasks:
+        tid = task.get('task_id', '0000')
+        if tid.isdigit():
+            max_id = max(max_id, int(tid))
+    return str(max_id + 1).zfill(4)
 
-jobs:
-  add-task:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Python Kur
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-          
-      - name: Task Ekle
-        run: python bots/task_manager.py
+def parse_task_block(block):
+    """Tek bir task bloğunu dict haline getirir"""
+    task_data = {}
+    for line in block.split('\n'):
+        line = line.strip()
+        if ':' in line and not line.startswith('#'):
+            key, value = line.split(':', 1)
+            task_data[key.strip()] = value.strip()
+    return task_data
+
+def parse_all_tasks(filepath):
+    """new_task.txt dosyasındaki TÜM task'ları okur, liste halinde döndürür"""
+    if not os.path.exists(filepath):
+        print(f"❌ {filepath} bulunamadı!")
+        return []
+    
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Task'ları ayır: her task bir category: ile başlar
+    blocks = []
+    current_block = []
+    lines = content.split('\n')
+    
+    for line in lines:
+        if line.strip().startswith('category:'):
+            if current_block:
+                blocks.append('\n'.join(current_block))
+            current_block = [line]
+        elif current_block:
+            current_block.append(line)
+    
+    if current_block:
+        blocks.append('\n'.join(current_block))
+    
+    tasks_data = []
+    for block in blocks:
+        task_data = parse_task_block(block)
+        # Gerekli alanlar var mı kontrol et
+        if task_data.get('topic') and task_data.get('category'):
+            tasks_data.append(task_data)
+        else:
+            print(f"⚠️ Eksik task bloğu atlandı: {block[:100]}...")
+    
+    return tasks_data
+
+def add_tasks():
+    """Yeni task'leri tasks.json'a ekler (toplu)"""
+    
+    if not os.path.exists("tasks.json"):
+        print("❌ tasks.json bulunamadı!")
+        return
+    
+    with open("tasks.json", "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    # new_task.txt'den TÜM task'ları oku
+    all_task_data = parse_all_tasks("new_task.txt")
+    if not all_task_data:
+        print("❌ Hiç task bulunamadı!")
+        return
+    
+    print(f"📋 {len(all_task_data)} task bulundu, ekleniyor...")
+    
+    today_iso = datetime.now().strftime("%Y-%m-%d")
+    today_display = datetime.now().strftime("%d %B %Y")
+    
+    added_count = 0
+    for task_data in all_task_data:
+        new_id = get_next_task_id(tasks)
         
-      - name: Değişiklikleri Kaydet
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add tasks.json
-          git commit -m "➕ Yeni task eklendi" || echo "Değişiklik yok"
-          git push
+        new_task = {
+            "task_id": new_id,
+            "category": task_data.get('category', 'general'),
+            "topic": task_data['topic'],
+            "reference_link": task_data.get('reference_link', ''),
+            "language": "en",
+            "author_persona": task_data.get('author_persona', 'Expert Analyst'),
+            "special_instructions": task_data.get('special_instructions', ''),
+            "visuals": {
+                "kapak": {
+                    "prompt": task_data.get('kapak_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                },
+                "icerik_1": {
+                    "prompt": task_data.get('icerik_1_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                },
+                "icerik_2": {
+                    "prompt": task_data.get('icerik_2_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                }
+            },
+            "status": "pending",
+            "created_at": today_iso,
+            "date": today_iso,
+            "display_date": today_display,
+            "processed_at": ""
+        }
+        
+        tasks.append(new_task)
+        print(f"   ✅ Task eklendi: ID {new_id} - {new_task['topic'][:50]}...")
+        added_count += 1
+    
+    with open("tasks.json", "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+    
+    print(f"\n✅ Toplam {added_count} task eklendi!")
+    print(f"📋 Toplam task sayısı: {len(tasks)}")
+
+if __name__ == "__main__":
+    add_tasks()
