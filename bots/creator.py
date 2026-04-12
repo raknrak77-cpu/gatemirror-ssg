@@ -92,10 +92,14 @@ REQUIRED STRUCTURE (identical across all 4 languages):
 [Hook + problem + stakes + what reader will learn. Min 2 paragraphs.]
 
 <h2>Key Takeaways</h2>
-⚠️ CRITICAL: Write EXACTLY <h2>Key Takeaways</h2> — do NOT translate this heading in ANY language version
+⚠️ CRITICAL: Write EXACTLY ONE <h2>Key Takeaways</h2> section per language.
+DO NOT repeat this heading. DO NOT write "No summary available".
+Write 3-5 actual takeaways as <li> items.
+Example format:
+<h2>Key Takeaways</h2>
 <ul>
-  <li><strong>[Bold key concept]:</strong> [One sharp, specific sentence]</li>
-  [3-5 items only]
+  <li><strong>First takeaway:</strong> Detailed explanation</li>
+  <li><strong>Second takeaway:</strong> Detailed explanation</li>
 </ul>
 
 <h2>Main Analysis</h2>
