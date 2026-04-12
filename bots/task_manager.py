@@ -1,6 +1,6 @@
 import os
-import sys
 import json
+import re
 from datetime import datetime
 
 def get_next_task_id(tasks):
@@ -12,94 +12,130 @@ def get_next_task_id(tasks):
             max_id = max(max_id, int(tid))
     return str(max_id + 1).zfill(4)
 
-def parse_task_file(filepath):
-    """new_task.txt dosyasını oku, dict haline getir"""
-    if not os.path.exists(filepath):
-        print(f"❌ {filepath} bulunamadı!")
-        return None
-    
+def parse_task_block(block):
+    """Tek bir task bloğunu dict haline getirir, emojileri ve boşlukları temizler"""
     task_data = {}
-    with open(filepath, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if ':' in line:
-                key, value = line.split(':', 1)
-                task_data[key.strip()] = value.strip()
-    
-    # Gerekli alanlar var mı kontrol et
-    required = ['topic', 'category']
-    for req in required:
-        if req not in task_data:
-            print(f"❌ {req} alanı eksik!")
-            return None
-    
+    for line in block.split('\n'):
+        line = line.strip()
+        # Boş satırları atla
+        if not line:
+            continue
+        # Emojileri ve özel karakterleri temizle (sadece harf, rakam, alt çizgi, iki nokta)
+        if ':' in line:
+            # İlk iki noktaya kadar olan kısmı temizle
+            parts = line.split(':', 1)
+            key = re.sub(r'[^a-z0-9_]', '', parts[0].strip().lower())
+            value = parts[1].strip()
+            task_data[key] = value
     return task_data
 
-def add_task():
-    """Yeni task'i tasks.json'a ekler"""
+def parse_all_tasks(filepath):
+    """new_task.txt dosyasındaki TÜM task'ları okur, liste halinde döndürür"""
+    if not os.path.exists(filepath):
+        print(f"❌ {filepath} bulunamadı!")
+        return []
     
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Task'ları ayır: her task bir category: ile başlar
+    blocks = []
+    current_block = []
+    lines = content.split('\n')
+    
+    for line in lines:
+        line_stripped = line.strip()
+        # category: ile başlayan yeni task
+        if line_stripped.startswith('category:'):
+            if current_block:
+                blocks.append('\n'.join(current_block))
+            current_block = [line]
+        elif current_block:
+            current_block.append(line)
+    
+    # Son bloğu ekle
+    if current_block:
+        blocks.append('\n'.join(current_block))
+    
+    tasks_data = []
+    for block in blocks:
+        task_data = parse_task_block(block)
+        # Gerekli alanlar var mı kontrol et
+        if task_data.get('topic') and task_data.get('category'):
+            tasks_data.append(task_data)
+        else:
+            print(f"⚠️ Eksik task bloğu atlandı (topic veya category yok)")
+    
+    return tasks_data
+
+def add_tasks():
+    """Yeni task'leri tasks.json'a ekler (toplu)"""
+    
+    # tasks.json yoksa oluştur
     if not os.path.exists("tasks.json"):
-        print("❌ tasks.json bulunamadı!")
-        return
+        print("⚠️ tasks.json bulunamadı, yeni dosya oluşturuluyor...")
+        with open("tasks.json", "w", encoding="utf-8") as f:
+            json.dump([], f)
     
     with open("tasks.json", "r", encoding="utf-8") as f:
         tasks = json.load(f)
     
-    # Yeni task_id oluştur
-    new_id = get_next_task_id(tasks)
-    
-    # new_task.txt'den verileri oku
-    task_data = parse_task_file("new_task.txt")
-    if not task_data:
+    # new_task.txt'den TÜM task'ları oku
+    all_task_data = parse_all_tasks("new_task.txt")
+    if not all_task_data:
+        print("❌ Hiç task bulunamadı! new_task.txt dosyasını kontrol et.")
         return
     
-    # ISO formatında bugünün tarihi
+    print(f"📋 {len(all_task_data)} task bulundu, ekleniyor...")
+    
     today_iso = datetime.now().strftime("%Y-%m-%d")
     today_display = datetime.now().strftime("%d %B %Y")
     
-    # Yeni task objesini oluştur
-    new_task = {
-        "task_id": new_id,
-        "category": task_data.get('category', 'general'),
-        "topic": task_data['topic'],
-        "reference_link": task_data.get('reference_link', ''),
-        "language": "en",
-        "author_persona": task_data.get('author_persona', 'Expert Analyst'),
-        "special_instructions": task_data.get('special_instructions', ''),
-        "visuals": {
-            "kapak": {
-                "prompt": task_data.get('kapak_prompt', task_data['topic']),
-                "width": 1024,
-                "height": 1024
+    added_count = 0
+    for task_data in all_task_data:
+        new_id = get_next_task_id(tasks)
+        
+        new_task = {
+            "task_id": new_id,
+            "category": task_data.get('category', 'general'),
+            "topic": task_data['topic'],
+            "reference_link": task_data.get('reference_link', ''),
+            "language": "en",
+            "author_persona": task_data.get('author_persona', 'Expert Analyst'),
+            "special_instructions": task_data.get('special_instructions', ''),
+            "visuals": {
+                "kapak": {
+                    "prompt": task_data.get('kapak_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                },
+                "icerik_1": {
+                    "prompt": task_data.get('icerik_1_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                },
+                "icerik_2": {
+                    "prompt": task_data.get('icerik_2_prompt', task_data['topic']),
+                    "width": 1024,
+                    "height": 1024
+                }
             },
-            "icerik_1": {
-                "prompt": task_data.get('icerik_1_prompt', task_data['topic']),
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": task_data.get('icerik_2_prompt', task_data['topic']),
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": today_iso,           # ISO formatı "2026-04-11"
-        "date": today_iso,                 # ✅ Creator'ın beklediği alan (ISO)
-        "display_date": today_display,     # Görüntüleme için "11 April 2026"
-        "processed_at": ""
-    }
-    
-    # tasks.json'a ekle
-    tasks.append(new_task)
+            "status": "pending",
+            "created_at": today_iso,
+            "date": today_iso,
+            "display_date": today_display,
+            "processed_at": ""
+        }
+        
+        tasks.append(new_task)
+        print(f"   ✅ Task eklendi: ID {new_id} - {new_task['topic'][:50]}...")
+        added_count += 1
     
     with open("tasks.json", "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
     
-    print(f"✅ Yeni task eklendi: ID {new_id} - {new_task['topic']}")
-    print(f"   📅 Tarih (ISO): {today_iso}")
-    print(f"   📅 Tarih (görüntüleme): {today_display}")
+    print(f"\n✅ Toplam {added_count} task eklendi!")
     print(f"📋 Toplam task sayısı: {len(tasks)}")
 
 if __name__ == "__main__":
-    add_task()
+    add_tasks()
