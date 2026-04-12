@@ -22,6 +22,9 @@ jobs:
           pip install --default-timeout=100 --retries=5 \
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
+      - name: 0. Starter Bot (Template + Task Kontrol - Kota Harcamadan Once)
+        run: python bots/starter-bot.py
+        
       - name: 1. Creator Bot (4 Dil Tek Prompt + Gorseller)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
