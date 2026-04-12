@@ -1448,36 +1448,5 @@
         "date": "2026-04-12",
         "display_date": "12 April 2026",
         "processed_at": ""
-    },
-    {
-        "task_id": "0048",
-        "category": "eco",
-        "topic": "Fast Fashion's Reckoning: How the EU's Digital Product Passport Is About to Destroy the $100 Billion Throwaway Clothing Industry",
-        "reference_link": "https://www.ecoenclose.com/blog/sustainable-packaging-trends-for-2026",
-        "language": "en",
-        "author_persona": "Sustainable Fashion Economist & EU Trade Policy Analyst",
-        "special_instructions": "Analyze how the EU's Digital Product Passport (DPP) and Ecodesign for Sustainable Products Regulation are targeting fast fashion specifically. Cover: mandatory repairability scores, recycled content requirements, and the end of \"eco-friendly\" claims without data. Discuss Shein and Temu's EU market access crisis as their supply chains cannot meet transparency requirements. Include data on fast fashion's environmental cost: 10% of global carbon emissions, 20% of wastewater. Case study: major fast fashion brand that quietly exited the EU market rather than comply with DPP requirements. Contrast with brands that have successfully transitioned (Patagonia, Mud Jeans' lease model). Address the Global South manufacturing worker impact of this regulatory shift. End with 2028 forecast for the post-fast-f",
-        "visuals": {
-            "kapak": {
-                "prompt": "Fast Fashion's Reckoning: How the EU's Digital Product Passport Is About to Destroy the $100 Billion Throwaway Clothing Industry",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "Fast Fashion's Reckoning: How the EU's Digital Product Passport Is About to Destroy the $100 Billion Throwaway Clothing Industry",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "Fast Fashion's Reckoning: How the EU's Digital Product Passport Is About to Destroy the $100 Billion Throwaway Clothing Industry",
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": "2026-04-12",
-        "date": "2026-04-12",
-        "display_date": "12 April 2026",
-        "processed_at": ""
-    }
+    }  
 ]
