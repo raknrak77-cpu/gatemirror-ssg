@@ -101,6 +101,7 @@
             color: var(--dark);
         }
         
+        /* SIDE MENU (MOBILE) */
         .side-menu {
             position: fixed;
             top: 0;
@@ -133,6 +134,51 @@
             text-decoration: none;
             padding: 0.8rem 0;
             border-bottom: 1px solid #333;
+        }
+        
+        /* SIDE MENU DİL BÖLÜMÜ */
+        .lang-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+        .lang-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+        }
+        .flags {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .flag-link {
+            font-size: 1.2rem;
+            text-decoration: none;
+            opacity: 0.7;
+        }
+        .side-menu .nav-links {
+            margin: 2rem 0;
+            display: block;
+        }
+        .side-menu .nav-links a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        .footer-links {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+        }
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            display: block;
+            padding: 0.3rem 0;
         }
         
         .hero {
@@ -341,7 +387,7 @@
 </head>
 <body>
 
-<!-- SIDE MENU (HARDCODED) -->
+<!-- SIDE MENU (HARDCODED - DİNAMİK DİL) -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="lang-section">
@@ -354,12 +400,12 @@
         </div>
     </div>
     <div class="nav-links">
-        <a href="/">HOME</a>
-        <a href="/en/wellness/">WELLNESS</a>
-        <a href="/en/tech/">TECH & AI</a>
-        <a href="/en/future-economy/">FUTURE ECONOMY</a>
-        <a href="/en/eco/">ECO & SUSTAINABLE</a>
-        <a href="/en/elearning/">E-LEARNING</a>
+        <a href="/{{ lang }}/">HOME</a>
+        <a href="/{{ lang }}/wellness/">WELLNESS</a>
+        <a href="/{{ lang }}/tech/">TECH & AI</a>
+        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
+        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
+        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
     </div>
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
@@ -374,12 +420,12 @@
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
     <div class="nav-links">
-        <a href="/">HOME</a>
-        <a href="/en/wellness/">WELLNESS</a>
-        <a href="/en/tech/">TECH & AI</a>
-        <a href="/en/future-economy/">FUTURE ECONOMY</a>
-        <a href="/en/eco/">ECO & SUSTAINABLE</a>
-        <a href="/en/elearning/">E-LEARNING</a>
+        <a href="/{{ lang }}/">HOME</a>
+        <a href="/{{ lang }}/wellness/">WELLNESS</a>
+        <a href="/{{ lang }}/tech/">TECH & AI</a>
+        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
+        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
+        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
     </div>
 </nav>
 
@@ -438,11 +484,11 @@
         </div>
         <div class="footer-column">
             <h4>Categories</h4>
-            <a href="/en/tech/">Tech & AI</a>
-            <a href="/en/future-economy/">Future Economy</a>
-            <a href="/en/wellness/">Wellness</a>
-            <a href="/en/eco/">Eco & Sustainable</a>
-            <a href="/en/elearning/">E-Learning</a>
+            <a href="/{{ lang }}/tech/">Tech & AI</a>
+            <a href="/{{ lang }}/future-economy/">Future Economy</a>
+            <a href="/{{ lang }}/wellness/">Wellness</a>
+            <a href="/{{ lang }}/eco/">Eco & Sustainable</a>
+            <a href="/{{ lang }}/elearning/">E-Learning</a>
         </div>
         <div class="footer-column">
             <h4>Read in</h4>
@@ -488,4 +534,4 @@
 </script>
 
 </body>
-</html>
+    </html>
