@@ -28,26 +28,44 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= MASTER VISUAL ROLE (TEMİZ VE NET) =================
-MASTER_VISUAL_ROLE = """
-You are a world-class cinematic architectural photographer and visual storyteller.
+# ================= KATEGORİ BAZLI STİLLER =================
+CATEGORY_STYLES = {
+    "wellness": "warm, organic, human-centric, soft natural light, intimate moments, plants, nature, calm atmosphere, spa vibes, healthy living",
+    "tech": "clean, futuristic, geometric, blue/silver tones, high-tech aesthetic, sleek surfaces, ambient glow, innovation focus",
+    "future-economy": "corporate, data-driven, minimalist, glass and steel, professional, abstract financial metaphors, global perspective",
+    "eco": "natural, green, sustainable, outdoor, golden hour, organic textures, renewable energy visuals, pristine environment",
+    "elearning": "bright, educational, approachable, modern, focused on people learning, books, digital interfaces, cozy study spaces"
+}
 
-Style priorities (in order):
-1. Photorealistic realism
-2. Cinematic composition
-3. Emotional atmosphere
-4. Natural light behavior
-5. Museum-quality visual output
+# ================= GLOBAL STYLE (TÜM KATEGORİLER İÇİN ORTAK) =================
+GLOBAL_STYLE = """
+Style:
+- photorealistic
+- cinematic lighting
+- shallow depth of field
+- ultra-detailed
+- natural color grading
+- high dynamic range
+- soft film grain
 
-Rules:
-- No text, typography, letters, or symbols
-- No logos, brands, or watermarks
-- No UI elements, diagrams, or overlays
-- No artificial labels or data visualization
-- No distorted anatomy or unrealistic structures
-
-Output must feel like a high-end editorial magazine photograph.
+Technical:
+- square format (1:1)
+- 1024x1024 resolution
 """
+
+NEGATIVE_CONSTRAINTS = """
+Strict constraints:
+- NO text, typography, letters, words, or symbols
+- NO logos, brands, or watermarks
+- NO diagrams, charts, infographics, UI elements, or overlays
+- NO fake data or labels
+- NO exaggerated CGI look
+- NO distorted anatomy or unrealistic structures
+"""
+
+def get_category_style(kategori):
+    """Kategori adına göre stil döndürür, varsayılan 'general'"""
+    return CATEGORY_STYLES.get(kategori, "professional, clean, modern, versatile")
 
 # ================= YARDIMCI FONKSİYONLAR =================
 def is_valid_image(filepath):
@@ -86,53 +104,29 @@ def upload_to_r2(local_path, r2_key):
         return True
     return False
 
-def enrich_prompt(base_prompt):
-    """Modüler prompt yapısı - Master Role + Stil + Teknik + Kompozisyon + Yasaklar"""
+def enrich_prompt(base_prompt, kategori):
+    """
+    Task prompt'u + kategori stili + global stil + negatif kuralları birleştirir.
+    Task prompt'u ana konuyu belirler, kategori stili sadece atmosferi etkiler.
+    """
+    category_style = get_category_style(kategori)
     
-    style_block = """
-Style:
-- photorealistic
-- cinematic lighting
-- shallow depth of field
-- ultra-detailed
-- natural color grading
-"""
+    return f"""You are a world-class versatile visual photographer.
 
-    technical_block = """
-Technical:
-- square format (1:1)
-- 1024x1024 resolution
-- high dynamic range
-- soft film grain
-"""
-
-    negative_block = """
-Strict constraints:
-- no text, no typography, no letters
-- no logos, no brands, no watermarks
-- no diagrams, charts, UI, or overlays
-- no fake data or labels
-- no exaggerated CGI look
-"""
-
-    composition_block = """
-Composition:
-- strong subject focus
-- rule of thirds or centered symmetry
-- clear foreground, midground, background separation
-- cinematic depth and layering
-"""
-
-    return f"""
-{MASTER_VISUAL_ROLE}
-
-Subject:
+SUBJECT (MUST FOLLOW):
 {base_prompt}
 
-{style_block}
-{technical_block}
-{composition_block}
-{negative_block}
+CATEGORY ATMOSPHERE:
+{category_style}
+
+{GLOBAL_STYLE}
+
+{NEGATIVE_CONSTRAINTS}
+
+IMPORTANT:
+- The SUBJECT above is the main focus. DO NOT ignore it.
+- The CATEGORY ATMOSPHERE only guides the mood and lighting, not the subject.
+- Create a photorealistic, cinematic image that matches the SUBJECT with the appropriate ATMOSPHERE.
 """
 
 def generate_image(prompt, model, width, height, output_png):
@@ -176,7 +170,7 @@ def generate_image(prompt, model, width, height, output_png):
     return False
 
 def visual_factory():
-    # Yeni parametreler: task_id, hash, visuals_json, kategori, yil, ay
+    # Parametreler: task_id, hash, visuals_json, kategori, yil, ay
     if len(sys.argv) < 7:
         print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json> <kategori> <yil> <ay>")
         return
@@ -208,7 +202,7 @@ def visual_factory():
     kapak = visuals.get("kapak", {})
     if kapak:
         base_prompt = kapak.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt)
+        full_prompt = enrich_prompt(base_prompt, kategori)
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
             kapak_webp = f"{hash_id}_kapak.webp"
             if convert_to_webp(kapak_png, kapak_webp):
@@ -223,7 +217,7 @@ def visual_factory():
     icerik1 = visuals.get("icerik_1", {})
     if icerik1:
         base_prompt = icerik1.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt)
+        full_prompt = enrich_prompt(base_prompt, kategori)
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
             icerik1_webp = f"{hash_id}_icerik_1.webp"
             if convert_to_webp(icerik1_png, icerik1_webp):
@@ -238,7 +232,7 @@ def visual_factory():
     icerik2 = visuals.get("icerik_2", {})
     if icerik2:
         base_prompt = icerik2.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt)
+        full_prompt = enrich_prompt(base_prompt, kategori)
         if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
             icerik2_webp = f"{hash_id}_icerik_2.webp"
             if convert_to_webp(icerik2_png, icerik2_webp):
@@ -250,6 +244,7 @@ def visual_factory():
     print(f"\n✅ Görsel işlemleri tamamlandı.")
     print(f"   📁 R2 klasörü: {r2_folder}")
     print(f"   🖼️ 1 kapak + 2 iç görsel WebP, R2'de")
+    print(f"   🎨 Kategori stili: {get_category_style(kategori)}")
 
 if __name__ == "__main__":
     visual_factory()
