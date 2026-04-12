@@ -69,7 +69,10 @@ CULTURAL ADAPTATION RULES:
 ---
 
 CONTENT REQUIREMENTS (per language):
-- Length: 1777-2222 words
+- Target length: 1800-2200 words per language (approx 12,000-14,000 characters)
+- Write complete, thorough articles. Do not cut content short.
+- Include rich examples, specific data points, and detailed subsections.
+- Quality over quantity, but aim for substantial depth.
 - Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question — never a generic statement
 - Tone: Analytical, opinionated, human — slightly varied rhythm and flow per language
 - Include: Named companies, real case studies, specific data points, expert perspectives
