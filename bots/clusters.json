@@ -1,5 +1,4 @@
-[
-    {
+{
     "version": "2.0",
     "categories": {
         "tech": {
@@ -308,7 +307,8 @@
                     "style_boost": "Amazon affiliate. Best-of lists. Focus on easy setup.",
                     "keywords": ["smart home energy", "smart plug", "energy monitoring", "smart thermostat", "home automation"]
                 },
-                "cluster_id": "eco_05",
+                "circular_economy": {
+                    "cluster_id": "eco_05",
                     "intent": "informational",
                     "cpc_min": 5,
                     "cpc_max": 11,
@@ -354,4 +354,3 @@
         "aff_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
     }
 }
-]
