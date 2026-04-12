@@ -6,13 +6,22 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - run: pip install boto3 requests jinja2
-      - run: python bots/publisher.py
+          python-version: '3.10'
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          pip install boto3 requests jinja2
+          
+      - name: Publisher Calistir
+        run: python bots/publisher.py
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
