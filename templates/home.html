@@ -3,37 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    
     <title>Gatemirror | Global Insights on Tech, Wellness & Future Economy</title>
     <meta name="description" content="Global insights on technology, wellness, future economy, and sustainable living. Gatemirror delivers deep analysis in 5 languages.">
     <link rel="canonical" href="{{ canonical_url }}">
-    
     <meta property="og:title" content="Gatemirror | Global Insights & Analysis">
     <meta property="og:description" content="Deep insights on tech, wellness, future economy, and sustainable living. Read in 5 languages.">
     <meta property="og:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Gatemirror">
-    
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Gatemirror | Global Insights & Analysis">
     <meta name="twitter:description" content="Deep insights on tech, wellness, future economy, and sustainable living.">
     <meta name="twitter:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
-    
     {% for alt in alternate_langs %}
     <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.url }}">
     {% endfor %}
     <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #2ecc71;
             --dark: #0a0a0a;
@@ -43,14 +32,12 @@
             --white: #ffffff;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--text);
             background: var(--white);
-            line-height: 1.5;
+            line-height: 1.6;
         }
-        
         nav {
             background: rgba(255,255,255,0.98);
             backdrop-filter: blur(10px);
@@ -63,45 +50,21 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        
         .logo {
+            font-family: 'Inter', sans-serif;
             font-weight: 800;
             font-size: 1.5rem;
             color: var(--dark);
             text-decoration: none;
+            letter-spacing: -0.5px;
         }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
         
-        .logo span {
-            color: var(--primary);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--dark);
-        }
-        
-        /* SIDE MENU (MOBILE) */
+        /* SIDE MENU */
         .side-menu {
             position: fixed;
             top: 0;
@@ -109,287 +72,118 @@
             width: 80%;
             max-width: 300px;
             height: 100%;
-            background: var(--dark);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
             color: white;
-            transition: left 0.3s;
+            transition: left 0.3s ease-in-out;
             z-index: 2000;
             padding: 2rem;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
-        
-        .side-menu.active {
-            left: 0;
+        .side-menu.active { left: 0; }
+        .close-menu { text-align: right; font-size: 1.5rem; cursor: pointer; }
+        .side-menu .nav-links { display: flex; flex-direction: column; gap: 0; margin: 0; }
+        .side-menu .nav-links a { display: block; padding: 0.8rem 0; border-bottom: 1px solid #333; color: white; }
+        .lang-section { border-bottom: 1px solid #333; padding-bottom: 1rem; }
+        .lang-title { font-size: 0.8rem; text-transform: uppercase; color: #aaa; }
+        .flags { display: flex; gap: 1rem; margin-top: 0.5rem; }
+        .flag-link { font-size: 1.2rem; text-decoration: none; opacity: 0.7; }
+        .footer-links { margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; font-size: 0.8rem; }
+        .footer-links a { display: block; color: #aaa; padding: 0.3rem 0; text-decoration: none; }
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
         }
-        
-        .close-menu {
-            text-align: right;
-            font-size: 1.5rem;
+        .toggle-switch {
+            width: 50px;
+            height: 24px;
+            background: #333;
+            border-radius: 30px;
+            position: relative;
             cursor: pointer;
-            margin-bottom: 2rem;
+            transition: 0.2s;
         }
-        
-        .side-menu a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid #333;
-        }
-        
-        /* SIDE MENU DİL BÖLÜMÜ */
-        .lang-section {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #333;
-        }
-        .lang-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #888;
-        }
-        .flags {
+        .toggle-switch:after {
+            content: "🌙";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 4px;
             display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: 0.2s;
         }
-        .flag-link {
-            font-size: 1.2rem;
-            text-decoration: none;
-            opacity: 0.7;
+        body.dark .toggle-switch:after {
+            content: "☀️";
+            left: 26px;
         }
-        .side-menu .nav-links {
-            margin: 2rem 0;
-            display: block;
-        }
-        .side-menu .nav-links a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid #333;
-        }
-        .footer-links {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #333;
-            font-size: 0.8rem;
-        }
-        .footer-links a {
-            color: #aaa;
-            text-decoration: none;
-            display: block;
-            padding: 0.3rem 0;
-        }
+        body.dark { background: #121212; color: #e0e0e0; }
+        body.dark nav { background: rgba(18,18,18,0.98); border-bottom-color: #333; }
+        body.dark .logo, body.dark .nav-links a { color: #e0e0e0; }
+        body.dark .hero { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); }
+        body.dark .article-card, body.dark .featured-card, body.dark .summary { background: #1e1e1e; }
+        body.dark .summary { background: #2a2a2a; }
+        body.dark .footer-links a, body.dark .footer-column a { color: #aaa; }
         
-        .hero {
-            background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%);
-            color: white;
-            padding: 4rem 5%;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 1rem;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .featured {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-        
-        .featured-card {
-            display: flex;
-            gap: 2rem;
-            background: var(--white);
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.3s;
-        }
-        
-        .featured-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .featured-card img {
-            width: 50%;
-            object-fit: cover;
-        }
-        
-        .featured-content {
-            padding: 2rem;
-            flex: 1;
-        }
-        
-        .featured-content h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .featured-meta {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin: 0.5rem 0;
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .featured-excerpt {
-            margin-top: 1rem;
-            color: var(--text-light);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            font-weight: 700;
-        }
-        
-        .article-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-        
-        .article-card {
-            background: var(--white);
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        
-        .article-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .article-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .article-card h3 {
-            padding: 1rem 1rem 0.5rem;
-            font-size: 1.2rem;
-        }
-        
-        .article-meta {
-            padding: 0 1rem;
-            display: flex;
-            gap: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        
-        .article-card p {
-            padding: 0.5rem 1rem 1rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-        
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 3rem 5%;
-            margin-top: 3rem;
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-        
-        .footer-column h4 {
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-        
-        .footer-column a {
-            display: block;
-            color: #aaa;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .footer-column a:hover {
-            color: var(--primary);
-        }
-        
-        .footer-copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-        
+        .hero { background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%); color: white; padding: 4rem 5%; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin: 0 auto; }
+        .featured { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        .featured-card { display: flex; gap: 2rem; background: var(--white); border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow); text-decoration: none; color: inherit; transition: transform 0.3s; }
+        .featured-card:hover { transform: translateY(-5px); }
+        .featured-card img { width: 50%; object-fit: cover; }
+        .featured-content { padding: 2rem; flex: 1; }
+        .featured-content h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .featured-meta { color: var(--text-light); font-size: 0.9rem; margin: 0.5rem 0; display: flex; gap: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+        .section-title { font-size: 1.8rem; margin-bottom: 2rem; font-weight: 700; }
+        .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+        .article-card { background: var(--white); border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s; text-decoration: none; color: inherit; display: block; }
+        .article-card:hover { transform: translateY(-5px); }
+        .article-card img { width: 100%; height: 200px; object-fit: cover; }
+        .article-card h3 { padding: 1rem 1rem 0.5rem; font-size: 1.2rem; }
+        .article-meta { padding: 0 1rem; display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-light); }
+        .article-card p { padding: 0.5rem 1rem 1rem; color: var(--text-light); font-size: 0.9rem; }
+        footer { background: var(--dark); color: white; padding: 3rem 5%; margin-top: 3rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-column h4 { margin-bottom: 1rem; font-size: 1rem; }
+        .footer-column a { display: block; color: #aaa; text-decoration: none; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .footer-column a:hover { color: var(--primary); }
+        .footer-copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; font-size: 0.8rem; color: #aaa; }
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .menu-btn {
-                display: block;
-            }
-            .hero {
-                padding: 2rem 1rem;
-            }
-            .article-grid {
-                grid-template-columns: 1fr;
-            }
-            .featured-card {
-                flex-direction: column;
-            }
-            .featured-card img {
-                width: 100%;
-                height: 200px;
-            }
-            .featured-content {
-                padding: 1.5rem;
-            }
-            .featured-content h2 {
-                font-size: 1.4rem;
-            }
+            .nav-links { display: none; }
+            .menu-btn { display: block; }
+            .hero { padding: 2rem 1rem; }
+            .article-grid { grid-template-columns: 1fr; }
+            .featured-card { flex-direction: column; }
+            .featured-card img { width: 100%; height: 200px; }
+            .featured-content { padding: 1.5rem; }
+            .featured-content h2 { font-size: 1.4rem; }
         }
-        
         @media (min-width: 769px) and (max-width: 1024px) {
-            .article-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .article-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-
-<!-- SIDE MENU (HARDCODED - DİNAMİK DİL) -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <div class="dark-mode-toggle">
+        <span>🌓 Dark Mode</span>
+        <div class="toggle-switch" id="darkModeToggle"></div>
+    </div>
     <div class="lang-section">
         <div class="lang-title">READ IN</div>
         <div class="flags">
@@ -414,8 +208,6 @@
         <p>&copy; 2026 Gatemirror Media</p>
     </div>
 </div>
-
-<!-- NAVBAR (DESKTOP) -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
@@ -428,12 +220,10 @@
         <a href="/{{ lang }}/elearning/">E-LEARNING</a>
     </div>
 </nav>
-
 <div class="hero">
     <h1>Global Insights on Tech, Wellness & Future Economy</h1>
     <p>Deep analysis. Multi‑language. Reflecting reality in 5 languages.</p>
 </div>
-
 {% if featured_article %}
 <div class="featured">
     <a href="{{ featured_article.url }}" class="featured-card">
@@ -450,7 +240,6 @@
     </a>
 </div>
 {% endif %}
-
 <div class="container">
     <h2 class="section-title">Latest Stories</h2>
     <div class="article-grid">
@@ -459,12 +248,8 @@
             <a href="{{ article.url }}">
                 <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" width="400" height="200" onerror="this.style.display='none'">
                 <div class="article-meta">
-                    {% if article.reading_time %}
-                    <span>⏱️ {{ article.reading_time }} min read</span>
-                    {% endif %}
-                    {% if article.views %}
-                    <span>👁️ {{ article.views }} views</span>
-                    {% endif %}
+                    {% if article.reading_time %}<span>⏱️ {{ article.reading_time }} min read</span>{% endif %}
+                    {% if article.views %}<span>👁️ {{ article.views }} views</span>{% endif %}
                 </div>
                 <h3>{{ article.title }}</h3>
                 <p>{{ article.excerpt | default(article.title) }}</p>
@@ -473,7 +258,6 @@
         {% endfor %}
     </div>
 </div>
-
 <footer>
     <div class="footer-content">
         <div class="footer-column">
@@ -502,7 +286,6 @@
         <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
     </div>
 </footer>
-
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -510,28 +293,24 @@
     "name": "Gatemirror",
     "url": "{{ canonical_url }}",
     "description": "Global insights on technology, wellness, future economy, and sustainable living.",
-    "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://gatemirror.com/search?q={query}",
-        "query-input": "required name=query"
-    },
+    "potentialAction": { "@type": "SearchAction", "target": "https://gatemirror.com/search?q={query}", "query-input": "required name=query" },
     "inLanguage": ["en", "es", "de", "fr"]
 }
 </script>
-
 <script>
-    function toggleMenu() {
-        document.getElementById('sideMenu').classList.toggle('active');
-    }
-    
-    document.addEventListener('click', function(event) {
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    document.addEventListener('click', function(e) {
         const menu = document.getElementById('sideMenu');
-        const menuBtn = document.querySelector('.menu-btn');
-        if (menu.classList.contains('active') && !menu.contains(event.target) && !menuBtn.contains(event.target)) {
-            menu.classList.remove('active');
-        }
+        const btn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
     });
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark');
+        const observer = new MutationObserver(() => localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled'));
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
 </script>
-
 </body>
     </html>
