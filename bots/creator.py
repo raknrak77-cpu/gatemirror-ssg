@@ -15,6 +15,7 @@ def create_hash():
     return uuid.uuid4().hex[:8]
 
 def create_slug(text):
+    """Fallback slug üretici (topic'ten)"""
     slug = text.lower()
     slug = re.sub(r'[^a-z0-9]+', '-', slug)
     slug = slug.strip('-')
@@ -34,7 +35,7 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug):
     
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
-    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path}")
+    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path} (slug: {slug})")
     return target_path
 
 def isle_gorev(task):
@@ -120,13 +121,23 @@ SEO RULES:
 
 OUTPUT FORMAT (exact — no deviation):
 <!-- LANG:EN -->
+<!-- SLUG:[english-url-slug-here] -->
 [Full EN HTML here]
 <!-- LANG:ES -->
+<!-- SLUG:[spanish-url-slug-here] -->
 [Full ES HTML here]
 <!-- LANG:DE -->
+<!-- SLUG:[german-url-slug-here] -->
 [Full DE HTML here]
 <!-- LANG:FR -->
+<!-- SLUG:[french-url-slug-here] -->
 [Full FR HTML here]
+
+SLUG RULES:
+- Generate a URL-friendly slug for EACH language separately
+- 5-8 words max, lowercase, use hyphens, no special characters, no accents
+- Must be DIFFERENT for each language (culturally adapted to search intent)
+- Example EN: "neurowellness-revolution", ES: "revolucion-neuro-bienestar"
 
 ---
 
@@ -152,12 +163,24 @@ STRICT RULES:
             full_response = res_data['candidates'][0]['content']['parts'][0]['text']
             print(f"✅ Yanıt alındı: {len(full_response)} karakter")
             
+            # Parse et: LANG ve SLUG'u birlikte al
             parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
             lang_html = {}
+            lang_slug = {}
+            
             for i in range(1, len(parts), 2):
                 lang_code = parts[i].lower()
-                html_content = parts[i+1].strip()
-                html_content = html_content.replace('```html', '').replace('```', '')
+                block = parts[i+1].strip()
+                
+                # SLUG satırını bul
+                slug_match = re.search(r'<!-- SLUG:(.*?) -->', block)
+                if slug_match:
+                    lang_slug[lang_code] = slug_match.group(1).strip()
+                    # SLUG satırını HTML'den temizle
+                    block = re.sub(r'<!-- SLUG:.*? -->', '', block).strip()
+                
+                # HTML içeriğini temizle
+                html_content = block.replace('```html', '').replace('```', '')
                 lang_html[lang_code] = html_content
             
             # Tüm dillerin geldiğini kontrol et
@@ -172,7 +195,6 @@ STRICT RULES:
             now = datetime.now()
             yil = now.strftime("%Y")
             ay = now.strftime("%m")
-            slug = create_slug(topic)
             
             # Görsel bot tek sefer çağrılır (dilden bağımsız)
             visuals = task.get('visuals', {})
@@ -190,10 +212,12 @@ STRICT RULES:
             else:
                 print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
             
-            # Her dil için HTML kaydet
+            # Her dil için HTML kaydet (her dil KENDİ slug'ı ile)
             saved_count = 0
             for lang, html in lang_html.items():
                 if lang in expected:
+                    # Her dilin kendi slug'ını kullan, yoksa fallback
+                    slug = lang_slug.get(lang, create_slug(topic))
                     html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug)
                     saved_count += 1
             
@@ -211,7 +235,7 @@ STRICT RULES:
         return False, None
 
 def operasyon_baslat():
-    print("🛰️ Creator Bot (4 Dil Tek Prompt - Profesyonel) başlatılıyor...")
+    print("🛰️ Creator Bot (4 Dil + Her Dil Kendi Slug'ı) başlatılıyor...")
     if not os.path.exists("tasks.json"):
         print("❌ tasks.json bulunamadı!")
         sys.exit(1)
@@ -236,7 +260,6 @@ def operasyon_baslat():
             json.dump(tasks, f, indent=4, ensure_ascii=False)
         sys.exit(1)
     
-    # tasks.json'u güncelle
     with open("tasks.json", "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
     
@@ -244,4 +267,3 @@ def operasyon_baslat():
 
 if __name__ == "__main__":
     operasyon_baslat()
-    
