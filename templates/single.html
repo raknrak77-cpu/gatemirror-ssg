@@ -65,7 +65,6 @@
         .nav-links a:hover { color: var(--primary); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
 
-        /* SIDE MENU - her zaman koyu */
         .side-menu {
             position: fixed;
             top: 0;
@@ -129,7 +128,6 @@
         }
         body.dark .toggle-switch:after { content: "☀️"; left: 26px; }
 
-        /* DARK MODE */
         body.dark { background: #121212; color: #e0e0e0; }
         body.dark nav { background: rgba(18,18,18,0.98); border-bottom-color: #333; }
         body.dark .logo, body.dark nav .nav-links a { color: #e0e0e0; }
@@ -144,7 +142,6 @@
         body.dark .meta-info { color: #888; }
         body.dark .author-bio { background: #2a2a2a; }
 
-        /* BREADCRUMB */
         .breadcrumb {
             font-size: 0.85rem;
             color: var(--text-light);
@@ -160,7 +157,6 @@
             text-decoration: underline;
         }
 
-        /* AUTHOR BIO */
         .author-bio {
             display: flex;
             gap: 1.5rem;
@@ -188,7 +184,6 @@
             .author-bio { flex-direction: column; align-items: center; text-align: center; }
         }
 
-        /* RANDOM BUTTON */
         .random-article {
             text-align: center;
             margin: 1.5rem 0;
@@ -208,7 +203,24 @@
             opacity: 0.9;
         }
 
-        /* STICKY SIDEBAR */
+        .category-archive {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .archive-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+        .archive-btn:hover {
+            opacity: 0.9;
+        }
+
         @media (min-width: 1024px) {
             .read-next {
                 position: sticky;
@@ -217,7 +229,6 @@
             }
         }
 
-        /* LAZY LOADING PLACEHOLDER */
         img {
             background-color: var(--gray);
         }
@@ -268,7 +279,6 @@
 </head>
 <body>
 
-<!-- SIDE MENU -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="dark-mode-toggle">
@@ -300,7 +310,6 @@
     </div>
 </div>
 
-<!-- NAVBAR -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/{{ lang }}/" class="logo">GATE<span>MIRROR</span></a>
@@ -315,7 +324,6 @@
 </nav>
 
 <div class="container">
-    <!-- BREADCRUMB - Sayfa yol haritası -->
     <div class="breadcrumb">
         <a href="/{{ lang }}/">Ana Sayfa</a> &gt;
         <a href="/{{ lang }}/{{ category }}/">{{ category_name }}</a> &gt;
@@ -334,7 +342,6 @@
         {% if view_count %}<span class="view-count">👁️ {{ view_count }} views</span>{% endif %}
     </div>
 
-    <!-- AUTHOR BIO - Yazar bilgisi ve uzmanlık -->
     {% if author_name and author_bio %}
     <div class="author-bio">
         {% if author_avatar %}
@@ -364,11 +371,16 @@
         <ul class="sources-list">{{ sources }}</ul>
     </div>
 
-    <!-- RANDOM ARTICLE BUTONU -->
     <div class="random-article">
         <button id="randomArticleBtn" class="random-btn">
             🎲 Rastgele Makale
         </button>
+    </div>
+
+    <div class="category-archive">
+        <a href="/api/articles?category={{ category }}" class="archive-btn" target="_blank">
+            📚 Tüm {{ category_name }} Makaleleri (JSON)
+        </a>
     </div>
 
     <div class="read-next">
@@ -386,7 +398,6 @@
     </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
     <div class="footer-content">
         <div class="footer-column">
@@ -416,7 +427,6 @@
     </div>
 </footer>
 
-<!-- FAQ SCHEMA (JSON-LD) - Google zengin sonuçlar için -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -472,7 +482,6 @@
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     }
 
-     // Random Article Button
     document.getElementById('randomArticleBtn')?.addEventListener('click', function() {
         fetch('/api/random-article')
             .then(res => res.json())
