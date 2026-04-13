@@ -46,7 +46,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/uploader.py
         
-      - name: 3. Publisher (Tum Sayfalari R2'den Oku, Template ile Birlestir - 4 Dil)
+      - name: 3. Publisher (Tum Sayfalari R2'den Oku, Makeup ile Makyajla, Template ile Birlestir - 4 Dil)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
