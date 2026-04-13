@@ -100,27 +100,35 @@ def image_exists(url):
         return False
 
 def parse_article_html(html_content, lang, category, hash_id, yil, ay):
-    """HTML içeriğini parse eder, cluster_id'yi META'dan okur"""
+    """HTML içeriğini parse eder, yazar bilgilerini ve cluster_id'yi META'dan okur"""
     
     # Başlık
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
-    # META: author, datetime, cluster_id
-    # Format: <!-- META: author=..., datetime=..., cluster_id=... -->
-    meta_match = re.search(r'<!-- META: author=(.*?), datetime=(.*?)(?:, cluster_id=(.*?))? -->', html_content)
+    # META: author, author_title, author_bio, author_avatar, datetime, cluster_id
+    # Format: <!-- META: author=..., author_title=..., author_bio=..., author_avatar=..., datetime=..., cluster_id=... -->
+    meta_match = re.search(r'<!-- META: author=(.*?), author_title=(.*?), author_bio=(.*?), author_avatar=(.*?), datetime=(.*?)(?:, cluster_id=(.*?))? -->', html_content)
+    
     if meta_match:
         author = meta_match.group(1).strip()
-        sort_datetime_raw = meta_match.group(2).strip()
+        author_title = meta_match.group(2).strip()
+        author_bio = meta_match.group(3).strip()
+        author_avatar = meta_match.group(4).strip()
+        sort_datetime_raw = meta_match.group(5).strip()
         sort_datetime = sort_datetime_raw
         sort_date = sort_datetime_raw[:10]
-        cluster_id = meta_match.group(3).strip() if meta_match.group(3) else None
+        cluster_id = meta_match.group(6).strip() if meta_match.group(6) else None
         try:
             display_date = datetime.strptime(sort_date, "%Y-%m-%d").strftime("%d %B %Y")
         except:
             display_date = sort_date
     else:
+        # Eski format veya yazar bilgisi yoksa fallback
         author = "Gatemirror Expert"
+        author_title = ""
+        author_bio = ""
+        author_avatar = ""
         sort_datetime = None
         sort_date = None
         display_date = datetime.now().strftime("%d %B %Y")
@@ -204,6 +212,9 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     return {
         'title': title,
         'author': author,
+        'author_title': author_title,
+        'author_bio': author_bio,
+        'author_avatar': author_avatar,
         'date': display_date,
         'sort_date': sort_date,
         'sort_datetime': sort_datetime,
@@ -220,7 +231,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         'hash': hash_id,
         'category': category,
         'lang': lang,
-        'cluster_id': cluster_id  # 🔥 YENİ: cluster_id eklendi
+        'cluster_id': cluster_id
     }
 
 def get_all_raw_articles():
@@ -289,7 +300,11 @@ def get_all_raw_articles():
                     'lang': lang,
                     'category': category,
                     'hash': hash_id,
-                    'cluster_id': parsed.get('cluster_id'),  # 🔥 YENİ: cluster_id eklendi
+                    'cluster_id': parsed.get('cluster_id'),
+                    'author_name': parsed.get('author'),
+                    'author_title': parsed.get('author_title'),
+                    'author_bio': parsed.get('author_bio'),
+                    'author_avatar': parsed.get('author_avatar'),
                     'yil': yil,
                     'ay': ay,
                     'slug': slug,
