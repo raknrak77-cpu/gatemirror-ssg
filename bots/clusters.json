@@ -416,7 +416,7 @@
                     }
                 },
                 "climate_finance": {
-                    "cluster_id": "eco_03",
+                    "cluster_id": "eco_03",7
                     "intent": "informational",
                     "cpc_min": 15,
                     "cpc_max": 30,
@@ -463,10 +463,10 @@
                     "style_boost": "B2B focused. Authority content for AdSense. Cite circular economy stats.",
                     "keywords": ["circular economy", "zero waste", "sustainable business", "right to repair", "circular business model"],
                     "default_author": {
-                        "name": "Sami Karjalainen",
-                        "title": "Circular Economy & Impact Investing Analyst",
-                        "bio": "Researches business models that eliminate waste. Covers EU regulations, corporate case studies, and VC funding in the circular space.",
-                        "avatar": "/images/authors/sami-karjalainen.webp"
+                        "name": "Anastasia Lisichka Volkova",
+                        "title": "Legal Counsel & Circular Economy Compliance Specialist",
+                        "bio": "Expert attorney specializing in international law and regulatory frameworks for sustainable business. Researches legal models that support zero-waste initiatives, EU environmental regulations, and corporate governance in the circular space.",
+                        "avatar": "/images/authors/Anastasia-lisichka-volkova.webp"
                     }
                 }
             }
