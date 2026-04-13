@@ -1,36 +1,249 @@
-category: wellness
-topic: Neurowellness Revolution: How Nervous System Regulation Is Becoming the New Frontier of Mental Health
-reference_link: https://www.globalwellnesssummit.com/2026trends/
-author_persona: Integrative Medicine Physician & Neuroscience Researcher
-special_instructions: Analyze the rise of "neurowellness" — the use of technology and somatic practices to regulate the nervous system. Discuss HRV (heart rate variability) tracking, neurotech wearables, breathwork, and somatic therapy as mainstream tools. Explain the fight-or-flight epidemic driven by digital life. Include data from Global Wellness Summit 2026. Cover the shift from symptom management to physiological measurement of stress. Case study: corporate wellness program that reduced burnout 35% using HRV biofeedback. End with 2028 forecast for precision nervous system optimization.
-kapak_prompt: A person sitting peacefully in a minimalist room, wearing a sleek neurotech headband that glows softly blue, holographic brainwave patterns floating gently around them, warm natural light from a large window, plants nearby, calm and serene atmosphere, photorealistic, cinematic lighting, no text
-icerik_1_prompt: Split scene: left side shows a stressed professional at a chaotic desk with multiple screens, cortisol and stress wave graphics overlaid, red tones, tense posture; right side shows the same person in a calm environment using breathwork with a wearable device showing normalized HRV metrics, green tones, relaxed expression — visual metaphor for nervous system regulation, photorealistic, no text labels
-icerik_2_prompt: Close-up of a wrist wearing a premium health wearable showing HRV score, stress level graph, nervous system status indicator, soft morning light, shallow depth of field, clean modern aesthetic, photorealistic, no text on screen
+category: tech
+cluster: ai_trading_bots
+topic: AI Trading Bots: Which Platform Delivers the Highest ROI in 2026?
+reference_link: https://www.gartner.com/en/ai-trading-platforms
+author_persona: Quantitative Trading Analyst & Fintech Consultant
+special_instructions: Compare top 3 AI trading platforms (Binance, Bybit, 3Commas). Focus on ROI, fee structures, security, and automation features. Include a comparison table. End with "Best for" scenarios for different trader profiles.
+kapak_prompt: A futuristic trading dashboard showing multiple AI bots executing trades, glowing green and red candlesticks, holographic interface, dark background with neon blue accents, photorealistic, cinematic, no text
+icerik_1_prompt: Split comparison: left side "Manual Trading" showing stressful red graphs; right side "AI Trading Bot" showing automated profitable trades with green upward arrows, clean interface, photorealistic, no text
+icerik_2_prompt: Close-up of a smartphone showing an AI trading app with "Profit: +24%" and "Win Rate: 89%", modern UI, soft blue glow, photorealistic, no text on screen
 
 category: tech
-topic: Agentic AI: The Rise of Autonomous Digital Workers and the Future of Enterprise
-reference_link: https://www.gartner.com/en/emerging-technologies/agentic-ai
-author_persona: Enterprise AI Strategist & Former CTO
-special_instructions: Explore the evolution from generative AI chatbots to "agentic" AI that autonomously executes tasks. Discuss differences between Copilots (assistive) and Agents (autonomous). Analyze enterprise adoption: software development (auto-fix bugs, deploy code), customer service (resolve tickets without human), data analysis (auto-generate reports). Include real examples from 2026. Address control mechanisms, safety, human oversight. Discuss pricing models (per task, per outcome). End with 2028 predictions for agentic workforce.
-kapak_prompt: A futuristic digital workspace showing multiple glowing AI agent nodes connected by flowing data streams, each node performing different tasks (code, customer chat, analytics), human supervisor watching from elevated position, holographic interfaces, dark background with neon blue and purple accents, photorealistic, cinematic, no text
-icerik_1_prompt: Split comparison: left side labeled "Copilot (Assistive)" showing a human typing with AI suggesting text; right side labeled "Agent (Autonomous)" showing AI performing tasks independently with status indicators (task completed, code deployed, ticket resolved), clean corporate aesthetic, photorealistic, no text labels
-icerik_2_prompt: Dashboard view showing metrics: "Tasks Automated: 12,347", "Hours Saved: 8,234", "Error Rate: 0.3%", multiple green checkmarks, modern interface design, dark mode, soft glow, photorealistic, no text on screen
+cluster: cybersecurity_ai
+topic: AI-Powered Cybersecurity: How Machine Learning Stops Zero-Day Attacks Before They Strike
+reference_link: https://www.crowdstrike.com/ai-cybersecurity-report-2026
+author_persona: Chief Information Security Officer (CISO) & AI Security Researcher
+special_instructions: Analyze threat landscape for 2026. Explain how AI detects anomalies and prevents zero-day attacks. Case study: real attack prevented by CrowdStrike. Discuss compliance requirements (GDPR, SOC2). End with 2028 threat predictions.
+kapak_prompt: A glowing digital shield protecting a network from multiple incoming attack vectors, neon blue and red contrast, futuristic cybersecurity interface, photorealistic, cinematic, no text
+icerik_1_prompt: Before/after visualization: left side chaotic network traffic with red attack indicators; right side AI-secured network with green shields and clean data flow, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Threats Blocked: 12,847", "Zero-Day Prevention: 99.7%", modern dark mode UI, clean professional design, photorealistic, no text on screen
+
+category: tech
+cluster: ai_productivity_tools
+topic: AI Productivity Tools 2026: Which One Saves Your Team the Most Time and Money?
+reference_link: https://www.forbes.com/ai-productivity-tools-2026
+author_persona: Digital Workplace Consultant & Productivity Researcher
+special_instructions: Compare 3-5 AI tools (Jasper, Copy.ai, Notion AI, Grammarly). Focus on time saved, pricing tiers, integrations (Slack, Zoom, Teams). Include user testimonials. End with free trial CTA.
+kapak_prompt: A clean modern desk with a laptop showing multiple AI productivity apps floating as holographic icons, warm morning light, minimalist aesthetic, photorealistic, no text
+icerik_1_prompt: Split comparison: left side "Without AI" showing messy calendar and long to-do list; right side "With AI" showing clean completed tasks and automated schedule, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Time Saved: 15 hours/week", "Tasks Automated: 234", "ROI: 340%", modern interface, soft green glow, photorealistic, no text on screen
+
+category: tech
+cluster: cloud_computing_ai
+topic: Cloud Computing for AI Workloads: AWS vs Azure vs GCP — Which One Wins in 2026?
+reference_link: https://www.gartner.com/cloud-ai-infrastructure
+author_persona: Cloud Solutions Architect & DevOps Strategist
+special_instructions: Compare AWS, Azure, GCP for AI/ML workloads. Pricing calculator mindset. Discuss scalability, SLAs, security compliance. Target CTOs and DevOps engineers. End with recommendation matrix.
+kapak_prompt: Three floating cloud platforms (AWS, Azure, GCP) connected by glowing data streams, futuristic data center background, photorealistic, cinematic, no text
+icerik_1_prompt: Split comparison: left side "Traditional Infrastructure" showing physical servers and cables; right side "Cloud AI Infrastructure" showing scalable cloud nodes and AI chips, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Cost per GPU hour", "Latency ms", "Uptime 99.99%" comparison table, clean enterprise UI, photorealistic, no text on screen
+
+category: tech
+cluster: generative_search
+topic: Generative Search vs Traditional SEO: How Google SGE and Perplexity Are Killing the 10 Blue Links
+reference_link: https://www.searchenginejournal.com/generative-search-2026
+author_persona: SEO Strategist & Search Algorithm Analyst
+special_instructions: Analyze impact of Google SGE and Perplexity on publishers. Discuss SEO adaptation strategies. Compare generative search with traditional search. Include data from recent studies. End with 2028 search landscape forecast.
+kapak_prompt: A search bar morphing into a glowing AI brain, generating contextual answers instead of links, futuristic interface, dark background with blue and purple gradients, photorealistic, no text
+icerik_1_prompt: Split: left side "Traditional Search" showing 10 blue links; right side "Generative Search" showing an AI-generated summary with sources, photorealistic, no text labels
+icerik_2_prompt: Graph showing "Search Traffic Distribution 2026" with generative search growing share, clean data visualization, modern analytics style, photorealistic, no text on screen
 
 category: future-economy
-topic: The Tokenization of Everything: How Real-World Assets Are Democratizing Private Equity
-reference_link: https://www.bcg.com/publications/2026/tokenization-of-real-world-assets
-author_persona: Digital Asset Economist & Tokenization Strategist
-special_instructions: Analyze the growth of RWA (Real World Asset) tokenization — how real estate, private equity, commodities, and art are being fractionalized on blockchain. Explain how tokenization lowers investment minimums from $1M to $100. Discuss liquidity benefits: 24/7 trading secondary markets. Cover regulatory landscape (SEC, MiCA). Include data: BCG forecasts $5T tokenized market by 2028. Case study: $50M Manhattan office building tokenized. Explain role of oracles (Chainlink) for off-chain data. End with 2028 forecast.
-kapak_prompt: Digital blockchain network overlaid on physical world assets: skyscrapers, art gallery, oil barrels, luxury watches — all connected by glowing blockchain nodes, translucent, futuristic, dark background with gold and green accents, photorealistic, cinematic, no text
-icerik_1_prompt: Split comparison: left side "Traditional Private Equity" showing a vault with giant lock, million dollar sign, closed doors, red tones; right side "Tokenized RWA" showing small glowing tokens floating, fractional ownership diagram, open access, green tones — visual metaphor for democratization, photorealistic, no text
-icerik_2_prompt: A smartphone screen showing a sleek investment app interface displaying "Tokenized Real Estate" with fractional shares listed at $100 each, progress bars showing ownership percentage, transaction history, modern dark mode UI, soft blue glow, photorealistic, no text on screen
+cluster: crypto_exchanges
+topic: Best Crypto Exchanges for Low Fees and High Security in 2026
+reference_link: https://www.coingecko.com/crypto-exchanges-ranking
+author_persona: Crypto Trader & Exchange Analyst
+special_instructions: Compare 4-5 exchanges (MEXC, Bitget, Kraken, Binance). Fee comparison table, security audit status, fiat on-ramp methods, staking rewards. Be decisive about fees. Include referral links naturally.
+kapak_prompt: Multiple crypto exchange logos floating on a digital trading floor, glowing green and blue, futuristic financial interface, photorealistic, cinematic, no text
+icerik_1_prompt: Split comparison: left side "High Fees Exchange" showing money flying away; right side "Low Fees Exchange" showing savings accumulating, photorealistic, no text
+icerik_2_prompt: Comparison table showing trading fees, withdrawal fees, and staking APY for 5 exchanges, clean dark mode design, photorealistic, no text on screen
 
+category: future-economy
+cluster: rwa_tokenization
+topic: Real-World Asset Tokenization: How to Invest in Tokenized Real Estate, Art, and Private Equity
+reference_link: https://www.bcg.com/rwa-tokenization-2026
+author_persona: Digital Asset Economist & Tokenization Strategist
+special_instructions: Explain RWA tokenization benefits: fractional ownership, liquidity, 24/7 trading. Discuss regulatory landscape (SEC, MiCA). Case study: tokenized Manhattan office building. BCG forecast $5T by 2028. End with 2028 predictions.
+kapak_prompt: Physical world assets (building, art, gold) connected by glowing blockchain nodes, futuristic overlay, dark background with gold and green accents, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Traditional Private Equity" with million-dollar lock and vault; right side "Tokenized RWA" with fractional tokens at $100 each, photorealistic, no text
+icerik_2_prompt: Investment app showing "Tokenized Real Estate - $100/share", progress bar, ownership percentage, modern dark mode UI, soft blue glow, photorealistic, no text on screen
+
+category: future-economy
+cluster: digital_banking
+topic: Neobanks Compared: Revolut, N26, and the Best Digital Banks for 2026
+reference_link: https://www.forrester.com/neobanking-2026
+author_persona: Fintech Analyst & Digital Banking Consultant
+special_instructions: Compare 3-5 neobanks. Fee comparison (monthly, ATM, foreign), interest rates, app features, deposit insurance. CPA focus. Highlight welcome bonuses.
+kapak_prompt: Multiple neobank app icons floating around a smartphone, glowing interfaces, modern banking aesthetic, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Traditional Bank" showing long queues and paperwork; right side "Neobank" showing seamless app onboarding, photorealistic, no text
+icerik_2_prompt: Comparison table of monthly fees, ATM fees, and interest rates for 5 neobanks, clean UI, photorealistic, no text on screen
+
+category: future-economy
+cluster: defi_staking
+topic: DeFi Staking 2026: Highest APY Platforms with Lowest Risk
+reference_link: https://www.defirate.com/staking-rewards
+author_persona: DeFi Protocol Analyst & Smart Contract Auditor
+special_instructions: Compare 3-5 DeFi staking protocols (Lido, Rocket Pool, Aave). Realistic APY ranges, lock-up periods, risk disclosure (impermanent loss), platform security audits. Disclaimers mandatory.
+kapak_prompt: Glowing DeFi protocol nodes connected in a network, staking rewards flowing as golden streams, futuristic blockchain visualization, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Traditional Savings" showing low interest rate; right side "DeFi Staking" showing high APY with risk meter, photorealistic, no text
+icerik_2_prompt: Dashboard showing APY comparison, TVL, and risk scores for 5 protocols, clean dark mode design, photorealistic, no text on screen
+
+category: future-economy
+cluster: wealth_management
+topic: Wealth Management for High-Net-Worth Individuals: Top Private Wealth Advisors in 2026
+reference_link: https://www.barrons.com/wealth-management-ranking
+author_persona: Private Wealth Manager & HNW Strategist
+special_instructions: Compare top wealth management firms. Fee structure (AUM, advisory), minimum investment, portfolio examples, performance track record. Target accredited investors. Professional, conservative tone.
+kapak_prompt: A private wealth office with luxury materials, soft lighting, portfolio charts on holographic displays, high-end professional aesthetic, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "DIY Investing" showing scattered papers; right side "Wealth Management" showing organized portfolio with professional advisor, photorealistic, no text
+icerik_2_prompt: Portfolio dashboard showing asset allocation, performance metrics, and risk analysis, clean professional UI, photorealistic, no text on screen
+
+category: wellness
+cluster: longevity_biohacking
+topic: Longevity Biohacking: Best Supplements and Wearables for Healthspan Extension in 2026
+reference_link: https://www.ncbi.nlm.nih.gov/longevity-research
+author_persona: Anti-Aging Researcher & Biohacking Coach
+special_instructions: Discuss NMN, resveratrol, and other supplements. Wearables: Oura Ring, WHOOP. Clinical study citations. Dosage recommendations. Price comparison. Science-backed tone. Affiliate links.
+kapak_prompt: A person in their 60s looking vibrant and healthy, with holographic health metrics floating around them, natural light, clean aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "Aging" showing cellular damage visualization; right side "Biohacking" showing repaired cells and glowing health indicators, photorealistic, no text
+icerik_2_prompt: Close-up of supplements (NMN, resveratrol) and Oura Ring, soft natural light, clean product photography, photorealistic, no text
+
+category: wellness
+cluster: mental_health_apps
+topic: Best Mental Health Apps for Anxiety and Depression in 2026
+reference_link: https://www.psychologytoday.com/mental-health-apps
+author_persona: Clinical Psychologist & Digital Therapeutics Specialist
+special_instructions: Compare 3-5 apps (BetterHelp, Calm, Headspace). Therapy modality (CBT, DBT), pricing, practitioner credentials, privacy policy (HIPAA). Ethical tone. Crisis disclaimer. Affiliate links.
+kapak_prompt: A person meditating peacefully with a smartphone showing a calm blue mental health app interface, soft morning light, serene atmosphere, photorealistic, no text
+icerik_1_prompt: Split: left side "Before App" showing anxious person with messy thoughts; right side "After App" showing calm person with organized thoughts, photorealistic, no text
+icerik_2_prompt: App comparison table showing pricing, therapy types, and user ratings for 5 apps, clean UI, photorealistic, no text on screen
+
+category: wellness
+cluster: telemedicine_tech
+topic: Telemedicine Platforms Compared: Best Online Doctor Services for 2026
+reference_link: https://www.ama-assn.org/telemedicine-adoption
+author_persona: Healthcare IT Consultant & Telemedicine Researcher
+special_instructions: Compare platforms (Teladoc, Amwell, Doctor on Demand). Insurance coverage, wait times, specialist availability. Authority building. Healthcare professional tone. Cite telemedicine adoption stats.
+kapak_prompt: A video consultation screen showing a doctor and patient, clean modern interface, soft blue lighting, professional healthcare aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "In-Person Visit" showing travel time and waiting room; right side "Telemedicine" showing quick video consultation from home, photorealistic, no text
+icerik_2_prompt: Comparison table of wait times, insurance acceptance, and specialties for 4 platforms, clean UI, photorealistic, no text on screen
+
+category: wellness
+cluster: sleep_optimization
+topic: Best Sleep Trackers and Smart Rings for Better Sleep in 2026
+reference_link: https://www.sleepfoundation.org/sleep-trackers
+author_persona: Sleep Scientist & Wearable Tech Reviewer
+special_instructions: Compare Oura Ring, Fitbit, Apple Watch, Whoop. Product features (tracking, smart alarm), battery life, app ecosystem, user rating aggregation. Amazon affiliate heavy. Focus on data accuracy.
+kapak_prompt: A person sleeping peacefully with a glowing smart ring on their finger, soft moonlight, clean bedroom aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "Poor Sleep" showing restless person with red metrics; right side "Optimized Sleep" showing deep sleep with green metrics, photorealistic, no text
+icerik_2_prompt: Close-up of sleep tracker dashboard showing sleep stages (REM, Deep, Light) and sleep score, modern dark mode UI, photorealistic, no text on screen
+
+category: wellness
+cluster: personalized_nutrition
+topic: Personalized Nutrition: DNA and Microbiome Testing Kits Compared
+reference_link: https://www.nature.com/articles/personalized-nutrition
+author_persona: Nutrigenomics Researcher & Registered Dietitian
+special_instructions: Compare InsideTracker, Viome, 23andMe. DNA/microbiome testing methodology, sample report, pricing (kit + subscription), science partners (universities). Educational + commercial balance. Cite clinical validation.
+kapak_prompt: A person holding a DNA testing kit, with a holographic visualization of their microbiome floating nearby, clean laboratory aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "Generic Nutrition" showing one-size-fits-all diet; right side "Personalized Nutrition" showing custom meal plan based on DNA, photorealistic, no text
+icerik_2_prompt: Sample report dashboard showing "Optimal Foods for Your DNA", "Food Sensitivities", and "Supplement Recommendations", clean UI, photorealistic, no text on screen
 
 category: elearning
-topic: The Skills Gap Crisis: Why Universities Can't Keep Up with AI and How Micro-Credentials Are Taking Over
-reference_link: https://www.weforum.org/reports/future-of-jobs-2026
-author_persona: Workforce Development Economist & EdTech Founder
-special_instructions: Analyze the widening skills gap as AI transforms job requirements faster than traditional education can adapt. Discuss the shift from 4-year degrees to stackable micro-credentials, industry certifications, corporate learning platforms. Include data from WEF Future of Jobs 2026. Compare university response (integrating AI literacy) vs alternative providers (Coursera, LinkedIn Learning, corporate academies). Case study: IBM's digital badge program. Discuss employer acceptance of micro-credentials. End with 2028 forecast for higher education disruption.
-kapak_prompt: A traditional university building with classic columns on one side, crumbling or fading into the background; on the other side, a glowing digital credential badge floating, holographic certificate, futuristic interface — metaphor for disruption, photorealistic, cinematic, no text
-icerik_1_prompt: A professional working at a desk, completing an online course on a laptop, screen showing "Micro-Credential: AI for Business" with progress bar at 100%, celebratory digital confetti, modern home office setup, warm evening light, photorealistic, no text on screen
-icerik_2_prompt: Dashboard showing multiple digital badges, credentials, and certificates from different providers (Coursera, IBM, LinkedIn), organized in a professional portfolio interface, clean modern design, soft blue and white tones, photorealistic, no text
+cluster: coding_bootcamps
+topic: Best Coding Bootcamps for 2026: Job Placement and ROI Compared
+reference_link: https://www.coursereport.com/coding-bootcamp-ranking
+author_persona: Career Coach & EdTech Analyst
+special_instructions: Compare 3-5 bootcamps (Coursera, Udacity, General Assembly). Curriculum depth (weeks, projects), job placement rates, instructor credentials, pricing & scholarships. ROI-focused. Alumni testimonials. Affiliate links.
+kapak_prompt: A person coding on a laptop with multiple digital badges and certificates floating around, modern workspace, warm lighting, photorealistic, no text
+icerik_1_prompt: Split: left side "Self-Taught" showing scattered resources; right side "Bootcamp" showing structured curriculum and mentor support, photorealistic, no text
+icerik_2_prompt: Comparison table of tuition, job placement rates, and program length for 5 bootcamps, clean UI, photorealistic, no text on screen
+
+category: elearning
+cluster: exec_education
+topic: Executive MBA Programs: Top Business Schools for ROI in 2026
+reference_link: https://www.ft.com/executive-mba-ranking
+author_persona: Executive Education Advisor & HNW Career Coach
+special_instructions: Compare top EMBA programs. ROI calculation (salary increase), alumni network strength, accreditation status, application requirements. Target C-suite readers. Professional, data-driven tone.
+kapak_prompt: A prestigious business school campus with executive students networking, professional atmosphere, golden hour light, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Before EMBA" showing mid-career plateau; right side "After EMBA" showing executive promotion and salary increase, photorealistic, no text
+icerik_2_prompt: ROI comparison table showing program cost, average salary increase, and alumni network size for 5 schools, clean professional UI, photorealistic, no text on screen
+
+category: elearning
+cluster: language_apps
+topic: Best Language Learning Apps for 2026: AI Tutors vs Traditional Methods
+reference_link: https://www.fluentin3months.com/app-review
+author_persona: Polyglot & Language Learning Researcher
+special_instructions: Compare 3-5 apps (Ling, Duolingo, Babbel, Rosetta Stone). Languages offered, AI features (speech recognition), pricing (free tier vs premium), user retention stats. Focus on value for money. Affiliate links.
+kapak_prompt: A smartphone showing a language learning app with multiple flags, person studying in cozy environment, warm lighting, photorealistic, no text
+icerik_1_prompt: Split: left side "Traditional Class" showing textbook and teacher; right side "Language App" showing interactive AI tutor on smartphone, photorealistic, no text
+icerik_2_prompt: Comparison table of languages offered, pricing, and AI features for 5 apps, clean UI, photorealistic, no text on screen
+
+category: elearning
+cluster: cloud_certifications
+topic: AWS vs Azure vs Google Cloud Certifications: Which One Boosts Your Career Most in 2026?
+reference_link: https://www.pluralsight.com/cloud-certification-report
+author_persona: Cloud Career Coach & Certification Trainer
+special_instructions: Compare AWS, Azure, GCP certifications. Exam breakdown (domains, questions), practice test quality, pass rate claims, cost (exam + prep). High-intent audience. Exam prep affiliate.
+kapak_prompt: Three cloud certification badges (AWS, Azure, GCP) glowing on a digital screen, professional workspace, modern tech aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "No Certification" showing entry-level salary; right side "Certified" showing senior salary and promotion, photorealistic, no text
+icerik_2_prompt: Comparison table of exam costs, difficulty, and average salary after certification for 3 providers, clean UI, photorealistic, no text on screen
+
+category: elearning
+cluster: sidehustle_skills
+topic: Best Side Hustle Skills for 2026: Learn to Make Money Online
+reference_link: https://www.sidehustlenation.com/skills
+author_persona: Digital Entrepreneurship Coach & Side Hustle Expert
+special_instructions: Discuss top skills (freelance writing, web design, social media management, dropshipping). Earnings potential (realistic), time commitment, platform fees, success stories (verifiable). Tool affiliate (Shopify, Fiverr, Canva). Actionable steps.
+kapak_prompt: A person working from a cozy home office with multiple income streams visualized as floating icons, warm lighting, motivational aesthetic, photorealistic, no text
+icerik_1_prompt: Split: left side "9-5 Only" showing limited income; right side "Side Hustle" showing multiple income streams growing, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Monthly Side Hustle Income: $3,247", "Hours per week: 12", "Platforms: Shopify, Fiverr, Canva", clean UI, photorealistic, no text on screen
+
+category: eco
+cluster: ev_infrastructure
+topic: EV Charging Networks Compared: Best Home and Public Charging Solutions for 2026
+reference_link: https://www.iea.org/ev-infrastructure-2026
+author_persona: EV Infrastructure Analyst & Sustainable Transport Consultant
+special_instructions: Compare ChargePoint, Tesla Supercharger, Electrify America. Charging speed comparison (kW), network coverage maps, pricing (per kWh, subscription), connector types. Lead gen (home charger install). Focus on total cost.
+kapak_prompt: An electric vehicle plugged into a modern charging station, futuristic city background, clean energy aesthetic, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Gas Station" showing fuel pump and emissions; right side "EV Charging" showing clean plug-in and green energy, photorealistic, no text
+icerik_2_prompt: Comparison table of charging speeds, pricing, and network coverage for 4 providers, clean UI, photorealistic, no text on screen
+
+category: eco
+cluster: solar_energy
+topic: Solar Panels for Home 2026: Cost, Savings, and Best Installers Compared
+reference_link: https://www.energy.gov/solar-home-guide
+author_persona: Solar Energy Consultant & Renewable Energy Engineer
+special_instructions: Compare solar panel brands (SunPower, LG, Panasonic). Cost per watt breakdown, payback period calculation, warranty comparison (panels, inverters), installation process. Lead gen (local installers). ROI calculator mindset. Include tax credit info.
+kapak_prompt: A modern house with solar panels on the roof, bright sunny day, clean neighborhood, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Without Solar" showing high electricity bill; right side "With Solar" showing zero bill and energy credits, photorealistic, no text
+icerik_2_prompt: ROI dashboard showing "Payback Period: 6 years", "20-Year Savings: $28,000", "Tax Credit: 30%", clean UI, photorealistic, no text on screen
+
+category: eco
+cluster: climate_finance
+topic: ESG Investing 2026: How to Build a Sustainable Portfolio Without Sacrificing Returns
+reference_link: https://www.msci.com/esg-investing-report
+author_persona: ESG Analyst & Sustainable Finance Researcher
+special_instructions: Discuss ESG scoring methodology, regulatory landscape (SFDR, SEC), fund performance comparison, greenwashing red flags. Authority content. Attracts high-CPC financial ads. Neutral, data-driven.
+kapak_prompt: A green financial district with ESG metrics floating as holograms, modern eco-friendly architecture, soft green lighting, photorealistic, cinematic, no text
+icerik_1_prompt: Split: left side "Traditional Portfolio" showing high carbon footprint; right side "ESG Portfolio" showing net-zero emissions and similar returns, photorealistic, no text
+icerik_2_prompt: Dashboard comparing ESG fund performance, carbon intensity, and expense ratios for 5 funds, clean professional UI, photorealistic, no text on screen
+
+category: eco
+cluster: smart_home_energy
+topic: Smart Home Energy Devices: Best Smart Plugs, Thermostats, and Monitors for 2026
+reference_link: https://www.energy.gov/smart-home-guide
+author_persona: Smart Home Tech Reviewer & Energy Efficiency Expert
+special_instructions: Compare Amazon IoT, Google Nest, Ecobee, Eve Energy. Device compatibility (Alexa, Google), energy savings estimates, installation difficulty, price comparison. Amazon affiliate. Best-of lists. Focus on easy setup.
+kapak_prompt: A modern smart home with glowing energy monitoring devices, smartphone control interface, cozy evening lighting, photorealistic, no text
+icerik_1_prompt: Split: left side "Without Smart Devices" showing wasted energy; right side "With Smart Devices" showing optimized energy usage, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Energy Saved: 23%", "Monthly Savings: $42", "Carbon Reduction: 340 lbs", clean UI, photorealistic, no text on screen
+
+category: eco
+cluster: circular_economy
+topic: Circular Economy Business Models: How Companies Profit from Zero Waste in 2026
+reference_link: https://www.ellenmacarthurfoundation.org/circular-economy
+author_persona: Circular Economy Strategist & Sustainability Consultant
+special_instructions: Analyze business model examples (Patagonia, Loop, Fairphone). Case study: successful circular company. Regulatory trends (EU right to repair). VC investment landscape. B2B focused. Authority content for AdSense.
+kapak_prompt: A circular diagram showing materials flowing back into production instead of waste, clean industrial aesthetic, green and blue tones, photorealistic, no text
+icerik_1_prompt: Split: left side "Linear Economy" showing take-make-waste; right side "Circular Economy" showing reduce-reuse-recycle loop, photorealistic, no text
+icerik_2_prompt: Dashboard showing "Waste Diverted: 12,000 tons", "Revenue from Circular Products: $45M", "CO2 Saved: 8,000 tons", clean UI, photorealistic, no text on screen
