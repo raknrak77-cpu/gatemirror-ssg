@@ -13,7 +13,13 @@
                     "required_sections": ["Comparison table (3-5 platforms)", "Fee breakdown", "ROI calculator mindset", "\"Best for\" scenarios"],
                     "forbidden": ["\"It depends\"", "\"DYOR\" (Do Your Own Research)", "Overly technical jargon"],
                     "style_boost": "Decisive, action-oriented. Use 'X is the winner for Y'. Include sign-up incentives.",
-                    "keywords": ["AI trading", "automated trading", "trading bots", "crypto trading bot"]
+                    "keywords": ["AI trading", "automated trading", "trading bots", "crypto trading bot"],
+                    "default_author": {
+                        "name": "Alp Deniz",
+                        "title": "Algorithmic Trading Strategist",
+                        "bio": "Former quantitative analyst at a proprietary trading firm. Specializes in high-frequency AI execution models and portfolio automation. Based in Istanbul.",
+                        "avatar": "/images/authors/alp-deniz.webp"
+                    }
                 },
                 "cybersecurity_ai": {
                     "cluster_id": "tech_02",
@@ -25,7 +31,13 @@
                     "required_sections": ["Threat landscape analysis", "Case study (real attack prevented)", "Compliance/regulation section", "Future threats (2027-28)"],
                     "forbidden": ["Fear-mongering without solution", "Product placement in first 50%"],
                     "style_boost": "Build authority. Quote Gartner/Forrester. Enterprise tone. Neutral, analytical.",
-                    "keywords": ["AI security", "cybersecurity", "threat detection", "enterprise security"]
+                    "keywords": ["AI security", "cybersecurity", "threat detection", "enterprise security"],
+                    "default_author": {
+                        "name": "Elena Varga",
+                        "title": "Cyber Threat Intelligence Researcher",
+                        "bio": "Former SOC lead for a European critical infrastructure operator. Focuses on AI-driven defense and zero-day exploit mitigation.",
+                        "avatar": "/images/authors/elena-varga.webp"
+                    }
                 },
                 "ai_productivity_tools": {
                     "cluster_id": "tech_03",
@@ -37,7 +49,13 @@
                     "required_sections": ["Feature comparison", "Pricing tiers (annual vs monthly)", "Integration list (Slack, Zoom, etc.)", "User testimonials"],
                     "forbidden": ["\"Revolutionary\" (overused)", "Overpromising AI capabilities"],
                     "style_boost": "Focus on time saved ($$$). Include 'free trial' CTA. Compare 3-5 tools.",
-                    "keywords": ["AI productivity", "automation tools", "business efficiency", "SaaS tools"]
+                    "keywords": ["AI productivity", "automation tools", "business efficiency", "SaaS tools"],
+                    "default_author": {
+                        "name": "Caner Yılmaz",
+                        "title": "Digital Workplace Consultant",
+                        "bio": "Helped over 150 companies integrate AI copilots and automation workflows. Passionate about measurable productivity gains.",
+                        "avatar": "/images/authors/caner-yilmaz.webp"
+                    }
                 },
                 "cloud_computing_ai": {
                     "cluster_id": "tech_04",
@@ -49,7 +67,13 @@
                     "required_sections": ["Vendor comparison (AWS/Azure/GCP)", "Pricing calculator mindset", "Scalability section", "Security compliance"],
                     "forbidden": ["Consumer-level language", "\"Easy for beginners\""],
                     "style_boost": "Target CTOs/DevOps. Use enterprise vocabulary: 'SLAs', 'uptime', 'latency'.",
-                    "keywords": ["cloud computing", "AWS", "Azure", "GCP", "enterprise cloud", "AI infrastructure"]
+                    "keywords": ["cloud computing", "AWS", "Azure", "GCP", "enterprise cloud", "AI infrastructure"],
+                    "default_author": {
+                        "name": "Sofia Larsson",
+                        "title": "Cloud Solutions Architect",
+                        "bio": "Designs multi-cloud infrastructure for fintech and AI-first startups. Certified AWS, Azure, and GCP professional.",
+                        "avatar": "/images/authors/sofia-larsson.webp"
+                    }
                 },
                 "generative_search": {
                     "cluster_id": "tech_05",
@@ -61,7 +85,13 @@
                     "required_sections": ["SEO impact analysis", "Publisher perspective", "Comparison (Google SGE vs Perplexity)", "Future of search"],
                     "forbidden": ["\"Google is dying\" (clickbait)", "Unsubstantiated claims"],
                     "style_boost": "Cite recent studies. Authority-building, traffic driver. Neutral tone.",
-                    "keywords": ["generative search", "Google SGE", "Perplexity", "AI search", "SEO future"]
+                    "keywords": ["generative search", "Google SGE", "Perplexity", "AI search", "SEO future"],
+                    "default_author": {
+                        "name": "Mert Akıncı",
+                        "title": "SEO & Generative Search Analyst",
+                        "bio": "Tracks search algorithm shifts since the early 2010s. Focuses on how publishers can adapt to SGE and answer engines.",
+                        "avatar": "/images/authors/mert-akinci.webp"
+                    }
                 }
             }
         },
@@ -77,7 +107,13 @@
                     "required_sections": ["Fee comparison table", "Security audit status", "Fiat on-ramp methods", "Staking rewards (if any)"],
                     "forbidden": ["\"Get rich quick\" language", "Price predictions as fact", "Unverified APY claims"],
                     "style_boost": "Include referral links naturally. Compare 4-5 exchanges. Be decisive about fees.",
-                    "keywords": ["crypto exchange", "buy Bitcoin", "trading fees", "crypto trading"]
+                    "keywords": ["crypto exchange", "buy Bitcoin", "trading fees", "crypto trading"],
+                    "default_author": {
+                        "name": "Zeynep Korkmaz",
+                        "title": "Cryptocurrency Market Analyst",
+                        "bio": "Full-time crypto trader since 2017. Analyzes exchange liquidity, fee structures, and security practices for retail and institutional investors.",
+                        "avatar": "/images/authors/zeynep-korkmaz.webp"
+                    }
                 },
                 "rwa_tokenization": {
                     "cluster_id": "fe_02",
@@ -89,7 +125,13 @@
                     "required_sections": ["Legal/regulatory framework (SEC/MiCA)", "Case study (successful tokenization)", "Asset classes covered", "Liquidity discussion"],
                     "forbidden": ["Hype language (\"revolution\")", "Ignoring regulatory risks"],
                     "style_boost": "High-authority content. Target institutional readers. Neutral, data-driven.",
-                    "keywords": ["RWA", "tokenization", "real world assets", "asset tokenization", "blockchain finance"]
+                    "keywords": ["RWA", "tokenization", "real world assets", "asset tokenization", "blockchain finance"],
+                    "default_author": {
+                        "name": "Dimitri Volkov",
+                        "title": "Tokenization & Digital Assets Economist",
+                        "bio": "Advised European regulators on MiCA implementation for RWAs. Previously structured tokenized real estate funds.",
+                        "avatar": "/images/authors/dimitri-volkov.webp"
+                    }
                 },
                 "digital_banking": {
                     "cluster_id": "fe_03",
@@ -101,7 +143,13 @@
                     "required_sections": ["Fee comparison (monthly, ATM, foreign)", "Interest rates (savings)", "App features (budgeting, investing)", "FDIC/EU deposit insurance"],
                     "forbidden": ["\"Free money\" claims", "Bashing traditional banks excessively"],
                     "style_boost": "CPA focus (account signup). Compare 3-5 neobanks. Highlight welcome bonuses.",
-                    "keywords": ["neobank", "digital banking", "online bank", "no fee banking", "mobile bank"]
+                    "keywords": ["neobank", "digital banking", "online bank", "no fee banking", "mobile bank"],
+                    "default_author": {
+                        "name": "Elif Taşkın",
+                        "title": "Fintech & Neobank Specialist",
+                        "bio": "Former product manager at a leading digital bank. Reviews account features, fee transparency, and user experience across Europe.",
+                        "avatar": "/images/authors/elif-taskin.webp"
+                    }
                 },
                 "defi_staking": {
                     "cluster_id": "fe_04",
@@ -113,7 +161,13 @@
                     "required_sections": ["APY comparison (realistic range)", "Lock-up periods", "Risk disclosure (impermanent loss)", "Platform security (audits)"],
                     "forbidden": ["Guaranteed returns", "\"Risk-free\" language", "Ignoring tax implications"],
                     "style_boost": "Educational + commercial. Disclaimers mandatory. Compare 3-5 protocols.",
-                    "keywords": ["DeFi", "staking", "crypto staking", "yield farming", "APY"]
+                    "keywords": ["DeFi", "staking", "crypto staking", "yield farming", "APY"],
+                    "default_author": {
+                        "name": "Lucas Fontaine",
+                        "title": "DeFi Protocol Researcher",
+                        "bio": "Audits smart contracts and staking mechanisms. Focuses on risk-adjusted yield strategies for long-term holders.",
+                        "avatar": "/images/authors/lucas-fontaine.webp"
+                    }
                 },
                 "wealth_management": {
                     "cluster_id": "fe_05",
@@ -125,7 +179,13 @@
                     "required_sections": ["Fee structure (AUM, advisory)", "Minimum investment", "Portfolio examples", "Performance track record"],
                     "forbidden": ["\"Beat the market\" promises", "Short-term focus"],
                     "style_boost": "HNW lead gen. Professional, conservative tone. Target accredited investors.",
-                    "keywords": ["wealth management", "private wealth", "investment advisory", "HNW", "asset management"]
+                    "keywords": ["wealth management", "private wealth", "investment advisory", "HNW", "asset management"],
+                    "default_author": {
+                        "name": "Clara Hofmann",
+                        "title": "Private Wealth Advisor",
+                        "bio": "15 years experience in multi‑family office asset allocation. Specializes in alternative investments and tax‑efficient portfolios.",
+                        "avatar": "/images/authors/clara-hofmann.webp"
+                    }
                 }
             }
         },
@@ -141,7 +201,13 @@
                     "required_sections": ["Ingredient breakdown (supplements)", "Clinical study citations", "Dosage recommendations", "Price comparison"],
                     "forbidden": ["\"Miracle cure\" claims", "Unverified before/after", "FDA unapproved claims"],
                     "style_boost": "Science-backed tone. Affiliate links to supplements/wearables. Cite PubMed studies.",
-                    "keywords": ["longevity", "biohacking", "anti-aging", "supplements", "healthspan"]
+                    "keywords": ["longevity", "biohacking", "anti-aging", "supplements", "healthspan"],
+                    "default_author": {
+                        "name": "Dr. Aris Thorne",
+                        "title": "Longevity & Metabolic Health Researcher",
+                        "bio": "PhD in molecular biology. Translates aging science into actionable protocols for biohackers and health optimizers.",
+                        "avatar": "/images/authors/aris-thorne.webp"
+                    }
                 },
                 "mental_health_apps": {
                     "cluster_id": "wl_02",
@@ -153,7 +219,13 @@
                     "required_sections": ["Therapy modality (CBT, DBT, etc.)", "Pricing (monthly/annual)", "Practitioner credentials", "Privacy policy (HIPAA)"],
                     "forbidden": ["\"Cure depression\" claims", "Minimizing serious conditions"],
                     "style_boost": "Ethical tone. Crisis resources disclaimer. Compare 3-5 apps.",
-                    "keywords": ["mental health app", "therapy app", "online therapy", "meditation app", "anxiety relief"]
+                    "keywords": ["mental health app", "therapy app", "online therapy", "meditation app", "anxiety relief"],
+                    "default_author": {
+                        "name": "Dr. Sibel Günay",
+                        "title": "Clinical Psychologist & Digital Therapeutics Consultant",
+                        "bio": "Evaluates evidence‑based mental health apps. Focuses on data privacy, therapeutic alliance, and real‑world outcomes.",
+                        "avatar": "/images/authors/sibel-gunay.webp"
+                    }
                 },
                 "telemedicine_tech": {
                     "cluster_id": "wl_03",
@@ -165,7 +237,13 @@
                     "required_sections": ["Platform comparison", "Insurance coverage", "Wait times", "Specialist availability"],
                     "forbidden": ["Replacing emergency care claims", "Unlicensed practitioner promotion"],
                     "style_boost": "Authority building. Healthcare professional tone. Cite telemedicine adoption stats.",
-                    "keywords": ["telemedicine", "online doctor", "virtual care", "remote healthcare", "telehealth"]
+                    "keywords": ["telemedicine", "online doctor", "virtual care", "remote healthcare", "telehealth"],
+                    "default_author": {
+                        "name": "Dr. Mateo Reyes",
+                        "title": "Telehealth Policy & Platform Analyst",
+                        "bio": "Works at the intersection of digital health and regulation. Reviews telemedicine services for accessibility and quality.",
+                        "avatar": "/images/authors/mateo-reyes.webp"
+                    }
                 },
                 "sleep_optimization": {
                     "cluster_id": "wl_04",
@@ -177,7 +255,13 @@
                     "required_sections": ["Product features (tracking, smart alarm)", "Battery life", "App ecosystem", "User rating aggregation"],
                     "forbidden": ["\"Cure insomnia\" claims", "Overstating scientific backing"],
                     "style_boost": "Amazon affiliate heavy. Comparison tables. Focus on data accuracy.",
-                    "keywords": ["sleep tracker", "smart watch", "sleep optimization", "better sleep", "sleep gadget"]
+                    "keywords": ["sleep tracker", "smart watch", "sleep optimization", "better sleep", "sleep gadget"],
+                    "default_author": {
+                        "name": "Nora Bergman",
+                        "title": "Sleep Science & Wearable Tech Reviewer",
+                        "bio": "Tests sleep trackers and smart rings. Translates sleep metrics into practical advice for better recovery.",
+                        "avatar": "/images/authors/nora-bergman.webp"
+                    }
                 },
                 "personalized_nutrition": {
                     "cluster_id": "wl_05",
@@ -189,7 +273,13 @@
                     "required_sections": ["DNA/microbiome testing methodology", "Sample report", "Pricing (kit + subscription)", "Science partners (universities)"],
                     "forbidden": ["Medical diagnosis claims", "Guaranteed weight loss"],
                     "style_boost": "SaaS + kit affiliate. Educational + commercial balance. Cite clinical validation.",
-                    "keywords": ["personalized nutrition", "DNA diet", "microbiome testing", "nutrition kit", "health testing"]
+                    "keywords": ["personalized nutrition", "DNA diet", "microbiome testing", "nutrition kit", "health testing"],
+                    "default_author": {
+                        "name": "Dr. Linh Nguyen",
+                        "title": "Nutrigenomics & Microbiome Researcher",
+                        "bio": "Focuses on how genetics and gut bacteria influence dietary responses. Reviews direct‑to‑consumer testing kits.",
+                        "avatar": "/images/authors/linh-nguyen.webp"
+                    }
                 }
             }
         },
@@ -205,7 +295,13 @@
                     "required_sections": ["Curriculum depth (weeks, projects)", "Job placement rates", "Instructor credentials", "Pricing & scholarships"],
                     "forbidden": ["\"Guaranteed job\" claims", "Outdated tech stack"],
                     "style_boost": "High-ticket affiliate. ROI-focused. Include alumni testimonials.",
-                    "keywords": ["coding bootcamp", "programming course", "learn to code", "software engineering bootcamp"]
+                    "keywords": ["coding bootcamp", "programming course", "learn to code", "software engineering bootcamp"],
+                    "default_author": {
+                        "name": "Emre Aydoğan",
+                        "title": "Career Coach & Coding Bootcamp Analyst",
+                        "bio": "Helped 2,000+ students transition into tech. Reviews bootcamp outcomes, curriculum quality, and job placement support.",
+                        "avatar": "/images/authors/emre-aydogan.webp"
+                    }
                 },
                 "exec_education": {
                     "cluster_id": "el_02",
@@ -217,7 +313,13 @@
                     "required_sections": ["ROI calculation (salary increase)", "Alumni network strength", "Accreditation status", "Application requirements"],
                     "forbidden": ["\"Easy\" or \"quick\" language", "Discounting traditional MBA"],
                     "style_boost": "HNW audience. Professional, data-driven tone. Target C-suite readers.",
-                    "keywords": ["executive MBA", "executive education", "leadership program", "business school", "HNW education"]
+                    "keywords": ["executive MBA", "executive education", "leadership program", "business school", "HNW education"],
+                    "default_author": {
+                        "name": "Isabella Conti",
+                        "title": "Executive Education Advisor",
+                        "bio": "Previously managed EMBA admissions at a top European business school. Advises senior leaders on program selection and ROI.",
+                        "avatar": "/images/authors/isabella-conti.webp"
+                    }
                 },
                 "language_apps": {
                     "cluster_id": "el_03",
@@ -229,7 +331,13 @@
                     "required_sections": ["Languages offered", "AI features (speech recognition)", "Pricing (free tier vs premium)", "User retention stats"],
                     "forbidden": ["\"Fluent in 3 months\" claims", "Overpromising AI capabilities"],
                     "style_boost": "Subscription affiliate. Compare 3-5 apps. Focus on value for money.",
-                    "keywords": ["language learning app", "learn Spanish", "Duolingo alternative", "AI language tutor"]
+                    "keywords": ["language learning app", "learn Spanish", "Duolingo alternative", "AI language tutor"],
+                    "default_author": {
+                        "name": "Mei Lin",
+                        "title": "Polyglot & EdTech Reviewer",
+                        "bio": "Speaks six languages. Tests apps for pedagogical effectiveness, speech recognition accuracy, and long‑term engagement.",
+                        "avatar": "/images/authors/mei-lin.webp"
+                    }
                 },
                 "cloud_certifications": {
                     "cluster_id": "el_04",
@@ -241,7 +349,13 @@
                     "required_sections": ["Exam breakdown (domains, questions)", "Practice test quality", "Pass rate claims", "Cost (exam + prep)"],
                     "forbidden": ["\"Brain dumps\" or cheating", "Unauthorized materials"],
                     "style_boost": "High-intent audience. Exam prep affiliate. Focus on career impact.",
-                    "keywords": ["AWS certification", "cloud certification", "exam prep", "practice test", "certification guide"]
+                    "keywords": ["AWS certification", "cloud certification", "exam prep", "practice test", "certification guide"],
+                    "default_author": {
+                        "name": "Khalid Al‑Rashid",
+                        "title": "Cloud Certification Trainer",
+                        "bio": "Holds all three main cloud certifications (AWS, Azure, GCP). Helps professionals pass exams on the first attempt.",
+                        "avatar": "/images/authors/khalid-alrashid.webp"
+                    }
                 },
                 "sidehustle_skills": {
                     "cluster_id": "el_05",
@@ -253,7 +367,13 @@
                     "required_sections": ["Earnings potential (realistic)", "Time commitment", "Platform fees", "Success stories (verifiable)"],
                     "forbidden": ["\"Get rich passive income\"", "Pyramid scheme adjacent"],
                     "style_boost": "Tool affiliate (Canva, Shopify, Fiverr). Focus on actionable steps.",
-                    "keywords": ["side hustle", "passive income", "freelance skills", "online business", "make money online"]
+                    "keywords": ["side hustle", "passive income", "freelance skills", "online business", "make money online"],
+                    "default_author": {
+                        "name": "Rebecca Tan",
+                        "title": "Digital Entrepreneurship Coach",
+                        "bio": "Built multiple six‑figure online businesses. Reviews side hustle platforms and teaches practical skills for freelancing.",
+                        "avatar": "/images/authors/rebecca-tan.webp"
+                    }
                 }
             }
         },
@@ -269,7 +389,13 @@
                     "required_sections": ["Charging speed comparison (kW)", "Network coverage maps", "Pricing (per kWh, subscription)", "Connector types"],
                     "forbidden": ["Ignoring range anxiety", "Overpromising charge times"],
                     "style_boost": "Lead gen (home charger install). Comparison tables. Focus on total cost.",
-                    "keywords": ["EV charging", "electric vehicle charger", "charging station", "EV infrastructure"]
+                    "keywords": ["EV charging", "electric vehicle charger", "charging station", "EV infrastructure"],
+                    "default_author": {
+                        "name": "Henrik Lund",
+                        "title": "E‑Mobility Infrastructure Analyst",
+                        "bio": "Tracks EV charger deployment across Europe. Advises consumers on home charger selection and network reliability.",
+                        "avatar": "/images/authors/henrik-lund.webp"
+                    }
                 },
                 "solar_energy": {
                     "cluster_id": "eco_02",
@@ -281,7 +407,13 @@
                     "required_sections": ["Cost per watt breakdown", "Payback period calculation", "Warranty comparison (panels, inverters)", "Installation process"],
                     "forbidden": ["\"Free solar\" scams", "Overestimating savings"],
                     "style_boost": "Lead gen (local installers). ROI calculator mindset. Include tax credit info.",
-                    "keywords": ["solar panels", "solar installation", "home solar", "solar energy system", "solar savings"]
+                    "keywords": ["solar panels", "solar installation", "home solar", "solar energy system", "solar savings"],
+                    "default_author": {
+                        "name": "Fatima Al‑Zahra",
+                        "title": "Renewable Energy Engineer",
+                        "bio": "Designs residential and commercial solar systems. Evaluates panel efficiency, inverter reliability, and installer quality.",
+                        "avatar": "/images/authors/fatima-alzahra.webp"
+                    }
                 },
                 "climate_finance": {
                     "cluster_id": "eco_03",
@@ -293,7 +425,13 @@
                     "required_sections": ["ESG scoring methodology", "Regulatory landscape (SFDR, SEC)", "Fund performance comparison", "Greenwashing red flags"],
                     "forbidden": ["\"Save the planet\" virtue signaling", "Ignoring trade-offs"],
                     "style_boost": "Authority content. Attracts high-CPC financial ads. Neutral, data-driven.",
-                    "keywords": ["ESG investing", "climate finance", "sustainable finance", "green bonds", "carbon markets"]
+                    "keywords": ["ESG investing", "climate finance", "sustainable finance", "green bonds", "carbon markets"],
+                    "default_author": {
+                        "name": "Oliver Klein",
+                        "title": "Sustainable Finance Strategist",
+                        "bio": "Previously managed ESG portfolios at an asset manager. Focuses on regulatory shifts and green investment performance.",
+                        "avatar": "/images/authors/oliver-klein.webp"
+                    }
                 },
                 "smart_home_energy": {
                     "cluster_id": "eco_04",
@@ -305,7 +443,13 @@
                     "required_sections": ["Device compatibility (Alexa, Google)", "Energy savings estimates", "Installation difficulty", "Price comparison"],
                     "forbidden": ["\"Set and forget\" overpromise", "Ignoring hub requirements"],
                     "style_boost": "Amazon affiliate. Best-of lists. Focus on easy setup.",
-                    "keywords": ["smart home energy", "smart plug", "energy monitoring", "smart thermostat", "home automation"]
+                    "keywords": ["smart home energy", "smart plug", "energy monitoring", "smart thermostat", "home automation"],
+                    "default_author": {
+                        "name": "Tess van der Meer",
+                        "title": "Smart Home Tech Reviewer",
+                        "bio": "Tests energy monitoring devices and smart plugs. Provides real‑world savings estimates and compatibility guides.",
+                        "avatar": "/images/authors/tess-vandermeer.webp"
+                    }
                 },
                 "circular_economy": {
                     "cluster_id": "eco_05",
@@ -317,7 +461,13 @@
                     "required_sections": ["Business model analysis", "Case study (successful circular company)", "Regulatory trends (EU right to repair)", "VC investment landscape"],
                     "forbidden": ["\"Zero waste\" absolutism", "Greenwashing"],
                     "style_boost": "B2B focused. Authority content for AdSense. Cite circular economy stats.",
-                    "keywords": ["circular economy", "zero waste", "sustainable business", "right to repair", "circular business model"]
+                    "keywords": ["circular economy", "zero waste", "sustainable business", "right to repair", "circular business model"],
+                    "default_author": {
+                        "name": "Sami Karjalainen",
+                        "title": "Circular Economy & Impact Investing Analyst",
+                        "bio": "Researches business models that eliminate waste. Covers EU regulations, corporate case studies, and VC funding in the circular space.",
+                        "avatar": "/images/authors/sami-karjalainen.webp"
+                    }
                 }
             }
         }
@@ -353,4 +503,4 @@
         "aff_028": {"name": "EnergySage", "commission": "$50-100 Lead", "link_template": "https://www.energysage.com/partner/{REF_ID}"},
         "aff_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
     }
-}
+                }
