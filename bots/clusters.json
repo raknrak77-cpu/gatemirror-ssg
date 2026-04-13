@@ -503,4 +503,4 @@
         "aff_028": {"name": "EnergySage", "commission": "$50-100 Lead", "link_template": "https://www.energysage.com/partner/{REF_ID}"},
         "aff_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
     }
-                }
+}
