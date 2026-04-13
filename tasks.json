@@ -1440,36 +1440,5 @@
         "display_date": "12 April 2026",
         "processed_at": "2026-04-13 12:39:13",
         "hash": "9d3f5115"
-    },
-    {
-        "task_id": "0047",
-        "category": "eco",
-        "topic": "Biodiversity Credits: The Next Carbon Market or the Next Greenwashing Disaster?",
-        "reference_link": "https://www.msci.com/research-and-insights/blog-post/sustainability-and-climate-in-focus-trends-to-watch-for-2026",
-        "language": "en",
-        "author_persona": "Conservation Finance Specialist & Biodiversity Economics Researcher",
-        "special_instructions": "Analyze the emerging biodiversity credit market — modeled after carbon credits but measuring ecosystem health, species counts, and habitat quality. Cover the Kunming-Montreal Global Biodiversity Framework targets (30x30), the Taskforce on Nature-related Financial Disclosures (TNFD), and early biodiversity credit pilots in Australia, UK, and Colombia. Explain the measurement challenge: how do you put a financial value on a species? Include data on biodiversity loss rate (1 million species threatened). Case study: UK infrastructure company purchasing biodiversity net gain credits for a highway project. Address the structural weaknesses: double-counting risk, permanence questions, and corporate use as greenwashing shield. Compare with carbon market's early failures. End with 2028 forecast for biodiversity market maturity.",
-        "visuals": {
-            "kapak": {
-                "prompt": "A split aerial view: left side a thriving biodiverse ecosystem — dense rainforest, river, diverse wildlife visible from above; right side a construction project with biodiversity net gain credit certificates appearing as holographic overlays — the tension between development and conservation, cinematic golden hour lighting, photorealistic, no text",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "A field ecologist using a tablet with biodiversity monitoring app, counting species in a restored wetland, colorful birds and insects visible around them, lush green environment, scientific fieldwork meets technology, warm natural light, photorealistic, no text on screen",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "A financial trading screen showing biodiversity credit prices alongside carbon credit prices and traditional commodities — nature becoming a financial instrument — clean dark trading interface aesthetic, green color scheme, photorealistic quality, no text labels visible",
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": "2026-04-12",
-        "date": "2026-04-12",
-        "display_date": "12 April 2026",
-        "processed_at": ""
     }
 ]
