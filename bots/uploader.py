@@ -26,6 +26,40 @@ def upload_file_to_r2(local_path, r2_key):
         return True
     return False
 
+def delete_all_articles():
+    """articles/ klasöründeki TÜM dosyaları sil (Publisher temiz başlasın)"""
+    print("\n🗑️ articles/ içindeki tüm dosyalar siliniyor...")
+    continuation_token = None
+    deleted_count = 0
+    while True:
+        if continuation_token:
+            response = s3.list_objects_v2(
+                Bucket=R2_BUCKET,
+                Prefix='articles/',
+                ContinuationToken=continuation_token
+            )
+        else:
+            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix='articles/')
+        
+        if 'Contents' not in response:
+            break
+        
+        for obj in response['Contents']:
+            key = obj['Key']
+            try:
+                s3.delete_object(Bucket=R2_BUCKET, Key=key)
+                print(f"   🗑️ Silindi: {key}")
+                deleted_count += 1
+            except Exception as e:
+                print(f"   ❌ Silme hatası ({key}): {e}")
+        
+        if response.get('IsTruncated'):
+            continuation_token = response.get('NextContinuationToken')
+        else:
+            break
+    
+    print(f"   ✅ Toplam {deleted_count} dosya silindi.\n")
+
 def upload_templates():
     """templates/ klasöründeki dosyaları R2'ye yedekler"""
     templates_dir = "templates"
@@ -39,11 +73,15 @@ def upload_templates():
             upload_file_to_r2(local_path, r2_key)
 
 def uploader():
-    """content/ altındaki HTML'leri R2'ye yükler, sonra siler"""
+    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler, sonra siler"""
     
-    # Önce template'leri yedekle
+    # 1. Önce template'leri yedekle
     upload_templates()
     
+    # 2. articles/ içini tamamen temizle
+    delete_all_articles()
+    
+    # 3. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -57,10 +95,12 @@ def uploader():
                 continue
             
             local_path = os.path.join(root, file)
-            r2_key = local_path.replace("content/", "articles/")
+            # content/en/wellness/hash.html → raw-articles/en/wellness/hash.html
+            r2_key = local_path.replace("content/", "raw-articles/")
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
+    # 4. Local dosyaları temizle
     for file_path in uploaded_files:
         try:
             os.remove(file_path)
@@ -68,7 +108,8 @@ def uploader():
         except Exception as e:
             print(f"⚠️ Silinemedi: {file_path} - {e}")
     
-    print("\n🏁 Tüm içerik R2'ye yüklendi ve local HTML'ler temizlendi.")
+    print("\n🏁 Tüm içerik R2'ye yüklendi (raw-articles/) ve local HTML'ler temizlendi.")
+    print("📁 articles/ klasörü temizlendi, Publisher sıfırdan yazacak.")
 
 if __name__ == "__main__":
     uploader()
