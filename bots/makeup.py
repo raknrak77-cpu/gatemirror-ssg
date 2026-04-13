@@ -100,15 +100,21 @@ def image_exists(url):
         return False
 
 def parse_article_html(html_content, lang, category, hash_id, yil, ay):
+    """HTML içeriğini parse eder, cluster_id'yi META'dan okur"""
+    
+    # Başlık
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
-    meta_match = re.search(r'<!-- META: author=(.*?), datetime=(.*?) -->', html_content)
+    # META: author, datetime, cluster_id
+    # Format: <!-- META: author=..., datetime=..., cluster_id=... -->
+    meta_match = re.search(r'<!-- META: author=(.*?), datetime=(.*?)(?:, cluster_id=(.*?))? -->', html_content)
     if meta_match:
         author = meta_match.group(1).strip()
         sort_datetime_raw = meta_match.group(2).strip()
         sort_datetime = sort_datetime_raw
         sort_date = sort_datetime_raw[:10]
+        cluster_id = meta_match.group(3).strip() if meta_match.group(3) else None
         try:
             display_date = datetime.strptime(sort_date, "%Y-%m-%d").strftime("%d %B %Y")
         except:
@@ -118,10 +124,13 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         sort_datetime = None
         sort_date = None
         display_date = datetime.now().strftime("%d %B %Y")
+        cluster_id = None
     
+    # Editor's Note
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
     editors_note = note_match.group(1).strip() if note_match else ""
     
+    # Key Takeaways
     takeaway_match = re.search(r'<h2>Key Takeaways</h2>\s*<ul>(.*?)</ul>', html_content, re.DOTALL | re.IGNORECASE)
     if takeaway_match:
         items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
@@ -129,6 +138,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     else:
         summary_html = "<li>No summary available</li>"
     
+    # Sources
     sources_match = re.search(r'<div class="sources">.*?<ul>(.*?)</ul>.*?</div>', html_content, re.DOTALL | re.IGNORECASE)
     if sources_match:
         items = re.findall(r'<li>(.*?)</li>', sources_match.group(1), re.DOTALL)
@@ -136,6 +146,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     else:
         sources_html = "<li>Sources not available</li>"
     
+    # İçeriği temizle
     content_clean = html_content
     content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
@@ -144,9 +155,11 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
     content_clean = content_clean.strip()
 
+    # Okuma süresi ve görüntülenme
     reading_time = calculate_reading_time(content_clean)
     views = generate_views(hash_id)
     
+    # Açıklama
     plain_text = re.sub(r'<[^>]+>', '', content_clean[:500])
     description = plain_text[:150].strip() + ("..." if len(plain_text) > 150 else "")
     if not description:
@@ -160,7 +173,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         base_new = None
         base_old = f"{R2_PUBLIC_URL}/images/{category}/{hash_id}"
     
-    # Kapak
+    # Kapak görseli
     if base_new and image_exists(f"{base_new}_kapak.webp"):
         cover_image = f"{base_new}_kapak.webp"
     else:
@@ -206,7 +219,8 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         'description': description,
         'hash': hash_id,
         'category': category,
-        'lang': lang
+        'lang': lang,
+        'cluster_id': cluster_id  # 🔥 YENİ: cluster_id eklendi
     }
 
 def get_all_raw_articles():
@@ -275,6 +289,7 @@ def get_all_raw_articles():
                     'lang': lang,
                     'category': category,
                     'hash': hash_id,
+                    'cluster_id': parsed.get('cluster_id'),  # 🔥 YENİ: cluster_id eklendi
                     'yil': yil,
                     'ay': ay,
                     'slug': slug,
@@ -289,6 +304,7 @@ def get_all_raw_articles():
     return all_articles
 
 def build_alternate_langs_dict(all_articles):
+    """Makalelerin alternatif dillerini oluşturur (hreflang için)"""
     alt_dict = {}
     for article in all_articles:
         key = (article['category'], article['hash'])
@@ -299,6 +315,7 @@ def build_alternate_langs_dict(all_articles):
     return alt_dict
 
 def generate_sitemap(all_articles, alt_dict):
+    """Sitemap.xml oluşturur"""
     base_url = R2_PUBLIC_URL
     urls = []
     languages = ['en', 'es', 'de', 'fr']
@@ -364,6 +381,7 @@ def generate_sitemap(all_articles, alt_dict):
     return xml
 
 def generate_robots_txt():
+    """robots.txt oluşturur"""
     base_url = R2_PUBLIC_URL
     return f"""# Tüm arama motorlarına izin ver
 User-agent: *
