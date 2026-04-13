@@ -72,7 +72,6 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     parsed = article['parsed']
     canonical = f"{R2_PUBLIC_URL}{article['url']}"
     
-    # 🔥 YENİ: Yazar bilgilerini al (makeup'tan gelen)
     author_name = article.get('author_name', parsed.get('author', 'Gatemirror Expert'))
     author_title = article.get('author_title', '')
     author_bio = article.get('author_bio', '')
@@ -124,6 +123,28 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         pagination=None, guide_articles=[], alternate_langs=alternate_langs
     )
 
+# ================= ARTICLES.JSON ÜRETİMİ =================
+
+def generate_articles_json(all_articles):
+    """Worker'ın random article seçmesi için articles.json oluşturur"""
+    articles_list = []
+    for article in all_articles:
+        articles_list.append({
+            'url': article['url'],
+            'lang': article['lang'],
+            'category': article['category'],
+            'title': article['parsed']['title']
+        })
+    
+    articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
+    s3.put_object(
+        Bucket=R2_BUCKET,
+        Key='articles.json',
+        Body=articles_json.encode('utf-8'),
+        ContentType='application/json'
+    )
+    print("   ✅ articles.json oluşturuldu (random article için)")
+
 # ================= ANA PUBLISHER =================
 
 def publisher():
@@ -137,7 +158,6 @@ def publisher():
         print("❌ Template'ler alınamadı.")
         return
     
-    # Makeup'ten zenginleştirilmiş makaleleri al (yazar bilgileri içinde)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -159,7 +179,6 @@ def publisher():
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
             
-            # 🔥 YENİ: cluster bazlı related articles seçimi
             same_cluster = [a for a in lang_articles if a.get('cluster_id') == article.get('cluster_id') and a['hash'] != article['hash']]
             if same_cluster:
                 related = random.sample(same_cluster, min(3, len(same_cluster)))
@@ -174,7 +193,6 @@ def publisher():
                 s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ Makale: {target_key}")
         
-        # Ana sayfa
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
         if featured:
@@ -197,7 +215,6 @@ def publisher():
             s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
             print(f"   ✅ Ana sayfa: articles/{lang}/index.html")
         
-        # Kategori sayfaları
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         for category in categories:
             cat_articles = [a for a in lang_articles if a['category'] == category]
@@ -247,6 +264,9 @@ def publisher():
     robots_txt = generate_robots_txt()
     s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
     print("   ✅ robots.txt yüklendi: robots.txt")
+    
+    # 🔥 YENİ: articles.json oluştur (Worker random article için)
+    generate_articles_json(all_articles)
     
     print("\n🏁 Publisher tamamlandı.")
 
