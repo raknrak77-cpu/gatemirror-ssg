@@ -133,11 +133,30 @@
         body.dark .hero { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); }
         body.dark .article-card, body.dark .featured-card { background: #1e1e1e; }
         body.dark .footer-links a, body.dark .footer-column a { color: #aaa; }
-        /* Side menu borders are fixed dark, no dark mode override needed */
         
         .hero { background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%); color: white; padding: 4rem 5%; text-align: center; }
         .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem; }
         .hero p { font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin: 0 auto; }
+        .category-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        .cat-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+        }
+        .cat-btn:hover {
+            opacity: 0.8;
+        }
         .featured { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
         .featured-card { display: flex; gap: 2rem; background: var(--white); border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow); text-decoration: none; color: inherit; transition: transform 0.3s; }
         .featured-card:hover { transform: translateY(-5px); }
@@ -222,6 +241,15 @@
     <h1>Global Insights on Tech, Wellness & Future Economy</h1>
     <p>Deep analysis. Multi‑language. Reflecting reality in 5 languages.</p>
 </div>
+
+<div class="category-buttons">
+    <a href="/api/articles?category=tech" class="cat-btn">📚 Tech</a>
+    <a href="/api/articles?category=wellness" class="cat-btn">📚 Wellness</a>
+    <a href="/api/articles?category=future-economy" class="cat-btn">📚 Future Economy</a>
+    <a href="/api/articles?category=eco" class="cat-btn">📚 Eco</a>
+    <a href="/api/articles?category=elearning" class="cat-btn">📚 E-Learning</a>
+</div>
+
 {% if featured_article %}
 <div class="featured">
     <a href="{{ featured_article.url }}" class="featured-card">
@@ -238,6 +266,7 @@
     </a>
 </div>
 {% endif %}
+
 <div class="container">
     <h2 class="section-title">Latest Stories</h2>
     <div class="article-grid">
@@ -256,6 +285,7 @@
         {% endfor %}
     </div>
 </div>
+
 <footer>
     <div class="footer-content">
         <div class="footer-column">
@@ -284,6 +314,7 @@
         <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
     </div>
 </footer>
+
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -295,6 +326,7 @@
     "inLanguage": ["en", "es", "de", "fr"]
 }
 </script>
+
 <script>
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
     document.addEventListener('click', function(e) {
@@ -311,5 +343,4 @@
     }
 </script>
 </body>
-    </html>
-    
+</html>
