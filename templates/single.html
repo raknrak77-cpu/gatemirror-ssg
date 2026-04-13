@@ -423,4 +423,72 @@
         </div>
     </div>
     <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. design_by_rak All rights reserved.</p>
+    </div>
+</footer>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "{{ faq_1_question }}",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ faq_1_answer }}"
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "{{ faq_2_question }}",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ faq_2_answer }}"
+            }
+        }
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ title }}",
+    "description": "{{ description }}",
+    "image": "{{ cover_image }}",
+    "author": { "@type": "Person", "name": "{{ author_name }}" },
+    "datePublished": "{{ date }}",
+    "dateModified": "{{ date }}",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ canonical_url }}" },
+    "publisher": { "@type": "Organization", "name": "Gatemirror", "logo": { "@type": "ImageObject", "url": "/logo.png" } }
+}
+</script>
+
+<script>
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('sideMenu');
+        const btn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
+    });
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark');
+        const observer = new MutationObserver(() => localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled'));
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    document.getElementById('randomArticleBtn')?.addEventListener('click', function() {
+        fetch('/api/random-article')
+            .then(res => res.json())
+            .then(data => { window.location.href = data.url; })
+            .catch(() => { window.location.href = '/articles/random'; });
+    });
+</script>
+</body>
+</html>
         
