@@ -1440,5 +1440,129 @@
         "display_date": "12 April 2026",
         "processed_at": "2026-04-13 12:39:13",
         "hash": "9d3f5115"
+    },
+    {
+        "task_id": "0047",
+        "category": "wellness",
+        "topic": "Neurowellness Revolution: How Nervous System Regulation Is Becoming the New Frontier of Mental Health",
+        "reference_link": "https://www.globalwellnesssummit.com/2026trends/",
+        "language": "en",
+        "author_persona": "Integrative Medicine Physician & Neuroscience Researcher",
+        "special_instructions": "Analyze the rise of \"neurowellness\" — the use of technology and somatic practices to regulate the nervous system. Discuss HRV (heart rate variability) tracking, neurotech wearables, breathwork, and somatic therapy as mainstream tools. Explain the fight-or-flight epidemic driven by digital life. Include data from Global Wellness Summit 2026. Cover the shift from symptom management to physiological measurement of stress. Case study: corporate wellness program that reduced burnout 35% using HRV biofeedback. End with 2028 forecast for precision nervous system optimization.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A person sitting peacefully in a minimalist room, wearing a sleek neurotech headband that glows softly blue, holographic brainwave patterns floating gently around them, warm natural light from a large window, plants nearby, calm and serene atmosphere, photorealistic, cinematic lighting, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side shows a stressed professional at a chaotic desk with multiple screens, cortisol and stress wave graphics overlaid, red tones, tense posture; right side shows the same person in a calm environment using breathwork with a wearable device showing normalized HRV metrics, green tones, relaxed expression — visual metaphor for nervous system regulation, photorealistic, no text labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Close-up of a wrist wearing a premium health wearable showing HRV score, stress level graph, nervous system status indicator, soft morning light, shallow depth of field, clean modern aesthetic, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-13",
+        "date": "2026-04-13",
+        "display_date": "13 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0048",
+        "category": "tech",
+        "topic": "Agentic AI: The Rise of Autonomous Digital Workers and the Future of Enterprise",
+        "reference_link": "https://www.gartner.com/en/emerging-technologies/agentic-ai",
+        "language": "en",
+        "author_persona": "Enterprise AI Strategist & Former CTO",
+        "special_instructions": "Explore the evolution from generative AI chatbots to \"agentic\" AI that autonomously executes tasks. Discuss differences between Copilots (assistive) and Agents (autonomous). Analyze enterprise adoption: software development (auto-fix bugs, deploy code), customer service (resolve tickets without human), data analysis (auto-generate reports). Include real examples from 2026. Address control mechanisms, safety, human oversight. Discuss pricing models (per task, per outcome). End with 2028 predictions for agentic workforce.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic digital workspace showing multiple glowing AI agent nodes connected by flowing data streams, each node performing different tasks (code, customer chat, analytics), human supervisor watching from elevated position, holographic interfaces, dark background with neon blue and purple accents, photorealistic, cinematic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split comparison: left side labeled \"Copilot (Assistive)\" showing a human typing with AI suggesting text; right side labeled \"Agent (Autonomous)\" showing AI performing tasks independently with status indicators (task completed, code deployed, ticket resolved), clean corporate aesthetic, photorealistic, no text labels",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Dashboard view showing metrics: \"Tasks Automated: 12,347\", \"Hours Saved: 8,234\", \"Error Rate: 0.3%\", multiple green checkmarks, modern interface design, dark mode, soft glow, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-13",
+        "date": "2026-04-13",
+        "display_date": "13 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0049",
+        "category": "future-economy",
+        "topic": "The Tokenization of Everything: How Real-World Assets Are Democratizing Private Equity",
+        "reference_link": "https://www.bcg.com/publications/2026/tokenization-of-real-world-assets",
+        "language": "en",
+        "author_persona": "Digital Asset Economist & Tokenization Strategist",
+        "special_instructions": "Analyze the growth of RWA (Real World Asset) tokenization — how real estate, private equity, commodities, and art are being fractionalized on blockchain. Explain how tokenization lowers investment minimums from $1M to $100. Discuss liquidity benefits: 24/7 trading secondary markets. Cover regulatory landscape (SEC, MiCA). Include data: BCG forecasts $5T tokenized market by 2028. Case study: $50M Manhattan office building tokenized. Explain role of oracles (Chainlink) for off-chain data. End with 2028 forecast.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Digital blockchain network overlaid on physical world assets: skyscrapers, art gallery, oil barrels, luxury watches — all connected by glowing blockchain nodes, translucent, futuristic, dark background with gold and green accents, photorealistic, cinematic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split comparison: left side \"Traditional Private Equity\" showing a vault with giant lock, million dollar sign, closed doors, red tones; right side \"Tokenized RWA\" showing small glowing tokens floating, fractional ownership diagram, open access, green tones — visual metaphor for democratization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A smartphone screen showing a sleek investment app interface displaying \"Tokenized Real Estate\" with fractional shares listed at $100 each, progress bars showing ownership percentage, transaction history, modern dark mode UI, soft blue glow, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-13",
+        "date": "2026-04-13",
+        "display_date": "13 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0050",
+        "category": "elearning",
+        "topic": "The Skills Gap Crisis: Why Universities Can't Keep Up with AI and How Micro-Credentials Are Taking Over",
+        "reference_link": "https://www.weforum.org/reports/future-of-jobs-2026",
+        "language": "en",
+        "author_persona": "Workforce Development Economist & EdTech Founder",
+        "special_instructions": "Analyze the widening skills gap as AI transforms job requirements faster than traditional education can adapt. Discuss the shift from 4-year degrees to stackable micro-credentials, industry certifications, corporate learning platforms. Include data from WEF Future of Jobs 2026. Compare university response (integrating AI literacy) vs alternative providers (Coursera, LinkedIn Learning, corporate academies). Case study: IBM's digital badge program. Discuss employer acceptance of micro-credentials. End with 2028 forecast for higher education disruption.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A traditional university building with classic columns on one side, crumbling or fading into the background; on the other side, a glowing digital credential badge floating, holographic certificate, futuristic interface — metaphor for disruption, photorealistic, cinematic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A professional working at a desk, completing an online course on a laptop, screen showing \"Micro-Credential: AI for Business\" with progress bar at 100%, celebratory digital confetti, modern home office setup, warm evening light, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Dashboard showing multiple digital badges, credentials, and certificates from different providers (Coursera, IBM, LinkedIn), organized in a professional portfolio interface, clean modern design, soft blue and white tones, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-13",
+        "date": "2026-04-13",
+        "display_date": "13 April 2026",
+        "processed_at": ""
     }
 ]
