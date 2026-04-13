@@ -1,5 +1,6 @@
 import os
 import random
+import json
 import boto3
 import requests
 from datetime import datetime
@@ -70,14 +71,35 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     tmpl = Template(template_str)
     parsed = article['parsed']
     canonical = f"{R2_PUBLIC_URL}{article['url']}"
+    
+    # 🔥 YENİ: Yazar bilgilerini al (makeup'tan gelen)
+    author_name = article.get('author_name', parsed.get('author', 'Gatemirror Expert'))
+    author_title = article.get('author_title', '')
+    author_bio = article.get('author_bio', '')
+    author_avatar = article.get('author_avatar', '')
+    
     return tmpl.render(
-        lang=article['lang'], title=parsed['title'], description=parsed['description'],
-        canonical_url=canonical, author=parsed['author'], date=parsed['date'],
-        editors_note=parsed['editors_note'], summary=parsed['summary'], content=parsed['content'],
-        sources=parsed['sources'], cover_image=parsed['cover_image'],
-        content_image_1=parsed['content_image_1'], content_image_2=parsed['content_image_2'],
-        reading_time=parsed['reading_time'], view_count=parsed['views'],
-        alternate_langs=alt_langs, menu=menu_texts, related_articles=related_articles
+        lang=article['lang'],
+        title=parsed['title'],
+        description=parsed['description'],
+        canonical_url=canonical,
+        author_name=author_name,
+        author_title=author_title,
+        author_bio=author_bio,
+        author_avatar=author_avatar,
+        date=parsed['date'],
+        editors_note=parsed['editors_note'],
+        summary=parsed['summary'],
+        content=parsed['content'],
+        sources=parsed['sources'],
+        cover_image=parsed['cover_image'],
+        content_image_1=parsed['content_image_1'],
+        content_image_2=parsed['content_image_2'],
+        reading_time=parsed['reading_time'],
+        view_count=parsed['views'],
+        alternate_langs=alt_langs,
+        menu=menu_texts,
+        related_articles=related_articles
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
@@ -115,7 +137,7 @@ def publisher():
         print("❌ Template'ler alınamadı.")
         return
     
-    # Makeup'ten zenginleştirilmiş makaleleri al
+    # Makeup'ten zenginleştirilmiş makaleleri al (yazar bilgileri içinde)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -136,8 +158,15 @@ def publisher():
         for article in lang_articles:
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
-            same_cat = [a for a in lang_articles if a['category'] == article['category'] and a['hash'] != article['hash']]
-            related = random.sample(same_cat, min(3, len(same_cat)))
+            
+            # 🔥 YENİ: cluster bazlı related articles seçimi
+            same_cluster = [a for a in lang_articles if a.get('cluster_id') == article.get('cluster_id') and a['hash'] != article['hash']]
+            if same_cluster:
+                related = random.sample(same_cluster, min(3, len(same_cluster)))
+            else:
+                same_cat = [a for a in lang_articles if a['category'] == article['category'] and a['hash'] != article['hash']]
+                related = random.sample(same_cat, min(3, len(same_cat))) if same_cat else []
+            
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
             single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
             if single_html:
