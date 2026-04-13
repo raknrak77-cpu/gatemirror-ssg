@@ -3,6 +3,68 @@ import json
 import re
 from datetime import datetime
 
+# ================= CLUSTER EŞLEME SÖZLÜĞÜ =================
+# new_task.txt'deki "cluster:" satırını cluster_id'ye çevirir
+CLUSTER_NAME_TO_ID = {
+    # TECH
+    "ai_trading_bots": "tech_01",
+    "cybersecurity_ai": "tech_02",
+    "ai_productivity_tools": "tech_03",
+    "cloud_computing_ai": "tech_04",
+    "generative_search": "tech_05",
+    # FUTURE-ECONOMY
+    "crypto_exchanges": "fe_01",
+    "rwa_tokenization": "fe_02",
+    "digital_banking": "fe_03",
+    "defi_staking": "fe_04",
+    "wealth_management": "fe_05",
+    # WELLNESS
+    "longevity_biohacking": "wl_01",
+    "mental_health_apps": "wl_02",
+    "telemedicine_tech": "wl_03",
+    "sleep_optimization": "wl_04",
+    "personalized_nutrition": "wl_05",
+    # ELEARNING
+    "coding_bootcamps": "el_01",
+    "exec_education": "el_02",
+    "language_apps": "el_03",
+    "cloud_certifications": "el_04",
+    "sidehustle_skills": "el_05",
+    # ECO
+    "ev_infrastructure": "eco_01",
+    "solar_energy": "eco_02",
+    "climate_finance": "eco_03",
+    "smart_home_energy": "eco_04",
+    "circular_economy": "eco_05"
+}
+
+# Tersine eşleme (id -> name) opsiyonel
+CLUSTER_ID_TO_NAME = {v: k for k, v in CLUSTER_NAME_TO_ID.items()}
+
+def resolve_cluster_id(cluster_input):
+    """
+    new_task.txt'den gelen cluster satırını cluster_id'ye çevirir.
+    - Eğer doğrudan cluster_id (wl_01) gelirse onu döndürür
+    - Eğer cluster adı (longevity_biohacking) gelirse eşleşen id'yi döndürür
+    - Bulunamazsa None döndürür
+    """
+    if not cluster_input:
+        return None
+    
+    cluster_input = cluster_input.strip().lower()
+    
+    # Eğer zaten cluster_id formatındaysa (örnek: wl_01, tech_03)
+    if re.match(r'^[a-z]+_[0-9]+$', cluster_input):
+        return cluster_input
+    
+    # Eşleme sözlüğünden ara
+    if cluster_input in CLUSTER_NAME_TO_ID:
+        return CLUSTER_NAME_TO_ID[cluster_input]
+    
+    # Bulunamadı
+    print(f"⚠️ Uyarı: '{cluster_input}' için cluster_id bulunamadı.")
+    return None
+
 def get_next_task_id(tasks):
     """Mevcut task'lerden en büyük task_id'yi bul, +1 yap"""
     max_id = 0
@@ -13,16 +75,13 @@ def get_next_task_id(tasks):
     return str(max_id + 1).zfill(4)
 
 def parse_task_block(block):
-    """Tek bir task bloğunu dict haline getirir, emojileri ve boşlukları temizler"""
+    """Tek bir task bloğunu dict haline getirir"""
     task_data = {}
     for line in block.split('\n'):
         line = line.strip()
-        # Boş satırları atla
         if not line:
             continue
-        # Emojileri ve özel karakterleri temizle (sadece harf, rakam, alt çizgi, iki nokta)
         if ':' in line:
-            # İlk iki noktaya kadar olan kısmı temizle
             parts = line.split(':', 1)
             key = re.sub(r'[^a-z0-9_]', '', parts[0].strip().lower())
             value = parts[1].strip()
@@ -45,7 +104,6 @@ def parse_all_tasks(filepath):
     
     for line in lines:
         line_stripped = line.strip()
-        # category: ile başlayan yeni task
         if line_stripped.startswith('category:'):
             if current_block:
                 blocks.append('\n'.join(current_block))
@@ -53,14 +111,12 @@ def parse_all_tasks(filepath):
         elif current_block:
             current_block.append(line)
     
-    # Son bloğu ekle
     if current_block:
         blocks.append('\n'.join(current_block))
     
     tasks_data = []
     for block in blocks:
         task_data = parse_task_block(block)
-        # Gerekli alanlar var mı kontrol et
         if task_data.get('topic') and task_data.get('category'):
             tasks_data.append(task_data)
         else:
@@ -94,10 +150,16 @@ def add_tasks():
     added_count = 0
     for task_data in all_task_data:
         new_id = get_next_task_id(tasks)
+        category = task_data.get('category', 'general')
+        
+        # 🔥 YENİ: cluster adını veya id'sini al, cluster_id'ye çevir
+        cluster_input = task_data.get('cluster', '')
+        cluster_id = resolve_cluster_id(cluster_input)
         
         new_task = {
             "task_id": new_id,
-            "category": task_data.get('category', 'general'),
+            "category": category,
+            "cluster_id": cluster_id,
             "topic": task_data['topic'],
             "reference_link": task_data.get('reference_link', ''),
             "language": "en",
@@ -128,7 +190,8 @@ def add_tasks():
         }
         
         tasks.append(new_task)
-        print(f"   ✅ Task eklendi: ID {new_id} - {new_task['topic'][:50]}...")
+        cluster_info = f" (cluster: {cluster_id})" if cluster_id else " (cluster: yok)"
+        print(f"   ✅ Task eklendi: ID {new_id} - {new_task['topic'][:50]}...{cluster_info}")
         added_count += 1
     
     with open("tasks.json", "w", encoding="utf-8") as f:
