@@ -151,7 +151,6 @@ kapak_prompt: Luxury wealth management office with holographic portfolio allocat
 icerik_1_prompt: Split scene: left side DIY investor overwhelmed with scattered assets; right side structured diversified portfolio managed professionally, photorealistic, no text
 icerik_2_prompt: Portfolio analytics dashboard showing "Asset Allocation %", "Sharpe Ratio", "Max Drawdown", "Annual Return %", "Advisor Fee %", ultra-clean professional UI, photorealistic, no text
 
-
 category: elearning
 cluster: coding_bootcamps
 topic: Coding Bootcamp ROI 2026: Which Programs Actually Lead to $80K+ Jobs (Data-Backed Analysis)
@@ -162,11 +161,15 @@ kapak_prompt: A focused student coding intensely while multiple job offers appea
 icerik_1_prompt: Split scene: left side self-learning confusion with scattered tutorials; right side structured bootcamp journey with clear milestones and mentorship, photorealistic, no text
 icerik_2_prompt: Career dashboard showing "Program Cost", "Placement Rate %", "Avg Salary", "Time to Hire (months)", clean edtech analytics UI, photorealistic, no text
 
-
-
-
-
-
+category: elearning
+cluster: exec_education
+topic: Executive MBA 2026: Real ROI vs Opportunity Cost (Is It Worth $100K+?)
+reference_link: https://www.ft.com/executive-mba-ranking
+author_persona: Executive Career Strategist & Leadership Development Consultant
+special_instructions: Break down full cost ($80K–$200K), salary growth, promotion probability, and network value. Include opportunity cost (lost income, time). Compare top programs (INSEAD, Wharton, LBS). Provide ROI timeline and payback period. End with "Who Should (and Should NOT) Get an EMBA".
+kapak_prompt: High-level executive networking event in an elite business school setting, professionals exchanging ideas with subtle luxury atmosphere, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side stagnant mid-career professional; right side post-EMBA executive leading teams, photorealistic, no text
+icerik_2_prompt: ROI dashboard showing "Tuition Cost", "Salary Increase %", "Promotion Rate", "Payback Period", premium business analytics UI, photorealistic, no text
 
 category: elearning
 cluster: language_apps
@@ -187,6 +190,18 @@ special_instructions: Compare AWS, Azure, GCP certifications. Include exam diffi
 kapak_prompt: Professional surrounded by floating cloud certification badges and salary indicators, futuristic tech environment, glowing data points, cinematic lighting, photorealistic, no text
 icerik_1_prompt: Split scene: left side uncertified IT worker struggling; right side certified cloud engineer managing scalable systems, photorealistic, no text
 icerik_2_prompt: Salary dashboard showing "Certification", "Avg Salary", "Experience Required", "Exam Difficulty", enterprise UI, photorealistic, no text
+
+category: elearning
+cluster: sidehustle_skills
+topic: Side Hustle Skills 2026: Which Digital Skills Actually Generate $1K–$5K/Month (No Hype Breakdown)
+reference_link: https://www.sidehustlenation.com/skills
+author_persona: Digital Income Strategist & Freelance Market Analyst
+special_instructions: Analyze skills (copywriting, video editing, AI automation, SEO, freelancing). Include real earning ranges, time-to-first-income, and competition level. Break down platforms (Upwork, Fiverr, Twitter, LinkedIn). Provide realistic timelines. End with "Best Skill by Time Availability (Full-Time, Part-Time, Beginner)".
+kapak_prompt: Freelancer working from a modern setup with multiple income streams visualized as glowing dashboards, laptop screens showing earnings growth, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side single income job stress; right side diversified side hustle income streams flowing digitally, photorealistic, no text
+icerik_2_prompt: Income dashboard showing "Monthly Earnings", "Clients", "Skill Demand Level", "Time Investment", clean fintech-style UI, photorealistic, no text
+
+
 
 
 
