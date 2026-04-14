@@ -2420,11 +2420,12 @@
                 "height": 1024
             }
         },
-        "status": "pending",
+        "status": "processed",
         "created_at": "2026-04-14",
         "date": "2026-04-14",
         "display_date": "14 April 2026",
-        "processed_at": ""
+        "processed_at": "2026-04-14 19:50:53",
+        "hash": "3294e634"
     },
     {
         "task_id": "0077",
