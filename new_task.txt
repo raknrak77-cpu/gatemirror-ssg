@@ -162,12 +162,84 @@ kapak_prompt: A focused student coding intensely while multiple job offers appea
 icerik_1_prompt: Split scene: left side self-learning confusion with scattered tutorials; right side structured bootcamp journey with clear milestones and mentorship, photorealistic, no text
 icerik_2_prompt: Career dashboard showing "Program Cost", "Placement Rate %", "Avg Salary", "Time to Hire (months)", clean edtech analytics UI, photorealistic, no text
 
+
+
+
+
+
+
 category: elearning
-cluster: exec_education
-topic: Executive MBA 2026: Real ROI vs Opportunity Cost (Is It Worth $100K+?)
-reference_link: https://www.ft.com/executive-mba-ranking
-author_persona: Executive Career Strategist & Leadership Development Consultant
-special_instructions: Break down full cost ($80K–$200K), salary growth, promotion probability, and network value. Include opportunity cost (lost income, time). Compare top programs (INSEAD, Wharton, LBS). Provide ROI timel
+cluster: language_apps
+topic: AI Language Learning 2026: Can Apps Deliver Real Fluency or Just Engagement Metrics?
+reference_link: https://www.fluentin3months.com/app-review
+author_persona: Applied Linguistics Expert & Polyglot Learning Strategist
+special_instructions: Compare Duolingo, Babbel, Rosetta Stone, AI tutors. Focus on fluency vs gamification. Include retention rate, speaking ability, and time-to-fluency estimates. Provide realistic expectations (A1→B2 timeline). End with "Best Method by Learning Goal (Travel, Work, Fluency)".
+kapak_prompt: A user interacting with an AI language app, floating words and translations forming sentences in real time, immersive digital learning environment, photorealistic, no text
+icerik_1_prompt: Split scene: left side passive app tapping (gamification); right side active speaking practice with AI tutor, photorealistic, no text
+icerik_2_prompt: Learning dashboard showing "Vocabulary Growth", "Fluency Level", "Speaking Accuracy %", modern app UI, photorealistic, no text
+
+category: elearning
+cluster: cloud_certifications
+topic: Cloud Certifications 2026: Which Path Leads to $120K–$180K Salaries (AWS vs Azure vs GCP)
+reference_link: https://www.pluralsight.com/cloud-certification-report
+author_persona: Cloud Career Architect & Enterprise Solutions Consultant
+special_instructions: Compare AWS, Azure, GCP certifications. Include exam difficulty, cost, preparation time, and salary benchmarks. Break down roles (DevOps, Solutions Architect, Data Engineer). Provide career path roadmap. End with "Best Certification by Experience Level".
+kapak_prompt: Professional surrounded by floating cloud certification badges and salary indicators, futuristic tech environment, glowing data points, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side uncertified IT worker struggling; right side certified cloud engineer managing scalable systems, photorealistic, no text
+icerik_2_prompt: Salary dashboard showing "Certification", "Avg Salary", "Experience Required", "Exam Difficulty", enterprise UI, photorealistic, no text
+
+
+
+category: wellness
+cluster: longevity_biohacking
+topic: Anti-Aging Secrets 2026: What Actually Works for Women (Hormones, Skin, Energy & Longevity Stack)
+reference_link: https://www.ncbi.nlm.nih.gov/longevity-research
+author_persona: Functional Medicine Doctor & Women’s Longevity Specialist
+special_instructions: Focus on female-specific aging (hormones, collagen loss, metabolism slowdown). Break down supplements (collagen, NMN, omega-3), skincare, fasting, and strength training. Include realistic timelines (4–12 weeks results). Avoid hype. End with "Daily Longevity Routine for Women (Morning–Night Protocol)".
+kapak_prompt: A confident, healthy woman glowing with vitality, subtle skin radiance, surrounded by soft holographic health indicators (hormones, cellular health, energy levels), warm natural lighting, cinematic depth, ultra-realistic, no text
+icerik_1_prompt: Split scene: left side tired, stressed aging signs (dull skin, fatigue); right side vibrant, energized woman with glowing skin and posture, photorealistic, no text
+icerik_2_prompt: Wellness dashboard showing "Biological Age", "Energy Level", "Hormone Balance", "Skin Health Score", elegant feminine UI, soft tones, photorealistic, no text
+
+category: wellness
+cluster: mental_health_apps
+topic: AI Therapy Apps 2026: Can They Really Replace Emotional Support (Anxiety, Burnout, Relationships)?
+reference_link: https://www.psychologytoday.com/mental-health-apps
+author_persona: Clinical Psychologist & Digital Therapy Researcher
+special_instructions: Focus on female audience (stress, anxiety, emotional overload). Compare apps (Woebot, Wysa, BetterHelp). Include CBT effectiveness, cost vs therapy. Add ethical limits and crisis disclaimer. End with "Best App by Emotional Need (Stress, Anxiety, Relationship)".
+kapak_prompt: A woman in a calm environment using a mental health app, soft blue and lavender tones, peaceful expression, subtle emotional relief visualized as fading shadows, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side overwhelmed mental state (chaotic thoughts, stress); right side calm clarity after guided app session, photorealistic, no text
+icerik_2_prompt: App interface showing "Mood Tracking", "Daily Check-ins", "Progress Graph", minimal elegant UI, photorealistic, no text
+
+category: wellness
+cluster: telemedicine_tech
+topic: Online Doctor Visits 2026: Faster, Cheaper, and More Private? (Women’s Health Perspective)
+reference_link: https://www.ama-assn.org/telemedicine-adoption
+author_persona: Digital Health Consultant & Telemedicine Specialist
+special_instructions: Focus on convenience for women (gynecology, dermatology, mental health). Compare cost, wait time, privacy vs hospital visits. Include real scenarios. End with "When Telemedicine Is Better (and When It’s Not)".
+kapak_prompt: A modern woman having a video consultation with a doctor, clean home environment, medical UI overlays, soft natural lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side crowded hospital waiting room; right side relaxed home consultation via video call, photorealistic, no text
+icerik_2_prompt: Healthcare dashboard showing "Wait Time", "Consult Cost", "Privacy Level", "Access Speed", modern clean UI, photorealistic, no text
+
+category: wellness
+cluster: sleep_optimization
+topic: Deep Sleep Reset 2026: Why Women Struggle with Sleep (Hormones, Stress) and How to Fix It
+reference_link: https://www.sleepfoundation.org/sleep-trackers
+author_persona: Sleep Scientist & Hormonal Health Specialist
+special_instructions: Focus on female sleep issues (cortisol, menstrual cycle, anxiety). Include melatonin, magnesium, blue light control, routines. Provide actionable night protocol. End with "7-Day Sleep Reset Plan".
+kapak_prompt: A peaceful sleeping woman with soft glowing waves representing deep sleep cycles, calming blue tones, cinematic soft lighting, ultra-realistic, no text
+icerik_1_prompt: Split scene: left side restless night (phone, stress, insomnia); right side deep uninterrupted sleep with calm posture, photorealistic, no text
+icerik_2_prompt: Sleep tracking dashboard showing "Deep Sleep %", "REM Cycle", "Sleep Score", soft minimal UI, photorealistic, no text
+
+category: wellness
+cluster: personalized_nutrition
+topic: Personalized Nutrition for Women 2026: DNA, Hormones, and the End of Generic Diets
+reference_link: https://www.nature.com/articles/personalized-nutrition
+author_persona: Nutrigenomics Expert & Women’s Health Dietitian
+special_instructions: Focus on female metabolism, hormonal cycles, gut health. Compare generic diets vs personalized plans. Include microbiome testing, food sensitivity, supplement matching. End with "Personalized Meal Framework (Fat Loss, Energy, Hormonal Balance)".
+kapak_prompt: A healthy woman with a personalized nutrition interface overlay showing foods, vitamins, and body responses, vibrant natural colors, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side restrictive generic diet frustration; right side flexible personalized nutrition success, photorealistic, no text
+icerik_2_prompt: Nutrition dashboard showing "Macronutrient Balance", "Gut Health Score", "Energy Level", "Food Sensitivities", modern wellness UI, photorealistic, no text
+
 
 
 
