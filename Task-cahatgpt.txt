@@ -48,205 +48,223 @@ kapak_prompt: Futuristic search interface transforming into an AI brain generati
 icerik_1_prompt: Split scene: left side traditional search results (10 blue links), right side AI-generated answer box with summarized content and citations, high detail, photorealistic, no text
 icerik_2_prompt: Analytics graph showing "Organic Traffic Decline %" vs "AI Answer Usage Growth", modern data visualization UI, glowing lines, photorealistic, no text
 
+
+category: eco
+cluster: ev_infrastructure
+topic: EV Charging Economics 2026: Cost per KM, Charging Speed, and Infrastructure ROI (Home vs Public vs Supercharger)
+reference_link: https://www.iea.org/ev-infrastructure-2026
+author_persona: EV Infrastructure Analyst & Energy Systems Engineer
+special_instructions: Compare EV vs gasoline cost per km using real data (kWh cost vs fuel price). Break down home charging vs public fast charging vs supercharger networks. Include charging speed (kW), battery degradation impact, and installation cost ($1K–$5K). Provide ROI timeline for home charger setup. End with "Best Charging Strategy by Usage Type (Urban, Long Distance, Fleet)".
+kapak_prompt: A futuristic electric vehicle charging ecosystem with multiple charging types (home charger, public fast charger, highway supercharger), glowing energy flow lines connecting grid to vehicles, neon blue-green lighting, cinematic depth, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Split scene: left side gasoline car refueling with rising cost indicators; right side EV charging with energy flow visualization and lower cost per km overlay, photorealistic, no text
+icerik_2_prompt: Advanced dashboard showing "Cost per KM", "Charging Speed (kW)", "Battery Degradation %", "Monthly Energy Cost", modern EV analytics UI, glowing metrics, photorealistic, no text
+
+category: eco
+cluster: solar_energy
+topic: Solar Investment Reality 2026: Payback Period, Hidden Costs, and True ROI (Residential Case Study)
+reference_link: https://www.energy.gov/solar-home-guide
+author_persona: Renewable Energy Consultant & Solar ROI Analyst
+special_instructions: Break down full residential solar system cost ($10K–$30K), incentives, maintenance, inverter replacement. Include real payback period (5–12 years depending on region). Model annual savings and long-term ROI (20 years). Include sensitivity analysis (electricity price increase). End with "When Solar Is NOT Worth It".
+kapak_prompt: Modern house with rooftop solar panels generating visible energy flow into the home, glowing sunlight beams, smart grid overlay, cinematic warm lighting, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Split scene: left side high electricity bills stacking up; right side solar-powered home with minimal bills and energy independence, photorealistic, no text
+icerik_2_prompt: Financial dashboard showing "System Cost", "Annual Savings", "Payback Period", "20-Year ROI", clean fintech-energy UI, photorealistic, no text
+
+category: eco
+cluster: climate_finance
+topic: ESG Investing 2026: Real Returns vs Greenwashing (Performance, Risk, and Capital Flows Analysis)
+reference_link: https://www.msci.com/esg-investing-report
+author_persona: ESG Portfolio Manager & Sustainable Finance Analyst
+special_instructions: Analyze ESG fund performance vs traditional indices (S&P 500 benchmark). Identify greenwashing risks and rating inconsistencies. Include capital inflows/outflows and regulatory pressure (EU taxonomy). Provide risk-adjusted return comparison. End with "How to Identify Real ESG Investments".
+kapak_prompt: Global financial market visualized with green ESG overlays, capital flows moving between assets, some glowing stable and others flickering (greenwashing risk), cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side genuine sustainable investment projects; right side misleading greenwashing corporate visuals, photorealistic, no text
+icerik_2_prompt: Investment dashboard showing "ESG Score", "Annual Return %", "Risk (Volatility)", "Capital Flow", modern institutional UI, photorealistic, no text
+
+category: eco
+cluster: smart_home_energy
+topic: Smart Home Energy Systems 2026: How IoT Automation Cuts Energy Bills by 20–40% (Real Usage Data)
+reference_link: https://www.energy.gov/smart-home-guide
+author_persona: Smart Grid Engineer & Home Automation Specialist
+special_instructions: Explain IoT devices (smart thermostats, plugs, solar integration). Include real savings scenarios and usage patterns. Break down installation cost vs monthly savings. Include automation logic (AI-based scheduling). End with "Optimal Smart Home Stack by Budget".
+kapak_prompt: Fully connected smart home with visible energy flow between devices, glowing IoT nodes controlling lighting, heating, and appliances, futuristic interface overlay, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side inefficient home wasting energy (lights on, heat loss); right side optimized smart home with automated energy control, photorealistic, no text
+icerik_2_prompt: Energy analytics dashboard showing "Monthly Consumption", "Savings %", "Device Efficiency", "Automation Events", modern UI, photorealistic, no text
+
+category: eco
+cluster: circular_economy
+topic: Circular Economy Profits 2026: How Companies Turn Waste into High-Margin Revenue Streams
+reference_link: https://www.ellenmacarthurfoundation.org/circular-economy
+author_persona: Circular Economy Strategist & Sustainable Business Consultant
+special_instructions: Analyze business models (recycling, resale, remanufacturing). Include real company case studies. Break down cost savings vs revenue generation. Explain margin improvement vs linear economy. End with "Most Profitable Circular Models by Industry".
+kapak_prompt: Industrial system visualized as a closed-loop circular process, raw materials transforming into products and returning as recycled inputs, glowing continuous flow, cinematic industrial environment, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Split scene: left side linear economy (produce-use-waste landfill); right side circular system (reuse-recycle-remanufacture loop), photorealistic, no text
+icerik_2_prompt: Business dashboard showing "Cost Reduction %", "Recycled Revenue", "Waste Reduction", "Profit Margin Increase", corporate analytics UI, photorealistic, no text
+
+
+
 category: future-economy
 cluster: crypto_exchanges
-topic: Crypto Exchange Fees Exposed 2026: Hidden Costs, Spread Manipulation, and Real Trading Expenses
+topic: Crypto Exchange Cost Breakdown 2026: Real Trading Fees, Hidden Spreads, and Slippage Analysis (With $10K Trade Simulation)
 reference_link: https://www.coingecko.com/crypto-exchanges-ranking
-author_persona: Crypto Market Structure Analyst & Exchange Liquidity Specialist
-special_instructions: Go beyond advertised fees. Break down maker/taker, spread, slippage, withdrawal fees. Compare Binance, MEXC, Kraken, Bitget. Include real trade example ($1,000 trade). End with “Cheapest Exchange by Trading Style”.
-kapak_prompt: A futuristic trading floor where crypto exchanges are competing, glowing fee percentages and hidden costs visualized as leaking coins, neon green and red lights, cinematic, ultra-detailed, photorealistic, no text
-icerik_1_prompt: Split scene: left side "advertised low fees" clean UI; right side "real costs" showing spread, slippage, hidden deductions visualized, photorealistic, no text
-icerik_2_prompt: Detailed fee breakdown dashboard showing "Trading Fee", "Spread %", "Slippage", "Net Cost per Trade", fintech UI, photorealistic, no text
+author_persona: Crypto Market Microstructure Analyst & Order Book Specialist
+special_instructions: Go beyond advertised fees. Simulate a $10,000 trade across Binance, Kraken, Bitget, MEXC. Break down maker/taker fees, spread %, slippage, and withdrawal costs. Include order book depth analysis. Show real net cost per trade. End with "Best Exchange by Strategy (Scalping, Swing, Long-Term)".
+kapak_prompt: Ultra-realistic crypto trading interface with multiple exchanges competing side by side, order books, liquidity depth heatmaps, and hidden fees visualized as leaking digital coins, neon green/red lighting, cinematic fintech environment, photorealistic, no text
+icerik_1_prompt: Split scene: left side "Advertised Fees" clean UI with low percentages; right side "Real Cost Execution" showing spread widening, slippage impact, and hidden deductions in real-time order book visualization, photorealistic, no text
+icerik_2_prompt: Advanced trading dashboard showing "Trade Size: $10,000", "Spread %", "Slippage Cost", "Net Execution Price", "Total Fee Impact", ultra-clean institutional trading UI, glowing data points, photorealistic, no text
 
 category: future-economy
 cluster: rwa_tokenization
-topic: $5 Trillion Opportunity: How Tokenized Assets Are Unlocking Global Liquidity in 2026
+topic: Tokenized Real Estate 2026: From $1M Assets to $100 Shares — Liquidity, Regulation, and ROI Breakdown
 reference_link: https://www.bcg.com/rwa-tokenization-2026
-author_persona: Digital Asset Economist & Institutional Tokenization Advisor
-special_instructions: Explain tokenization of real estate, art, bonds. Include liquidity transformation, fractional ownership math. Cover SEC & MiCA regulations. Case study: tokenized commercial building. End with institutional adoption forecast.
-kapak_prompt: Physical assets (skyscraper, gold, art) breaking into digital tokens connected via blockchain nodes, glowing gold and green network, cinematic depth, photorealistic, no text
-icerik_1_prompt: Split scene: left side illiquid assets locked in vault; right side fractional tokens flowing freely in digital markets, photorealistic, no text
-icerik_2_prompt: Investment dashboard showing "Fractional Ownership %", "Liquidity Index", "Token Price", modern fintech UI, photorealistic, no text
+author_persona: Institutional Tokenization Advisor & Real Estate Investment Analyst
+special_instructions: Explain how a $1M property becomes fractional tokens ($100/share). Include liquidity transformation, secondary market trading, and yield distribution. Cover SEC vs MiCA frameworks. Case study: tokenized commercial building cash flow. End with institutional vs retail advantage breakdown.
+kapak_prompt: A high-value real estate asset transforming into thousands of digital tokens floating in a blockchain network, glowing ownership fragments, gold and green tones, cinematic lighting, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Split scene: left side traditional real estate locked behind high capital barrier; right side tokenized property split into micro-ownership units flowing in digital marketplace, photorealistic, no text
+icerik_2_prompt: Investment platform dashboard showing "Property Value", "Token Price ($100)", "Rental Yield %", "Ownership Share", "Liquidity Index", modern fintech UI, photorealistic, no text
 
 category: future-economy
 cluster: digital_banking
-topic: Neobank Economics 2026: How Digital Banks Make Money While Offering Zero Fees
+topic: Neobank Business Model 2026: How Zero-Fee Banking Generates Billions (Unit Economics Explained)
 reference_link: https://www.forrester.com/neobanking-2026
-author_persona: Fintech Business Model Analyst & Banking Strategist
-special_instructions: Explain revenue streams: interchange fees, subscriptions, lending spreads. Compare Revolut, N26, Wise. Include unit economics. End with “Best Neobank by User Type”.
-kapak_prompt: A sleek digital banking interface floating over a fading traditional bank building, glowing financial data streams, photorealistic, cinematic, no text
-icerik_1_prompt: Split scene: traditional banking (queues, paperwork) vs frictionless mobile banking app experience, photorealistic, no text
-icerik_2_prompt: Revenue model dashboard showing "Interchange Revenue", "Subscription Income", "Loan Margins", clean UI, photorealistic, no text
+author_persona: Fintech Business Model Strategist & Digital Banking Analyst
+special_instructions: Break down revenue streams: interchange fees, FX margins, subscription tiers, lending spreads. Compare Revolut, N26, Wise. Include CAC vs LTV analysis and unit economics per user. Explain how “free banking” is monetized. End with "Best Neobank by User Profile (Traveler, Freelancer, Saver)".
+kapak_prompt: A sleek mobile banking interface floating above a collapsing traditional bank building, glowing financial data streams showing hidden revenue flows, cinematic fintech aesthetic, photorealistic, no text
+icerik_1_prompt: Split scene: left side traditional banking (queues, paperwork, hidden fees); right side seamless neobank experience with instant onboarding and analytics, photorealistic, no text
+icerik_2_prompt: Business model dashboard showing "Interchange Revenue/User", "FX Margin %", "Subscription Income", "Customer LTV vs CAC", clean modern UI, photorealistic, no text
 
 category: future-economy
 cluster: defi_staking
-topic: DeFi Yield Reality Check 2026: Sustainable APY vs Ponzi-Like Returns
+topic: DeFi Yield Truth 2026: Sustainable APY vs Inflationary Rewards (Risk-Adjusted Return Analysis)
 reference_link: https://www.defirate.com/staking-rewards
-author_persona: DeFi Risk Analyst & Smart Contract Auditor
-special_instructions: Separate real yield vs inflationary rewards. Compare Lido, Aave, Rocket Pool. Include risk metrics, impermanent loss, smart contract risk. Add mandatory disclaimers. End with safe allocation strategy.
-kapak_prompt: DeFi ecosystem visualized with glowing yield streams, some stable and some collapsing, cinematic contrast between green stable returns and red risky yields, photorealistic, no text
-icerik_1_prompt: Split scene: fake high APY collapsing vs sustainable yield stable growth, photorealistic, no text
-icerik_2_prompt: Dashboard showing "APY", "Risk Score", "TVL", "Audit Status", dark DeFi UI, photorealistic, no text
+author_persona: DeFi Protocol Analyst & Smart Contract Risk Auditor
+special_instructions: Separate real yield (protocol revenue) vs token inflation rewards. Compare Lido, Rocket Pool, Aave. Include APY vs real return, lock-up periods, smart contract risk, and slashing risks. Provide risk-adjusted yield framework. Mandatory disclaimer on capital risk. End with optimal allocation strategy.
+kapak_prompt: A DeFi network visualized with multiple yield streams, some stable glowing green and others unstable flashing red, blockchain nodes interconnected, cinematic depth, photorealistic, no text
+icerik_1_prompt: Split scene: left side unsustainable high APY collapsing (tokens inflating rapidly); right side stable yield backed by real protocol revenue, photorealistic, no text
+icerik_2_prompt: DeFi analytics dashboard showing "APY", "Real Yield %", "Risk Score", "TVL", "Lock-up Period", dark mode crypto UI, photorealistic, no text
 
 category: future-economy
 cluster: wealth_management
-topic: AI vs Human Wealth Managers: Who Delivers Better Returns for HNW Clients in 2026?
+topic: $1M Portfolio Strategy 2026: Asset Allocation, Risk Management, and AI vs Human Advisor Performance
 reference_link: https://www.barrons.com/wealth-management-ranking
-author_persona: Private Wealth Strategist & Portfolio Optimization Expert
-special_instructions: Compare robo-advisors vs human advisors. Include portfolio allocation, fees (AUM), performance benchmarks. Target HNW audience. End with hybrid strategy.
-kapak_prompt: Luxury wealth office with AI holographic advisor managing portfolios alongside human advisor, elegant lighting, photorealistic, no text
-icerik_1_prompt: Split scene: DIY chaos vs professionally managed portfolio, photorealistic, no text
-icerik_2_prompt: Portfolio analytics dashboard showing "Alpha", "Beta", "Sharpe Ratio", "AUM Fees", photorealistic, no text
-
-
-category: wellness
-cluster: longevity_biohacking
-topic: Longevity Stack 2026: What Actually Works (NMN, Resveratrol, Cold Exposure, Sleep Optimization)
-reference_link: https://www.ncbi.nlm.nih.gov/longevity-research
-author_persona: Anti-Aging Scientist & Biohacking Practitioner
-special_instructions: Break down evidence-backed interventions. Include dosage ranges, wearable tracking. Avoid hype. End with daily protocol.
-kapak_prompt: A healthy older individual surrounded by holographic biological metrics (DNA repair, cellular health), soft natural lighting, photorealistic, no text
-icerik_1_prompt: Split scene: cellular aging damage vs optimized cellular regeneration, photorealistic, no text
-icerik_2_prompt: Biohacking dashboard showing "Biological Age", "HRV", "Sleep Score", photorealistic, no text
-
-category: wellness
-cluster: mental_health_apps
-topic: Digital Therapy ROI: Can Mental Health Apps Replace Weekly Therapy Sessions in 2026?
-reference_link: https://www.psychologytoday.com/mental-health-apps
-author_persona: Clinical Psychologist & Digital Health Researcher
-special_instructions: Compare therapy apps vs human therapy. Include CBT effectiveness, cost comparison, ethical concerns. Add crisis disclaimer.
-kapak_prompt: Person calmly interacting with AI therapist on smartphone, soft blue tones, peaceful environment, photorealistic, no text
-icerik_1_prompt: Split scene: anxiety chaos vs calm structured thoughts after app usage, photorealistic, no text
-icerik_2_prompt: App dashboard showing mood tracking, session logs, progress charts, photorealistic, no text
-
-category: wellness
-cluster: telemedicine_tech
-topic: Telemedicine Efficiency: Cost, Speed, and Patient Outcomes vs Traditional Healthcare in 2026
-reference_link: https://www.ama-assn.org/telemedicine-adoption
-author_persona: Healthcare Systems Analyst
-special_instructions: Compare wait times, cost savings, accessibility. Include adoption statistics. Target healthcare decision makers.
-kapak_prompt: Doctor-patient video consultation with futuristic medical UI overlays, clean environment, photorealistic, no text
-icerik_1_prompt: Split scene: hospital waiting vs instant video consultation, photorealistic, no text
-icerik_2_prompt: Dashboard showing "Wait Time", "Consult Cost", "Patient Satisfaction", photorealistic, no text
-
-category: wellness
-cluster: sleep_optimization
-topic: Sleep Optimization Data 2026: How Wearables Are Rewiring Human Recovery Cycles
-reference_link: https://www.sleepfoundation.org/sleep-trackers
-author_persona: Sleep Scientist & Neurobiology Researcher
-special_instructions: Explain REM cycles, recovery metrics, wearable accuracy. Compare Oura, Whoop, Apple Watch.
-kapak_prompt: Person sleeping peacefully with glowing biometric data streams visualizing sleep cycles, photorealistic, no text
-icerik_1_prompt: Split scene: fragmented sleep vs deep optimized sleep cycles, photorealistic, no text
-icerik_2_prompt: Sleep analytics dashboard showing REM, deep sleep, recovery score, photorealistic, no text
-
-category: wellness
-cluster: personalized_nutrition
-topic: Microbiome Economy 2026: How Personalized Nutrition Is Becoming a $100B Industry
-reference_link: https://www.nature.com/articles/personalized-nutrition
-author_persona: Nutrigenomics Scientist & Clinical Dietitian
-special_instructions: Explain microbiome testing, DNA-based diets. Compare top platforms. Include scientific validation.
-kapak_prompt: Human body with microbiome visualization glowing in digestive system, futuristic overlay, photorealistic, no text
-icerik_1_prompt: Split scene: generic diet vs personalized nutrition plan based on DNA, photorealistic, no text
-icerik_2_prompt: Nutrition dashboard showing food recommendations, sensitivities, supplements, photorealistic, no text
+author_persona: Private Wealth Manager & Portfolio Optimization Specialist
+special_instructions: Build a $1M portfolio allocation (equities, bonds, alternatives, crypto). Compare robo-advisors vs human advisors on fees (AUM), performance, and personalization. Include Sharpe ratio, drawdown scenarios, and tax efficiency. End with hybrid allocation model.
+kapak_prompt: Luxury wealth management office with holographic portfolio allocations floating in the air, asset classes visualized as glowing segments, elegant lighting, cinematic, photorealistic, no text
+icerik_1_prompt: Split scene: left side DIY investor overwhelmed with scattered assets; right side structured diversified portfolio managed professionally, photorealistic, no text
+icerik_2_prompt: Portfolio analytics dashboard showing "Asset Allocation %", "Sharpe Ratio", "Max Drawdown", "Annual Return %", "Advisor Fee %", ultra-clean professional UI, photorealistic, no text
 
 
 category: elearning
 cluster: coding_bootcamps
-topic: Coding Bootcamp ROI 2026: Which Programs Actually Get You Hired?
+topic: Coding Bootcamp ROI 2026: Which Programs Actually Lead to $80K+ Jobs (Data-Backed Analysis)
 reference_link: https://www.coursereport.com/coding-bootcamp-ranking
-author_persona: EdTech Analyst & Career Placement Specialist
-special_instructions: Compare job placement rates, salaries, program duration. Include real outcomes.
-kapak_prompt: Student coding with job offers visualized as floating notifications, photorealistic, no text
-icerik_1_prompt: Split scene: self-learning confusion vs structured bootcamp success path, photorealistic, no text
-icerik_2_prompt: Dashboard showing "Placement Rate", "Avg Salary", "Program Length", photorealistic, no text
+author_persona: EdTech Market Analyst & Tech Career Placement Strategist
+special_instructions: Analyze real bootcamp outcomes (job placement rate, average salary, time to hire). Compare top programs (Le Wagon, General Assembly, Flatiron). Include cost ($5K–$20K), duration, and ROI timeline. Break down frontend vs backend vs data paths. End with "Best Bootcamp Path by Career Goal (Fast Hire, High Salary, Remote Work)".
+kapak_prompt: A focused student coding intensely while multiple job offers appear as glowing holographic notifications around them, modern tech environment, cinematic lighting, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Split scene: left side self-learning confusion with scattered tutorials; right side structured bootcamp journey with clear milestones and mentorship, photorealistic, no text
+icerik_2_prompt: Career dashboard showing "Program Cost", "Placement Rate %", "Avg Salary", "Time to Hire (months)", clean edtech analytics UI, photorealistic, no text
 
 category: elearning
 cluster: exec_education
-topic: Executive MBA ROI 2026: Salary Growth vs Opportunity Cost Analysis
+topic: Executive MBA 2026: Real ROI vs Opportunity Cost (Is It Worth $100K+?)
 reference_link: https://www.ft.com/executive-mba-ranking
-author_persona: Executive Career Strategist
-special_instructions: Break down ROI, networking, cost-benefit. Target executives.
-kapak_prompt: Executive networking event in elite business school, cinematic lighting, photorealistic, no text
-icerik_1_prompt: Split scene: stagnant career vs executive promotion, photorealistic, no text
-icerik_2_prompt: ROI dashboard showing salary increase, cost, payback period, photorealistic, no text
+author_persona: Executive Career Strategist & Leadership Development Consultant
+special_instructions: Break down full cost ($80K–$200K), salary growth, promotion probability, and network value. Include opportunity cost (lost income, time). Compare top programs (INSEAD, Wharton, LBS). Provide ROI timeline and payback period. End with "Who Should (and Should NOT) Get an EMBA".
+kapak_prompt: High-level executive networking event in an elite business school setting, professionals exchanging ideas with subtle luxury atmosphere, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side stagnant mid-career professional; right side post-EMBA executive leading teams, photorealistic, no text
+icerik_2_prompt: ROI dashboard showing "Tuition Cost", "Salary Increase %", "Promotion Rate", "Payback Period", premium business analytics UI, photorealistic, no text
 
 category: elearning
 cluster: language_apps
-topic: AI Language Learning 2026: Do Apps Achieve Fluency or Just Gamify Learning?
+topic: AI Language Learning 2026: Can Apps Deliver Real Fluency or Just Engagement Metrics?
 reference_link: https://www.fluentin3months.com/app-review
-author_persona: Linguistics Expert & Polyglot
-special_instructions: Compare fluency outcomes, retention, engagement. Include app comparison.
-kapak_prompt: Person learning language via AI app with floating words and translations, photorealistic, no text
-icerik_1_prompt: Split scene: classroom vs AI interactive learning, photorealistic, no text
-icerik_2_prompt: Progress dashboard showing fluency level, vocabulary growth, photorealistic, no text
+author_persona: Applied Linguistics Expert & Polyglot Learning Strategist
+special_instructions: Compare Duolingo, Babbel, Rosetta Stone, AI tutors. Focus on fluency vs gamification. Include retention rate, speaking ability, and time-to-fluency estimates. Provide realistic expectations (A1→B2 timeline). End with "Best Method by Learning Goal (Travel, Work, Fluency)".
+kapak_prompt: A user interacting with an AI language app, floating words and translations forming sentences in real time, immersive digital learning environment, photorealistic, no text
+icerik_1_prompt: Split scene: left side passive app tapping (gamification); right side active speaking practice with AI tutor, photorealistic, no text
+icerik_2_prompt: Learning dashboard showing "Vocabulary Growth", "Fluency Level", "Speaking Accuracy %", modern app UI, photorealistic, no text
 
 category: elearning
 cluster: cloud_certifications
-topic: Cloud Certification ROI 2026: Which Path Leads to $150K+ Salaries?
+topic: Cloud Certifications 2026: Which Path Leads to $120K–$180K Salaries (AWS vs Azure vs GCP)
 reference_link: https://www.pluralsight.com/cloud-certification-report
-author_persona: Cloud Career Coach
-special_instructions: Compare AWS, Azure, GCP. Include salary benchmarks and exam difficulty.
-kapak_prompt: Cloud certification badges glowing with salary indicators, photorealistic, no text
-icerik_1_prompt: Split scene: uncertified vs certified career path, photorealistic, no text
-icerik_2_prompt: Salary dashboard by certification, photorealistic, no text
+author_persona: Cloud Career Architect & Enterprise Solutions Consultant
+special_instructions: Compare AWS, Azure, GCP certifications. Include exam difficulty, cost, preparation time, and salary benchmarks. Break down roles (DevOps, Solutions Architect, Data Engineer). Provide career path roadmap. End with "Best Certification by Experience Level".
+kapak_prompt: Professional surrounded by floating cloud certification badges and salary indicators, futuristic tech environment, glowing data points, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side uncertified IT worker struggling; right side certified cloud engineer managing scalable systems, photorealistic, no text
+icerik_2_prompt: Salary dashboard showing "Certification", "Avg Salary", "Experience Required", "Exam Difficulty", enterprise UI, photorealistic, no text
+
+
+
+category: wellness
+cluster: longevity_biohacking
+topic: Anti-Aging Secrets 2026: What Actually Works for Women (Hormones, Skin, Energy & Longevity Stack)
+reference_link: https://www.ncbi.nlm.nih.gov/longevity-research
+author_persona: Functional Medicine Doctor & Women’s Longevity Specialist
+special_instructions: Focus on female-specific aging (hormones, collagen loss, metabolism slowdown). Break down supplements (collagen, NMN, omega-3), skincare, fasting, and strength training. Include realistic timelines (4–12 weeks results). Avoid hype. End with "Daily Longevity Routine for Women (Morning–Night Protocol)".
+kapak_prompt: A confident, healthy woman glowing with vitality, subtle skin radiance, surrounded by soft holographic health indicators (hormones, cellular health, energy levels), warm natural lighting, cinematic depth, ultra-realistic, no text
+icerik_1_prompt: Split scene: left side tired, stressed aging signs (dull skin, fatigue); right side vibrant, energized woman with glowing skin and posture, photorealistic, no text
+icerik_2_prompt: Wellness dashboard showing "Biological Age", "Energy Level", "Hormone Balance", "Skin Health Score", elegant feminine UI, soft tones, photorealistic, no text
+
+category: wellness
+cluster: mental_health_apps
+topic: AI Therapy Apps 2026: Can They Really Replace Emotional Support (Anxiety, Burnout, Relationships)?
+reference_link: https://www.psychologytoday.com/mental-health-apps
+author_persona: Clinical Psychologist & Digital Therapy Researcher
+special_instructions: Focus on female audience (stress, anxiety, emotional overload). Compare apps (Woebot, Wysa, BetterHelp). Include CBT effectiveness, cost vs therapy. Add ethical limits and crisis disclaimer. End with "Best App by Emotional Need (Stress, Anxiety, Relationship)".
+kapak_prompt: A woman in a calm environment using a mental health app, soft blue and lavender tones, peaceful expression, subtle emotional relief visualized as fading shadows, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side overwhelmed mental state (chaotic thoughts, stress); right side calm clarity after guided app session, photorealistic, no text
+icerik_2_prompt: App interface showing "Mood Tracking", "Daily Check-ins", "Progress Graph", minimal elegant UI, photorealistic, no text
+
+category: wellness
+cluster: telemedicine_tech
+topic: Online Doctor Visits 2026: Faster, Cheaper, and More Private? (Women’s Health Perspective)
+reference_link: https://www.ama-assn.org/telemedicine-adoption
+author_persona: Digital Health Consultant & Telemedicine Specialist
+special_instructions: Focus on convenience for women (gynecology, dermatology, mental health). Compare cost, wait time, privacy vs hospital visits. Include real scenarios. End with "When Telemedicine Is Better (and When It’s Not)".
+kapak_prompt: A modern woman having a video consultation with a doctor, clean home environment, medical UI overlays, soft natural lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side crowded hospital waiting room; right side relaxed home consultation via video call, photorealistic, no text
+icerik_2_prompt: Healthcare dashboard showing "Wait Time", "Consult Cost", "Privacy Level", "Access Speed", modern clean UI, photorealistic, no text
+
+category: wellness
+cluster: sleep_optimization
+topic: Deep Sleep Reset 2026: Why Women Struggle with Sleep (Hormones, Stress) and How to Fix It
+reference_link: https://www.sleepfoundation.org/sleep-trackers
+author_persona: Sleep Scientist & Hormonal Health Specialist
+special_instructions: Focus on female sleep issues (cortisol, menstrual cycle, anxiety). Include melatonin, magnesium, blue light control, routines. Provide actionable night protocol. End with "7-Day Sleep Reset Plan".
+kapak_prompt: A peaceful sleeping woman with soft glowing waves representing deep sleep cycles, calming blue tones, cinematic soft lighting, ultra-realistic, no text
+icerik_1_prompt: Split scene: left side restless night (phone, stress, insomnia); right side deep uninterrupted sleep with calm posture, photorealistic, no text
+icerik_2_prompt: Sleep tracking dashboard showing "Deep Sleep %", "REM Cycle", "Sleep Score", soft minimal UI, photorealistic, no text
+
+category: wellness
+cluster: personalized_nutrition
+topic: Personalized Nutrition for Women 2026: DNA, Hormones, and the End of Generic Diets
+reference_link: https://www.nature.com/articles/personalized-nutrition
+author_persona: Nutrigenomics Expert & Women’s Health Dietitian
+special_instructions: Focus on female metabolism, hormonal cycles, gut health. Compare generic diets vs personalized plans. Include microbiome testing, food sensitivity, supplement matching. End with "Personalized Meal Framework (Fat Loss, Energy, Hormonal Balance)".
+kapak_prompt: A healthy woman with a personalized nutrition interface overlay showing foods, vitamins, and body responses, vibrant natural colors, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side restrictive generic diet frustration; right side flexible personalized nutrition success, photorealistic, no text
+icerik_2_prompt: Nutrition dashboard showing "Macronutrient Balance", "Gut Health Score", "Energy Level", "Food Sensitivities", modern wellness UI, photorealistic, no text
+
+
+👍😂
 
 category: elearning
 cluster: sidehustle_skills
-topic: Side Hustle Reality 2026: Which Skills Actually Generate $1K+/Month (No Hype)
+topic: Side Hustle Skills 2026: Which Digital Skills Actually Generate $1K–$5K/Month (No Hype Breakdown)
 reference_link: https://www.sidehustlenation.com/skills
-author_persona: Digital Income Strategist
-special_instructions: Focus on realistic income, time investment, platforms. Include proof-based scenarios.
-kapak_prompt: Freelancer managing multiple income streams visualized as digital dashboards, photorealistic, no text
-icerik_1_prompt: Split scene: single income stress vs diversified income streams, photorealistic, no text
-icerik_2_prompt: Income dashboard showing monthly earnings and platforms, photorealistic, no text
+author_persona: Digital Income Strategist & Freelance Market Analyst
+special_instructions: Analyze skills (copywriting, video editing, AI automation, SEO, freelancing). Include real earning ranges, time-to-first-income, and competition level. Break down platforms (Upwork, Fiverr, Twitter, LinkedIn). Provide realistic timelines. End with "Best Skill by Time Availability (Full-Time, Part-Time, Beginner)".
+kapak_prompt: Freelancer working from a modern setup with multiple income streams visualized as glowing dashboards, laptop screens showing earnings growth, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Split scene: left side single income job stress; right side diversified side hustle income streams flowing digitally, photorealistic, no text
+icerik_2_prompt: Income dashboard showing "Monthly Earnings", "Clients", "Skill Demand Level", "Time Investment", clean fintech-style UI, photorealistic, no text
 
 
-category: eco
-cluster: ev_infrastructure
-topic: EV Charging Economics 2026: Cost per KM vs Gasoline (Full Breakdown)
-reference_link: https://www.iea.org/ev-infrastructure-2026
-author_persona: EV Infrastructure Analyst
-special_instructions: Compare EV vs gas costs per km. Include charging speeds, home vs public.
-kapak_prompt: Electric car charging with energy flow visualization vs gas fueling, photorealistic, no text
-icerik_1_prompt: Split scene: fuel cost vs electric cost comparison, photorealistic, no text
-icerik_2_prompt: Cost dashboard per km, charging time, photorealistic, no text
 
-category: eco
-cluster: solar_energy
-topic: Solar Investment 2026: Real ROI, Payback Period, and Hidden Costs
-reference_link: https://www.energy.gov/solar-home-guide
-author_persona: Renewable Energy Consultant
-special_instructions: Break down cost per watt, incentives, ROI timeline.
-kapak_prompt: House with solar panels generating energy flow visualization, photorealistic, no text
-icerik_1_prompt: Split scene: high bill vs solar savings, photorealistic, no text
-icerik_2_prompt: ROI dashboard with savings and payback period, photorealistic, no text
 
-category: eco
-cluster: climate_finance
-topic: ESG Investing Reality 2026: Performance vs Greenwashing Risks
-reference_link: https://www.msci.com/esg-investing-report
-author_persona: ESG Investment Analyst
-special_instructions: Analyze ESG returns, risks, and fake sustainability claims.
-kapak_prompt: Financial market with green ESG overlays and warning signals, photorealistic, no text
-icerik_1_prompt: Split scene: real ESG vs greenwashing, photorealistic, no text
-icerik_2_prompt: ESG performance dashboard, photorealistic, no text
 
-category: eco
-cluster: smart_home_energy
-topic: Smart Home Energy ROI 2026: How IoT Devices Reduce Bills by 20–30%
-reference_link: https://www.energy.gov/smart-home-guide
-author_persona: Energy Efficiency Specialist
-special_instructions: Compare devices, savings, installation ease.
-kapak_prompt: Smart home glowing with connected devices and energy flow, photorealistic, no text
-icerik_1_prompt: Split scene: wasted energy vs optimized usage, photorealistic, no text
-icerik_2_prompt: Energy savings dashboard, photorealistic, no text
 
-category: eco
-cluster: circular_economy
-topic: Circular Economy Profits 2026: How Companies Turn Waste into Revenue Streams
-reference_link: https://www.ellenmacarthurfoundation.org/circular-economy
-author_persona: Circular Economy Strategist
-special_instructions: Analyze business models, revenue streams, sustainability impact.
-kapak_prompt: Circular production loop visualized with materials flowing continuously, photorealistic, no text
-icerik_1_prompt: Split scene: waste economy vs circular reuse system, photorealistic, no text
-icerik_2_prompt: Dashboard showing revenue from recycled materials, photorealistic, no text
+
+
+
+
+
+
