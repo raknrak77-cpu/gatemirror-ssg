@@ -47,8 +47,11 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
         meta_comment = f"<!-- META: author={author_name}, author_title={author_title}, author_bio={author_bio}, author_avatar={author_avatar}, datetime={datetime_full} -->\n"
+        # 🔍 YENİ: META'ya yazılan yazar bilgisini göster
+        print(f"   📝 META'ya yazılıyor: author={author_name}")
     else:
         meta_comment = f"<!-- META: author={author_persona}, datetime={datetime_full} -->\n"
+        print(f"   📝 META'ya yazılıyor: author={author_persona} (varsayılan)")
     
     final_html = meta_comment + makale_html
     
@@ -78,6 +81,15 @@ def isle_gorev(task):
     
     clusters = load_clusters()
     author_info = get_author_info(cluster_id, clusters)
+    
+    # 🔍 YENİ: Yazar bilgisi debug log'u
+    if author_info:
+        print(f"   ✅ Yazar bulundu: {author_info.get('name')} (cluster: {cluster_id})")
+    else:
+        if cluster_id:
+            print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id} clusters.json'da yok")
+        else:
+            print(f"   ⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak (Gatemirror Expert)")
     
     cluster_rules = ""
     if cluster_id:
