@@ -416,7 +416,7 @@
                     }
                 },
                 "climate_finance": {
-                    "cluster_id": "eco_03",7
+                    "cluster_id": "eco_03",
                     "intent": "informational",
                     "cpc_min": 15,
                     "cpc_max": 30,
