@@ -2393,5 +2393,805 @@
         "display_date": "13 April 2026",
         "processed_at": "2026-04-14 18:10:28",
         "hash": "3bd17bf6"
+    },
+    {
+        "task_id": "0076",
+        "category": "tech",
+        "cluster_id": "tech_01",
+        "topic": "AI Trading Bots 2026: Which Strategies Actually Beat the Market (Backtested Data & Real ROI Analysis)",
+        "reference_link": "https://www.gartner.com/en/ai-trading-platforms",
+        "language": "en",
+        "author_persona": "Quantitative Trading Analyst & Algorithmic Strategy Developer",
+        "special_instructions": "Deep dive into AI trading strategies (grid, DCA, scalping, arbitrage). Include backtesting logic, Sharpe ratio, max drawdown, and real ROI expectations (no hype). Compare Binance, Bybit, 3Commas. Include a data table. Explain why most bots fail. End with \"Best Strategy by Risk Profile\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Ultra-detailed futuristic trading command center with multiple AI bots executing different strategies simultaneously, holographic charts showing Sharpe ratio, drawdown curves, profit heatmaps, dark environment with neon blue and green lighting, cinematic depth of field, hyper-realistic reflections, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split visualization: left side chaotic human trading with emotional panic (red overlays, messy charts), right side AI bots executing structured strategies (grid lines, DCA layers, clean green profit zones), ultra-detailed trading UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Advanced analytics dashboard showing \"ROI %\", \"Max Drawdown\", \"Sharpe Ratio\", \"Win Rate\", multi-strategy comparison table, modern fintech UI, glowing data points, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0077",
+        "category": "tech",
+        "cluster_id": "tech_02",
+        "topic": "AI Cybersecurity in 2026: Real-Time Threat Detection vs Zero-Day Exploits (Inside Modern Defense Systems)",
+        "reference_link": "https://www.crowdstrike.com/ai-cybersecurity-report-2026",
+        "language": "en",
+        "author_persona": "Chief Information Security Officer (CISO) & Threat Intelligence Specialist",
+        "special_instructions": "Explain how AI models detect anomalies using behavior analysis, not signatures. Include real-world zero-day attack scenarios. Break down response time differences (ms level). Discuss compliance (GDPR, SOC2). Include case-based explanation. End with 2028 threat evolution forecast.",
+        "visuals": {
+            "kapak": {
+                "prompt": "High-tech cyber defense system visualized as an AI core detecting and neutralizing incoming attack vectors in real time, glowing red threats dissolving into blue energy shields, deep cyber grid background, cinematic lighting, ultra-detailed particles, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Before/after scene: left side overwhelmed network under attack (red packets, alerts flooding), right side AI-controlled network with clean flow, anomaly detection highlighted with glowing nodes, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Security dashboard displaying \"Threats Blocked/sec\", \"Anomaly Detection Rate\", \"Zero-Day Response Time (ms)\", advanced SOC interface, dark mode, ultra-clean UI, photorealistic, no text on screen",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0078",
+        "category": "tech",
+        "cluster_id": "tech_03",
+        "topic": "AI Productivity ROI: How Teams Save 10–20 Hours Weekly Using Automation (Real Workflow Breakdown 2026)",
+        "reference_link": "https://www.forbes.com/ai-productivity-tools-2026",
+        "language": "en",
+        "author_persona": "Digital Transformation Consultant & Productivity Systems Architect",
+        "special_instructions": "Break down real workflows (content, meetings, emails, project management). Compare tools (Notion AI, Grammarly, Jasper, ChatGPT). Include time saved per task, cost vs ROI analysis. Add real team use-case scenario. End with \"Stack Recommendation by Team Size\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Hyper-modern workspace with AI tools floating as holographic assistants around a professional, each handling tasks like writing, scheduling, analytics, warm cinematic lighting, minimal desk setup, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side chaotic workflow (messy notes, endless emails, missed deadlines), right side AI-optimized workflow (automated calendar, clean tasks, completed projects), high detail, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Productivity dashboard showing \"Hours Saved/Week\", \"Tasks Automated\", \"Cost vs ROI\", integrated tool icons, modern SaaS UI, glowing metrics, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0079",
+        "category": "tech",
+        "cluster_id": "tech_04",
+        "topic": "AI Infrastructure Costs 2026: GPU Pricing, Scaling Strategies, and How to Cut Cloud Bills by 40%",
+        "reference_link": "https://www.gartner.com/cloud-ai-infrastructure",
+        "language": "en",
+        "author_persona": "Cloud Solutions Architect & AI Infrastructure Specialist",
+        "special_instructions": "Compare AWS, Azure, GCP GPU pricing (A100, H100). Explain autoscaling, spot instances, and cost optimization strategies. Include real cost breakdown example. Target CTO-level readers. End with decision matrix.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Massive futuristic cloud data center with glowing GPU clusters processing AI workloads, data streams flowing between servers, cinematic lighting, ultra-detailed environment, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split comparison: left side inefficient infrastructure (idle servers, high cost alerts), right side optimized cloud scaling (auto-scaling nodes, efficient usage heatmap), photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Enterprise dashboard showing \"Cost per GPU/hour\", \"Utilization %\", \"Latency ms\", \"Monthly Spend\", clean DevOps UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0080",
+        "category": "tech",
+        "cluster_id": "tech_05",
+        "topic": "Generative Search Revolution: How Google SGE & AI Engines Are Killing SEO Traffic (Data-Driven Analysis 2026)",
+        "reference_link": "https://www.searchenginejournal.com/generative-search-2026",
+        "language": "en",
+        "author_persona": "SEO Strategist & Search Algorithm Researcher",
+        "special_instructions": "Analyze CTR decline, zero-click searches, and publisher revenue impact. Compare Google SGE vs Perplexity. Include adaptation strategies (AI-first content). Use real data trends. End with 2028 search ecosystem prediction.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Futuristic search interface transforming into an AI brain generating instant answers, links dissolving into data streams, dark gradient background with blue-purple tones, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side traditional search results (10 blue links), right side AI-generated answer box with summarized content and citations, high detail, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Analytics graph showing \"Organic Traffic Decline %\" vs \"AI Answer Usage Growth\", modern data visualization UI, glowing lines, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0081",
+        "category": "eco",
+        "cluster_id": "eco_01",
+        "topic": "EV Charging Economics 2026: Cost per KM, Charging Speed, and Infrastructure ROI (Home vs Public vs Supercharger)",
+        "reference_link": "https://www.iea.org/ev-infrastructure-2026",
+        "language": "en",
+        "author_persona": "EV Infrastructure Analyst & Energy Systems Engineer",
+        "special_instructions": "Compare EV vs gasoline cost per km using real data (kWh cost vs fuel price). Break down home charging vs public fast charging vs supercharger networks. Include charging speed (kW), battery degradation impact, and installation cost ($1K–$5K). Provide ROI timeline for home charger setup. End with \"Best Charging Strategy by Usage Type (Urban, Long Distance, Fleet)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic electric vehicle charging ecosystem with multiple charging types (home charger, public fast charger, highway supercharger), glowing energy flow lines connecting grid to vehicles, neon blue-green lighting, cinematic depth, ultra-detailed, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side gasoline car refueling with rising cost indicators; right side EV charging with energy flow visualization and lower cost per km overlay, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Advanced dashboard showing \"Cost per KM\", \"Charging Speed (kW)\", \"Battery Degradation %\", \"Monthly Energy Cost\", modern EV analytics UI, glowing metrics, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0082",
+        "category": "eco",
+        "cluster_id": "eco_02",
+        "topic": "Solar Investment Reality 2026: Payback Period, Hidden Costs, and True ROI (Residential Case Study)",
+        "reference_link": "https://www.energy.gov/solar-home-guide",
+        "language": "en",
+        "author_persona": "Renewable Energy Consultant & Solar ROI Analyst",
+        "special_instructions": "Break down full residential solar system cost ($10K–$30K), incentives, maintenance, inverter replacement. Include real payback period (5–12 years depending on region). Model annual savings and long-term ROI (20 years). Include sensitivity analysis (electricity price increase). End with \"When Solar Is NOT Worth It\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Modern house with rooftop solar panels generating visible energy flow into the home, glowing sunlight beams, smart grid overlay, cinematic warm lighting, ultra-detailed, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side high electricity bills stacking up; right side solar-powered home with minimal bills and energy independence, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Financial dashboard showing \"System Cost\", \"Annual Savings\", \"Payback Period\", \"20-Year ROI\", clean fintech-energy UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0083",
+        "category": "eco",
+        "cluster_id": "eco_03",
+        "topic": "ESG Investing 2026: Real Returns vs Greenwashing (Performance, Risk, and Capital Flows Analysis)",
+        "reference_link": "https://www.msci.com/esg-investing-report",
+        "language": "en",
+        "author_persona": "ESG Portfolio Manager & Sustainable Finance Analyst",
+        "special_instructions": "Analyze ESG fund performance vs traditional indices (S&P 500 benchmark). Identify greenwashing risks and rating inconsistencies. Include capital inflows/outflows and regulatory pressure (EU taxonomy). Provide risk-adjusted return comparison. End with \"How to Identify Real ESG Investments\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Global financial market visualized with green ESG overlays, capital flows moving between assets, some glowing stable and others flickering (greenwashing risk), cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side genuine sustainable investment projects; right side misleading greenwashing corporate visuals, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Investment dashboard showing \"ESG Score\", \"Annual Return %\", \"Risk (Volatility)\", \"Capital Flow\", modern institutional UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0084",
+        "category": "eco",
+        "cluster_id": "eco_04",
+        "topic": "Smart Home Energy Systems 2026: How IoT Automation Cuts Energy Bills by 20–40% (Real Usage Data)",
+        "reference_link": "https://www.energy.gov/smart-home-guide",
+        "language": "en",
+        "author_persona": "Smart Grid Engineer & Home Automation Specialist",
+        "special_instructions": "Explain IoT devices (smart thermostats, plugs, solar integration). Include real savings scenarios and usage patterns. Break down installation cost vs monthly savings. Include automation logic (AI-based scheduling). End with \"Optimal Smart Home Stack by Budget\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Fully connected smart home with visible energy flow between devices, glowing IoT nodes controlling lighting, heating, and appliances, futuristic interface overlay, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side inefficient home wasting energy (lights on, heat loss); right side optimized smart home with automated energy control, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Energy analytics dashboard showing \"Monthly Consumption\", \"Savings %\", \"Device Efficiency\", \"Automation Events\", modern UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0085",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Circular Economy Profits 2026: How Companies Turn Waste into High-Margin Revenue Streams",
+        "reference_link": "https://www.ellenmacarthurfoundation.org/circular-economy",
+        "language": "en",
+        "author_persona": "Circular Economy Strategist & Sustainable Business Consultant",
+        "special_instructions": "Analyze business models (recycling, resale, remanufacturing). Include real company case studies. Break down cost savings vs revenue generation. Explain margin improvement vs linear economy. End with \"Most Profitable Circular Models by Industry\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Industrial system visualized as a closed-loop circular process, raw materials transforming into products and returning as recycled inputs, glowing continuous flow, cinematic industrial environment, ultra-detailed, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side linear economy (produce-use-waste landfill); right side circular system (reuse-recycle-remanufacture loop), photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Business dashboard showing \"Cost Reduction %\", \"Recycled Revenue\", \"Waste Reduction\", \"Profit Margin Increase\", corporate analytics UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0086",
+        "category": "future-economy",
+        "cluster_id": "fe_01",
+        "topic": "Crypto Exchange Cost Breakdown 2026: Real Trading Fees, Hidden Spreads, and Slippage Analysis (With $10K Trade Simulation)",
+        "reference_link": "https://www.coingecko.com/crypto-exchanges-ranking",
+        "language": "en",
+        "author_persona": "Crypto Market Microstructure Analyst & Order Book Specialist",
+        "special_instructions": "Go beyond advertised fees. Simulate a $10,000 trade across Binance, Kraken, Bitget, MEXC. Break down maker/taker fees, spread %, slippage, and withdrawal costs. Include order book depth analysis. Show real net cost per trade. End with \"Best Exchange by Strategy (Scalping, Swing, Long-Term)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Ultra-realistic crypto trading interface with multiple exchanges competing side by side, order books, liquidity depth heatmaps, and hidden fees visualized as leaking digital coins, neon green/red lighting, cinematic fintech environment, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side \"Advertised Fees\" clean UI with low percentages; right side \"Real Cost Execution\" showing spread widening, slippage impact, and hidden deductions in real-time order book visualization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Advanced trading dashboard showing \"Trade Size: $10,000\", \"Spread %\", \"Slippage Cost\", \"Net Execution Price\", \"Total Fee Impact\", ultra-clean institutional trading UI, glowing data points, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0087",
+        "category": "future-economy",
+        "cluster_id": "fe_02",
+        "topic": "Tokenized Real Estate 2026: From $1M Assets to $100 Shares — Liquidity, Regulation, and ROI Breakdown",
+        "reference_link": "https://www.bcg.com/rwa-tokenization-2026",
+        "language": "en",
+        "author_persona": "Institutional Tokenization Advisor & Real Estate Investment Analyst",
+        "special_instructions": "Explain how a $1M property becomes fractional tokens ($100/share). Include liquidity transformation, secondary market trading, and yield distribution. Cover SEC vs MiCA frameworks. Case study: tokenized commercial building cash flow. End with institutional vs retail advantage breakdown.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A high-value real estate asset transforming into thousands of digital tokens floating in a blockchain network, glowing ownership fragments, gold and green tones, cinematic lighting, ultra-detailed, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side traditional real estate locked behind high capital barrier; right side tokenized property split into micro-ownership units flowing in digital marketplace, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Investment platform dashboard showing \"Property Value\", \"Token Price ($100)\", \"Rental Yield %\", \"Ownership Share\", \"Liquidity Index\", modern fintech UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0088",
+        "category": "future-economy",
+        "cluster_id": "fe_03",
+        "topic": "Neobank Business Model 2026: How Zero-Fee Banking Generates Billions (Unit Economics Explained)",
+        "reference_link": "https://www.forrester.com/neobanking-2026",
+        "language": "en",
+        "author_persona": "Fintech Business Model Strategist & Digital Banking Analyst",
+        "special_instructions": "Break down revenue streams: interchange fees, FX margins, subscription tiers, lending spreads. Compare Revolut, N26, Wise. Include CAC vs LTV analysis and unit economics per user. Explain how “free banking” is monetized. End with \"Best Neobank by User Profile (Traveler, Freelancer, Saver)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A sleek mobile banking interface floating above a collapsing traditional bank building, glowing financial data streams showing hidden revenue flows, cinematic fintech aesthetic, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side traditional banking (queues, paperwork, hidden fees); right side seamless neobank experience with instant onboarding and analytics, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Business model dashboard showing \"Interchange Revenue/User\", \"FX Margin %\", \"Subscription Income\", \"Customer LTV vs CAC\", clean modern UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0089",
+        "category": "future-economy",
+        "cluster_id": "fe_04",
+        "topic": "DeFi Yield Truth 2026: Sustainable APY vs Inflationary Rewards (Risk-Adjusted Return Analysis)",
+        "reference_link": "https://www.defirate.com/staking-rewards",
+        "language": "en",
+        "author_persona": "DeFi Protocol Analyst & Smart Contract Risk Auditor",
+        "special_instructions": "Separate real yield (protocol revenue) vs token inflation rewards. Compare Lido, Rocket Pool, Aave. Include APY vs real return, lock-up periods, smart contract risk, and slashing risks. Provide risk-adjusted yield framework. Mandatory disclaimer on capital risk. End with optimal allocation strategy.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A DeFi network visualized with multiple yield streams, some stable glowing green and others unstable flashing red, blockchain nodes interconnected, cinematic depth, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side unsustainable high APY collapsing (tokens inflating rapidly); right side stable yield backed by real protocol revenue, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "DeFi analytics dashboard showing \"APY\", \"Real Yield %\", \"Risk Score\", \"TVL\", \"Lock-up Period\", dark mode crypto UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0090",
+        "category": "future-economy",
+        "cluster_id": "fe_05",
+        "topic": "$1M Portfolio Strategy 2026: Asset Allocation, Risk Management, and AI vs Human Advisor Performance",
+        "reference_link": "https://www.barrons.com/wealth-management-ranking",
+        "language": "en",
+        "author_persona": "Private Wealth Manager & Portfolio Optimization Specialist",
+        "special_instructions": "Build a $1M portfolio allocation (equities, bonds, alternatives, crypto). Compare robo-advisors vs human advisors on fees (AUM), performance, and personalization. Include Sharpe ratio, drawdown scenarios, and tax efficiency. End with hybrid allocation model.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Luxury wealth management office with holographic portfolio allocations floating in the air, asset classes visualized as glowing segments, elegant lighting, cinematic, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side DIY investor overwhelmed with scattered assets; right side structured diversified portfolio managed professionally, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Portfolio analytics dashboard showing \"Asset Allocation %\", \"Sharpe Ratio\", \"Max Drawdown\", \"Annual Return %\", \"Advisor Fee %\", ultra-clean professional UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0091",
+        "category": "elearning",
+        "cluster_id": "el_01",
+        "topic": "Coding Bootcamp ROI 2026: Which Programs Actually Lead to $80K+ Jobs (Data-Backed Analysis)",
+        "reference_link": "https://www.coursereport.com/coding-bootcamp-ranking",
+        "language": "en",
+        "author_persona": "EdTech Market Analyst & Tech Career Placement Strategist",
+        "special_instructions": "Analyze real bootcamp outcomes (job placement rate, average salary, time to hire). Compare top programs (Le Wagon, General Assembly, Flatiron). Include cost ($5K–$20K), duration, and ROI timeline. Break down frontend vs backend vs data paths. End with \"Best Bootcamp Path by Career Goal (Fast Hire, High Salary, Remote Work)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A focused student coding intensely while multiple job offers appear as glowing holographic notifications around them, modern tech environment, cinematic lighting, ultra-detailed, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side self-learning confusion with scattered tutorials; right side structured bootcamp journey with clear milestones and mentorship, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Career dashboard showing \"Program Cost\", \"Placement Rate %\", \"Avg Salary\", \"Time to Hire (months)\", clean edtech analytics UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0092",
+        "category": "elearning",
+        "cluster_id": "el_02",
+        "topic": "Executive MBA 2026: Real ROI vs Opportunity Cost (Is It Worth $100K+?)",
+        "reference_link": "https://www.ft.com/executive-mba-ranking",
+        "language": "en",
+        "author_persona": "Executive Career Strategist & Leadership Development Consultant",
+        "special_instructions": "Break down full cost ($80K–$200K), salary growth, promotion probability, and network value. Include opportunity cost (lost income, time). Compare top programs (INSEAD, Wharton, LBS). Provide ROI timeline and payback period. End with \"Who Should (and Should NOT) Get an EMBA\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "High-level executive networking event in an elite business school setting, professionals exchanging ideas with subtle luxury atmosphere, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side stagnant mid-career professional; right side post-EMBA executive leading teams, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "ROI dashboard showing \"Tuition Cost\", \"Salary Increase %\", \"Promotion Rate\", \"Payback Period\", premium business analytics UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0093",
+        "category": "elearning",
+        "cluster_id": "el_03",
+        "topic": "AI Language Learning 2026: Can Apps Deliver Real Fluency or Just Engagement Metrics?",
+        "reference_link": "https://www.fluentin3months.com/app-review",
+        "language": "en",
+        "author_persona": "Applied Linguistics Expert & Polyglot Learning Strategist",
+        "special_instructions": "Compare Duolingo, Babbel, Rosetta Stone, AI tutors. Focus on fluency vs gamification. Include retention rate, speaking ability, and time-to-fluency estimates. Provide realistic expectations (A1→B2 timeline). End with \"Best Method by Learning Goal (Travel, Work, Fluency)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A user interacting with an AI language app, floating words and translations forming sentences in real time, immersive digital learning environment, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side passive app tapping (gamification); right side active speaking practice with AI tutor, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Learning dashboard showing \"Vocabulary Growth\", \"Fluency Level\", \"Speaking Accuracy %\", modern app UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0094",
+        "category": "elearning",
+        "cluster_id": "el_04",
+        "topic": "Cloud Certifications 2026: Which Path Leads to $120K–$180K Salaries (AWS vs Azure vs GCP)",
+        "reference_link": "https://www.pluralsight.com/cloud-certification-report",
+        "language": "en",
+        "author_persona": "Cloud Career Architect & Enterprise Solutions Consultant",
+        "special_instructions": "Compare AWS, Azure, GCP certifications. Include exam difficulty, cost, preparation time, and salary benchmarks. Break down roles (DevOps, Solutions Architect, Data Engineer). Provide career path roadmap. End with \"Best Certification by Experience Level\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Professional surrounded by floating cloud certification badges and salary indicators, futuristic tech environment, glowing data points, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side uncertified IT worker struggling; right side certified cloud engineer managing scalable systems, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Salary dashboard showing \"Certification\", \"Avg Salary\", \"Experience Required\", \"Exam Difficulty\", enterprise UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0095",
+        "category": "elearning",
+        "cluster_id": "el_05",
+        "topic": "Side Hustle Skills 2026: Which Digital Skills Actually Generate $1K–$5K/Month (No Hype Breakdown)",
+        "reference_link": "https://www.sidehustlenation.com/skills",
+        "language": "en",
+        "author_persona": "Digital Income Strategist & Freelance Market Analyst",
+        "special_instructions": "Analyze skills (copywriting, video editing, AI automation, SEO, freelancing). Include real earning ranges, time-to-first-income, and competition level. Break down platforms (Upwork, Fiverr, Twitter, LinkedIn). Provide realistic timelines. End with \"Best Skill by Time Availability (Full-Time, Part-Time, Beginner)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "Freelancer working from a modern setup with multiple income streams visualized as glowing dashboards, laptop screens showing earnings growth, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side single income job stress; right side diversified side hustle income streams flowing digitally, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Income dashboard showing \"Monthly Earnings\", \"Clients\", \"Skill Demand Level\", \"Time Investment\", clean fintech-style UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0096",
+        "category": "wellness",
+        "cluster_id": "wl_01",
+        "topic": "Anti-Aging Secrets 2026: What Actually Works for Women (Hormones, Skin, Energy & Longevity Stack)",
+        "reference_link": "https://www.ncbi.nlm.nih.gov/longevity-research",
+        "language": "en",
+        "author_persona": "Functional Medicine Doctor & Women’s Longevity Specialist",
+        "special_instructions": "Focus on female-specific aging (hormones, collagen loss, metabolism slowdown). Break down supplements (collagen, NMN, omega-3), skincare, fasting, and strength training. Include realistic timelines (4–12 weeks results). Avoid hype. End with \"Daily Longevity Routine for Women (Morning–Night Protocol)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A confident, healthy woman glowing with vitality, subtle skin radiance, surrounded by soft holographic health indicators (hormones, cellular health, energy levels), warm natural lighting, cinematic depth, ultra-realistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side tired, stressed aging signs (dull skin, fatigue); right side vibrant, energized woman with glowing skin and posture, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Wellness dashboard showing \"Biological Age\", \"Energy Level\", \"Hormone Balance\", \"Skin Health Score\", elegant feminine UI, soft tones, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0097",
+        "category": "wellness",
+        "cluster_id": "wl_02",
+        "topic": "AI Therapy Apps 2026: Can They Really Replace Emotional Support (Anxiety, Burnout, Relationships)?",
+        "reference_link": "https://www.psychologytoday.com/mental-health-apps",
+        "language": "en",
+        "author_persona": "Clinical Psychologist & Digital Therapy Researcher",
+        "special_instructions": "Focus on female audience (stress, anxiety, emotional overload). Compare apps (Woebot, Wysa, BetterHelp). Include CBT effectiveness, cost vs therapy. Add ethical limits and crisis disclaimer. End with \"Best App by Emotional Need (Stress, Anxiety, Relationship)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A woman in a calm environment using a mental health app, soft blue and lavender tones, peaceful expression, subtle emotional relief visualized as fading shadows, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side overwhelmed mental state (chaotic thoughts, stress); right side calm clarity after guided app session, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "App interface showing \"Mood Tracking\", \"Daily Check-ins\", \"Progress Graph\", minimal elegant UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0098",
+        "category": "wellness",
+        "cluster_id": "wl_03",
+        "topic": "Online Doctor Visits 2026: Faster, Cheaper, and More Private? (Women’s Health Perspective)",
+        "reference_link": "https://www.ama-assn.org/telemedicine-adoption",
+        "language": "en",
+        "author_persona": "Digital Health Consultant & Telemedicine Specialist",
+        "special_instructions": "Focus on convenience for women (gynecology, dermatology, mental health). Compare cost, wait time, privacy vs hospital visits. Include real scenarios. End with \"When Telemedicine Is Better (and When It’s Not)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A modern woman having a video consultation with a doctor, clean home environment, medical UI overlays, soft natural lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side crowded hospital waiting room; right side relaxed home consultation via video call, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Healthcare dashboard showing \"Wait Time\", \"Consult Cost\", \"Privacy Level\", \"Access Speed\", modern clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0099",
+        "category": "wellness",
+        "cluster_id": "wl_04",
+        "topic": "Deep Sleep Reset 2026: Why Women Struggle with Sleep (Hormones, Stress) and How to Fix It",
+        "reference_link": "https://www.sleepfoundation.org/sleep-trackers",
+        "language": "en",
+        "author_persona": "Sleep Scientist & Hormonal Health Specialist",
+        "special_instructions": "Focus on female sleep issues (cortisol, menstrual cycle, anxiety). Include melatonin, magnesium, blue light control, routines. Provide actionable night protocol. End with \"7-Day Sleep Reset Plan\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A peaceful sleeping woman with soft glowing waves representing deep sleep cycles, calming blue tones, cinematic soft lighting, ultra-realistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side restless night (phone, stress, insomnia); right side deep uninterrupted sleep with calm posture, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Sleep tracking dashboard showing \"Deep Sleep %\", \"REM Cycle\", \"Sleep Score\", soft minimal UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0100",
+        "category": "wellness",
+        "cluster_id": "wl_05",
+        "topic": "Personalized Nutrition for Women 2026: DNA, Hormones, and the End of Generic Diets",
+        "reference_link": "https://www.nature.com/articles/personalized-nutrition",
+        "language": "en",
+        "author_persona": "Nutrigenomics Expert & Women’s Health Dietitian",
+        "special_instructions": "Focus on female metabolism, hormonal cycles, gut health. Compare generic diets vs personalized plans. Include microbiome testing, food sensitivity, supplement matching. End with \"Personalized Meal Framework (Fat Loss, Energy, Hormonal Balance)\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A healthy woman with a personalized nutrition interface overlay showing foods, vitamins, and body responses, vibrant natural colors, cinematic lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split scene: left side restrictive generic diet frustration; right side flexible personalized nutrition success, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Nutrition dashboard showing \"Macronutrient Balance\", \"Gut Health Score\", \"Energy Level\", \"Food Sensitivities\", modern wellness UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
     }
 ]
