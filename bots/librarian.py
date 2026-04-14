@@ -21,11 +21,9 @@ s3 = boto3.client(
 )
 
 # Dil konfigürasyonu
-LANGUAGES = {
-    'en': {'name': 'English', 'dir': 'en'},
-    'es': {'name': 'Español', 'dir': 'es'},
-    'de': {'name': 'Deutsch', 'dir': 'de'},
-    'fr': {'name': 'Français', 'dir': 'fr'}
+LANGUAGES = ['en', 'es', 'de', 'fr']
+LANG_NAMES = {
+    'en': 'English', 'es': 'Español', 'de': 'Deutsch', 'fr': 'Français'
 }
 
 CATEGORIES = {
@@ -45,13 +43,18 @@ def get_articles_from_r2():
         return []
 
 def generate_all_articles_page(articles, lang):
-    """Tüm makaleleri listeleyen statik sayfa oluşturur (belirli bir dil için)"""
+    """Tüm makaleleri listeleyen statik sayfa oluşturur - explore/all-explore/{lang}/index.html"""
     
-    # Dil filtresi
     lang_articles = [a for a in articles if a.get('lang') == lang]
     lang_articles.sort(key=lambda x: x.get('sort_date', ''), reverse=True)
     
-    lang_name = LANGUAGES.get(lang, {}).get('name', 'English')
+    lang_name = LANG_NAMES.get(lang, 'English')
+    
+    # Dil geçiş bağlantıları
+    lang_switch = ''
+    for l in LANGUAGES:
+        active_class = 'active' if l == lang else ''
+        lang_switch += f'<a href="/explore/all-explore/{l}/index.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/all-explore/{l}/index.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -83,14 +86,9 @@ def generate_all_articles_page(articles, lang):
 </head>
 <body>
     <div class="container">
-        <a href="/{lang}/" class="back-link">← Home</a>
+        <a href="/" class="back-link">← Home</a>
         <h1>📚 All Articles ({lang_name})</h1>
-        <div class="lang-switch">
-            <a href="/en/all-articles.html" class="lang-btn {'active' if lang == 'en' else ''}">🇺🇸 English</a>
-            <a href="/es/all-articles.html" class="lang-btn {'active' if lang == 'es' else ''}">🇪🇸 Español</a>
-            <a href="/de/all-articles.html" class="lang-btn {'active' if lang == 'de' else ''}">🇩🇪 Deutsch</a>
-            <a href="/fr/all-articles.html" class="lang-btn {'active' if lang == 'fr' else ''}">🇫🇷 Français</a>
-        </div>
+        <div class="lang-switch">{lang_switch}</div>
         <div class="subtitle">''' + str(len(lang_articles)) + ''' articles</div>
         <ul class="article-list">
 '''
@@ -124,7 +122,7 @@ def generate_all_articles_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"{lang}/all-articles.html" if lang != 'en' else "all-articles.html"
+    key = f"explore/all-explore/{lang}/index.html"
     s3.put_object(
         Bucket=R2_BUCKET,
         Key=key,
@@ -134,23 +132,26 @@ def generate_all_articles_page(articles, lang):
     print(f"   ✅ {key} oluşturuldu ({len(lang_articles)} articles)")
 
 def generate_categories_page(articles, lang):
-    """Kategoriler halinde makaleleri listeleyen statik sayfa oluşturur (belirli bir dil için)"""
+    """Kategori listesi sayfası oluşturur - explore/category-explore/{lang}/index.html"""
     
-    # Dil filtresi
     lang_articles = [a for a in articles if a.get('lang') == lang]
     
-    # Kategorilere göre grupla
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
         cat = article.get('category', '')
         if cat in category_articles:
             category_articles[cat].append(article)
     
-    # Her kategoride tarihe göre sırala
     for cat in category_articles:
         category_articles[cat].sort(key=lambda x: x.get('sort_date', ''), reverse=True)
     
-    lang_name = LANGUAGES.get(lang, {}).get('name', 'English')
+    lang_name = LANG_NAMES.get(lang, 'English')
+    
+    # Dil geçiş bağlantıları
+    lang_switch = ''
+    for l in LANGUAGES:
+        active_class = 'active' if l == lang else ''
+        lang_switch += f'<a href="/explore/category-explore/{l}/index.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-explore/{l}/index.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -186,14 +187,9 @@ def generate_categories_page(articles, lang):
 </head>
 <body>
     <div class="container">
-        <a href="/{lang}/" class="back-link">← Home</a>
+        <a href="/" class="back-link">← Home</a>
         <h1>📂 Categories ({lang_name})</h1>
-        <div class="lang-switch">
-            <a href="/en/categories.html" class="lang-btn {'active' if lang == 'en' else ''}">🇺🇸 English</a>
-            <a href="/es/categories.html" class="lang-btn {'active' if lang == 'es' else ''}">🇪🇸 Español</a>
-            <a href="/de/categories.html" class="lang-btn {'active' if lang == 'de' else ''}">🇩🇪 Deutsch</a>
-            <a href="/fr/categories.html" class="lang-btn {'active' if lang == 'fr' else ''}">🇫🇷 Français</a>
-        </div>
+        <div class="lang-switch">{lang_switch}</div>
         <div class="subtitle">Browse articles by category</div>
 '''
     
@@ -219,7 +215,7 @@ def generate_categories_page(articles, lang):
                 </li>
 '''
             if len(cat_arts) > 8:
-                archive_url = f"/{lang}/category-archive/{cat_key}/" if lang != 'en' else f"/category-archive/{cat_key}/"
+                archive_url = f"/explore/category-explore/{lang}/{cat_key}/"
                 html += f'''
                 <div class="more-link">
                     <a href="{archive_url}">+ {len(cat_arts) - 8} more in {cat_name} →</a>
@@ -241,7 +237,7 @@ def generate_categories_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"{lang}/categories.html" if lang != 'en' else "categories.html"
+    key = f"explore/category-explore/{lang}/index.html"
     s3.put_object(
         Bucket=R2_BUCKET,
         Key=key,
@@ -251,12 +247,10 @@ def generate_categories_page(articles, lang):
     print(f"   ✅ {key} oluşturuldu")
 
 def generate_category_archives(articles, lang):
-    """Her kategori için ayrı arşiv sayfası oluşturur (belirli bir dil için)"""
+    """Her kategori için ayrı arşiv sayfası oluşturur - explore/category-explore/{lang}/{category}/index.html"""
     
-    # Dil filtresi
     lang_articles = [a for a in articles if a.get('lang') == lang]
     
-    # Kategorilere göre grupla
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
         cat = article.get('category', '')
@@ -267,7 +261,13 @@ def generate_category_archives(articles, lang):
         cat_arts = category_articles.get(cat_key, [])
         cat_arts.sort(key=lambda x: x.get('sort_date', ''), reverse=True)
         cat_name = cat_names.get(lang, cat_names['en'])
-        lang_name = LANGUAGES.get(lang, {}).get('name', 'English')
+        lang_name = LANG_NAMES.get(lang, 'English')
+        
+        # Dil geçiş bağlantıları
+        lang_switch = ''
+        for l in LANGUAGES:
+            active_class = 'active' if l == lang else ''
+            lang_switch += f'<a href="/explore/category-explore/{l}/{cat_key}/" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-explore/{l}/{cat_key}/" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
         
         if cat_arts:
             html = f'''<!DOCTYPE html>
@@ -300,15 +300,10 @@ def generate_category_archives(articles, lang):
 </head>
 <body>
     <div class="container">
-        <a href="/{lang}/" class="back-link">← Home</a>
-        <a href="/{lang}/categories.html" class="back-link" style="margin-left: 1rem;">← Categories</a>
+        <a href="/" class="back-link">← Home</a>
+        <a href="/explore/category-explore/{lang}/" class="back-link" style="margin-left: 1rem;">← Categories</a>
         <h1>📚 {cat_name}</h1>
-        <div class="lang-switch">
-            <a href="/category-archive/{cat_key}/" class="lang-btn {'active' if lang == 'en' else ''}">🇺🇸 English</a>
-            <a href="/es/category-archive/{cat_key}/" class="lang-btn {'active' if lang == 'es' else ''}">🇪🇸 Español</a>
-            <a href="/de/category-archive/{cat_key}/" class="lang-btn {'active' if lang == 'de' else ''}">🇩🇪 Deutsch</a>
-            <a href="/fr/category-archive/{cat_key}/" class="lang-btn {'active' if lang == 'fr' else ''}">🇫🇷 Français</a>
-        </div>
+        <div class="lang-switch">{lang_switch}</div>
         <div class="subtitle">All articles ({len(cat_arts)} articles)</div>
         <ul class="article-list">
 '''
@@ -339,12 +334,7 @@ def generate_category_archives(articles, lang):
 </body>
 </html>'''
             
-            # English için kökte, diğer diller için kendi klasöründe
-            if lang == 'en':
-                key = f"category-archive/{cat_key}/index.html"
-            else:
-                key = f"{lang}/category-archive/{cat_key}/index.html"
-            
+            key = f"explore/category-explore/{lang}/{cat_key}/index.html"
             s3.put_object(
                 Bucket=R2_BUCKET,
                 Key=key,
@@ -355,7 +345,10 @@ def generate_category_archives(articles, lang):
 
 def librarian():
     print("\n" + "="*60)
-    print("📚 KÜTÜPHANECİ BOT (Librarian) - Çok Dilli başlatılıyor...")
+    print("📚 KÜTÜPHANECİ BOT (Librarian) - Yeni Klasör Yapısı")
+    print("   explore/all-explore/{lang}/index.html")
+    print("   explore/category-explore/{lang}/index.html")
+    print("   explore/category-explore/{lang}/{category}/index.html")
     print("="*60)
     
     articles = get_articles_from_r2()
@@ -371,15 +364,13 @@ def librarian():
         lang = article.get('lang', 'unknown')
         lang_counts[lang] = lang_counts.get(lang, 0) + 1
     
-    print(f"   📊 EN: {lang_counts.get('en', 0)} makale")
-    print(f"   📊 ES: {lang_counts.get('es', 0)} makale")
-    print(f"   📊 DE: {lang_counts.get('de', 0)} makale")
-    print(f"   📊 FR: {lang_counts.get('fr', 0)} makale")
+    for lang in LANGUAGES:
+        print(f"   📊 {lang.upper()}: {lang_counts.get(lang, 0)} makale")
     
     print("\n📄 Statik sayfalar oluşturuluyor...")
     
     # Her dil için sayfaları oluştur
-    for lang in ['en', 'es', 'de', 'fr']:
+    for lang in LANGUAGES:
         print(f"\n   🌍 {lang.upper()} işleniyor...")
         generate_all_articles_page(articles, lang)
         generate_categories_page(articles, lang)
@@ -387,9 +378,9 @@ def librarian():
     
     print("\n" + "="*60)
     print("🏁 Kütüphaneci Bot tamamlandı.")
-    print("   ✅ all-articles.html (her dil için)")
-    print("   ✅ categories.html (her dil için)")
-    print("   ✅ category-archive/*/index.html (her dil için)")
+    print("   ✅ explore/all-explore/{lang}/index.html")
+    print("   ✅ explore/category-explore/{lang}/index.html")
+    print("   ✅ explore/category-explore/{lang}/{category}/index.html")
     print("="*60)
 
 if __name__ == "__main__":
