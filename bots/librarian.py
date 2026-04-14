@@ -2,6 +2,7 @@ import os
 import json
 import boto3
 from collections import defaultdict
+from datetime import datetime
 from botocore.client import Config
 
 # ================= KONFIGURASYON =================
@@ -35,6 +36,7 @@ CATEGORIES = {
 }
 
 def get_articles_from_r2():
+    """articles.json'dan tüm makaleleri okur"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
         return json.loads(response['Body'].read().decode('utf-8'))
@@ -42,8 +44,44 @@ def get_articles_from_r2():
         print(f"⚠️ articles.json okunamadı: {e}")
         return []
 
+def generate_explorer_json(articles):
+    """explore/explorer.json oluşturur - tüm dilleri ve detaylı metadataları içerir"""
+    explorer_data = {
+        "version": "1.0",
+        "generated": datetime.now().isoformat(),
+        "total_articles": len(articles),
+        "languages": LANGUAGES,
+        "categories": list(CATEGORIES.keys()),
+        "articles": []
+    }
+    
+    for article in articles:
+        explorer_data["articles"].append({
+            "url": article.get('url', '#'),
+            "lang": article.get('lang', 'en'),
+            "category": article.get('category', ''),
+            "title": article.get('title', 'Untitled'),
+            "description": article.get('description', ''),
+            "date": article.get('date', ''),
+            "sort_date": article.get('sort_date', ''),
+            "reading_time": article.get('reading_time', 0),
+            "views": article.get('views', 0),
+            "cover_image": article.get('cover_image', ''),
+            "slug": article.get('slug', '')
+        })
+    
+    explorer_json = json.dumps(explorer_data, indent=2, ensure_ascii=False)
+    key = "explore/explorer.json"
+    s3.put_object(
+        Bucket=R2_BUCKET,
+        Key=key,
+        Body=explorer_json.encode('utf-8'),
+        ContentType='application/json'
+    )
+    print(f"   ✅ {key} oluşturuldu ({len(articles)} articles)")
+
 def generate_all_articles_page(articles, lang):
-    """Tüm makaleleri listeleyen statik sayfa oluşturur - explore/all-explore/{lang}/index.html"""
+    """Tüm makaleleri listeleyen statik sayfa oluşturur - explore/all-articles/{lang}.html"""
     
     lang_articles = [a for a in articles if a.get('lang') == lang]
     lang_articles.sort(key=lambda x: x.get('sort_date', ''), reverse=True)
@@ -54,7 +92,7 @@ def generate_all_articles_page(articles, lang):
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/all-explore/{l}/index.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/all-explore/{l}/index.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -122,7 +160,7 @@ def generate_all_articles_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"explore/all-explore/{lang}/index.html"
+    key = f"explore/all-articles/{lang}.html"
     s3.put_object(
         Bucket=R2_BUCKET,
         Key=key,
@@ -132,7 +170,7 @@ def generate_all_articles_page(articles, lang):
     print(f"   ✅ {key} oluşturuldu ({len(lang_articles)} articles)")
 
 def generate_categories_page(articles, lang):
-    """Kategori listesi sayfası oluşturur - explore/category-explore/{lang}/index.html"""
+    """Kategori listesi sayfası oluşturur - explore/categories/{lang}.html"""
     
     lang_articles = [a for a in articles if a.get('lang') == lang]
     
@@ -151,7 +189,7 @@ def generate_categories_page(articles, lang):
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/category-explore/{l}/index.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-explore/{l}/index.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -215,7 +253,7 @@ def generate_categories_page(articles, lang):
                 </li>
 '''
             if len(cat_arts) > 8:
-                archive_url = f"/explore/category-explore/{lang}/{cat_key}/"
+                archive_url = f"/explore/category-archive/{lang}/{cat_key}/"
                 html += f'''
                 <div class="more-link">
                     <a href="{archive_url}">+ {len(cat_arts) - 8} more in {cat_name} →</a>
@@ -237,7 +275,7 @@ def generate_categories_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"explore/category-explore/{lang}/index.html"
+    key = f"explore/categories/{lang}.html"
     s3.put_object(
         Bucket=R2_BUCKET,
         Key=key,
@@ -247,7 +285,7 @@ def generate_categories_page(articles, lang):
     print(f"   ✅ {key} oluşturuldu")
 
 def generate_category_archives(articles, lang):
-    """Her kategori için ayrı arşiv sayfası oluşturur - explore/category-explore/{lang}/{category}/index.html"""
+    """Her kategori için ayrı arşiv sayfası oluşturur - explore/category-archive/{lang}/{category}/index.html"""
     
     lang_articles = [a for a in articles if a.get('lang') == lang]
     
@@ -267,7 +305,7 @@ def generate_category_archives(articles, lang):
         lang_switch = ''
         for l in LANGUAGES:
             active_class = 'active' if l == lang else ''
-            lang_switch += f'<a href="/explore/category-explore/{l}/{cat_key}/" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-explore/{l}/{cat_key}/" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+            lang_switch += f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
         
         if cat_arts:
             html = f'''<!DOCTYPE html>
@@ -301,7 +339,7 @@ def generate_category_archives(articles, lang):
 <body>
     <div class="container">
         <a href="/" class="back-link">← Home</a>
-        <a href="/explore/category-explore/{lang}/" class="back-link" style="margin-left: 1rem;">← Categories</a>
+        <a href="/explore/categories/{lang}.html" class="back-link" style="margin-left: 1rem;">← Categories</a>
         <h1>📚 {cat_name}</h1>
         <div class="lang-switch">{lang_switch}</div>
         <div class="subtitle">All articles ({len(cat_arts)} articles)</div>
@@ -334,7 +372,7 @@ def generate_category_archives(articles, lang):
 </body>
 </html>'''
             
-            key = f"explore/category-explore/{lang}/{cat_key}/index.html"
+            key = f"explore/category-archive/{lang}/{cat_key}/index.html"
             s3.put_object(
                 Bucket=R2_BUCKET,
                 Key=key,
@@ -346,9 +384,10 @@ def generate_category_archives(articles, lang):
 def librarian():
     print("\n" + "="*60)
     print("📚 KÜTÜPHANECİ BOT (Librarian) - Yeni Klasör Yapısı")
-    print("   explore/all-explore/{lang}/index.html")
-    print("   explore/category-explore/{lang}/index.html")
-    print("   explore/category-explore/{lang}/{category}/index.html")
+    print("   explore/explorer.json (tüm diller, detaylı metadata)")
+    print("   explore/all-articles/{lang}.html")
+    print("   explore/categories/{lang}.html")
+    print("   explore/category-archive/{lang}/{category}/index.html")
     print("="*60)
     
     articles = get_articles_from_r2()
@@ -369,6 +408,9 @@ def librarian():
     
     print("\n📄 Statik sayfalar oluşturuluyor...")
     
+    # Önce explorer.json oluştur (tüm diller için)
+    generate_explorer_json(articles)
+    
     # Her dil için sayfaları oluştur
     for lang in LANGUAGES:
         print(f"\n   🌍 {lang.upper()} işleniyor...")
@@ -378,9 +420,10 @@ def librarian():
     
     print("\n" + "="*60)
     print("🏁 Kütüphaneci Bot tamamlandı.")
-    print("   ✅ explore/all-explore/{lang}/index.html")
-    print("   ✅ explore/category-explore/{lang}/index.html")
-    print("   ✅ explore/category-explore/{lang}/{category}/index.html")
+    print("   ✅ explore/explorer.json")
+    print("   ✅ explore/all-articles/{lang}.html")
+    print("   ✅ explore/categories/{lang}.html")
+    print("   ✅ explore/category-archive/{lang}/{category}/index.html")
     print("="*60)
 
 if __name__ == "__main__":
