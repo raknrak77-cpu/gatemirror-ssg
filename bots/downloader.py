@@ -54,9 +54,10 @@ def download_folder(prefix, local_dir):
 
 def downloader():
     print("\n" + "="*60)
-    print("📥 DOWNLOADER BOT - ilk-demo klasörü indiriliyor")
+    print("📥 DOWNLOADER BOT - ilk_demo klasörü indiriliyor")
     print("="*60)
-    download_folder("ilk-demo/", "downloaded/ilk-demo")
+    # 🔥 DÜZELTİLDİ: ilk-demo → ilk_demo
+    download_folder("ilk_demo/", "downloaded/ilk_demo")
     print("\n✅ İndirme tamamlandı.")
 
 if __name__ == "__main__":
