@@ -211,12 +211,24 @@
         </div>
     </div>
     <div class="nav-links">
-        <a href="/{{ lang }}/">{{ menu.home }}</a>
-        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-        <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+        <a href="/{{ lang }}/">
+            {% if lang == 'en' %}HOME{% elif lang == 'es' %}INICIO{% elif lang == 'de' %}STARTSEITE{% elif lang == 'fr' %}ACCUEIL{% endif %}
+        </a>
+        <a href="/{{ lang }}/wellness/">
+            {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+        </a>
+        <a href="/{{ lang }}/tech/">
+            {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+        </a>
+        <a href="/{{ lang }}/future-economy/">
+            {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+        </a>
+        <a href="/{{ lang }}/eco/">
+            {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+        </a>
+        <a href="/{{ lang }}/elearning/">
+            {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+        </a>
     </div>
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
@@ -229,12 +241,24 @@
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
     <div class="nav-links">
-        <a href="/{{ lang }}/">{{ menu.home }}</a>
-        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-        <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+        <a href="/{{ lang }}/">
+            {% if lang == 'en' %}HOME{% elif lang == 'es' %}INICIO{% elif lang == 'de' %}STARTSEITE{% elif lang == 'fr' %}ACCUEIL{% endif %}
+        </a>
+        <a href="/{{ lang }}/wellness/">
+            {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+        </a>
+        <a href="/{{ lang }}/tech/">
+            {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+        </a>
+        <a href="/{{ lang }}/future-economy/">
+            {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+        </a>
+        <a href="/{{ lang }}/eco/">
+            {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+        </a>
+        <a href="/{{ lang }}/elearning/">
+            {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+        </a>
     </div>
 </nav>
 <div class="hero">
@@ -243,11 +267,21 @@
 </div>
 
 <div class="category-buttons">
-    <a href="/api/articles?category=tech" class="cat-btn">📚 Tech</a>
-    <a href="/api/articles?category=wellness" class="cat-btn">📚 Wellness</a>
-    <a href="/api/articles?category=future-economy" class="cat-btn">📚 Future Economy</a>
-    <a href="/api/articles?category=eco" class="cat-btn">📚 Eco</a>
-    <a href="/api/articles?category=elearning" class="cat-btn">📚 E-Learning</a>
+    <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn">
+        {% if lang == 'en' %}📚 EXPLORE TECH{% elif lang == 'es' %}📚 EXPLORAR TECH{% elif lang == 'de' %}📚 TECH ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER TECH{% endif %}
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/wellness/" class="cat-btn">
+        {% if lang == 'en' %}📚 EXPLORE WELLNESS{% elif lang == 'es' %}📚 EXPLORAR BIENESTAR{% elif lang == 'de' %}📚 WELLNESS ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER BIEN-ÊTRE{% endif %}
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="cat-btn">
+        {% if lang == 'en' %}📚 EXPLORE FUTURE ECONOMY{% elif lang == 'es' %}📚 EXPLORAR ECONOMÍA FUTURA{% elif lang == 'de' %}📚 ZUKUNFTSWIRTSCHAFT ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER ÉCONOMIE FUTURE{% endif %}
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/eco/" class="cat-btn">
+        {% if lang == 'en' %}📚 EXPLORE ECO{% elif lang == 'es' %}📚 EXPLORAR ECO{% elif lang == 'de' %}📚 ÖKO ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER ÉCO{% endif %}
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/elearning/" class="cat-btn">
+        {% if lang == 'en' %}📚 EXPLORE E-LEARNING{% elif lang == 'es' %}📚 EXPLORAR E-APRENDIZAJE{% elif lang == 'de' %}📚 E-LEARNING ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER E-APPRENTISSAGE{% endif %}
+    </a>
 </div>
 
 {% if featured_article %}
@@ -268,7 +302,9 @@
 {% endif %}
 
 <div class="container">
-    <h2 class="section-title">Latest Stories</h2>
+    <h2 class="section-title">
+        {% if lang == 'en' %}Latest Stories{% elif lang == 'es' %}Últimas Historias{% elif lang == 'de' %}Neueste Geschichten{% elif lang == 'fr' %}Dernières Histoires{% endif %}
+    </h2>
     <div class="article-grid">
         {% for article in articles %}
         <article class="article-card">
@@ -295,15 +331,29 @@
             <a href="/privacy-policy.html">Privacy Policy</a>
         </div>
         <div class="footer-column">
-            <h4>Categories</h4>
-            <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-            <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-            <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-            <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-            <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+            <h4>
+                {% if lang == 'en' %}Categories{% elif lang == 'es' %}Categorías{% elif lang == 'de' %}Kategorien{% elif lang == 'fr' %}Catégories{% endif %}
+            </h4>
+            <a href="/{{ lang }}/tech/">
+                {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+            </a>
+            <a href="/{{ lang }}/future-economy/">
+                {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+            </a>
+            <a href="/{{ lang }}/wellness/">
+                {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+            </a>
+            <a href="/{{ lang }}/eco/">
+                {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+            </a>
+            <a href="/{{ lang }}/elearning/">
+                {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+            </a>
         </div>
         <div class="footer-column">
-            <h4>Read in</h4>
+            <h4>
+                {% if lang == 'en' %}Read in{% elif lang == 'es' %}Leer en{% elif lang == 'de' %}Lesen in{% elif lang == 'fr' %}Lire en{% endif %}
+            </h4>
             <a href="/">🇺🇸 English</a>
             <a href="/es/">🇪🇸 Español</a>
             <a href="/de/">🇩🇪 Deutsch</a>
