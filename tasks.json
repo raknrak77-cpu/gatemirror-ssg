@@ -2393,5 +2393,805 @@
         "display_date": "13 April 2026",
         "processed_at": "2026-04-14 18:10:28",
         "hash": "3bd17bf6"
+    },
+    {
+        "task_id": "0076",
+        "category": "tech",
+        "cluster_id": "tech_01",
+        "topic": "AI Trading Bots 2026: New Platforms and Features for Maximum ROI",
+        "reference_link": "https://www.gartner.com/ai-trading-2026",
+        "language": "en",
+        "author_persona": "Quantitative Trading Analyst",
+        "special_instructions": "Compare Binance, Bybit, 3Commas, and new entrant. Updated fee structures, new automation features, AI prediction accuracy. Include comparison table. End with \"Best for\" scenarios.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated trading dashboard with new AI features, holographic interface, neon blue, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Side-by-side old vs new AI trading features, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "New dashboard showing improved ROI metrics, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0077",
+        "category": "tech",
+        "cluster_id": "tech_02",
+        "topic": "AI Cybersecurity 2026: New Zero-Day Threats and Defense Strategies",
+        "reference_link": "https://www.crowdstrike.com/2026-threat-report",
+        "language": "en",
+        "author_persona": "CISO & AI Security Researcher",
+        "special_instructions": "New threat landscape for 2026. Latest AI detection methods. Recent case study. Updated compliance (GDPR, SOC2, new 2026 regs). End with 2029 predictions.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated digital shield against new attack vectors, neon blue and red, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New before/after security visualization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated dashboard with new threat metrics, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0078",
+        "category": "tech",
+        "cluster_id": "tech_03",
+        "topic": "AI Productivity Tools 2026: New Features and Better ROI",
+        "reference_link": "https://www.forbes.com/ai-productivity-2026",
+        "language": "en",
+        "author_persona": "Digital Workplace Consultant",
+        "special_instructions": "Compare Jasper, Copy.ai, Notion AI, Grammarly, plus new tools. Updated pricing, new integrations (Slack, Zoom, Teams, new platforms). Fresh testimonials. End with free trial CTA.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated modern desk with new AI tools, warm light, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New side-by-side productivity comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated dashboard with improved time savings metrics, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0079",
+        "category": "tech",
+        "cluster_id": "tech_04",
+        "topic": "Cloud AI 2026: AWS vs Azure vs GCP — Updated Comparison",
+        "reference_link": "https://www.gartner.com/cloud-ai-2026",
+        "language": "en",
+        "author_persona": "Cloud Solutions Architect",
+        "special_instructions": "Compare AWS, Azure, GCP for AI/ML workloads. New pricing models, updated SLAs, new security features. Target CTOs. End with updated recommendation matrix.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Three cloud platforms with updated visuals, data center background, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Updated infrastructure comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "New cost comparison dashboard, clean enterprise UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0080",
+        "category": "tech",
+        "cluster_id": "tech_05",
+        "topic": "Generative Search 2026: Google SGE and Perplexity One Year Later",
+        "reference_link": "https://www.searchenginejournal.com/sge-2026",
+        "language": "en",
+        "author_persona": "SEO Strategist",
+        "special_instructions": "Analyze one year of Google SGE impact. Updated Perplexity features. New publisher adaptation strategies. Fresh data from 2026 studies. End with 2029 forecast.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated search bar morphing into AI brain, dark background, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New search comparison visualization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated traffic distribution graph, clean analytics UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0081",
+        "category": "future-economy",
+        "cluster_id": "fe_01",
+        "topic": "Crypto Exchanges 2026: New Players, Lower Fees, Better Security",
+        "reference_link": "https://www.coingecko.com/2026-exchanges",
+        "language": "en",
+        "author_persona": "Crypto Trader",
+        "special_instructions": "Compare MEXC, Bitget, Kraken, Binance, plus new entrant. Updated fee comparison, new security audits, new staking rewards. Include referral links naturally.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated exchange logos on trading floor, glowing green and blue, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New fee comparison visualization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table with new exchanges, clean dark UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0082",
+        "category": "future-economy",
+        "cluster_id": "fe_02",
+        "topic": "RWA Tokenization 2026: New Asset Classes and Regulatory Updates",
+        "reference_link": "https://www.bcg.com/rwa-2026",
+        "language": "en",
+        "author_persona": "Digital Asset Economist",
+        "special_instructions": "New asset classes (art, real estate, private equity, new). Updated regulations (SEC, MiCA). New case study. BCG updated forecast $8T by 2030.",
+        "visuals": {
+            "kapak": {
+                "prompt": "New physical assets connected by blockchain nodes, gold and green, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Updated tokenization comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "New investment dashboard, clean dark UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0083",
+        "category": "future-economy",
+        "cluster_id": "fe_03",
+        "topic": "Neobanks 2026: Revolut, N26, and New Challengers",
+        "reference_link": "https://www.forrester.com/neobanking-2026",
+        "language": "en",
+        "author_persona": "Fintech Analyst",
+        "special_instructions": "Compare Revolut, N26, and 2 new neobanks. Updated fee comparison, new interest rates, new app features. CPA focus. New welcome bonuses.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated neobank app icons floating, modern banking aesthetic, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New traditional vs neobank comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated fee comparison table, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0084",
+        "category": "future-economy",
+        "cluster_id": "fe_04",
+        "topic": "DeFi Staking 2026: Highest APY with Lowest Risk — New Protocols",
+        "reference_link": "https://www.defirate.com/2026-staking",
+        "language": "en",
+        "author_persona": "DeFi Protocol Analyst",
+        "special_instructions": "Compare Lido, Rocket Pool, Aave, and 2 new protocols. Updated APY ranges, new risk factors, new security audits. Disclaimers mandatory.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated DeFi protocol nodes with new connections, golden streams, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New savings vs staking comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated APY comparison dashboard, clean dark UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0085",
+        "category": "future-economy",
+        "cluster_id": "fe_05",
+        "topic": "Wealth Management 2026: Top Private Wealth Advisors for HNWIs",
+        "reference_link": "https://www.barrons.com/wealth-2026",
+        "language": "en",
+        "author_persona": "Private Wealth Manager",
+        "special_instructions": "Compare top wealth management firms. Updated fee structures, new minimums, new portfolio examples, updated performance. Target accredited investors.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated private wealth office, luxury materials, holographic displays, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Updated DIY vs wealth management comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated portfolio dashboard, clean professional UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0086",
+        "category": "wellness",
+        "cluster_id": "wl_01",
+        "topic": "Longevity Biohacking 2026: New Supplements and Wearables",
+        "reference_link": "https://www.ncbi.nlm.nih.gov/longevity-2026",
+        "language": "en",
+        "author_persona": "Anti-Aging Researcher",
+        "special_instructions": "Discuss new supplements (NMN, resveratrol, new). New wearables: Oura Ring 4, WHOOP 5.0. Updated clinical citations. New dosage recommendations. Updated price comparison.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated vibrant older person with new health metrics, natural light, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New aging vs biohacking comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated supplements and Oura Ring close-up, soft natural light, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0087",
+        "category": "wellness",
+        "cluster_id": "wl_02",
+        "topic": "Mental Health Apps 2026: New Platforms for Anxiety and Depression",
+        "reference_link": "https://www.psychologytoday.com/mental-health-2026",
+        "language": "en",
+        "author_persona": "Clinical Psychologist",
+        "special_instructions": "Compare BetterHelp, Calm, Headspace, plus 2 new apps. Updated therapy modalities, new pricing, updated credentials, new privacy features. Crisis disclaimer.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated person meditating with new app interface, soft morning light, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New before/after app comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated app comparison table, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0088",
+        "category": "wellness",
+        "cluster_id": "wl_03",
+        "topic": "Telemedicine 2026: Best Online Doctor Services Updated",
+        "reference_link": "https://www.ama-assn.org/telemedicine-2026",
+        "language": "en",
+        "author_persona": "Healthcare IT Consultant",
+        "special_instructions": "Compare Teladoc, Amwell, Doctor on Demand, plus new platform. Updated insurance coverage, new wait times, new specialist availability. Cite new adoption stats.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated video consultation screen, clean interface, soft blue lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New in-person vs telemedicine comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table of wait times and insurance, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0089",
+        "category": "wellness",
+        "cluster_id": "wl_04",
+        "topic": "Sleep Trackers 2026: Oura Ring 4, Whoop 5.0, and New Devices",
+        "reference_link": "https://www.sleepfoundation.org/trackers-2026",
+        "language": "en",
+        "author_persona": "Sleep Scientist",
+        "special_instructions": "Compare Oura Ring 4, Whoop 5.0, Apple Watch Ultra 2, new entrant. Updated features, new battery life, new app ecosystems. Amazon affiliate. Focus on new accuracy data.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated person sleeping with new smart ring, soft moonlight, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New poor sleep vs optimized sleep comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated sleep tracker dashboard, modern dark UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0090",
+        "category": "wellness",
+        "cluster_id": "wl_05",
+        "topic": "Personalized Nutrition 2026: New DNA and Microbiome Testing Kits",
+        "reference_link": "https://www.nature.com/nutrition-2026",
+        "language": "en",
+        "author_persona": "Nutrigenomics Researcher",
+        "special_instructions": "Compare InsideTracker, Viome, 23andMe, plus new kit. Updated testing methodology, new sample reports, updated pricing. Cite new clinical validation.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated person holding DNA kit, holographic microbiome visualization, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New generic vs personalized nutrition comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated sample report dashboard, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0091",
+        "category": "elearning",
+        "cluster_id": "el_01",
+        "topic": "Coding Bootcamps 2026: New Programs, Better Job Placement",
+        "reference_link": "https://www.coursereport.com/2026-bootcamps",
+        "language": "en",
+        "author_persona": "Career Coach",
+        "special_instructions": "Compare Coursera, Udacity, General Assembly, plus new bootcamp. Updated curriculum depth, new job placement rates, updated instructor credentials, new pricing. Affiliate links.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated person coding with new digital badges, warm lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New self-taught vs bootcamp comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table of tuition and placement, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0092",
+        "category": "elearning",
+        "cluster_id": "el_02",
+        "topic": "Executive MBA 2026: Top Business Schools Updated Ranking",
+        "reference_link": "https://www.ft.com/emba-2026",
+        "language": "en",
+        "author_persona": "Executive Education Advisor",
+        "special_instructions": "Compare top EMBA programs. Updated ROI calculations, new alumni network data, updated accreditation. Target C-suite. Professional tone.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated business school campus, professional atmosphere, golden hour, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New before/after EMBA comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated ROI comparison table, clean professional UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0093",
+        "category": "elearning",
+        "cluster_id": "el_03",
+        "topic": "Language Apps 2026: New AI Tutors and Better Features",
+        "reference_link": "https://www.fluentin3months.com/2026-apps",
+        "language": "en",
+        "author_persona": "Polyglot",
+        "special_instructions": "Compare Ling, Duolingo, Babbel, Rosetta Stone, plus new app. Updated languages offered, new AI features, updated pricing, new retention stats. Affiliate links.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated smartphone with language app, cozy environment, warm lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New traditional class vs app comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table of languages and pricing, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0094",
+        "category": "elearning",
+        "cluster_id": "el_04",
+        "topic": "Cloud Certifications 2026: AWS, Azure, GCP Updated",
+        "reference_link": "https://www.pluralsight.com/cloud-2026",
+        "language": "en",
+        "author_persona": "Cloud Career Coach",
+        "special_instructions": "Compare AWS, Azure, GCP certifications. Updated exam breakdown, new practice test quality, updated pass rate claims, new costs. Exam prep affiliate.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated three certification badges glowing, professional workspace, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New no certification vs certified comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table of exam costs and salaries, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0095",
+        "category": "elearning",
+        "cluster_id": "el_05",
+        "topic": "Side Hustle Skills 2026: New Platforms, Better Earnings",
+        "reference_link": "https://www.sidehustlenation.com/2026-skills",
+        "language": "en",
+        "author_persona": "Digital Entrepreneurship Coach",
+        "special_instructions": "Updated top skills (freelance writing, web design, social media, dropshipping, new). Updated earnings potential, new platform fees, new success stories. Tool affiliate (Shopify, Fiverr, Canva).",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated person working from home with new income streams, warm lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New 9-5 vs side hustle comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated income dashboard, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0096",
+        "category": "eco",
+        "cluster_id": "eco_01",
+        "topic": "EV Charging 2026: New Networks, Better Coverage",
+        "reference_link": "https://www.iea.org/ev-2026",
+        "language": "en",
+        "author_persona": "EV Infrastructure Analyst",
+        "special_instructions": "Compare ChargePoint, Tesla Supercharger, Electrify America, plus new network. Updated charging speeds, new coverage maps, updated pricing. Lead gen.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated EV at modern charging station, clean energy aesthetic, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New gas vs EV charging comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated comparison table of speeds and pricing, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0097",
+        "category": "eco",
+        "cluster_id": "eco_02",
+        "topic": "Solar Panels 2026: New Technology, Better Savings",
+        "reference_link": "https://www.energy.gov/solar-2026",
+        "language": "en",
+        "author_persona": "Solar Energy Consultant",
+        "special_instructions": "Compare SunPower, LG, Panasonic, plus new brand. Updated cost per watt, new payback periods, updated warranties. Lead gen. Include new tax credit info.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated modern house with solar panels, sunny day, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New without solar vs with solar comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated ROI dashboard, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0098",
+        "category": "eco",
+        "cluster_id": "eco_03",
+        "topic": "ESG Investing 2026: New Regulations, Better Returns",
+        "reference_link": "https://www.msci.com/esg-2026",
+        "language": "en",
+        "author_persona": "ESG Analyst",
+        "special_instructions": "Updated ESG scoring methodology, new regulations (SFDR, SEC, new), updated fund performance, new greenwashing red flags. Authority content.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated green financial district, ESG metrics holograms, soft green lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New traditional vs ESG portfolio comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated ESG fund performance dashboard, clean professional UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0099",
+        "category": "eco",
+        "cluster_id": "eco_04",
+        "topic": "Smart Home Energy 2026: New Devices, Better Savings",
+        "reference_link": "https://www.energy.gov/smart-home-2026",
+        "language": "en",
+        "author_persona": "Smart Home Tech Reviewer",
+        "special_instructions": "Compare Amazon IoT, Google Nest, Ecobee, Eve Energy, plus new device. Updated compatibility, new energy savings data, updated prices. Amazon affiliate.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated modern smart home with new energy monitors, cozy lighting, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New without vs with smart devices comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated energy savings dashboard, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0100",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Circular Economy 2026: New Business Models, Better Profits",
+        "reference_link": "https://www.ellenmacarthurfoundation.org/2026",
+        "language": "en",
+        "author_persona": "Circular Economy Strategist",
+        "special_instructions": "New business model examples (Patagonia, Loop, Fairphone, new). New case study. Updated EU regulations (right to repair, new). Updated VC investment landscape.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Updated circular diagram, clean industrial aesthetic, green and blue, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "New linear vs circular economy comparison, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Updated circular impact dashboard, clean UI, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-14",
+        "date": "2026-04-14",
+        "display_date": "14 April 2026",
+        "processed_at": ""
     }
 ]
