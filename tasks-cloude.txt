@@ -1,0 +1,263 @@
+Dosyaya bakayım önce!
+
+Format tam anladım. Şimdi 25 yeni task yazıyorum, güncel trendlere bakayım önce.
+
+İşte 25 yeni task, hepsi güncel 2026 trendleri, cluster isimleri bire bir aynı:
+
+---
+
+```
+category: tech
+cluster: ai_trading_bots
+topic: AI Trading Bots vs Human Traders 2026: Who Wins in a High-Volatility Market? (Live Performance Data)
+reference_link: https://www.gartner.com/en/ai-trading-platforms
+author_persona: Quantitative Trading Analyst & Algorithmic Strategy Developer
+special_instructions: Analyze real 2026 market conditions (rate volatility, AI-driven flash crashes). Compare AI bot performance vs human traders in volatile periods (Q1 2026 market swings). Break down strategy types (momentum, mean-reversion, arbitrage) with real Sharpe ratios. Include a $50K simulation showing monthly P&L. Explain when AI bots FAIL and why. End with "Best Bot Architecture by Market Condition (Bull, Bear, Sideways)".
+kapak_prompt: Intense split battle scene between glowing AI robot trader and human trader at competing terminals, market charts exploding with volatility in background, red and green candles clashing, cinematic lighting, ultra-detailed, photorealistic, no text
+icerik_1_prompt: Real-time performance comparison visualization: AI bot executing 1,200 trades in milliseconds vs human executing 3 trades in same timeframe, profit curves overlaid, volatility spikes highlighted, photorealistic trading UI, no text
+icerik_2_prompt: Dashboard showing "Bot P&L vs Human P&L", "Sharpe Ratio Comparison", "Max Drawdown Events", "Win Rate %", "Slippage Impact", institutional dark-mode trading UI, glowing metrics, photorealistic, no text
+
+category: tech
+cluster: cybersecurity_ai
+topic: AI vs AI Cyberwarfare 2026: When Attack Bots Fight Defense Bots in Real Time
+reference_link: https://www.crowdstrike.com/ai-cybersecurity-report-2026
+author_persona: Chief Information Security Officer & AI Threat Intelligence Researcher
+special_instructions: Analyze the emerging "AI vs AI" threat landscape where offensive LLMs generate polymorphic malware and defensive AI neutralizes in real time. Include response time benchmarks (sub-100ms detection). Break down attack categories (deepfake social engineering, AI-generated phishing, autonomous lateral movement). Case study: 2026 financial sector AI attack successfully neutralized. Include MITRE ATT&CK framework context. End with "2028 Autonomous Cyber Defense Architecture".
+kapak_prompt: Epic digital battlefield with two AI systems clashing — glowing red attack vectors (mutating code streams) vs blue defense shields (adaptive neural barriers), deep cyber grid, particle effects, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Timeline visualization showing attack bot generating 10,000 phishing variants in 3 seconds, defense AI detecting and blocking 99.7% in real time, response latency graph in milliseconds, photorealistic, no text
+icerik_2_prompt: Threat intelligence dashboard showing "Attack Variants/sec", "Detection Rate %", "Response Time (ms)", "Blocked Vectors", "AI Confidence Score", dark SOC interface, glowing alerts, photorealistic, no text
+
+category: tech
+cluster: ai_productivity_tools
+topic: AI Agents at Work 2026: The Real Cost of NOT Automating Your Team (ROI Calculator)
+reference_link: https://www.pwc.com/us/en/tech-effect/ai-analytics/ai-predictions.html
+author_persona: Digital Transformation Consultant & Enterprise AI Deployment Specialist
+special_instructions: Quantify the productivity gap between AI-augmented and non-AI teams in 2026. Use PwC and Deloitte data ($3T AI infrastructure investment). Break down automation ROI by department (finance, marketing, operations, HR). Include a real cost calculator framework: hours lost × salary rate × task frequency. Analyze specific tools (Microsoft Copilot, Notion AI, Zapier AI). End with "Automation Readiness Score by Company Size".
+kapak_prompt: Modern enterprise office split in two — left side human workers drowning in manual tasks, right side same team augmented with AI copilots handling 80% of workload effortlessly, cinematic warm lighting, photorealistic, no text
+icerik_1_prompt: Workflow diagram showing pre-AI vs post-AI task completion: email sorting (4hrs → 12min), report generation (6hrs → 20min), data entry (8hrs → automated), glowing time-saved metrics, photorealistic, no text
+icerik_2_prompt: ROI calculator dashboard showing "Hours Saved/Month", "Cost Reduction ($)", "Revenue Impact", "Automation Coverage %", "Payback Period", clean SaaS analytics UI, photorealistic, no text
+
+category: tech
+cluster: cloud_computing_ai
+topic: GPU Cloud Wars 2026: H100 vs A100 vs TPU — Real Benchmark Costs for AI Training Workloads
+reference_link: https://www.gartner.com/cloud-ai-infrastructure
+author_persona: AI Infrastructure Architect & MLOps Engineering Lead
+special_instructions: Deep technical comparison of GPU cloud options in 2026. Include real pricing: AWS p4d vs p5 instances, Azure NDv5, GCP A3. Benchmark actual training times (LLM fine-tuning, image generation, inference). Calculate total cost for 3 use cases: startup ($5K budget), SMB ($50K), enterprise ($500K). Include spot instance strategies and cost optimization. End with "Best GPU Stack by AI Workload Type".
+kapak_prompt: Massive competing GPU server clusters glowing in different colors (AWS orange, Azure blue, GCP red), heat signatures visualized above processors, data center environment, cinematic industrial lighting, photorealistic, no text
+icerik_1_prompt: Technical benchmark comparison showing H100 vs A100 vs TPU performance on identical AI training task, throughput bars, cost-per-FLOP visualization, clean engineering UI, photorealistic, no text
+icerik_2_prompt: Cost breakdown dashboard showing "GPU Type", "$/Hour", "Training Time", "Total Cost ($)", "Performance/Dollar Ratio", enterprise cloud pricing UI, photorealistic, no text
+
+category: tech
+cluster: generative_search
+topic: GEO vs SEO 2026: How to Rank in AI-Generated Answers (Generative Engine Optimization Strategy Guide)
+reference_link: https://www.searchenginejournal.com/generative-search-2026
+author_persona: Search Strategy Consultant & AI Content Optimization Specialist
+special_instructions: Define GEO (Generative Engine Optimization) as the new discipline replacing traditional SEO. Analyze what makes content get cited by Google SGE, Perplexity, and Claude. Include technical factors: structured data, E-E-A-T signals, citation probability. Provide real A/B test data showing GEO-optimized content getting 3x more AI citations. Include a "GEO Audit Checklist" for existing content. End with "2028 Search Visibility Framework".
+kapak_prompt: Content creator watching their article get cited inside multiple AI answer boxes simultaneously (Google, Perplexity, Bing AI), glowing citation rings connecting content to AI responses, digital content ecosystem, photorealistic, no text
+icerik_1_prompt: Split comparison: left side traditional SEO page optimized for clicks (blue links, meta descriptions); right side GEO-optimized content structured for AI citation (structured data, clear claims, citations), photorealistic, no text
+icerik_2_prompt: GEO analytics dashboard showing "AI Citation Rate %", "Answer Box Appearances", "E-E-A-T Score", "Structured Data Coverage", "Zero-Click Impact", modern SEO analytics UI, photorealistic, no text
+
+category: future-economy
+cluster: crypto_exchanges
+topic: Crypto Exchange Hack History 2026: Which Platforms Lost User Funds (And What They're Doing Now)
+reference_link: https://www.coingecko.com/crypto-exchanges-ranking
+author_persona: Blockchain Security Analyst & Crypto Exchange Risk Assessor
+special_instructions: Comprehensive security audit of major exchanges based on hack history, recovery actions, and current protection levels. Include: Mt. Gox lesson, FTX collapse analysis, 2024-2026 incident timeline. Rate exchanges on: cold wallet %, insurance coverage, Proof of Reserves frequency, MPC implementation. Real case study: exchange that survived a $100M hack and rebuilt trust. End with "Exchange Security Scorecard 2026".
+kapak_prompt: Crypto vault cracking open with red warning lights, digital coins scattering, security AI systems activating to stop breach, contrast between vulnerability and defense, cinematic dramatic lighting, photorealistic, no text
+icerik_1_prompt: Timeline infographic showing major exchange hacks 2014-2026 with amounts lost, recovery %, and trust recovery trajectory, clean dark financial UI visualization, photorealistic, no text
+icerik_2_prompt: Security scorecard dashboard showing "Cold Wallet %", "Insurance Coverage ($)", "PoR Frequency", "Hack History", "MPC Status", "Overall Score", institutional security UI, photorealistic, no text
+
+category: future-economy
+cluster: rwa_tokenization
+topic: Tokenized Treasury Bills 2026: How BlackRock's BUIDL Fund Changed Institutional DeFi Forever
+reference_link: https://www.bcg.com/rwa-tokenization-2026
+author_persona: Institutional DeFi Strategist & Tokenized Securities Analyst
+special_instructions: Analyze the explosion of tokenized US Treasuries (BlackRock BUIDL, Franklin OnChain, Ondo Finance). Include TVL growth ($1B → $10B+), yield mechanics, and institutional adoption drivers. Explain on-chain settlement advantages vs traditional T+2. Cover regulatory clarity from SEC. Case study: hedge fund using tokenized Treasuries as DeFi collateral while earning 5% yield. End with "RWA Yield Optimization Strategy for 2026-2027".
+kapak_prompt: US Treasury bonds transforming into glowing digital tokens flowing into DeFi protocols, BlackRock-style institutional environment meets blockchain visualization, gold and green tones, cinematic, photorealistic, no text
+icerik_1_prompt: Split scene: left side traditional Treasury purchase (T+2 settlement, paperwork, illiquid); right side tokenized T-bill instant settlement, DeFi composability, 24/7 liquidity, photorealistic, no text
+icerik_2_prompt: Yield comparison dashboard showing "Traditional T-Bill APY", "Tokenized T-Bill APY", "Settlement Time", "DeFi Composability Score", "TVL Growth", institutional fintech UI, photorealistic, no text
+
+category: future-economy
+cluster: digital_banking
+topic: Revolut vs Wise vs N26 2026: The Ultimate Neobank Shootout for Frequent Travelers and Expats
+reference_link: https://www.forrester.com/neobanking-2026
+author_persona: Expat Financial Advisor & Cross-Border Banking Specialist
+special_instructions: Real-world comparison for high-value use cases: international transfers, FX rates, multi-currency accounts, business features. Include real fee calculations for $10K international transfer across all three. Compare insurance, customer support response times, and card benefits. Test real exchange rates vs interbank rate. Include expat-specific scenarios (salary abroad, property purchase, tax). End with "Best Neobank by User Type (Traveler, Expat, Freelancer, Business)".
+kapak_prompt: Global traveler using neobank cards in multiple countries simultaneously, holographic currency exchange rates updating in real time, passport stamps and digital wallets, cinematic travel aesthetic, photorealistic, no text
+icerik_1_prompt: Head-to-head fee comparison visualization for $10,000 international transfer: Revolut vs Wise vs N26 vs traditional bank, showing markup %, total cost, arrival time, clean fintech comparison UI, photorealistic, no text
+icerik_2_prompt: Feature comparison dashboard showing "FX Rate Markup %", "Free ATM Limit/Month", "Transfer Speed", "Business Features", "Customer Support Rating", clean banking analytics UI, photorealistic, no text
+
+category: future-economy
+cluster: defi_staking
+topic: Ethereum Restaking 2026: EigenLayer, Symbiotic, and the $50B Yield Layer Explained
+reference_link: https://www.defirate.com/staking-rewards
+author_persona: DeFi Protocol Architect & Ethereum Staking Economics Researcher
+special_instructions: Explain restaking mechanics (EigenLayer, Symbiotic) and the yield multiplication effect. Break down: base ETH staking yield (4-5%) + restaking bonus (2-8%) = total APY potential. Include slashing risks, operator selection, and AVS (Actively Validated Services). Real case study: $1M ETH position restaked across 3 AVS yielding 11% net APY. Include liquidity risks (LST depegging scenarios). End with "Restaking Risk-Reward Matrix 2026".
+kapak_prompt: Ethereum network visualization with restaking layers stacking like glowing energy coils, ETH tokens multiplying yield streams, deep blue blockchain environment, cinematic depth, photorealistic, no text
+icerik_1_prompt: Yield stack diagram: base ETH staking layer → EigenLayer restaking → AVS rewards → total compounded APY visualization, glowing stack layers building up, photorealistic, no text
+icerik_2_prompt: Restaking analytics dashboard showing "Base Staking APY", "Restaking Bonus", "Total APY", "Slashing Risk Score", "TVL by Protocol", dark crypto UI, photorealistic, no text
+
+category: future-economy
+cluster: wealth_management
+topic: Family Office Investment Strategy 2026: How the Ultra-Wealthy Are Allocating to AI, Private Credit, and Real Assets
+reference_link: https://www.barrons.com/wealth-management-ranking
+author_persona: Family Office Investment Strategist & Alternative Assets Allocator
+special_instructions: Analyze 2026 family office allocation shifts based on UBS/Credit Suisse data. Include: private credit surge (replacing bonds), AI infrastructure investments, real assets (farmland, data centers, energy), and crypto allocation (5-15% in progressive offices). Explain why traditional 60/40 is dead for HNW. Include a model $10M family office portfolio. Cover governance, succession planning, and tax optimization. End with "Family Office Checklist for 2026-2030".
+kapak_prompt: Ultra-modern family office investment room with holographic portfolio breakdown showing diverse asset classes (real estate, private equity, AI tech, commodities), elegant wealthy aesthetic, warm cinematic lighting, photorealistic, no text
+icerik_1_prompt: Portfolio evolution visualization: 2020 traditional 60/40 portfolio vs 2026 modern family office allocation with alternatives, private credit, AI, real assets, animated shift, photorealistic, no text
+icerik_2_prompt: Family office dashboard showing "Asset Allocation %", "Target Return", "Risk Score", "Private Credit Yield", "AI Exposure", "Tax Efficiency", premium wealth management UI, photorealistic, no text
+
+category: wellness
+cluster: longevity_biohacking
+topic: GLP-1 Weight Loss Drugs 2026: Ozempic, Mounjaro, and the New Science of Metabolic Reset (Benefits vs Long-Term Risks)
+reference_link: https://www.ncbi.nlm.nih.gov/longevity-research
+author_persona: Endocrinologist & Metabolic Medicine Specialist
+special_instructions: Comprehensive analysis of GLP-1 receptor agonists in 2026. Include real clinical data: average weight loss (15-22%), metabolic improvements, cardiovascular benefits. Address risks: muscle loss, bone density, rebound effects, long-term dependency. Compare Ozempic, Mounjaro, Wegovy, and new 2026 entrants. Include natural GLP-1 optimization alternatives. Cover cost ($800-$1,200/month) and insurance. End with "Who Should (and Should NOT) Take GLP-1 Drugs".
+kapak_prompt: Before/after metabolic transformation visualization with molecular GLP-1 receptor activation shown as glowing biological pathway, clean medical aesthetic, warm lighting, photorealistic, no text
+icerik_1_prompt: Split comparison: left side metabolic syndrome indicators (visceral fat, inflammation, high glucose); right side GLP-1 optimized metabolism (lean body composition, normal glucose, reduced inflammation), photorealistic, no text
+icerik_2_prompt: Clinical data dashboard showing "Average Weight Loss %", "Cardiovascular Risk Reduction", "Blood Sugar Impact", "Muscle Loss Risk", "Monthly Cost", clean medical analytics UI, photorealistic, no text
+
+category: wellness
+cluster: mental_health_apps
+topic: Burnout Recovery Protocol 2026: AI-Assisted Mental Health Tools That Actually Work (Evidence Review)
+reference_link: https://www.psychologytoday.com/mental-health-apps
+author_persona: Occupational Psychologist & Digital Mental Health Researcher
+special_instructions: Address the 2026 burnout epidemic (62% of knowledge workers report burnout per Gallup). Compare AI therapy apps (Woebot, Wysa, Headspace AI) with evidence-based effectiveness ratings. Include HRV-based stress monitoring, AI journaling, and sleep-mood correlation tracking. Real case study: tech executive recovering from severe burnout using AI-assisted protocol in 12 weeks. Include clinical disclaimer and crisis resources. End with "12-Week Burnout Recovery Stack".
+kapak_prompt: Exhausted professional transitioning to recovery — split scene showing burnout state (grey, chaotic, overwhelmed) gradually transforming to calm, energized state with AI wellness tools glowing softly around them, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Recovery timeline visualization showing HRV scores, sleep quality, mood ratings, and energy levels improving week by week over 12-week protocol, clean wellness analytics chart, photorealistic, no text
+icerik_2_prompt: Wellness dashboard showing "Burnout Risk Score", "HRV Trend", "Sleep Quality", "Mood Index", "Recovery Progress %", modern mental health app UI, photorealistic, no text
+
+category: wellness
+cluster: telemedicine_tech
+topic: AI Diagnostics 2026: Can an App Detect Your Condition Before a Doctor? (Accuracy Data)
+reference_link: https://www.ama-assn.org/telemedicine-adoption
+author_persona: Digital Health Physician & AI Medical Diagnostics Researcher
+special_instructions: Analyze AI diagnostic tools reaching clinical accuracy in 2026. Include: skin cancer detection (AI vs dermatologist accuracy rates), retinal disease screening, ECG interpretation, and symptom triage. Use real FDA-cleared device data. Include both promise and limitations (false positive risks, liability). Real case study: AI caught early-stage melanoma a dermatologist missed. Address data privacy (HIPAA). End with "AI Diagnostic Tools Worth Using in 2026".
+kapak_prompt: AI medical diagnostic interface scanning human body in real time, identifying health markers with glowing precision overlays, clinical clean environment, blue-white medical aesthetic, photorealistic, no text
+icerik_1_prompt: Accuracy comparison: AI diagnostic vs human doctor on 5 conditions (melanoma, diabetic retinopathy, arrhythmia, pneumonia, fracture), performance bars, clean medical UI, photorealistic, no text
+icerik_2_prompt: Diagnostic dashboard showing "Condition", "AI Accuracy %", "Human Accuracy %", "FDA Cleared", "False Positive Rate", professional medical analytics UI, photorealistic, no text
+
+category: wellness
+cluster: sleep_optimization
+topic: Wearable Sleep Trackers 2026: Oura Ring vs WHOOP vs Apple Watch (Real Accuracy vs Clinical PSG)
+reference_link: https://www.sleepfoundation.org/sleep-trackers
+author_persona: Sleep Scientist & Consumer Health Technology Reviewer
+special_instructions: Independent accuracy comparison of top sleep wearables vs polysomnography (clinical gold standard). Include: sleep stage accuracy (REM, deep, light), HRV measurement, sleep score algorithms. Real test data from published studies. Break down cost ($299-$499), subscription fees, and ecosystem value. Include use cases: insomnia tracking, athlete recovery, shift workers. End with "Best Wearable by Sleep Goal (Recovery, Insomnia, Performance)".
+kapak_prompt: Three premium sleep wearables (ring, band, watch) floating above a sleeping figure, each showing different data visualizations, soft blue sleep analytics overlays, cinematic bedroom lighting, photorealistic, no text
+icerik_1_prompt: Accuracy comparison chart: Oura Ring vs WHOOP vs Apple Watch vs clinical PSG on sleep stage detection, correlation coefficients visualized, clean scientific comparison UI, photorealistic, no text
+icerik_2_prompt: Wearable comparison dashboard showing "Sleep Stage Accuracy %", "HRV Precision", "Battery Life", "Price + Subscription", "Best Use Case", modern consumer tech UI, photorealistic, no text
+
+category: wellness
+cluster: personalized_nutrition
+topic: Continuous Glucose Monitoring for Non-Diabetics 2026: Is the $200/Month CGM Trend Worth It?
+reference_link: https://www.nature.com/articles/personalized-nutrition
+author_persona: Metabolic Health Researcher & Precision Nutrition Specialist
+special_instructions: Analyze the CGM trend among healthy people using Levels, Nutrisense, and Abbott Libre. Include real glucose response data for common foods (white rice vs brown rice, stress, sleep deprivation). Explain glycemic variability and metabolic health optimization. Include cost breakdown ($150-$300/month). Real case study: athlete using CGM to optimize performance nutrition. Address whether CGM data is actionable without diabetes. End with "CGM Starter Protocol for Metabolic Optimization".
+kapak_prompt: Athletic person with CGM sensor showing real-time glucose curve on smartphone, healthy food choices floating around as holographic data points, clean modern aesthetic, natural lighting, photorealistic, no text
+icerik_1_prompt: Glucose response visualization comparing identical person eating different foods (processed vs whole), showing spike and crash patterns vs stable response, clean metabolic data chart, photorealistic, no text
+icerik_2_prompt: CGM analytics dashboard showing "Glucose Variability Score", "Time in Range %", "Peak Glucose Response", "Metabolic Score", "Food Impact Rating", modern health app UI, photorealistic, no text
+
+category: elearning
+cluster: coding_bootcamps
+topic: No-Code/Low-Code Development 2026: Can You Build Real Apps Without Coding? (Market Reality Check)
+reference_link: https://www.coursereport.com/coding-bootcamp-ranking
+author_persona: No-Code Platform Strategist & Digital Product Development Consultant
+special_instructions: Analyze the no-code/low-code explosion in 2026 (market: $65B+). Compare platforms: Bubble, Webflow, Glide, Adalo, FlutterFlow. Include real apps built without code (revenue examples). Break down what you CAN and CANNOT build. Include cost comparison vs traditional development. Time-to-launch data. Real case study: non-technical founder built $500K ARR SaaS using no-code. End with "No-Code Mastery Path by Business Goal".
+kapak_prompt: Non-technical entrepreneur building a complex app using drag-and-drop no-code interface, finished product appearing on multiple devices simultaneously, empowering creative environment, photorealistic, no text
+icerik_1_prompt: Split comparison: left side traditional coding bootcamp path (6 months, $15K); right side no-code mastery path (6 weeks, $200), showing comparable outcomes for specific use cases, photorealistic, no text
+icerik_2_prompt: No-code platform comparison dashboard showing "Platform", "Learning Curve", "Scalability Limit", "Cost/Month", "Apps You Can Build", clean edtech analytics UI, photorealistic, no text
+
+category: elearning
+cluster: exec_education
+topic: Corporate AI Training 2026: Why Fortune 500 Companies Are Spending $2B on Internal AI Upskilling
+reference_link: https://www.ft.com/executive-mba-ranking
+author_persona: Corporate Learning & Development Strategist & AI Workforce Transformation Consultant
+special_instructions: Analyze the corporate AI upskilling explosion (McKinsey: $2B+ spend). Include real programs: Microsoft AI Skills, Google AI Essentials, IBM SkillsBuild. Break down ROI: cost per employee vs productivity gain. Include program formats (bootcamps, microlearning, AI coaching). Real case study: manufacturing company that upskilled 5,000 employees in 6 months, 34% productivity gain. Address change management and resistance. End with "AI Upskilling Roadmap by Role (Executive, Manager, Individual Contributor)".
+kapak_prompt: Corporate training room transformed with AI learning interfaces, executives and managers engaging with AI copilots learning in real time, modern enterprise environment, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Skills gap visualization showing company's current AI literacy vs industry benchmark, training program bridging the gap over 6-month timeline, professional corporate data visualization, photorealistic, no text
+icerik_2_prompt: Corporate training dashboard showing "Employees Trained", "AI Literacy Score", "Productivity Gain %", "Cost per Employee", "ROI", enterprise L&D analytics UI, photorealistic, no text
+
+category: elearning
+cluster: language_apps
+topic: AI Language Tutors 2026: Can ChatGPT and Conversation AI Finally Replace Language Classes?
+reference_link: https://www.fluentin3months.com/app-review
+author_persona: Applied Linguistics Researcher & AI Language Learning Specialist
+special_instructions: Evaluate AI conversation tutors (iTalki AI, Speak, Pimsleur AI, custom GPT tutors) vs traditional methods. Include real fluency timeline data: A1 to B2 using AI-only method (realistic: 18-24 months for most languages). Compare pronunciation accuracy feedback. Include research on comprehensible input and AI-generated content quality. Real case study: person achieving B2 Spanish in 14 months using only AI tools ($50 total investment). End with "AI Language Tutor Stack by Target Language".
+kapak_prompt: Person having natural conversation with AI language tutor avatar, real-time pronunciation feedback floating as waveforms, immersive multilingual environment, warm engaging lighting, photorealistic, no text
+icerik_1_prompt: Learning path comparison: traditional classroom (3 years, $5,000) vs AI tutor method (18 months, $50), fluency level progression curves, photorealistic, no text
+icerik_2_prompt: AI tutor analytics dashboard showing "Vocabulary Acquired", "Grammar Accuracy %", "Pronunciation Score", "Speaking Fluency Level", "Total Investment", clean language learning UI, photorealistic, no text
+
+category: elearning
+cluster: cloud_certifications
+topic: AWS vs Azure vs GCP Certification 2026: Which Pays More and Gets Hired Faster? (Real Salary Data)
+reference_link: https://www.pluralsight.com/cloud-certification-report
+author_persona: Cloud Career Architect & Tech Recruitment Market Analyst
+special_instructions: Data-driven comparison using 2026 salary surveys (Indeed, Glassdoor, LinkedIn). Include real salary ranges by certification level and geography (US, UK, India, Germany). Break down: time to certification (3-6 months), exam pass rates, study resources cost. Include job posting demand analysis (which certifications appear most). Real case study: career switcher going from retail to $130K cloud architect in 11 months. End with "Certification ROI Calculator by Experience Level".
+kapak_prompt: Professional holding three glowing cloud certification badges (AWS, Azure, GCP) with salary indicators and job offer notifications floating around them, modern tech achievement aesthetic, photorealistic, no text
+icerik_1_prompt: Salary comparison visualization across AWS/Azure/GCP certifications by level (associate, professional, specialty), geographic salary heatmap, clean recruitment analytics UI, photorealistic, no text
+icerik_2_prompt: Certification comparison dashboard showing "Avg Salary ($)", "Job Postings/Month", "Pass Rate %", "Study Time (months)", "Exam Cost", career analytics UI, photorealistic, no text
+
+category: elearning
+cluster: sidehustle_skills
+topic: Faceless YouTube Channel 2026: The $3K-$10K/Month Business Model Anyone Can Start (Full Blueprint)
+reference_link: https://www.sidehustlenation.com/skills
+author_persona: Digital Content Strategist & YouTube Monetization Specialist
+special_instructions: Detailed breakdown of the faceless YouTube model using AI tools (ElevenLabs voiceover, Midjourney/Runway visuals, ChatGPT scripts). Include real channel revenue data by niche (finance, tech, motivation). Time-to-monetization (3-6 months typically). Tool stack cost breakdown ($50-150/month). Include algorithm strategy, thumbnail optimization. Real case study: faceless finance channel reaching 100K subscribers and $5K/month in 8 months. End with "Top 10 Faceless Niches by Revenue Potential 2026".
+kapak_prompt: Faceless content creator behind a camera with AI tools generating video content automatically (voiceover waves, AI images appearing, script writing), income dashboard visible, cinematic creative environment, photorealistic, no text
+icerik_1_prompt: Business model visualization: AI tools generating content components (script→voiceover→visuals→edited video), publishing to multiple platforms, ad revenue and sponsorship income flowing in, photorealistic, no text
+icerik_2_prompt: Channel analytics dashboard showing "Monthly Revenue", "Subscriber Growth", "Views/Month", "CPM by Niche", "AI Tool Cost", YouTube-style analytics UI, photorealistic, no text
+
+category: eco
+cluster: ev_infrastructure
+topic: EV Battery Degradation 2026: How Much Range Will You Lose in 5 Years? (Real World Data by Model)
+reference_link: https://www.iea.org/ev-infrastructure-2026
+author_persona: EV Battery Engineer & Electric Vehicle Ownership Analyst
+special_instructions: Real-world battery degradation data for top EVs (Tesla Model 3, Nissan Leaf, BMW i4, Chevy Bolt). Include degradation curves by year, climate impact (cold vs hot), charging habits (fast charge vs slow). Use Recurrent Auto real-world dataset. Include warranty comparison and battery replacement costs ($8K-$20K). Real case study: 5-year-old Tesla with 89% battery health vs Leaf at 71%. End with "Battery Preservation Protocol to Maximize EV Lifespan".
+kapak_prompt: EV battery cross-section visualization showing degradation timeline — fresh battery glowing full capacity vs 5-year battery with visible capacity reduction, technical yet cinematic, photorealistic, no text
+icerik_1_prompt: Degradation curve comparison: Tesla vs Nissan Leaf vs BMW i4 over 100K miles, showing range loss %, climate variation impact, charging frequency correlation, clean EV analytics chart, photorealistic, no text
+icerik_2_prompt: Battery health dashboard showing "Current Capacity %", "Estimated Remaining Range", "Years to 80% Capacity", "Degradation Rate/Year", "Replacement Cost Forecast", modern EV analytics UI, photorealistic, no text
+
+category: eco
+cluster: solar_energy
+topic: Solar Panel Efficiency 2026: Which Technology Actually Delivers (Monocrystalline vs TOPCon vs Perovskite)
+reference_link: https://www.energy.gov/solar-home-guide
+author_persona: Solar Technology Engineer & Residential Energy Systems Analyst
+special_instructions: Technical comparison of solar technologies available in 2026. Include efficiency rates (standard mono: 20-22%, TOPCon: 23-25%, Perovskite: 28%+ in lab). Real-world vs lab performance gap. Include temperature coefficient, degradation rates (0.3% vs 0.7% annual), and lifespan. Cost comparison: $/Watt by technology. Real case study: TOPCon system on cloudy UK climate generating 15% more than standard mono. End with "Technology Selection Guide by Climate and Roof Type".
+kapak_prompt: Cross-section visualization of three solar panel technologies side by side (monocrystalline, TOPCon, Perovskite) showing electron flow efficiency differences, photon interaction, cinematic scientific visualization, photorealistic, no text
+icerik_1_prompt: Efficiency comparison visualization: three panel types converting same sunlight, showing output difference percentages, cloudy vs sunny climate performance, annual degradation curves, photorealistic, no text
+icerik_2_prompt: Technology comparison dashboard showing "Efficiency %", "$/Watt", "Annual Degradation", "Temperature Coefficient", "Warranty Years", "Best Climate", clean solar analytics UI, photorealistic, no text
+
+category: eco
+cluster: climate_finance
+topic: Carbon Credit Market 2026: Can You Actually Make Money Buying and Selling Carbon Offsets?
+reference_link: https://www.msci.com/esg-investing-report
+author_persona: Carbon Markets Analyst & Climate Finance Investment Strategist
+special_instructions: Explain the voluntary vs compliance carbon market structure (VCMI, ICVCM standards). Include real price data: VCS credits ($5-15/ton), CORSIA credits, EU ETS ($60-80/ton). Analyze market volatility and investment returns. Include the quality problem (Verra scandal aftermath). Real case study: institutional investor building diversified carbon credit portfolio with 18% annual return. Include market manipulation risks. End with "Carbon Credit Investment Strategy for 2026-2028".
+kapak_prompt: Carbon credit marketplace visualization with quality credits glowing green and questionable credits flickering red, global forest and industrial project overlays, financial trading environment, cinematic, photorealistic, no text
+icerik_1_prompt: Market comparison: voluntary carbon credits vs EU ETS vs CORSIA credits — price history, volatility, liquidity, quality rating visualization, clean financial chart UI, photorealistic, no text
+icerik_2_prompt: Carbon investment dashboard showing "Credit Type", "Price/Ton", "Annual Return %", "Quality Rating", "Liquidity Score", "Risk Level", modern commodities trading UI, photorealistic, no text
+
+category: eco
+cluster: smart_home_energy
+topic: Home Battery Storage 2026: Powerwall vs Powerwall 3 vs Competitors — Is It Worth the $10K Investment?
+reference_link: https://www.energy.gov/smart-home-guide
+author_persona: Home Energy Storage Engineer & Residential Solar-Storage Analyst
+special_instructions: Comprehensive comparison of home battery options in 2026 (Tesla Powerwall 3, Enphase IQ, sonnen, Franklin WH). Include real capacity (kWh), round-trip efficiency (88-95%), warranty cycles, and integration with solar. Model 3 scenarios: backup-only, self-consumption, grid arbitrage (time-of-use pricing). Include ROI calculation for different electricity markets. Real case study: California home achieving 95% energy independence. End with "Battery Selection Guide by Use Case".
+kapak_prompt: Modern home with large battery storage units mounted on garage wall, glowing energy flow from solar panels through battery to home, smart energy management interface visible, cinematic residential environment, photorealistic, no text
+icerik_1_prompt: Energy flow visualization: solar generation → battery storage → home consumption → grid export, showing self-sufficiency percentage in real time, seasonal variation, clean smart home analytics UI, photorealistic, no text
+icerik_2_prompt: Battery comparison dashboard showing "Capacity (kWh)", "Round-Trip Efficiency %", "Warranty Cycles", "Price ($)", "Payback Period", "Self-Sufficiency %", clean energy storage UI, photorealistic, no text
+
+category: eco
+cluster: circular_economy
+topic: Right to Repair Laws 2026: How EU's New Rules Are Forcing Apple, Samsung, and John Deere to Change
+reference_link: https://www.ellenmacarthurfoundation.org/circular-economy
+author_persona: Circular Economy Policy Analyst & Consumer Electronics Sustainability Researcher
+special_instructions: Analyze EU Right to Repair Regulation (effective 2026) and US state-level laws. Include specific requirements: mandatory 5-10 year spare parts availability, repairability scores, software unlocking. Real impact on Apple (iPhone repairability score improvement), Samsung, John Deere (tractor software locks). Include economic analysis: repair market size ($50B+), consumer savings. Real case study: independent repair shop that doubled revenue post-regulation. End with "What Right to Repair Means for Consumers in 2026".
+kapak_prompt: Technician repairing a smartphone with easily accessible parts, manufacturer logos visible in background reluctantly providing repair manuals, regulatory EU flag overlay, empowering repair culture aesthetic, cinematic lighting, photorealistic, no text
+icerik_1_prompt: Before/after comparison: left side deliberately difficult-to-repair device (glued, proprietary screws, software locks); right side same brand post-regulation with accessible parts, repair manual, repairability score badge, photorealistic, no text
+icerik_2_prompt: Policy impact dashboard showing "Repairability Score by Brand", "Spare Parts Availability (years)", "Repair Cost Reduction %", "Market Size ($B)", "Consumer Savings", clean regulatory analytics UI, photorealistic, no text
+
+
+
+
+
