@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Gatemirror | Global Insights on Tech, Wellness & Future Economy</title>
-    <meta name="description" content="Global insights on technology, wellness, future economy, and sustainable living. Gatemirror delivers deep analysis in 5 languages.">
-    <link rel="canonical" href="{{ canonical_url }}">
-    <meta property="og:title" content="Gatemirror | Global Insights & Analysis">
-    <meta property="og:description" content="Deep insights on tech, wellness, future economy, and sustainable living. Read in 5 languages.">
+    <title>{{ category_name }} | Gatemirror</title>
+    <meta name="description" content="{{ category_description }}">
+    <link rel="canonical" href="{{ category_url }}">
+    <meta property="og:title" content="{{ category_name }} | Gatemirror">
+    <meta property="og:description" content="{{ category_description }}">
     <meta property="og:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
-    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:url" content="{{ category_url }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Gatemirror">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Gatemirror | Global Insights & Analysis">
-    <meta name="twitter:description" content="Deep insights on tech, wellness, future economy, and sustainable living.">
+    <meta name="twitter:title" content="{{ category_name }} | Gatemirror">
+    <meta name="twitter:description" content="{{ category_description }}">
     <meta name="twitter:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
     {% for alt in alternate_langs %}
     <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.url }}">
     {% endfor %}
-    <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+    <link rel="alternate" hreflang="x-default" href="{{ category_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -211,12 +211,24 @@
         </div>
     </div>
     <div class="nav-links">
-        <a href="/{{ lang }}/">{{ menu.home }}</a>
-        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-        <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+        <a href="/{{ lang }}/">
+            {% if lang == 'en' %}HOME{% elif lang == 'es' %}INICIO{% elif lang == 'de' %}STARTSEITE{% elif lang == 'fr' %}ACCUEIL{% endif %}
+        </a>
+        <a href="/{{ lang }}/wellness/">
+            {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+        </a>
+        <a href="/{{ lang }}/tech/">
+            {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+        </a>
+        <a href="/{{ lang }}/future-economy/">
+            {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+        </a>
+        <a href="/{{ lang }}/eco/">
+            {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+        </a>
+        <a href="/{{ lang }}/elearning/">
+            {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+        </a>
     </div>
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
@@ -229,25 +241,38 @@
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
     <div class="nav-links">
-        <a href="/{{ lang }}/">{{ menu.home }}</a>
-        <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-        <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-        <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-        <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-        <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+        <a href="/{{ lang }}/">
+            {% if lang == 'en' %}HOME{% elif lang == 'es' %}INICIO{% elif lang == 'de' %}STARTSEITE{% elif lang == 'fr' %}ACCUEIL{% endif %}
+        </a>
+        <a href="/{{ lang }}/wellness/">
+            {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+        </a>
+        <a href="/{{ lang }}/tech/">
+            {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+        </a>
+        <a href="/{{ lang }}/future-economy/">
+            {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+        </a>
+        <a href="/{{ lang }}/eco/">
+            {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+        </a>
+        <a href="/{{ lang }}/elearning/">
+            {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+        </a>
     </div>
 </nav>
 <div class="hero">
-    <h1>Global Insights on Tech, Wellness & Future Economy</h1>
-    <p>Deep analysis. Multi‑language. Reflecting reality in 5 languages.</p>
+    <h1>{{ category_name }}</h1>
+    <p>{{ category_description }}</p>
 </div>
 
 <div class="category-buttons">
-    <a href="/api/articles?category=tech" class="cat-btn">📚 Tech</a>
-    <a href="/api/articles?category=wellness" class="cat-btn">📚 Wellness</a>
-    <a href="/api/articles?category=future-economy" class="cat-btn">📚 Future Economy</a>
-    <a href="/api/articles?category=eco" class="cat-btn">📚 Eco</a>
-    <a href="/api/articles?category=elearning" class="cat-btn">📚 E-Learning</a>
+    <a href="/explore/categories/{{ lang }}.html" class="cat-btn">
+        {% if lang == 'en' %}📚 ALL CATEGORIES{% elif lang == 'es' %}📚 TODAS LAS CATEGORÍAS{% elif lang == 'de' %}📚 ALLE KATEGORIEN{% elif lang == 'fr' %}📚 TOUTES LES CATÉGORIES{% endif %}
+    </a>
+    <a href="/explore/all-articles/{{ lang }}.html" class="cat-btn">
+        {% if lang == 'en' %}📚 ALL ARTICLES{% elif lang == 'es' %}📚 TODOS LOS ARTÍCULOS{% elif lang == 'de' %}📚 ALLE ARTIKEL{% elif lang == 'fr' %}📚 TOUS LES ARTICLES{% endif %}
+    </a>
 </div>
 
 {% if featured_article %}
@@ -268,7 +293,9 @@
 {% endif %}
 
 <div class="container">
-    <h2 class="section-title">Latest Stories</h2>
+    <h2 class="section-title">
+        {% if lang == 'en' %}Latest in {{ category_name }}{% elif lang == 'es' %}Último en {{ category_name }}{% elif lang == 'de' %}Neueste in {{ category_name }}{% elif lang == 'fr' %}Dernier en {{ category_name }}{% endif %}
+    </h2>
     <div class="article-grid">
         {% for article in articles %}
         <article class="article-card">
@@ -295,15 +322,29 @@
             <a href="/privacy-policy.html">Privacy Policy</a>
         </div>
         <div class="footer-column">
-            <h4>Categories</h4>
-            <a href="/{{ lang }}/tech/">{{ menu.tech }}</a>
-            <a href="/{{ lang }}/future-economy/">{{ menu["future-economy"] }}</a>
-            <a href="/{{ lang }}/wellness/">{{ menu.wellness }}</a>
-            <a href="/{{ lang }}/eco/">{{ menu.eco }}</a>
-            <a href="/{{ lang }}/elearning/">{{ menu.elearning }}</a>
+            <h4>
+                {% if lang == 'en' %}Categories{% elif lang == 'es' %}Categorías{% elif lang == 'de' %}Kategorien{% elif lang == 'fr' %}Catégories{% endif %}
+            </h4>
+            <a href="/{{ lang }}/tech/">
+                {% if lang == 'en' %}TECH & AI{% elif lang == 'es' %}TECNOLOGÍA & IA{% elif lang == 'de' %}TECHNOLOGIE & KI{% elif lang == 'fr' %}TECHNOLOGIE & IA{% endif %}
+            </a>
+            <a href="/{{ lang }}/future-economy/">
+                {% if lang == 'en' %}FUTURE ECONOMY{% elif lang == 'es' %}ECONOMÍA FUTURA{% elif lang == 'de' %}ZUKUNFTSWIRTSCHAFT{% elif lang == 'fr' %}ÉCONOMIE FUTURE{% endif %}
+            </a>
+            <a href="/{{ lang }}/wellness/">
+                {% if lang == 'en' %}WELLNESS{% elif lang == 'es' %}BIENESTAR{% elif lang == 'de' %}WOHLBEFINDEN{% elif lang == 'fr' %}BIEN-ÊTRE{% endif %}
+            </a>
+            <a href="/{{ lang }}/eco/">
+                {% if lang == 'en' %}ECO & SUSTAINABLE{% elif lang == 'es' %}ECO & SOSTENIBLE{% elif lang == 'de' %}ÖKO & NACHHALTIG{% elif lang == 'fr' %}ÉCO & DURABLE{% endif %}
+            </a>
+            <a href="/{{ lang }}/elearning/">
+                {% if lang == 'en' %}E-LEARNING{% elif lang == 'es' %}E-APRENDIZAJE{% elif lang == 'de' %}E-LEARNING{% elif lang == 'fr' %}E-APPRENTISSAGE{% endif %}
+            </a>
         </div>
         <div class="footer-column">
-            <h4>Read in</h4>
+            <h4>
+                {% if lang == 'en' %}Read in{% elif lang == 'es' %}Leer en{% elif lang == 'de' %}Lesen in{% elif lang == 'fr' %}Lire en{% endif %}
+            </h4>
             <a href="/">🇺🇸 English</a>
             <a href="/es/">🇪🇸 Español</a>
             <a href="/de/">🇩🇪 Deutsch</a>
@@ -318,11 +359,10 @@
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Gatemirror",
-    "url": "{{ canonical_url }}",
-    "description": "Global insights on technology, wellness, future economy, and sustainable living.",
-    "potentialAction": { "@type": "SearchAction", "target": "https://gatemirror.com/search?q={query}", "query-input": "required name=query" },
+    "@type": "CollectionPage",
+    "name": "{{ category_name }}",
+    "description": "{{ category_description }}",
+    "url": "{{ category_url }}",
     "inLanguage": ["en", "es", "de", "fr"]
 }
 </script>
