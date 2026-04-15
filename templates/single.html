@@ -100,11 +100,11 @@
             {% if view_count %}<span class="view-count">👁️ {{ view_count }} views</span>{% endif %}
         </div>
 
-        <!-- YAZAR BÖLÜMÜ - Native Toggle -->
+        <!-- YAZAR BÖLÜMÜ - Kavisli çerçeve, isim+ünvan satırda, gerisi toggle -->
         <details class="toggle-details">
             <summary>
                 <span class="toggle-title">
-                    <i class="fas fa-user"></i> {{ author_name }}
+                    <i class="fas fa-user"></i> {{ author_name }}{% if author_title %} · {{ author_title }}{% endif %}
                 </span>
                 <span class="toggle-icon">▼</span>
             </summary>
@@ -115,7 +115,7 @@
                     {% endif %}
                     <div class="author-info-compact">
                         <h4>{{ author_name }}</h4>
-                        {% if author_title %}<p>{{ author_title }}</p>{% endif %}
+                        <p>{{ author_title }}</p>
                     </div>
                 </div>
                 {% if author_bio %}
@@ -124,7 +124,7 @@
             </div>
         </details>
 
-        <!-- KEY TAKEAWAYS - Native Toggle, 2 satır önizleme -->
+        <!-- KEY TAKEAWAYS - Kavisli çerçeve, başlık + ilk madde önizleme, gerisi toggle -->
         <details class="toggle-details">
             <summary>
                 <span class="toggle-title">
@@ -276,4 +276,4 @@
     });
 </script>
 </body>
-    </html>
+</html>
