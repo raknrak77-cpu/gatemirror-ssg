@@ -18,10 +18,13 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-def upload_file_to_r2(local_path, r2_key):
+def upload_file_to_r2(local_path, r2_key, content_type=None):
     if os.path.exists(local_path):
         print(f"🚀 Yükleniyor: {local_path} -> {r2_key}")
-        s3.upload_file(local_path, R2_BUCKET, r2_key)
+        extra_args = {}
+        if content_type:
+            extra_args['ContentType'] = content_type
+        s3.upload_file(local_path, R2_BUCKET, r2_key, ExtraArgs=extra_args)
         print(f"✅ Yüklendi: {r2_key}")
         return True
     return False
@@ -64,28 +67,51 @@ def upload_templates():
     """templates/ klasöründeki dosyaları R2'ye yedekler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
+        print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
         return
     
     for file in os.listdir(templates_dir):
-        if file.endswith('.html'):
-            local_path = os.path.join(templates_dir, file)
+        local_path = os.path.join(templates_dir, file)
+        if os.path.isfile(local_path):
             r2_key = f"templates/{file}"
             upload_file_to_r2(local_path, r2_key)
+
+def upload_hero_json():
+    """Github ana dizininden hero.json'u alıp R2 templates/ klasörüne yükler"""
+    local_path = "hero.json"
+    r2_key = "templates/hero.json"
+    
+    if os.path.exists(local_path):
+        print(f"\n🎨 Hero JSON yükleniyor...")
+        return upload_file_to_r2(local_path, r2_key, content_type='application/json')
+    else:
+        print(f"\n⚠️ hero.json dosyası ana dizinde bulunamadı, atlanıyor.")
+        return False
 
 def uploader():
     """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler, sonra siler"""
     
     # 1. Önce template'leri yedekle
+    print("\n📁 TEMPLATE YEDEKLEME")
+    print("-" * 40)
     upload_templates()
     
-    # 2. articles/ içini tamamen temizle
+    # 2. Hero JSON'u yedekle (templates/ klasörüne)
+    upload_hero_json()
+    
+    # 3. articles/ içini tamamen temizle
+    print("\n📁 ARTICLES TEMİZLİĞİ")
+    print("-" * 40)
     delete_all_articles()
     
-    # 3. content/ altındaki ham HTML'leri raw-articles/ altına yükle
+    # 4. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
         return
+    
+    print("\n📁 İÇERİK YÜKLEME")
+    print("-" * 40)
     
     uploaded_files = []
     
@@ -100,16 +126,35 @@ def uploader():
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 4. Local dosyaları temizle
+    # 5. Local dosyaları temizle
+    print("\n🗑️ LOCAL TEMİZLİK")
+    print("-" * 40)
     for file_path in uploaded_files:
         try:
             os.remove(file_path)
-            print(f"🗑️ Silindi: {file_path}")
+            print(f"   🗑️ Silindi: {file_path}")
         except Exception as e:
-            print(f"⚠️ Silinemedi: {file_path} - {e}")
+            print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    print("\n🏁 Tüm içerik R2'ye yüklendi (raw-articles/) ve local HTML'ler temizlendi.")
-    print("📁 articles/ klasörü temizlendi, Publisher sıfırdan yazacak.")
+    # 6. Boş klasörleri temizle (opsiyonel)
+    for root, dirs, files in os.walk(content_base, topdown=False):
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            try:
+                if not os.listdir(dir_path):
+                    os.rmdir(dir_path)
+                    print(f"   🗑️ Boş klasör silindi: {dir_path}")
+            except:
+                pass
+    
+    print("\n" + "=" * 60)
+    print("🏁 UPLOADER TAMAMLANDI!")
+    print("   ✅ Template'ler → R2/templates/")
+    print("   ✅ hero.json → R2/templates/hero.json")
+    print("   ✅ articles/ klasörü temizlendi")
+    print("   ✅ content/ → R2/raw-articles/")
+    print("   ✅ Local HTML'ler temizlendi")
+    print("=" * 60)
 
 if __name__ == "__main__":
     uploader()
