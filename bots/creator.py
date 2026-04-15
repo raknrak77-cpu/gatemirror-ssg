@@ -47,7 +47,6 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
         meta_comment = f"<!-- META: author={author_name}, author_title={author_title}, author_bio={author_bio}, author_avatar={author_avatar}, datetime={datetime_full} -->\n"
-        # 🔍 YENİ: META'ya yazılan yazar bilgisini göster
         print(f"   📝 META'ya yazılıyor: author={author_name}")
     else:
         meta_comment = f"<!-- META: author={author_persona}, datetime={datetime_full} -->\n"
@@ -82,14 +81,13 @@ def isle_gorev(task):
     clusters = load_clusters()
     author_info = get_author_info(cluster_id, clusters)
     
-    # 🔍 YENİ: Yazar bilgisi debug log'u
     if author_info:
         print(f"   ✅ Yazar bulundu: {author_info.get('name')} (cluster: {cluster_id})")
     else:
         if cluster_id:
             print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id} clusters.json'da yok")
         else:
-            print(f"   ⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak (Gatemirror Expert)")
+            print(f"   ⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak")
     
     cluster_rules = ""
     if cluster_id:
@@ -110,8 +108,7 @@ def isle_gorev(task):
     prompt_emri = f"""
 ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice. You write for Gatemirror, a premium multi-language analysis platform read by professionals globally.
 
-TASK: Write ONE article about '{topic}' in FOUR culturally adapted versions.
-This is NOT a translation job. Each version must feel ORIGINALLY WRITTEN for that audience.
+TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone and feel like it was written by a different expert in that region. This is NOT a translation job.
 
 {f"REFERENCE MATERIAL: {reference_link}" if reference_link else ""}
 {f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
@@ -127,15 +124,27 @@ CULTURAL ADAPTATION RULES:
 
 ---
 
+HUMAN WRITING RULES (MUST FOLLOW):
+- Write as if you are a real expert talking to peers, not teaching beginners
+- Use short, punchy sentences mixed with longer analytical ones
+- Include at least ONE opinionated or slightly controversial statement
+- Avoid perfectly balanced "on the one hand, on the other hand" arguments
+- Use real-world scenarios and specific numbers (not "many", "some", "various")
+- Each language version must feel like written by a DIFFERENT expert in that region
+- Do NOT mirror paragraph structure across languages
+- Allow slight asymmetry in paragraph length and rhythm
+
+---
+
 CONTENT REQUIREMENTS (per language):
 - STRICT MINIMUM: 2000 words per language. MAXIMUM: 2500 words per language.
 - Total output (4 languages combined) MUST exceed 56,000 characters.
 - Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question.
-- Avoid: "In today's rapidly evolving landscape", "It is worth noting", "In conclusion" — ban all AI filler phrases.
 
 ---
 
-REQUIRED STRUCTURE (identical across all 4 languages):
+STRUCTURE GUIDELINE (flexible, not identical across languages):
+Follow this general flow but allow variation in section order, emphasis, and depth:
 
 <h1>[Title in target language]</h1>
 
@@ -223,7 +232,7 @@ STRICT RULES:
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
-        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 28000, "topP": 0.95}
+        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
     }
     
     try:
