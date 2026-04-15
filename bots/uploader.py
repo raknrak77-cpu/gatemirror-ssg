@@ -29,40 +29,6 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
         return True
     return False
 
-def delete_all_articles():
-    """articles/ klasöründeki TÜM dosyaları sil (Publisher temiz başlasın)"""
-    print("\n🗑️ articles/ içindeki tüm dosyalar siliniyor...")
-    continuation_token = None
-    deleted_count = 0
-    while True:
-        if continuation_token:
-            response = s3.list_objects_v2(
-                Bucket=R2_BUCKET,
-                Prefix='articles/',
-                ContinuationToken=continuation_token
-            )
-        else:
-            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix='articles/')
-        
-        if 'Contents' not in response:
-            break
-        
-        for obj in response['Contents']:
-            key = obj['Key']
-            try:
-                s3.delete_object(Bucket=R2_BUCKET, Key=key)
-                print(f"   🗑️ Silindi: {key}")
-                deleted_count += 1
-            except Exception as e:
-                print(f"   ❌ Silme hatası ({key}): {e}")
-        
-        if response.get('IsTruncated'):
-            continuation_token = response.get('NextContinuationToken')
-        else:
-            break
-    
-    print(f"   ✅ Toplam {deleted_count} dosya silindi.\n")
-
 def upload_templates():
     """templates/ klasöründeki dosyaları R2'ye yedekler"""
     templates_dir = "templates"
@@ -78,7 +44,7 @@ def upload_templates():
 
 def upload_hero_json():
     """Github templates/ klasöründen hero.json'u alıp R2 templates/ klasörüne yükler"""
-    local_path = "templates/hero.json"  # <--- templates/ klasöründen al
+    local_path = "templates/hero.json"
     r2_key = "templates/hero.json"
     
     if os.path.exists(local_path):
@@ -89,22 +55,17 @@ def upload_hero_json():
         return False
 
 def uploader():
-    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler, sonra siler"""
+    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler - articles/ SİLMEZ"""
     
     # 1. Önce template'leri yedekle
     print("\n📁 TEMPLATE YEDEKLEME")
     print("-" * 40)
     upload_templates()
     
-    # 2. Hero JSON'u yedekle (templates/ klasöründen)
+    # 2. Hero JSON'u yedekle
     upload_hero_json()
     
-    # 3. articles/ içini tamamen temizle
-    print("\n📁 ARTICLES TEMİZLİĞİ")
-    print("-" * 40)
-    delete_all_articles()
-    
-    # 4. content/ altındaki ham HTML'leri raw-articles/ altına yükle
+    # 3. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -121,12 +82,11 @@ def uploader():
                 continue
             
             local_path = os.path.join(root, file)
-            # content/en/wellness/hash.html → raw-articles/en/wellness/hash.html
             r2_key = local_path.replace("content/", "raw-articles/")
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 5. Local dosyaları temizle
+    # 4. Local dosyaları temizle
     print("\n🗑️ LOCAL TEMİZLİK")
     print("-" * 40)
     for file_path in uploaded_files:
@@ -136,7 +96,7 @@ def uploader():
         except Exception as e:
             print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    # 6. Boş klasörleri temizle (opsiyonel)
+    # 5. Boş klasörleri temizle
     for root, dirs, files in os.walk(content_base, topdown=False):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
@@ -150,9 +110,8 @@ def uploader():
     print("\n" + "=" * 60)
     print("🏁 UPLOADER TAMAMLANDI!")
     print("   ✅ Template'ler → R2/templates/")
-    print("   ✅ hero.json (templates/ klasöründen) → R2/templates/hero.json")
-    print("   ✅ articles/ klasörü temizlendi")
-    print("   ✅ content/ → R2/raw-articles/")
+    print("   ✅ hero.json → R2/templates/hero.json")
+    print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
     print("   ✅ Local HTML'ler temizlendi")
     print("=" * 60)
 
