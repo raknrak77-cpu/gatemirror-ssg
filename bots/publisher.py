@@ -18,6 +18,9 @@ from makeup import (
     generate_robots_txt
 )
 
+# Import from hero_bot
+from hero_bot import render_hero, get_hero_data
+
 # ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
@@ -37,6 +40,7 @@ s3 = boto3.client(
 # ================= TEMPLATE YÖNETİMİ =================
 
 def upload_templates_to_r2():
+    """templates/ klasöründeki tüm HTML dosyalarını R2'ye yükler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print("⚠️ templates/ klasörü bulunamadı.")
@@ -52,6 +56,7 @@ def upload_templates_to_r2():
                 print(f"⚠️ Template yüklenemedi {file}: {e}")
 
 def get_template_from_r2(template_name):
+    """R2'den template içeriğini alır, yoksa local'den dener"""
     try:
         url = f"{R2_PUBLIC_URL}/templates/{template_name}"
         resp = requests.get(url, timeout=10)
@@ -68,6 +73,10 @@ def get_template_from_r2(template_name):
 # ================= RENDER FONKSİYONLARI =================
 
 def render_single_page(article, alt_langs, template_str, menu_texts, related_articles):
+    """
+    Tek makale sayfasını render eder
+    Hero: article tipinde (show: false varsayılan)
+    """
     tmpl = Template(template_str)
     parsed = article['parsed']
     canonical = f"{R2_PUBLIC_URL}{article['url']}"
@@ -76,6 +85,10 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     author_title = article.get('author_title', '')
     author_bio = article.get('author_bio', '')
     author_avatar = article.get('author_avatar', '')
+    
+    # Hero verisini al (article tipinde - genellikle show: false)
+    hero_html = render_hero('article', article['lang'])
+    hero_data = get_hero_data('article', article['lang'])
     
     return tmpl.render(
         lang=article['lang'],
@@ -101,29 +114,63 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         view_count=parsed['views'],
         alternate_langs=alt_langs,
         menu=menu_texts,
-        related_articles=related_articles
+        related_articles=related_articles,
+        hero={'html': hero_html, 'show': hero_data.get('show', False)}
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
+    """
+    Ana sayfayı render eder
+    Hero: home tipinde
+    """
     tmpl = Template(template_str)
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
+    
+    # Hero verisini al (home tipinde)
+    hero_html = render_hero('home', lang)
+    hero_data = get_hero_data('home', lang)
+    
     return tmpl.render(
-        lang=lang, menu=menu_texts, articles=articles, featured_article=featured_article,
-        canonical_url=canonical, og_image=og_image, alternate_langs=alternate_langs
+        lang=lang,
+        menu=menu_texts,
+        articles=articles,
+        featured_article=featured_article,
+        canonical_url=canonical,
+        og_image=og_image,
+        alternate_langs=alternate_langs,
+        hero={'html': hero_html, 'show': hero_data.get('show', True)}
     )
 
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
+    """
+    Kategori listeleme sayfasını render eder
+    Hero: category tipinde
+    """
     tmpl = Template(template_str)
     category_name = get_category_name(lang, category)
     category_description = get_category_description(lang, category)
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
+    
+    # Hero verisini al (category tipinde)
+    hero_html = render_hero('category', lang, category)
+    hero_data = get_hero_data('category', lang, category)
+    
     return tmpl.render(
-        lang=lang, menu=menu_texts, category_name=category_name, category_description=category_description,
-        category_url=category_url, og_image=og_image, articles=cat_articles,
-        featured_article=featured_article, trending_articles=trending_articles,
-        pagination=None, guide_articles=[], alternate_langs=alternate_langs
+        lang=lang,
+        menu=menu_texts,
+        category_name=category_name,
+        category_description=category_description,
+        category_url=category_url,
+        og_image=og_image,
+        articles=cat_articles,
+        featured_article=featured_article,
+        trending_articles=trending_articles,
+        pagination=None,
+        guide_articles=[],
+        alternate_langs=alternate_langs,
+        hero={'html': hero_html, 'show': hero_data.get('show', True)}
     )
 
 # ================= ARTICLES.JSON ÜRETİMİ =================
@@ -136,7 +183,12 @@ def generate_articles_json(all_articles):
             'url': article['url'],
             'lang': article['lang'],
             'category': article['category'],
-            'title': article['parsed']['title']
+            'title': article['parsed']['title'],
+            'date': article['parsed']['date'],
+            'reading_time': article['parsed']['reading_time'],
+            'views': article['parsed']['views'],
+            'cover_image': article['parsed']['cover_image'],
+            'description': article['parsed']['description']
         })
     
     articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
@@ -151,37 +203,63 @@ def generate_articles_json(all_articles):
 # ================= ANA PUBLISHER =================
 
 def publisher():
-    print("🚀 Publisher Bot (Sitemap + Hreflang + robots.txt) başlatılıyor...")
+    print("=" * 60)
+    print("🚀 PUBLISHER BOT - Tam Donanımlı")
+    print("   ✅ Sitemap + Hreflang + robots.txt")
+    print("   ✅ Hero Bot entegre (çok dilli, modüler)")
+    print("   ✅ Makale 3 parçaya bölünüyor")
+    print("   ✅ AdSense alanı hazır")
+    print("=" * 60)
+    
+    # Template'leri R2'ye yükle
     upload_templates_to_r2()
     
+    # Template'leri al
     single_tpl = get_template_from_r2("single.html")
     home_tpl = get_template_from_r2("home.html")
     list_tpl = get_template_from_r2("list.html")
+    
     if not single_tpl or not home_tpl or not list_tpl:
         print("❌ Template'ler alınamadı.")
+        print(f"   single: {'✅' if single_tpl else '❌'}")
+        print(f"   home: {'✅' if home_tpl else '❌'}")
+        print(f"   list: {'✅' if list_tpl else '❌'}")
         return
     
+    # Tüm makaleleri al
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
         return
     
+    print(f"\n📊 Toplam {len(all_articles)} makale bulundu.")
+    
+    # Alternatif diller sözlüğü oluştur
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
     
+    # Her dil için işlem yap
     for lang in languages:
-        print(f"\n🌍 {lang.upper()} işleniyor...")
+        print(f"\n{'=' * 40}")
+        print(f"🌍 {lang.upper()} işleniyor...")
+        print(f"{'=' * 40}")
+        
         lang_articles = [a for a in all_articles if a['lang'] == lang]
         if not lang_articles:
+            print(f"   ⚠️ {lang.upper()} için makale bulunamadı.")
             continue
         
+        # Makaleleri tarihe göre sırala (en yeniden eskiye)
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
+        # 1. MAKALELERİ RENDER ET
+        print(f"\n📝 Makaleler işleniyor...")
         for article in lang_articles:
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
             
+            # İlgili makaleleri bul (aynı cluster veya aynı kategori)
             same_cluster = [a for a in lang_articles if a.get('cluster_id') == article.get('cluster_id') and a['hash'] != article['hash']]
             if same_cluster:
                 related = random.sample(same_cluster, min(3, len(same_cluster)))
@@ -190,88 +268,138 @@ def publisher():
                 related = random.sample(same_cat, min(3, len(same_cat))) if same_cat else []
             
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
+            
             single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
             if single_html:
                 target_key = article['url'].lstrip('/')
                 s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
-                print(f"   ✅ Makale: {target_key}")
+                print(f"   ✅ {target_key}")
         
+        # 2. ANA SAYFA (HOME)
+        print(f"\n🏠 Ana sayfa oluşturuluyor...")
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
         if featured:
             featured_for_home = {
-                'url': featured['url'], 'image': featured['parsed']['cover_image'],
-                'title': featured['parsed']['title'], 'date': featured['parsed']['date'],
-                'reading_time': featured['parsed']['reading_time'], 'views': featured['parsed']['views'],
+                'url': featured['url'],
+                'image': featured['parsed']['cover_image'],
+                'title': featured['parsed']['title'],
+                'date': featured['parsed']['date'],
+                'reading_time': featured['parsed']['reading_time'],
+                'views': featured['parsed']['views'],
                 'excerpt': featured['parsed']['description']
             }
+        
         articles_for_home = []
         for a in lang_articles[:12]:
             articles_for_home.append({
-                'url': a['url'], 'image': a['parsed']['cover_image'], 'title': a['parsed']['title'],
-                'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
+                'url': a['url'],
+                'image': a['parsed']['cover_image'],
+                'title': a['parsed']['title'],
+                'reading_time': a['parsed']['reading_time'],
+                'views': a['parsed']['views'],
                 'excerpt': a['parsed']['description']
             })
+        
         home_alt_langs = [{'lang': l, 'url': f"{R2_PUBLIC_URL}/{l}/"} for l in languages if l != lang]
+        
         home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs)
         if home_html:
             s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-            print(f"   ✅ Ana sayfa: articles/{lang}/index.html")
+            print(f"   ✅ articles/{lang}/index.html")
         
+        # 3. KATEGORİ SAYFALARI
+        print(f"\n📂 Kategori sayfaları oluşturuluyor...")
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
+        
         for category in categories:
             cat_articles = [a for a in lang_articles if a['category'] == category]
             if not cat_articles:
                 continue
+            
             cat_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
+            
             featured_cat = cat_articles[0] if cat_articles else None
             featured_for_cat = None
             if featured_cat:
                 featured_for_cat = {
-                    'url': featured_cat['url'], 'image': featured_cat['parsed']['cover_image'],
-                    'title': featured_cat['parsed']['title'], 'date': featured_cat['parsed']['date'],
-                    'reading_time': featured_cat['parsed']['reading_time'], 'views': featured_cat['parsed']['views'],
+                    'url': featured_cat['url'],
+                    'image': featured_cat['parsed']['cover_image'],
+                    'title': featured_cat['parsed']['title'],
+                    'date': featured_cat['parsed']['date'],
+                    'reading_time': featured_cat['parsed']['reading_time'],
+                    'views': featured_cat['parsed']['views'],
                     'excerpt': featured_cat['parsed']['description']
                 }
+            
             trending = []
             for a in cat_articles[1:4]:
                 trending.append({
-                    'url': a['url'], 'image': a['parsed']['cover_image'], 'title': a['parsed']['title'],
-                    'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
+                    'url': a['url'],
+                    'image': a['parsed']['cover_image'],
+                    'title': a['parsed']['title'],
+                    'reading_time': a['parsed']['reading_time'],
+                    'views': a['parsed']['views'],
                     'excerpt': a['parsed']['description']
                 })
+            
             articles_for_list = []
             for a in cat_articles:
                 articles_for_list.append({
-                    'url': a['url'], 'image': a['parsed']['cover_image'], 'title': a['parsed']['title'],
-                    'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
+                    'url': a['url'],
+                    'image': a['parsed']['cover_image'],
+                    'title': a['parsed']['title'],
+                    'reading_time': a['parsed']['reading_time'],
+                    'views': a['parsed']['views'],
                     'excerpt': a['parsed']['description']
                 })
+            
             cat_alt_langs = []
             for other_lang in languages:
                 if other_lang == lang:
                     continue
                 cat_alt_langs.append({'lang': other_lang, 'url': f"{R2_PUBLIC_URL}/{other_lang}/{category}/"})
+            
             list_html = render_list_page(lang, category, articles_for_list, featured_for_cat, trending, list_tpl, menu_texts, cat_alt_langs)
             if list_html:
                 s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
-                print(f"   ✅ Kategori arşivi: articles/{lang}/{category}/index.html")
+                print(f"   ✅ articles/{lang}/{category}/index.html ({len(cat_articles)} makale)")
     
-    # Sitemap ve robots.txt
-    print("\n📊 Sitemap oluşturuluyor (hreflang ile)...")
+    # 4. SITEMAP VE ROBOTS.TXT
+    print(f"\n{'=' * 40}")
+    print("📊 Sitemap ve robots.txt oluşturuluyor...")
+    print(f"{'=' * 40}")
+    
     sitemap_xml = generate_sitemap(all_articles, alt_dict)
     s3.put_object(Bucket=R2_BUCKET, Key='sitemap.xml', Body=sitemap_xml.encode('utf-8'), ContentType='application/xml')
-    print("   ✅ Sitemap yüklendi: sitemap.xml")
+    print("   ✅ sitemap.xml yüklendi")
     
-    print("🤖 robots.txt oluşturuluyor...")
     robots_txt = generate_robots_txt()
     s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
-    print("   ✅ robots.txt yüklendi: robots.txt")
+    print("   ✅ robots.txt yüklendi")
     
-    # 🔥 YENİ: articles.json oluştur (Worker random article için)
+    # 5. ARTICLES.JSON (Worker random article için)
     generate_articles_json(all_articles)
     
-    print("\n🏁 Publisher tamamlandı.")
+    # 6. ÖZET RAPORU
+    print(f"\n{'=' * 40}")
+    print("🏁 PUBLISHER TAMAMLANDI!")
+    print(f"{'=' * 40}")
+    print(f"\n📊 İstatistikler:")
+    print(f"   Toplam makale: {len(all_articles)}")
+    for lang in languages:
+        count = len([a for a in all_articles if a['lang'] == lang])
+        print(f"   {lang.upper()}: {count} makale")
+    
+    print(f"\n📁 Oluşturulan dosyalar:")
+    print(f"   ✅ articles/{lang}/index.html (her dil için ana sayfa)")
+    print(f"   ✅ articles/{lang}/{category}/index.html (kategori sayfaları)")
+    print(f"   ✅ articles/{lang}/{category}/{yil}/{ay}/{hash}-{slug}.html (makaleler)")
+    print(f"   ✅ sitemap.xml")
+    print(f"   ✅ robots.txt")
+    print(f"   ✅ articles.json")
+    print(f"\n🎨 Hero Bot entegre çalışıyor (hero.json ile yönetiliyor)")
+    print(f"{'=' * 40}")
 
 if __name__ == "__main__":
     publisher()
