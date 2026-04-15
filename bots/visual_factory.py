@@ -7,6 +7,8 @@ import boto3
 from botocore.client import Config
 from PIL import Image
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 # ================= KONFIGURASYON =================
 CF_TOKEN = os.getenv('CLOUDFLARE_API_TOKEN')
@@ -28,6 +30,10 @@ s3 = boto3.client(
     region_name='auto'
 )
 
+# Rate limit koruması için token bucket
+request_times = []
+time_lock = threading.Lock()
+
 # ================= KATEGORİ BAZLI STİLLER =================
 CATEGORY_STYLES = {
     "wellness": "warm, organic, human-centric, soft natural light, intimate moments, plants, nature, calm atmosphere, spa vibes, healthy living",
@@ -37,7 +43,7 @@ CATEGORY_STYLES = {
     "elearning": "bright, educational, approachable, modern, focused on people learning, books, digital interfaces, cozy study spaces"
 }
 
-# ================= GLOBAL STYLE (TÜM KATEGORİLER İÇİN ORTAK) =================
+# ================= GLOBAL STYLE =================
 GLOBAL_STYLE = """
 Style:
 - photorealistic
@@ -64,7 +70,6 @@ Strict constraints:
 """
 
 def get_category_style(kategori):
-    """Kategori adına göre stil döndürür, varsayılan 'general'"""
     return CATEGORY_STYLES.get(kategori, "professional, clean, modern, versatile")
 
 # ================= YARDIMCI FONKSİYONLAR =================
@@ -105,12 +110,7 @@ def upload_to_r2(local_path, r2_key):
     return False
 
 def enrich_prompt(base_prompt, kategori):
-    """
-    Task prompt'u + kategori stili + global stil + negatif kuralları birleştirir.
-    Task prompt'u ana konuyu belirler, kategori stili sadece atmosferi etkiler.
-    """
     category_style = get_category_style(kategori)
-    
     return f"""You are a world-class versatile visual photographer.
 
 SUBJECT (MUST FOLLOW):
@@ -129,8 +129,25 @@ IMPORTANT:
 - Create a photorealistic, cinematic image that matches the SUBJECT with the appropriate ATMOSPHERE.
 """
 
+def rate_limit_wait():
+    """Rate limit koruması - son 10 saniyede 3 istekten fazla varsa bekle"""
+    with time_lock:
+        now = time.time()
+        global request_times
+        request_times = [t for t in request_times if now - t < 10]
+        if len(request_times) >= 3:
+            wait_time = 3
+            print(f"⏳ Rate limit koruması: {wait_time} saniye bekleniyor...")
+            time.sleep(wait_time)
+            return rate_limit_wait()
+        request_times.append(now)
+    return True
+
 def generate_image(prompt, model, width, height, output_png):
     print(f"🎨 [{output_png}] {width}x{height} formatında görsel üretiliyor...")
+    
+    # Rate limit kontrolü
+    rate_limit_wait()
     
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
     payload = {
@@ -155,22 +172,50 @@ def generate_image(prompt, model, width, height, output_png):
                 else:
                     print(f"⚠️ {output_png} geçersiz (bozuk), yeniden deneniyor...")
                     os.remove(output_png)
-                    time.sleep(5)
+                    time.sleep(3)
                     continue
+            elif response.status_code == 429:
+                print(f"⚠️ Rate limit (429), 5 saniye bekleniyor...")
+                time.sleep(5)
+                continue
             else:
                 print(f"⚠️ HTTP {response.status_code} (deneme {attempt+1}/3)")
         except Exception as e:
             print(f"⚠️ Hata (deneme {attempt+1}/3): {e}")
         
         if attempt < 2:
-            print(f"⏳ 15 saniye bekleniyor...")
-            time.sleep(15)
+            wait = 3 if attempt == 0 else 5
+            print(f"⏳ {wait} saniye bekleniyor...")
+            time.sleep(wait)
     
     print(f"❌ {output_png} üretilemedi (3 deneme başarısız).")
     return False
 
+def process_single_image(image_type, image_data, hash_id, kategori, yil, ay, r2_folder, results):
+    """Tek bir görseli işle (parallel için)"""
+    try:
+        png_file = f"{hash_id}_{image_type}.png"
+        webp_file = f"{hash_id}_{image_type}.webp"
+        
+        base_prompt = image_data.get("prompt", "")
+        full_prompt = enrich_prompt(base_prompt, kategori)
+        
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, png_file):
+            if convert_to_webp(png_file, webp_file):
+                r2_key = f"{r2_folder}/{hash_id}_{image_type}.webp"
+                upload_to_r2(webp_file, r2_key)
+                os.remove(webp_file)
+            os.remove(png_file)
+            results[image_type] = True
+            return image_type, True
+        results[image_type] = False
+        return image_type, False
+    except Exception as e:
+        print(f"⚠️ {image_type} işlenirken hata: {e}")
+        results[image_type] = False
+        return image_type, False
+
 def visual_factory():
-    # Parametreler: task_id, hash, visuals_json, kategori, yil, ay
     if len(sys.argv) < 7:
         print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json> <kategori> <yil> <ay>")
         return
@@ -188,62 +233,51 @@ def visual_factory():
         print("❌ visuals JSON parse edilemedi!")
         return
     
-    print(f"🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori}, Yıl: {yil}, Ay: {ay})")
+    print(f"\n🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori})")
+    print(f"   🚀 PARALEL MOD: 3 görsel aynı anda işleniyor (rate limit korumalı)")
     
-    # Geçici PNG dosyaları
-    kapak_png = f"{hash_id}_kapak.png"
-    icerik1_png = f"{hash_id}_icerik_1.png"
-    icerik2_png = f"{hash_id}_icerik_2.png"
-    
-    # R2 klasör yapısı: images/{yil}/{ay}/{kategori}/
     r2_folder = f"images/{yil}/{ay}/{kategori}"
     
-    # 1. KAPAK GÖRSELİ
-    kapak = visuals.get("kapak", {})
-    if kapak:
-        base_prompt = kapak.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt, kategori)
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, kapak_png):
-            kapak_webp = f"{hash_id}_kapak.webp"
-            if convert_to_webp(kapak_png, kapak_webp):
-                r2_key = f"{r2_folder}/{hash_id}_kapak.webp"
-                upload_to_r2(kapak_webp, r2_key)
-                os.remove(kapak_webp)
-            os.remove(kapak_png)
-        print("⏳ 15 saniye bekleniyor (API kotası)...")
-        time.sleep(15)
+    # İşlenecek görselleri hazırla
+    images_to_process = []
     
-    # 2. İÇ GÖRSEL 1
-    icerik1 = visuals.get("icerik_1", {})
-    if icerik1:
-        base_prompt = icerik1.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt, kategori)
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik1_png):
-            icerik1_webp = f"{hash_id}_icerik_1.webp"
-            if convert_to_webp(icerik1_png, icerik1_webp):
-                r2_key = f"{r2_folder}/{hash_id}_icerik_1.webp"
-                upload_to_r2(icerik1_webp, r2_key)
-                os.remove(icerik1_webp)
-            os.remove(icerik1_png)
-        print("⏳ 15 saniye bekleniyor (API kotası)...")
-        time.sleep(15)
+    if "kapak" in visuals:
+        images_to_process.append(("kapak", visuals["kapak"]))
+    if "icerik_1" in visuals:
+        images_to_process.append(("icerik_1", visuals["icerik_1"]))
+    if "icerik_2" in visuals:
+        images_to_process.append(("icerik_2", visuals["icerik_2"]))
     
-    # 3. İÇ GÖRSEL 2
-    icerik2 = visuals.get("icerik_2", {})
-    if icerik2:
-        base_prompt = icerik2.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt, kategori)
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, icerik2_png):
-            icerik2_webp = f"{hash_id}_icerik_2.webp"
-            if convert_to_webp(icerik2_png, icerik2_webp):
-                r2_key = f"{r2_folder}/{hash_id}_icerik_2.webp"
-                upload_to_r2(icerik2_webp, r2_key)
-                os.remove(icerik2_webp)
-            os.remove(icerik2_png)
+    if not images_to_process:
+        print("⚠️ Hiç görsel prompt'u yok!")
+        return
     
-    print(f"\n✅ Görsel işlemleri tamamlandı.")
+    # PARALEL işleme
+    results = {}
+    start_time = time.time()
+    
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futures = []
+        for img_type, img_data in images_to_process:
+            future = executor.submit(
+                process_single_image, 
+                img_type, img_data, hash_id, kategori, yil, ay, r2_folder, results
+            )
+            futures.append(future)
+        
+        # Tüm işlemlerin tamamlanmasını bekle
+        for future in as_completed(futures):
+            img_type, success = future.result()
+            status = "✅" if success else "❌"
+            print(f"   {status} {img_type} tamamlandı")
+    
+    elapsed = time.time() - start_time
+    success_count = sum(1 for v in results.values() if v)
+    
+    print(f"\n✅ Görsel işlemleri tamamlandı!")
     print(f"   📁 R2 klasörü: {r2_folder}")
-    print(f"   🖼️ 1 kapak + 2 iç görsel WebP, R2'de")
+    print(f"   📊 Başarılı: {success_count}/{len(images_to_process)}")
+    print(f"   ⏱️ Toplam süre: {elapsed:.1f} saniye")
     print(f"   🎨 Kategori stili: {get_category_style(kategori)}")
 
 if __name__ == "__main__":
