@@ -43,7 +43,7 @@ CATEGORY_STYLES = {
     "elearning": "bright, educational, approachable, modern, focused on people learning, books, digital interfaces, cozy study spaces"
 }
 
-# ================= GLOBAL STYLE =================
+# ================= GLOBAL STYLE (TÜM KATEGORİLER İÇİN ORTAK) =================
 GLOBAL_STYLE = """
 Style:
 - photorealistic
@@ -59,6 +59,18 @@ Technical:
 - 1024x1024 resolution
 """
 
+# ================= YENİ: KOMPOZİSYON KURALLARI =================
+COMPOSITION_RULES = """
+COMPOSITION RULES (CRITICAL):
+- Canvas is SQUARE (1:1 aspect ratio, 1024x1024 pixels)
+- The main subject MUST be positioned in the CENTER of the frame
+- The scene MUST fill the ENTIRE square frame naturally
+- NO empty spaces, NO solid color bars, NO letterboxing
+- The composition should work as if it was a wide 16:9 shot adapted to square
+- Extend the background and environment to fill all edges of the square naturally
+- Every part of the square canvas MUST contain meaningful visual content
+"""
+
 NEGATIVE_CONSTRAINTS = """
 Strict constraints:
 - NO text, typography, letters, words, or symbols
@@ -70,6 +82,7 @@ Strict constraints:
 """
 
 def get_category_style(kategori):
+    """Kategori adına göre stil döndürür, varsayılan 'general'"""
     return CATEGORY_STYLES.get(kategori, "professional, clean, modern, versatile")
 
 # ================= YARDIMCI FONKSİYONLAR =================
@@ -110,7 +123,11 @@ def upload_to_r2(local_path, r2_key):
     return False
 
 def enrich_prompt(base_prompt, kategori):
+    """
+    Task prompt'u + kategori stili + global stil + kompozisyon kuralları + negatif kuralları birleştirir.
+    """
     category_style = get_category_style(kategori)
+    
     return f"""You are a world-class versatile visual photographer.
 
 SUBJECT (MUST FOLLOW):
@@ -121,12 +138,15 @@ CATEGORY ATMOSPHERE:
 
 {GLOBAL_STYLE}
 
+{COMPOSITION_RULES}
+
 {NEGATIVE_CONSTRAINTS}
 
 IMPORTANT:
 - The SUBJECT above is the main focus. DO NOT ignore it.
 - The CATEGORY ATMOSPHERE only guides the mood and lighting, not the subject.
-- Create a photorealistic, cinematic image that matches the SUBJECT with the appropriate ATMOSPHERE.
+- The COMPOSITION RULES determine how the subject is placed in the square frame.
+- Create a photorealistic, cinematic image that matches the SUBJECT with the appropriate ATMOSPHERE and COMPOSITION.
 """
 
 def rate_limit_wait():
@@ -235,6 +255,7 @@ def visual_factory():
     
     print(f"\n🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori})")
     print(f"   🚀 PARALEL MOD: 3 görsel aynı anda işleniyor (rate limit korumalı)")
+    print(f"   🎯 KOMPOZİSYON: Kare tuval, ana konu merkezde, tüm alan dolu")
     
     r2_folder = f"images/{yil}/{ay}/{kategori}"
     
@@ -279,6 +300,7 @@ def visual_factory():
     print(f"   📊 Başarılı: {success_count}/{len(images_to_process)}")
     print(f"   ⏱️ Toplam süre: {elapsed:.1f} saniye")
     print(f"   🎨 Kategori stili: {get_category_style(kategori)}")
+    print(f"   🎯 Kompozisyon kuralı: Aktif (kare tuval, merkezde konu, tüm alan dolu)")
 
 if __name__ == "__main__":
     visual_factory()
