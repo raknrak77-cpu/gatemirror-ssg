@@ -1,0 +1,6 @@
+requests
+boto3
+beautifulsoup4
+markdown
+jinja2
+pillow
