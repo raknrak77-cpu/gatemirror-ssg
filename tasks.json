@@ -2915,11 +2915,12 @@
                 "height": 1024
             }
         },
-        "status": "pending",
+        "status": "processed",
         "created_at": "2026-04-14",
         "date": "2026-04-14",
         "display_date": "14 April 2026",
-        "processed_at": ""
+        "processed_at": "2026-04-15 13:47:45",
+        "hash": "b59b8a58"
     },
     {
         "task_id": "0092",
