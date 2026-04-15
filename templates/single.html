@@ -133,7 +133,7 @@
                 <span class="toggle-icon">⋮</span>
             </div>
             <div class="takeaways-preview">
-                {{ summary|striptags|slice:":150" }}{% if summary|length > 150 %}...{% endif %}
+                {{ summary|striptags|truncate(150) }}
             </div>
             <div class="toggle-content">
                 <ul class="summary-list">{{ summary }}</ul>
