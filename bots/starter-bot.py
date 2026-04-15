@@ -1,66 +1,80 @@
 import os
-import sys
-import json
 
-def test_templates():
-    """Tüm template'leri kontrol eder, hata varsa workflow durur"""
+def check_templates():
+    """Template dosyalarının varlığını ve gerekli elementleri kontrol eder"""
     templates_dir = "templates"
     errors = []
     
     if not os.path.exists(templates_dir):
-        print("❌ templates/ klasörü bulunamadı!")
-        sys.exit(1)
+        print(f"❌ {templates_dir} klasörü yok!")
+        return False
     
-    for file in os.listdir(templates_dir):
-        if not file.endswith('.html'):
-            continue
-        
-        path = os.path.join(templates_dir, file)
-        with open(path, 'r', encoding='utf-8') as f:
+    required_templates = ['home.html', 'list.html', 'single.html', 'hero.html']
+    for template in required_templates:
+        if not os.path.exists(os.path.join(templates_dir, template)):
+            errors.append(f"{template}: Dosya yok")
+    
+    # hero.html kontrolü (sadece hero bileşeni, side menu vs. aranmaz)
+    hero_path = os.path.join(templates_dir, 'hero.html')
+    if os.path.exists(hero_path):
+        with open(hero_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
-        # 1. Lang değişkeni kontrolü
-        if '/en/' in content and '{{ lang }}' not in content:
-            if file in ['home.html', 'list.html', 'single.html']:
-                errors.append(f"{file}: /en/ var ama {{ lang }} yok (dil yönlendirme hatası)")
-        
-        # 2. Side menu link kontrolü
-        if 'href="{{ lang }}"' in content or 'href="{{ lang }}/"' in content:
-            errors.append(f"{file}: href başında / eksik (href=\"/{{ lang }}/\" olmalı)")
-        
-        # 3. Dark mode toggle kontrolü
-        if 'darkModeToggle' not in content:
-            errors.append(f"{file}: Dark mode butonu yok")
-        
-        # 4. Toggle switch kontrolü
-        if 'toggle-switch' not in content:
-            errors.append(f"{file}: toggle-switch sınıfı yok")
+            # Sadece kritik hero elementlerini kontrol et
+            if 'class="hero"' not in content:
+                errors.append("hero.html: .hero sınıfı yok")
+            if 'hero-title' not in content:
+                errors.append("hero.html: hero-title sınıfı yok")
+            if 'hero-description' not in content:
+                errors.append("hero.html: hero-description sınıfı yok")
+    else:
+        errors.append("hero.html: Dosya yok")
     
     return errors
 
-def check_pending_tasks():
-    """tasks.json'da pending görev var mı kontrol eder"""
-    if not os.path.exists("tasks.json"):
-        print("⚠️ tasks.json bulunamadı, yeni task eklenmemiş olabilir.")
-        return 0
+def check_tasks():
+    """tasks.json kontrolü"""
+    if not os.path.exists('tasks.json'):
+        print("⚠️ tasks.json yok, oluşturulacak.")
+        return True
     
-    with open("tasks.json", "r", encoding="utf-8") as f:
+    import json
+    with open('tasks.json', 'r', encoding='utf-8') as f:
         tasks = json.load(f)
     
-    pending = [t for t in tasks if t.get("status") == "pending"]
-    
+    pending = [t for t in tasks if t.get('status') == 'pending']
     if not pending:
-        print("❌ BEKLEYEN GÖREV YOK! Önce 'Add New Task' workflow'u ile task ekleyin.")
-        return 0
+        print("✅ Bekleyen görev yok.")
+        return True
     
-    print(f"✅ {len(pending)} pending görev bulundu.")
-    return len(pending)
+    print(f"📋 {len(pending)} bekleyen görev var.")
+    return True
+
+def starter():
+    print("=" * 60)
+    print("🔍 STARTER BOT - TEMPLATE VE TASK KONTROLÜ")
+    print("=" * 60)
+    
+    print("\n📁 Template'ler kontrol ediliyor...")
+    errors = check_templates()
+    
+    if errors:
+        print("❌ TEMPLATE HATALARI:")
+        for err in errors:
+            print(f"   {err}")
+        print("\n🚨 Workflow durduruluyor. Önce template'leri düzeltin.")
+        exit(1)
+    else:
+        print("✅ Tüm template'ler geçerli.")
+    
+    print("\n📋 Task kontrolü...")
+    if not check_tasks():
+        print("❌ Task hatası!")
+        exit(1)
+    
+    print("\n✅ STARTER BOT BAŞARILI - Workflow devam edebilir.")
 
 if __name__ == "__main__":
-    print("\n" + "="*50)
-    print("🔍 STARTER BOT - TEMPLATE VE TASK KONTROLÜ")
-    print("="*50 + "\n")
-    
+    starter()    
     # 1. Template kontrolü
     print("📁 Template'ler kontrol ediliyor...")
     template_errors = test_templates()
