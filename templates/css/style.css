@@ -1333,6 +1333,7 @@ body.dark .toggle-details summary:hover {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .toggle-icon {
@@ -1355,7 +1356,7 @@ body.dark .toggle-content-inner {
     border-top-color: #333;
 }
 
-/* Önizleme metni (2 satır) */
+/* Önizleme metni (2-3 satır) */
 .takeaways-preview {
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
@@ -1363,12 +1364,12 @@ body.dark .toggle-content-inner {
     font-size: 0.85rem;
     line-height: 1.4;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* Yazar Bio iç stilleri (AYNI KALABİLİR) */
+/* Yazar Bio iç stilleri */
 .author-bio-compact {
     display: flex;
     gap: 1rem;
@@ -1398,6 +1399,26 @@ body.dark .toggle-content-inner {
     font-size: 0.9rem;
     line-height: 1.5;
     color: var(--text-light);
+}
+
+/* Key Takeaways liste stilleri */
+.summary-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.summary-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body.dark .summary-list li {
+    border-bottom-color: #333;
+}
+
+.summary-list li:last-child {
+    border-bottom: none;
 }
 
 /* Editor's Note - kavisli çerçeve */
