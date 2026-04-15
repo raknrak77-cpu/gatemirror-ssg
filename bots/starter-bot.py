@@ -55,7 +55,7 @@ def test_templates():
         
         # 6. Hero include kontrolü (artık include değil, variable kullanılıyor)
         if '{% include "hero.html"' in content:
-            errors.append(f"{file}: {% include hero.html %} kullanılıyor, {{ hero.html | safe }} ile değiştirin")
+            errors.append(f"{file}: include hero.html kullanılıyor, hero.html safe ile değiştirin")
     
     return errors
 
@@ -65,7 +65,7 @@ def test_css():
     errors = []
     
     if not os.path.exists(css_path):
-        errors.append(f"❌ CSS dosyası bulunamadı: {css_path}")
+        errors.append(f"CSS dosyası bulunamadı: {css_path}")
         return errors
     
     with open(css_path, 'r', encoding='utf-8') as f:
@@ -172,7 +172,7 @@ def test_explore_folder():
     
     for d in explore_dirs:
         if not os.path.exists(d):
-            warnings.append(f"⚠️ {d}/ klasörü yok (Librarian çalışınca oluşacak)")
+            warnings.append(f"{d}/ klasörü yok (Librarian çalışınca oluşacak)")
     
     return warnings
 
@@ -182,7 +182,7 @@ def check_pending_tasks():
         print("⚠️ tasks.json bulunamadı, yeni task eklenmemiş olabilir.")
         return 0
     
-    with open("tasks.json", "r", encoding="utf-8") as f:
+    with open("tasks.json", "r", encoding='utf-8') as f:
         tasks = json.load(f)
     
     pending = [t for t in tasks if t.get("status") == "pending"]
