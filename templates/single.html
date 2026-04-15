@@ -23,9 +23,11 @@
     <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        /* Aynı home.html'deki stiller + ek single stilleri */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #2ecc71;
+            --primary-dark: #1a8c3f;
             --dark: #0a0a0a;
             --text: #1a1a1a;
             --text-light: #666;
@@ -33,56 +35,16 @@
             --white: #ffffff;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: var(--text);
-            background: var(--white);
-            line-height: 1.7;
-        }
-        nav {
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(10px);
-            padding: 1rem 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .logo {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--dark);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-        .logo span { color: var(--primary); }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
+        nav { background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); padding: 1rem 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--dark); text-decoration: none; letter-spacing: -0.5px; }
+        .logo span { color: var(--primary-dark); }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
         .nav-links a:hover { color: var(--primary); }
         .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(12px);
-            color: white;
-            transition: left 0.3s ease-in-out;
-            z-index: 2000;
-            padding: 2rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+        
+        .side-menu { position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(12px); color: white; transition: left 0.3s ease-in-out; z-index: 2000; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
         .side-menu.active { left: 0; }
         .close-menu { text-align: right; font-size: 1.5rem; cursor: pointer; color: #aaa; }
         .side-menu .nav-links { display: flex; flex-direction: column; gap: 0; margin: 0; }
@@ -91,43 +53,15 @@
         .lang-section { border-bottom: 1px solid #444; padding-bottom: 1rem; }
         .lang-title { font-size: 0.8rem; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
         .flags { display: flex; gap: 1rem; margin-top: 0.5rem; }
-        .flag-link { font-size: 1.2rem; text-decoration: none; opacity: 0.7; }
+        .flag-link { font-size: 1.2rem; text-decoration: none; opacity: 0.7; transition: opacity 0.3s; }
+        .flag-link:hover { opacity: 1; }
         .footer-links { margin-top: auto; padding-top: 1rem; border-top: 1px solid #444; font-size: 0.8rem; }
         .footer-links a { display: block; color: #aaa; padding: 0.3rem 0; text-decoration: none; }
-        .dark-mode-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #444;
-            color: #ccc;
-        }
-        .toggle-switch {
-            width: 50px;
-            height: 24px;
-            background: #333;
-            border-radius: 30px;
-            position: relative;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .toggle-switch:after {
-            content: "🌙";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            transition: 0.2s;
-        }
+        .dark-mode-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #444; color: #ccc; }
+        .toggle-switch { width: 50px; height: 24px; background: #333; border-radius: 30px; position: relative; cursor: pointer; transition: 0.2s; }
+        .toggle-switch:after { content: "🌙"; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s; }
         body.dark .toggle-switch:after { content: "☀️"; left: 26px; }
-
+        
         body.dark { background: #121212; color: #e0e0e0; }
         body.dark nav { background: rgba(18,18,18,0.98); border-bottom-color: #333; }
         body.dark .logo, body.dark nav .nav-links a { color: #e0e0e0; }
@@ -141,115 +75,33 @@
         body.dark .article-content { color: #d0d0d0; }
         body.dark .meta-info { color: #888; }
         body.dark .author-bio { background: #2a2a2a; }
-
-        .breadcrumb {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin: 1rem auto;
-            max-width: 720px;
-            padding: 0 1rem;
-        }
-        .breadcrumb a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .author-bio {
-            display: flex;
-            gap: 1.5rem;
-            background: var(--gray);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin: 2rem 0;
-        }
-        .author-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .author-info h4 {
-            margin: 0 0 0.25rem;
-            font-size: 1.1rem;
-        }
-        .author-bio-text {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-        }
-        @media (max-width: 600px) {
-            .author-bio { flex-direction: column; align-items: center; text-align: center; }
-        }
-
-        .random-article {
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-        .random-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: opacity 0.3s;
-        }
-        .random-btn:hover {
-            opacity: 0.9;
-        }
-
-        .category-archive {
-            text-align: center;
-            margin: 2rem 0;
-        }
-        .archive-btn {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.3s;
-        }
-        .archive-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* AD SENSE ALANI */
-        .adsense-wrapper {
-            text-align: center;
-            margin: 2rem 0;
-            min-height: 90px;
-        }
-
-        .image-wrapper {
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-        .image-caption {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-        }
-
-        @media (min-width: 1024px) {
-            .read-next {
-                position: sticky;
-                top: 100px;
-                align-self: start;
-            }
-        }
-
-        img {
-            background-color: var(--gray);
-        }
-
+        
+        .breadcrumb { font-size: 0.85rem; color: var(--text-light); margin: 1rem auto; max-width: 720px; padding: 0 1rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        
+        .author-bio { display: flex; gap: 1.5rem; background: var(--gray); padding: 1.5rem; border-radius: 1rem; margin: 2rem 0; }
+        .author-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+        .author-info h4 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+        .author-bio-text { font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem; }
+        @media (max-width: 600px) { .author-bio { flex-direction: column; align-items: center; text-align: center; } }
+        
+        .random-article { text-align: center; margin: 1.5rem 0; }
+        .random-btn { background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 2rem; cursor: pointer; font-weight: 600; font-size: 1rem; transition: opacity 0.3s; }
+        .random-btn:hover { opacity: 0.9; }
+        
+        .category-archive { text-align: center; margin: 2rem 0; }
+        .archive-btn { display: inline-block; background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none; font-weight: 600; transition: opacity 0.3s; }
+        .archive-btn:hover { opacity: 0.9; }
+        
+        .adsense-wrapper { text-align: center; margin: 2rem 0; min-height: 90px; }
+        .image-wrapper { text-align: center; margin: 1.5rem 0; }
+        .image-caption { font-size: 0.8rem; color: var(--text-light); margin-top: 0.5rem; }
+        
+        @media (min-width: 1024px) { .read-next { position: sticky; top: 100px; align-self: start; } }
+        
+        img { background-color: var(--gray); }
+        
         .container { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
         .hero-image { width: 70%; max-width: 700px; border-radius: 1rem; margin: 0 auto 2rem auto; display: block; aspect-ratio: 16/9; object-fit: cover; }
         .content-image-1 { width: 60%; max-width: 600px; border-radius: 0.75rem; margin: 1.5rem auto; display: block; aspect-ratio: 16/9; object-fit: cover; }
@@ -275,9 +127,10 @@
         footer { background: var(--dark); color: white; padding: 3rem 5%; margin-top: 3rem; }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
         .footer-column h4 { margin-bottom: 1rem; font-size: 1rem; }
-        .footer-column a { display: block; color: #aaa; text-decoration: none; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .footer-column a { display: block; color: #aaa; text-decoration: none; margin-bottom: 0.5rem; font-size: 0.9rem; transition: color 0.3s; }
         .footer-column a:hover { color: var(--primary); }
         .footer-copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; font-size: 0.8rem; color: #aaa; }
+        
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .menu-btn { display: block; }
@@ -328,7 +181,9 @@
 </div>
 
 <nav>
-    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
     <a href="/{{ lang }}/" class="logo">GATE<span>MIRROR</span></a>
     <div class="nav-links">
         <a href="/{{ lang }}/">{{ menu.home }}</a>
@@ -340,108 +195,115 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="breadcrumb">
-        <a href="/{{ lang }}/">Ana Sayfa</a> &gt;
-        <a href="/{{ lang }}/{{ category }}/">{{ category_name }}</a> &gt;
-        <span>{{ title }}</span>
-    </div>
-
-    <img src="{{ cover_image }}" alt="{{ title }}" class="hero-image" loading="lazy" onerror="this.style.display='none'">
+<main>
+    <!-- HERO - Dinamik içerik hero_bot.py'den geliyor -->
+    {% include "hero.html" with context %}
     
-    <h1>{{ title }}</h1>
-    {% if editors_note %}<div class="editors-note">{{ editors_note }}</div>{% endif %}
-    
-    <div class="meta-info">
-        <span class="author">✍️ {{ author_name }}</span>
-        <span class="date">📅 {{ date }}</span>
-        {% if reading_time %}<span class="reading-time">⏱️ {{ reading_time }} min read</span>{% endif %}
-        {% if view_count %}<span class="view-count">👁️ {{ view_count }} views</span>{% endif %}
-    </div>
-
-    {% if author_name and author_bio %}
-    <div class="author-bio">
-        {% if author_avatar %}
-        <img src="{{ author_avatar }}" alt="{{ author_name }}" class="author-avatar" loading="lazy" onerror="this.style.display='none'">
-        {% endif %}
-        <div class="author-info">
-            <h4>{{ author_name }}</h4>
-            <p>{{ author_title }}</p>
-            <p class="author-bio-text">{{ author_bio }}</p>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/{{ lang }}/">
+                {% if lang == 'en' %}HOME{% elif lang == 'es' %}INICIO{% elif lang == 'de' %}STARTSEITE{% elif lang == 'fr' %}ACCUEIL{% endif %}
+            </a> &gt;
+            <a href="/{{ lang }}/{{ category }}/">{{ category_name }}</a> &gt;
+            <span>{{ title }}</span>
         </div>
-    </div>
-    {% endif %}
 
-    <div class="summary">
-        <div class="summary-title"><i class="fas fa-bolt"></i> KEY TAKEAWAYS</div>
-        <ul class="summary-list">{{ summary }}</ul>
-    </div>
+        <img src="{{ cover_image }}" alt="{{ title }}" class="hero-image" loading="lazy" onerror="this.style.display='none'">
+        
+        <h1>{{ title }}</h1>
+        {% if editors_note %}<div class="editors-note">{{ editors_note }}</div>{% endif %}
+        
+        <div class="meta-info">
+            <span class="author">✍️ {{ author_name }}</span>
+            <span class="date">📅 {{ date }}</span>
+            {% if reading_time %}<span class="reading-time">⏱️ {{ reading_time }} min read</span>{% endif %}
+            {% if view_count %}<span class="view-count">👁️ {{ view_count }} views</span>{% endif %}
+        </div>
 
-    <!-- MAKALE 1. PARÇA (Introduction + Main Analysis İlk Yarı) -->
-    <div class="article-content part-1">
-        {{ content_part1 | safe }}
-    </div>
-
-    <!-- GÖRSEL 1 (Makalenin ortasında) -->
-    {% if content_image_1 %}
-    <div class="image-wrapper">
-        <img src="{{ content_image_1 }}" alt="Content Image 1" loading="lazy" class="content-image-1" onerror="this.style.display='none'">
-    </div>
-    {% endif %}
-
-    <!-- MAKALE 2. PARÇA (Main Analysis İkinci Yarı) -->
-    <div class="article-content part-2">
-        {{ content_part2 | safe }}
-    </div>
-
-    <!-- ADSENSE ALANI (Google kendi kodunu buraya yerleştirecek) -->
-    <div class="adsense-wrapper">
-        <!-- Google AdSense buraya gelecek -->
-    </div>
-
-    <!-- GÖRSEL 2 -->
-    {% if content_image_2 %}
-    <div class="image-wrapper">
-        <img src="{{ content_image_2 }}" alt="Content Image 2" loading="lazy" class="content-image-2" onerror="this.style.display='none'">
-    </div>
-    {% endif %}
-
-    <!-- MAKALE 3. PARÇA (Practical Implications + Conclusion) -->
-    <div class="article-content part-3">
-        {{ content_part3 | safe }}
-    </div>
-
-    <div class="sources">
-        <h3>📚 Sources</h3>
-        <ul class="sources-list">{{ sources }}</ul>
-    </div>
-
-    <div class="random-article">
-        <button id="randomArticleBtn" class="random-btn">
-            🎲 Rastgele Makale
-        </button>
-    </div>
-
-    <div class="category-archive">
-        <a href="/explore/category-archive/{{ lang }}/{{ category }}/" class="archive-btn">
-            📚 Tüm {{ category_name }} Makaleleri
-        </a>
-    </div>
-
-    <div class="read-next">
-        <h3>📖 READ THIS NEXT</h3>
-        <div class="read-next-grid">
-            {% for article in related_articles %}
-            <div class="read-next-card">
-                <a href="{{ article.url }}">
-                    <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
-                    <h4>{{ article.title }}</h4>
-                </a>
+        {% if author_name and author_bio %}
+        <div class="author-bio">
+            {% if author_avatar %}
+            <img src="{{ author_avatar }}" alt="{{ author_name }}" class="author-avatar" loading="lazy" onerror="this.style.display='none'">
+            {% endif %}
+            <div class="author-info">
+                <h4>{{ author_name }}</h4>
+                <p>{{ author_title }}</p>
+                <p class="author-bio-text">{{ author_bio }}</p>
             </div>
-            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="summary">
+            <div class="summary-title"><i class="fas fa-bolt"></i> KEY TAKEAWAYS</div>
+            <ul class="summary-list">{{ summary }}</ul>
+        </div>
+
+        <!-- MAKALE 1. PARÇA (Introduction + Main Analysis İlk Yarı) -->
+        <div class="article-content part-1">
+            {{ content_part1 | safe }}
+        </div>
+
+        <!-- GÖRSEL 1 (Makalenin ortasında) -->
+        {% if content_image_1 %}
+        <div class="image-wrapper">
+            <img src="{{ content_image_1 }}" alt="Content Image 1" loading="lazy" class="content-image-1" onerror="this.style.display='none'">
+        </div>
+        {% endif %}
+
+        <!-- MAKALE 2. PARÇA (Main Analysis İkinci Yarı) -->
+        <div class="article-content part-2">
+            {{ content_part2 | safe }}
+        </div>
+
+        <!-- ADSENSE ALANI (Google kendi kodunu buraya yerleştirecek) -->
+        <div class="adsense-wrapper">
+            <!-- Google AdSense buraya gelecek -->
+        </div>
+
+        <!-- GÖRSEL 2 -->
+        {% if content_image_2 %}
+        <div class="image-wrapper">
+            <img src="{{ content_image_2 }}" alt="Content Image 2" loading="lazy" class="content-image-2" onerror="this.style.display='none'">
+        </div>
+        {% endif %}
+
+        <!-- MAKALE 3. PARÇA (Practical Implications + Conclusion) -->
+        <div class="article-content part-3">
+            {{ content_part3 | safe }}
+        </div>
+
+        <div class="sources">
+            <h3>📚 Sources</h3>
+            <ul class="sources-list">{{ sources }}</ul>
+        </div>
+
+        <div class="random-article">
+            <button id="randomArticleBtn" class="random-btn" aria-label="Random Article">
+                🎲 Rastgele Makale
+            </button>
+        </div>
+
+        <div class="category-archive">
+            <a href="/explore/category-archive/{{ lang }}/{{ category }}/" class="archive-btn">
+                📚 Tüm {{ category_name }} Makaleleri
+            </a>
+        </div>
+
+        <div class="read-next">
+            <h3>📖 READ THIS NEXT</h3>
+            <div class="read-next-grid">
+                {% for article in related_articles %}
+                <div class="read-next-card">
+                    <a href="{{ article.url }}">
+                        <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
+                        <h4>{{ article.title }}</h4>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-</div>
+</main>
 
 <footer>
     <div class="footer-content">
