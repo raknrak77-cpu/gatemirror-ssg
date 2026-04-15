@@ -29,18 +29,29 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
         return True
     return False
 
+def upload_directory_to_r2(local_dir, r2_prefix):
+    """Bir klasörün içindeki TÜM dosyaları (alt klasörler dahil) R2'ye yükler"""
+    if not os.path.exists(local_dir):
+        print(f"⚠️ {local_dir} klasörü yok, atlanıyor.")
+        return
+    
+    for root, dirs, files in os.walk(local_dir):
+        for file in files:
+            local_path = os.path.join(root, file)
+            # R2 key: r2_prefix + göreceli yol
+            relative_path = os.path.relpath(local_path, local_dir)
+            r2_key = f"{r2_prefix}/{relative_path}".replace('\\', '/')
+            upload_file_to_r2(local_path, r2_key)
+
 def upload_templates():
-    """templates/ klasöründeki dosyaları R2'ye yedekler"""
+    """templates/ klasöründeki TÜM dosyaları (alt klasörler dahil) R2'ye yedekler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
         return
     
-    for file in os.listdir(templates_dir):
-        local_path = os.path.join(templates_dir, file)
-        if os.path.isfile(local_path):
-            r2_key = f"templates/{file}"
-            upload_file_to_r2(local_path, r2_key)
+    print("\n📁 templates/ klasörü taranıyor...")
+    upload_directory_to_r2(templates_dir, "templates")
 
 def upload_hero_json():
     """Github templates/ klasöründen hero.json'u alıp R2 templates/ klasörüne yükler"""
@@ -57,8 +68,8 @@ def upload_hero_json():
 def uploader():
     """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler - articles/ SİLMEZ"""
     
-    # 1. Önce template'leri yedekle
-    print("\n📁 TEMPLATE YEDEKLEME")
+    # 1. Önce template'leri yedekle (alt klasörler dahil - css/style.css)
+    print("\n📁 TEMPLATE YEDEKLEME (css/ alt klasörü dahil)")
     print("-" * 40)
     upload_templates()
     
@@ -109,7 +120,7 @@ def uploader():
     
     print("\n" + "=" * 60)
     print("🏁 UPLOADER TAMAMLANDI!")
-    print("   ✅ Template'ler → R2/templates/")
+    print("   ✅ Template'ler (alt klasörler dahil) → R2/templates/")
     print("   ✅ hero.json → R2/templates/hero.json")
     print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
     print("   ✅ Local HTML'ler temizlendi")
