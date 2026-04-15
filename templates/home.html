@@ -329,7 +329,7 @@
 
 <main>
     <!-- HERO - Dinamik içerik hero_bot.py'den geliyor -->
-    {% include "hero.html" with context %}
+    {{ hero.html | safe }}
     
     <div class="category-buttons">
         <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn">
