@@ -29,29 +29,30 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
         return True
     return False
 
-def upload_directory_to_r2(local_dir, r2_prefix):
-    """Bir klasörün içindeki TÜM dosyaları (alt klasörler dahil) R2'ye yükler"""
-    if not os.path.exists(local_dir):
-        print(f"⚠️ {local_dir} klasörü yok, atlanıyor.")
-        return
-    
-    for root, dirs, files in os.walk(local_dir):
-        for file in files:
-            local_path = os.path.join(root, file)
-            # R2 key: r2_prefix + göreceli yol
-            relative_path = os.path.relpath(local_path, local_dir)
-            r2_key = f"{r2_prefix}/{relative_path}".replace('\\', '/')
-            upload_file_to_r2(local_path, r2_key)
-
 def upload_templates():
-    """templates/ klasöründeki TÜM dosyaları (alt klasörler dahil) R2'ye yedekler"""
+    """templates/ klasöründeki dosyaları R2'ye yedekler (css hariç)"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
         return
     
-    print("\n📁 templates/ klasörü taranıyor...")
-    upload_directory_to_r2(templates_dir, "templates")
+    for file in os.listdir(templates_dir):
+        local_path = os.path.join(templates_dir, file)
+        if os.path.isfile(local_path):
+            r2_key = f"templates/{file}"
+            upload_file_to_r2(local_path, r2_key)
+
+def upload_css_to_assets():
+    """templates/css/style.css dosyasını R2'de assets/css/style.css olarak yükler"""
+    local_path = "templates/css/style.css"
+    r2_key = "assets/css/style.css"
+    
+    if os.path.exists(local_path):
+        print(f"\n🎨 CSS dosyası assets'e yükleniyor...")
+        return upload_file_to_r2(local_path, r2_key, content_type='text/css')
+    else:
+        print(f"\n⚠️ templates/css/style.css dosyası bulunamadı, atlanıyor.")
+        return False
 
 def upload_hero_json():
     """Github templates/ klasöründen hero.json'u alıp R2 templates/ klasörüne yükler"""
@@ -65,18 +66,47 @@ def upload_hero_json():
         print(f"\n⚠️ templates/hero.json dosyası bulunamadı, atlanıyor.")
         return False
 
+def upload_assets_folder():
+    """assets/ klasörü varsa (diğer statik dosyalar için) R2'ye yükler"""
+    assets_dir = "assets"
+    if not os.path.exists(assets_dir):
+        return
+    
+    print(f"\n📁 {assets_dir}/ klasörü taranıyor...")
+    for root, dirs, files in os.walk(assets_dir):
+        for file in files:
+            local_path = os.path.join(root, file)
+            relative_path = os.path.relpath(local_path, assets_dir)
+            r2_key = f"assets/{relative_path}".replace('\\', '/')
+            
+            content_type = None
+            if file.endswith('.css'):
+                content_type = 'text/css'
+            elif file.endswith('.js'):
+                content_type = 'application/javascript'
+            elif file.endswith('.json'):
+                content_type = 'application/json'
+            
+            upload_file_to_r2(local_path, r2_key, content_type)
+
 def uploader():
     """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler - articles/ SİLMEZ"""
     
-    # 1. Önce template'leri yedekle (alt klasörler dahil - css/style.css)
-    print("\n📁 TEMPLATE YEDEKLEME (css/ alt klasörü dahil)")
+    # 1. Önce template'leri yedekle (css hariç - çünkü css assets'e gidecek)
+    print("\n📁 TEMPLATE YEDEKLEME (css hariç)")
     print("-" * 40)
     upload_templates()
     
-    # 2. Hero JSON'u yedekle
+    # 2. CSS dosyasını assets/ altına yükle
+    upload_css_to_assets()
+    
+    # 3. Hero JSON'u yedekle
     upload_hero_json()
     
-    # 3. content/ altındaki ham HTML'leri raw-articles/ altına yükle
+    # 4. Varsa diğer assets dosyalarını yükle
+    upload_assets_folder()
+    
+    # 5. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -97,7 +127,7 @@ def uploader():
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 4. Local dosyaları temizle
+    # 6. Local dosyaları temizle
     print("\n🗑️ LOCAL TEMİZLİK")
     print("-" * 40)
     for file_path in uploaded_files:
@@ -107,7 +137,7 @@ def uploader():
         except Exception as e:
             print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    # 5. Boş klasörleri temizle
+    # 7. Boş klasörleri temizle
     for root, dirs, files in os.walk(content_base, topdown=False):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
@@ -120,7 +150,8 @@ def uploader():
     
     print("\n" + "=" * 60)
     print("🏁 UPLOADER TAMAMLANDI!")
-    print("   ✅ Template'ler (alt klasörler dahil) → R2/templates/")
+    print("   ✅ Template'ler → R2/templates/ (css hariç)")
+    print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ hero.json → R2/templates/hero.json")
     print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
     print("   ✅ Local HTML'ler temizlendi")
