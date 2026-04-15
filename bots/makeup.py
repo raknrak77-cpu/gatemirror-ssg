@@ -99,6 +99,52 @@ def image_exists(url):
     except:
         return False
 
+def split_article_content(content_html):
+    """
+    Makale içeriğini <h2> başlıklarına göre 3 parçaya böler:
+    - Part 1: Introduction + Main Analysis'ın ilk yarısı
+    - Part 2: Main Analysis'ın ikinci yarısı
+    - Part 3: Practical Implications + Conclusion
+    """
+    
+    if not content_html:
+        return {'content_part1': '', 'content_part2': '', 'content_part3': ''}
+    
+    # Başlıkları bul
+    intro_match = re.search(r'(<h2>Introduction</h2>.*?)<h2>Main Analysis</h2>', content_html, re.DOTALL)
+    main_analysis_match = re.search(r'<h2>Main Analysis</h2>(.*?)<h2>Practical Implications</h2>', content_html, re.DOTALL)
+    practical_match = re.search(r'<h2>Practical Implications</h2>(.*?)<h2>Conclusion</h2>', content_html, re.DOTALL)
+    conclusion_match = re.search(r'<h2>Conclusion</h2>(.*?)(?=<h2>Frequently Asked Questions|$)', content_html, re.DOTALL)
+    
+    intro = intro_match.group(1) if intro_match else ""
+    main_analysis = main_analysis_match.group(1) if main_analysis_match else ""
+    practical = practical_match.group(1) if practical_match else ""
+    conclusion = conclusion_match.group(1) if conclusion_match else ""
+    
+    # Main Analysis'i <h3> başlıklarına göre ikiye böl
+    h3_sections = re.findall(r'(<h3>.*?</h3>.*?)(?=<h3>|$)', main_analysis, re.DOTALL)
+    
+    if h3_sections:
+        mid = len(h3_sections) // 2
+        main_part1 = ''.join(h3_sections[:mid])
+        main_part2 = ''.join(h3_sections[mid:])
+    else:
+        # <h3> yoksa, karakter sayısına göre böl
+        mid = len(main_analysis) // 2
+        main_part1 = main_analysis[:mid]
+        main_part2 = main_analysis[mid:]
+    
+    # Parçaları oluştur
+    part1 = intro + main_part1
+    part2 = main_part2
+    part3 = practical + conclusion
+    
+    return {
+        'content_part1': part1.strip(),
+        'content_part2': part2.strip(),
+        'content_part3': part3.strip()
+    }
+
 def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     """HTML içeriğini parse eder, yazar bilgilerini ve cluster_id'yi META'dan okur"""
     
@@ -107,7 +153,6 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     title = title_match.group(1).strip() if title_match else ""
     
     # META: author, author_title, author_bio, author_avatar, datetime, cluster_id
-    # Format: <!-- META: author=..., author_title=..., author_bio=..., author_avatar=..., datetime=..., cluster_id=... -->
     meta_match = re.search(r'<!-- META: author=(.*?), author_title=(.*?), author_bio=(.*?), author_avatar=(.*?), datetime=(.*?)(?:, cluster_id=(.*?))? -->', html_content)
     
     if meta_match:
@@ -124,7 +169,6 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         except:
             display_date = sort_date
     else:
-        # Eski format veya yazar bilgisi yoksa fallback
         author = "Gatemirror Expert"
         author_title = ""
         author_bio = ""
@@ -163,6 +207,9 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
     content_clean = content_clean.strip()
 
+    # Makaleyi 3 parçaya böl
+    content_parts = split_article_content(content_clean)
+    
     # Okuma süresi ve görüntülenme
     reading_time = calculate_reading_time(content_clean)
     views = generate_views(hash_id)
@@ -222,6 +269,9 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         'summary': summary_html,
         'sources': sources_html,
         'content': content_clean,
+        'content_part1': content_parts['content_part1'],
+        'content_part2': content_parts['content_part2'],
+        'content_part3': content_parts['content_part3'],
         'cover_image': cover_image,
         'content_image_1': content_image_1,
         'content_image_2': content_image_2,
