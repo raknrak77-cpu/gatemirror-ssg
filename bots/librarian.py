@@ -5,6 +5,7 @@ import boto3
 from collections import defaultdict
 from datetime import datetime
 from botocore.client import Config
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
@@ -38,6 +39,38 @@ CATEGORIES = {
 
 # ================= R2 YARDIMCI FONKSİYONLAR =================
 
+def list_all_files(prefix):
+    """R2'deki tüm dosyaları listeler"""
+    files = []
+    continuation_token = None
+    
+    while True:
+        try:
+            if continuation_token:
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    Prefix=prefix,
+                    ContinuationToken=continuation_token
+                )
+            else:
+                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+        except Exception as e:
+            print(f"   ❌ Listeleme hatası: {e}")
+            return []
+        
+        if 'Contents' not in response:
+            break
+        
+        for obj in response['Contents']:
+            files.append(obj['Key'])
+        
+        if response.get('IsTruncated'):
+            continuation_token = response.get('NextContinuationToken')
+        else:
+            break
+    
+    return files
+
 def folder_exists(prefix):
     """R2'de klasör var mı (içinde en az 1 dosya var mı)"""
     try:
@@ -45,47 +78,6 @@ def folder_exists(prefix):
         return 'Contents' in response
     except:
         return False
-
-def copy_folder(source_prefix, dest_prefix):
-    """R2'de bir klasörün içindeki tüm dosyaları başka klasöre kopyala"""
-    continuation_token = None
-    copied_count = 0
-    
-    while True:
-        try:
-            if continuation_token:
-                response = s3.list_objects_v2(
-                    Bucket=R2_BUCKET, 
-                    Prefix=source_prefix,
-                    ContinuationToken=continuation_token
-                )
-            else:
-                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=source_prefix)
-        except Exception as e:
-            print(f"   ❌ Listeleme hatası: {e}")
-            raise
-        
-        if 'Contents' not in response:
-            break
-        
-        for obj in response['Contents']:
-            source_key = obj['Key']
-            dest_key = source_key.replace(source_prefix, dest_prefix, 1)
-            
-            try:
-                copy_source = {'Bucket': R2_BUCKET, 'Key': source_key}
-                s3.copy_object(CopySource=copy_source, Bucket=R2_BUCKET, Key=dest_key)
-                copied_count += 1
-            except Exception as e:
-                print(f"   ❌ Kopyalama hatası: {source_key} -> {dest_key}: {e}")
-                raise
-        
-        if response.get('IsTruncated'):
-            continuation_token = response.get('NextContinuationToken')
-        else:
-            break
-    
-    print(f"   📁 {copied_count} dosya kopyalandı: {source_prefix} → {dest_prefix}")
 
 def delete_folder(prefix):
     """R2'de bir klasörün içindeki tüm dosyaları sil"""
@@ -122,15 +114,33 @@ def delete_folder(prefix):
         else:
             break
     
-    print(f"   🗑️ {deleted_count} dosya silindi: {prefix}")
+    if deleted_count > 0:
+        print(f"   🗑️ {deleted_count} dosya silindi: {prefix}")
+
+def copy_and_overwrite(source_key, dest_key):
+    """Tek bir dosyayı üzerine yazar (parallel için)"""
+    try:
+        # Kaynak dosyayı oku
+        response = s3.get_object(Bucket=R2_BUCKET, Key=source_key)
+        content = response['Body'].read()
+        
+        # Hedefe üzerine yaz
+        s3.put_object(Bucket=R2_BUCKET, Key=dest_key, Body=content, ContentType='text/html')
+        return True
+    except Exception as e:
+        print(f"   ⚠️ {source_key} -> {dest_key} yazılamadı: {e}")
+        return False
+
+# ================= OPTİMİZE ATOMIC SWAP =================
 
 def atomic_swap():
     """
-    articles_ready/ → articles/ atomik swap işlemi
-    Eğer başarısız olursa hata fırlatır (SEIÇARIZ)
+    articles_ready/ → articles/ OPTİMİZE swap
+    - Backup YOK (üzerine yaz)
+    - Parallel copy (10 thread)
     """
     print("\n" + "=" * 40)
-    print("🔄 ATOMIC SWAP: articles_ready/ → articles/")
+    print("🔄 ATOMIC SWAP: articles_ready/ → articles/ (Üzerine Yaz + Parallel)")
     print("=" * 40)
     
     # 1. articles_ready/ var mı kontrol et
@@ -138,28 +148,47 @@ def atomic_swap():
         print("❌ articles_ready/ bulunamadı! Swap iptal.")
         return False
     
-    # 2. articles/ varsa backup al
-    if folder_exists('articles/'):
-        print("📦 articles/ → articles_backup/ kopyalanıyor...")
-        copy_folder('articles/', 'articles_backup/')
-        print("✅ Backup alındı")
+    # 2. Tüm dosyaları listele
+    print("📁 articles_ready/ içindeki dosyalar listeleniyor...")
+    source_files = list_all_files('articles_ready/')
     
-    # 3. articles_ready/ → articles/ kopyala
-    print("🚀 articles_ready/ → articles/ kopyalanıyor...")
-    copy_folder('articles_ready/', 'articles/')
-    print("✅ Yeni sürüm aktif!")
+    if not source_files:
+        print("⚠️ articles_ready/ boş, swap iptal.")
+        return False
     
-    # 4. Backup'ı sil
-    if folder_exists('articles_backup/'):
-        print("🗑️ articles_backup/ siliniyor...")
-        delete_folder('articles_backup/')
-        print("✅ Backup temizlendi")
+    print(f"   📄 {len(source_files)} dosya bulundu.")
+    
+    # 3. Parallel olarak üzerine yaz
+    print(f"🚀 {len(source_files)} dosya parallel yazılıyor (10 thread)...")
+    
+    success_count = 0
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {}
+        for source_key in source_files:
+            dest_key = source_key.replace('articles_ready/', 'articles/', 1)
+            future = executor.submit(copy_and_overwrite, source_key, dest_key)
+            futures[future] = source_key
+        
+        for future in as_completed(futures):
+            if future.result():
+                success_count += 1
+            source_key = futures[future]
+            if success_count % 50 == 0:
+                print(f"   📊 {success_count}/{len(source_files)} dosya yazıldı...")
+    
+    print(f"   ✅ {success_count}/{len(source_files)} dosya başarıyla yazıldı")
+    
+    # 4. Başarı oranı kontrolü (%90 altı ise hata)
+    if success_count < len(source_files) * 0.9:
+        print(f"❌ Çok fazla hata ({success_count}/{len(source_files)} başarılı)")
+        print("   SEIÇARIZ! Manuel müdahale gerekli.")
+        return False
     
     # 5. articles_ready/ temizle
     print("🗑️ articles_ready/ siliniyor...")
     delete_folder('articles_ready/')
-    print("✅ Swap tamamlandı!")
     
+    print("✅ Swap tamamlandı!")
     return True
 
 # ================= MEVCUT LİBRARIAN FONKSİYONLARI =================
@@ -461,9 +490,9 @@ def generate_category_archives(articles, lang):
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KÜTÜPHANECİ BOT (Librarian)")
+    print("📚 KÜTÜPHANECİ BOT (Librarian) - OPTİMİZE")
     print("   ✅ explore/ klasörü oluşturuluyor")
-    print("   ✅ Atomic swap: articles_ready/ → articles/")
+    print("   ✅ Atomic swap: Üzerine Yaz + Parallel (10 thread)")
     print("=" * 60)
     
     # 1. Önce explore/ sayfalarını oluştur
@@ -504,4 +533,3 @@ def librarian():
 
 if __name__ == "__main__":
     librarian()
-
