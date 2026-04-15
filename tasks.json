@@ -3218,5 +3218,805 @@
         "display_date": "14 April 2026",
         "processed_at": "2026-04-15 18:32:50",
         "hash": "4ea1c02c"
+    },
+    {
+        "task_id": "0101",
+        "category": "tech",
+        "cluster_id": "tech_01",
+        "topic": "2026 AI Trading Bots: Strategic ROI Analysis and High-Frequency Execution Platforms",
+        "reference_link": "https://www.bloomberg.com/ai-trading-trends-2026",
+        "language": "en",
+        "author_persona": "Quantitative Trading Systems Architect & Fintech Strategist",
+        "special_instructions": "Focus on low-latency execution and risk management algorithms. Compare decentralized vs centralized AI bots. Include a data table for annual ROI projections.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A sleek, high-tech trading command center with transparent glass screens showing rapid green ticker data, neon blue lighting, cinematic bokeh, 8k, photorealistic, no text",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "Split screen: left side \"Chaotic Manual Charts\" with red downwards trends; right side \"Calm AI Interface\" with steady green growth and automated trade icons, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A futuristic robotic hand interacting with a holographic crypto-chart showing a \"Trade Executed: Profit +18%\" notification, clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0102",
+        "category": "tech",
+        "cluster_id": "tech_02",
+        "topic": "The Rise of Autonomous Malware: How AI-Driven Defense Neutralizes Zero-Day Threats in 2026",
+        "reference_link": "https://www.wired.com/cybersecurity-ai-future",
+        "language": "en",
+        "author_persona": "Chief Information Security Officer (CISO) & Ethical Hacker",
+        "special_instructions": "Explain behavioral analysis over signature-based detection. Discuss the \"Human-in-the-loop\" security model. Focus on enterprise-level data protection.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A digital shield glowing with blue energy lines protecting a data core from red crystalline shards of malware, dark cyber background, cinematic lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A visualization of a neural network identifying a malicious red node among millions of blue nodes, glowing data streams, 3D isometric view, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A modern security dashboard showing \"Threat Neutralized: 0.002s\", clean minimalist interface, soft blue glow, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0103",
+        "category": "tech",
+        "cluster_id": null,
+        "topic": "Edge Computing vs Cloud: Why 2026 is the Year of Real-Time Decentralized Processing",
+        "reference_link": "https://www.forbes.com/edge-computing-2026",
+        "language": "en",
+        "author_persona": "Distributed Systems Engineer & IoT Infrastructure Consultant",
+        "special_instructions": "Discuss latency reduction in autonomous vehicles and smart cities. Explain why \"local processing\" is the new privacy standard.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic smart city at night with glowing data lines connecting street lamps, cars, and buildings to local small data towers, cinematic, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A comparison of data travel: left side showing a long loop to a distant cloud; right side showing a direct fast link to a nearby edge device, clean infographic style, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A technician installing a small, glowing edge-computing unit on a factory wall, wires and circuit boards visible, soft industrial lighting, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0104",
+        "category": "tech",
+        "cluster_id": null,
+        "topic": "Quantum Supremacy in Pharmaceutical R&D: How 2026 Research is Halving Drug Discovery Time",
+        "reference_link": "https://www.nature.com/quantum-bio-tech",
+        "language": "en",
+        "author_persona": "Quantum Physicist & Bioinformatics Researcher",
+        "special_instructions": "Analyze the impact of quantum simulation on molecular modeling. Explain the transition from binary to qubit-based drug design.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic laboratory with a large glowing quantum computer in the center, complex blue wiring, a scientist looking at a 3D DNA molecule hologram, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A visual of a molecule being assembled by light particles (qubits), highly detailed, scientific visualization, soft glow, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A chart showing \"Traditional R&D: 10 Years\" vs \"Quantum R&D: 2 Years\" displayed on a high-tech lab monitor, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0105",
+        "category": "tech",
+        "cluster_id": null,
+        "topic": "Beyond Smartwatches: The 2026 Era of Neural Links and Bio-Integrated Wearables",
+        "reference_link": "https://www.theverge.com/wearables-2026-report",
+        "language": "en",
+        "author_persona": "Biomedical Engineer & Human-Machine Interface Expert",
+        "special_instructions": "Discuss smart contact lenses and skin-integrated glucose monitors. Focus on the \"Invisible Tech\" trend.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A close-up of a human eye with a subtle, glowing micro-circuit pattern on the iris (smart lens), cinematic lighting, extremely detailed, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A person wearing a thin, transparent electronic skin patch on their wrist that glows softly when showing a heart rate, futuristic fashion, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A digital overlay showing a \"Vitals: Stable\" HUD seen through a pair of stylish, normal-looking AR glasses, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0106",
+        "category": "wellness",
+        "cluster_id": null,
+        "topic": "The 2026 Longevity Blueprints: Cellular Reprogramming and Advanced Biohacking Routines",
+        "reference_link": "https://www.healthline.com/longevity-science-2026",
+        "language": "en",
+        "author_persona": "Longevity Scientist & Regenerative Medicine Specialist",
+        "special_instructions": "Analyze NAD+ boosters, senolytics, and personalized nutrition. Focus on extending \"Healthspan\" over just \"Lifespan\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A vibrant, healthy elderly person running on a beach at sunrise, glowing DNA helix overlaying the background, warm natural light, cinematic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Oxidized Cells\"; right side \"Rejuvenated Cells\" with glowing mitochondria, biological visualization, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A smart kitchen counter showing a personalized \"Bio-Optimal Meal Plan\" on a holographic display next to a fresh green smoothie, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0107",
+        "category": "wellness",
+        "cluster_id": null,
+        "topic": "AI-Driven Gastronomy: How DNA-Based Meal Plans are Eliminating Metabolic Disease in 2026",
+        "reference_link": "https://www.medicalnewstoday.com/personalized-nutrition-2026",
+        "language": "en",
+        "author_persona": "Clinical Nutritionist & AI Health Data Analyst",
+        "special_instructions": "Discuss the integration of continuous glucose monitors (CGM) with AI recipe generators. Focus on gut microbiome optimization.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A professional chef and a data scientist looking at a colorful array of fresh organic vegetables and a holographic nutrient breakdown, soft kitchen lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A smartphone app scanning a grocery item and showing a \"DNA Match: 98%\" badge with detailed micronutrient stats, clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A top-down view of a beautifully plated Mediterranean dish with small holographic icons showing Vitamin and Mineral levels, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0108",
+        "category": "wellness",
+        "cluster_id": null,
+        "topic": "VR Therapy and AI Companions: Solving the 2026 Global Loneliness and Anxiety Crisis",
+        "reference_link": "https://www.psychologytoday.com/tech-wellness-2026",
+        "language": "en",
+        "author_persona": "Neuropsychologist & Digital Wellness Consultant",
+        "special_instructions": "Focus on VR-based exposure therapy and AI-driven cognitive behavioral therapy (CBT) apps.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A person sitting in a comfortable chair wearing a sleek VR headset, surrounded by a peaceful, glowing forest environment (holographic), soft lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "An AI chatbot interface on a tablet showing a empathetic conversation: \"I'm here for you, let's practice breathing\", soft colors, minimalist UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "Brain scan visualization (fMRI) showing a stressed red area turning into a calm blue area during a VR meditation session, 3D isometric view",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0109",
+        "category": "wellness",
+        "cluster_id": null,
+        "topic": "Circadian Alignment 2.0: Optimizing 2026 Sleep and Energy through Light and Sound Science",
+        "reference_link": "https://www.mindbodygreen.com/biohacking-trends-2026",
+        "language": "en",
+        "author_persona": "Circadian Rhythm Specialist & Sleep Coach",
+        "special_instructions": "Discuss red light therapy, binaural beats, and temperature-controlled sleeping environments.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A high-tech bedroom with warm amber low-level lighting, a sleep-tracking device glowing softly on a nightstand, serene atmosphere, photorealistic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Blue Light Stress\" with a person looking tired; right side \"Red Light Calm\" with a person looking relaxed, cinematic lighting, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A pair of sleek earbuds showing \"Binaural Beats: Deep Sleep Mode\" on a connected smartphone screen, soft glow, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0110",
+        "category": "wellness",
+        "cluster_id": null,
+        "topic": "Muscle Hypertrophy in 2026: EMS Suits and AI-Adaptive Resistance Training",
+        "reference_link": "https://www.menshealth.com/fitness-tech-2026",
+        "language": "en",
+        "author_persona": "Sports Physiologist & Performance Biohacker",
+        "special_instructions": "Focus on Electric Muscle Stimulation (EMS) and AI coaches that adjust weights in real-time.",
+        "visuals": {
+            "kapak": {
+                "prompt": "An athlete wearing a sleek black compression suit with glowing blue fibers (EMS suit) doing a workout in a modern gym, cinematic lighting, photorealistic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A smart gym mirror showing an AI coach overlay \"Adjusting Form: 2 degrees left\", glowing data lines on the athlete's reflection, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a muscle fiber visualization glowing with energy during a high-tech workout, biological 3D render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0111",
+        "category": "future-economy",
+        "cluster_id": "fe_02",
+        "topic": "The Tokenization of Everything: Why Real-World Assets (RWA) are the Backbone of 2026 Finance",
+        "reference_link": "https://www.coindesk.com/rwa-tokenization-2026",
+        "language": "en",
+        "author_persona": "Blockchain Economist & Asset Tokenization Consultant",
+        "special_instructions": "Focus on real estate and fine art tokenization. Discuss liquidity in previously illiquid markets.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A holographic golden skyscraper icon hovering above a tablet, with hundreds of tiny glowing \"digital share\" tokens flowing from it, financial district background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Slow Paper Deeds\"; right side \"Instant Tokenized Transfer\" on a smartphone, clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A digital dashboard showing \"Portfolio: 5% of Van Gogh Painting, 2% of London Office Building\", modern clean finance UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0112",
+        "category": "future-economy",
+        "cluster_id": null,
+        "topic": "DePIN 2026: Building the People's Internet and Energy Grid through Incentivized Hardware",
+        "reference_link": "https://www.cointelegraph.com/depin-guide-2026",
+        "language": "en",
+        "author_persona": "Decentralized Infrastructure (DePIN) Architect",
+        "special_instructions": "Explain Decentralized Physical Infrastructure Networks. Focus on community-owned WiFi and solar grids.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A map of a city with thousands of small glowing nodes (WiFi routers/solar panels) connected by golden threads, sunset background, cinematic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A person installing a small glowing \"DePIN Hub\" on their balcony, with a smartphone showing \"Earnings: 12 Tokens/Hour\", photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A decentralized energy dashboard showing \"Community Solar Power: 84% Capacity\", clean green energy UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0113",
+        "category": "future-economy",
+        "cluster_id": null,
+        "topic": "CBDC vs. Stablecoins: The Battle for Global Monetary Control in 2026",
+        "reference_link": "https://www.reuters.com/cbdc-report-2026",
+        "language": "en",
+        "author_persona": "Monetary Policy Analyst & Crypto-Economist",
+        "special_instructions": "Analyze the privacy implications of CBDCs. Compare with programmable stablecoins. Mention the \"Digital Euro\" and \"Digital Dollar\" projects.",
+        "visuals": {
+            "kapak": {
+                "prompt": "Two large glowing coins (one with a Central Bank logo, one with a decentralized symbol) facing each other on a high-tech glass table, dark dramatic background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A digital wallet showing \"Digital Dollar: Programmable Tax Payment\" vs \"USDC: Private Payment\", clean interface comparison, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person paying at a store using a sleek digital card, with a holographic \"Transaction Verified by Central Bank\" badge, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0114",
+        "category": "future-economy",
+        "cluster_id": null,
+        "topic": "Gig Economy 3.0: How AI Agents and DAOs are Replacing Traditional Corporate Jobs in 2026",
+        "reference_link": "https://www.hbr.org/gig-economy-web3-2026",
+        "language": "en",
+        "author_persona": "Future of Work Consultant & DAO Strategist",
+        "special_instructions": "Focus on AI-managed freelance marketplaces. Discuss Decentralized Autonomous Organizations (DAOs) as the new \"employers\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A global map with diverse professionals connected by glowing links to a central holographic \"DAO Logo\", no central building, sunset city background, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A digital workspace showing an AI agent negotiating a contract for a freelance designer, dual screen setup, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A smartphone screen showing \"Voting Rights Active: New DAO Proposal\", clean community-driven UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0115",
+        "category": "future-economy",
+        "cluster_id": null,
+        "topic": "Beyond Profits: Why 2026 Investors are Prioritizing \"Regenerative Finance\" (ReFi)",
+        "reference_link": "https://www.bloomberg.com/esg-investing-2026",
+        "language": "en",
+        "author_persona": "Sustainable Finance Director & ReFi Advocate",
+        "special_instructions": "Focus on carbon credit markets and biodiversity offsets. Explain how blockchain ensures ESG transparency.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A digital forest where trees grow as the \"Investment Fund\" value increases, glowing green numbers among the leaves, cinematic lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A dashboard showing \"Carbon Credits Retired: 500 tons\" with a real-time link to a reforestation project in the Amazon, clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A professional handshake with a holographic \"Green Certification\" badge appearing between the hands, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0116",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Circular Cities 2026: Designing Urban Environments with Zero-Waste Architecture",
+        "reference_link": "https://www.ellenmacarthurfoundation.org/circular-cities-2026",
+        "language": "en",
+        "author_persona": "Urban Planner & Circular Economy Architect",
+        "special_instructions": "Analyze modular building materials and \"Product-as-a-Service\" urban models. Case study: Amsterdam or Singapore.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic city building with vertical gardens and visible solar glass, where robot arms are replacing modular parts instead of demolition, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Trash Filled Landfill\"; right side \"Automated Recycling Loop\" feeding back into a factory, clean infographic, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a modular building brick made from recycled ocean plastic, highly textured, professional studio lighting, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0117",
+        "category": "eco",
+        "cluster_id": null,
+        "topic": "Regenerative Farming 2026: Vertical AI-Farms and Soil Carbon Sequestration",
+        "reference_link": "https://www.nationalgeographic.com/future-of-farming-2026",
+        "language": "en",
+        "author_persona": "AgTech Innovator & Soil Microbiologist",
+        "special_instructions": "Focus on \"No-Till\" methods and drone-based precision farming. Explain how farmers earn through \"Soil Carbon Credits\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A massive indoor vertical farm with layers of glowing purple and blue LED lights, drones flying through the aisles, cinematic lighting, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A cross-section of healthy dark soil with glowing roots and diverse microorganisms, extremely detailed, scientific render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A tablet showing a \"Farm Carbon Storage: +15%\" dashboard with a map of a lush green field, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0118",
+        "category": "eco",
+        "cluster_id": null,
+        "topic": "The Hydrogen Revolution: Powering 2026 Heavy Industry with Zero-Emission Fuel",
+        "reference_link": "https://www.iea.org/hydrogen-outlook-2026",
+        "language": "en",
+        "author_persona": "Renewable Energy Engineer & Hydrogen Policy Expert",
+        "special_instructions": "Analyze the cost-drop in electrolyzers. Discuss hydrogen-powered shipping and steel production.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A giant cargo ship at sea with \"Powered by Hydrogen\" glowing on its side, leaving only water vapor behind, dramatic ocean sunset, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A visualization of a water molecule (H2O) splitting into hydrogen and oxygen using glowing green energy, clean scientific animation style, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A hydrogen refueling station for heavy trucks, sleek silver design, green nozzles, soft evening light, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0119",
+        "category": "eco",
+        "cluster_id": null,
+        "topic": "2026 Ocean Restoration: Autonomous Plastic Collectors and Coral Reef AI-Bio-Seeding",
+        "reference_link": "https://www.theoceancleanup.com/2026-mission",
+        "language": "en",
+        "author_persona": "Marine Biologist & Ocean Tech Engineer",
+        "special_instructions": "Discuss satellite-tracked ocean cleanup systems and 3D-printed coral reefs.",
+        "visuals": {
+            "kapak": {
+                "prompt": "An underwater view of a vibrant coral reef with small robotic drones carefully planting new coral, sunbeams filtering through blue water, cinematic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A large autonomous solar-powered vessel on the ocean surface pulling in plastic waste with a glowing blue collection net, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Bleached Dead Coral\"; right side \"Healthy Thriving Reef\" after AI-seeding, vibrant colors, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0120",
+        "category": "eco",
+        "cluster_id": null,
+        "topic": "Lab-Grown Leather and Mushroom Silk: The 2026 Biotech Revolution in Sustainable Fashion",
+        "reference_link": "https://www.vogue.com/sustainable-fashion-2026",
+        "language": "en",
+        "author_persona": "Sustainable Fashion Designer & Materials Scientist",
+        "special_instructions": "Analyze Mycelium-based fabrics and bacterial dyes. Focus on the end of \"Fast Fashion\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A high-end fashion boutique with a dress made of glowing, translucent mushroom-based silk on a mannequin, soft elegant lighting, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A microscopic view of mushroom (mycelium) fibers weaving themselves into a strong leather-like texture, biological 3D render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person scanning a clothing tag that shows \"CO2 Footprint: Negative\" and \"100% Biodegradable\", clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0121",
+        "category": "elearning",
+        "cluster_id": null,
+        "topic": "The 2026 Metaverse Schooling: VR Classrooms and Immersive History Lessons",
+        "reference_link": "https://www.edtechmagazine.com/vr-education-2026",
+        "language": "en",
+        "author_persona": "EdTech Visionary & Immersive Learning Designer",
+        "special_instructions": "Focus on \"Time-Travel\" history lessons and VR-based chemistry labs. Discuss the end of static textbooks.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A classroom of students wearing lightweight VR headsets, seeing a holographic T-Rex walking through the room, excited faces, cinematic lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A student's view through VR: standing in ancient Rome, with glowing \"Interact\" labels on buildings and statues, highly detailed, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A virtual chemistry lab where a student is safely mixing glowing liquids with their hands, holographic periodic table in the air, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0122",
+        "category": "elearning",
+        "cluster_id": null,
+        "topic": "One-on-One AI Tutors for Everyone: Solving the 2026 Global Education Inequality",
+        "reference_link": "https://www.khanacademy.org/ai-education-future",
+        "language": "en",
+        "author_persona": "Pedagogy Expert & AI Ethics Researcher",
+        "special_instructions": "Analyze how LLMs provide 24/7 personalized tutoring. Discuss \"Adaptive Learning Paths\" based on student emotion and speed.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A child in a rural village with a basic tablet, laughing while a friendly glowing AI tutor (hologram) helps them with math, sunset background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A screen showing \"Personalized Learning Path: Mastered Algebra, Moving to Calculus\", with glowing trophy icons, clean gamified UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Confused Student in Large Class\"; right side \"Confident Student with AI Tutor\", emotional contrast, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0123",
+        "category": "elearning",
+        "cluster_id": null,
+        "topic": "The Death of the 4-Year Degree? 2026's Rise of AI-Verified Micro-Credentials",
+        "reference_link": "https://www.coursera.org/future-of-degrees-2026",
+        "language": "en",
+        "author_persona": "Workforce Development Strategist & Academic Reformist",
+        "special_instructions": "Focus on job-market demand for specific skills like \"AI Prompt Engineering\" or \"Quantum Security\". Discuss blockchain-verified diplomas.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A digital resume glowing on a screen, with \"Verified Skills\" badges popping out like 3D holographic medals, modern clean office background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A person receiving a \"Blockchain Diploma\" on their phone after finishing a 3-month AI intensive course, smiling face, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Outdated University Textbook\"; right side \"Real-time AI Training Module\" showing live market data, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0124",
+        "category": "elearning",
+        "cluster_id": null,
+        "topic": "Lifelong Learning in the AI Age: How 2026 Workers are Reskilling Every 6 Months",
+        "reference_link": "https://www.linkedin.com/learning-future-2026",
+        "language": "en",
+        "author_persona": "Career Transition Coach & Lifelong Learner Advocate",
+        "special_instructions": "Focus on \"Micro-Learning\" during commutes and AI-curated skill paths. Mention the \"Human + AI\" collaboration skills.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A professional person in their 50s comfortably learning a new digital skill on a sleek tablet during a commute in a clean autonomous bus, photorealistic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A daily schedule on a smartphone showing \"15 min AI Ethics\", \"10 min Prompt Design\", \"20 min Data Strategy\", clean productivity UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A \"Skill Tree\" visualization on a screen where new branches are glowing and growing as the user completes micro-lessons, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0125",
+        "category": "elearning",
+        "cluster_id": null,
+        "topic": "Level Up: How 2026 Gamified Platforms are Turning Hard Sciences into Addictive Games",
+        "reference_link": "https://www.duolingo.com/gamified-learning-future",
+        "language": "en",
+        "author_persona": "Game Designer & Educational Psychologist",
+        "special_instructions": "Focus on \"Quest-based\" learning and real-world rewards for educational achievements.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A teenager intensely focused on a laptop where a complex physics problem looks like a high-end RPG quest, with glowing swords and \"Knowledge XP\", 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A digital leaderboard showing friends competing in a \"Global Coding Quest\", with glowing avatars and rank badges, vibrant colors, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A smartphone notification showing \"Quest Complete: You earned a local coffee shop discount for mastering Spanish verbs!\", clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
     }
 ]
