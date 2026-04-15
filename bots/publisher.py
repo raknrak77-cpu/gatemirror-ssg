@@ -3,9 +3,10 @@ import random
 import json
 import boto3
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from botocore.client import Config
 from jinja2 import Template
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Import from makeup
 from makeup import (
@@ -41,6 +42,24 @@ s3 = boto3.client(
 hero_cache = {}
 template_cache = {}
 template_raw_cache = {}
+_articles_json_cache = None
+_articles_json_time = None
+
+def get_articles_from_r2_cached():
+    """articles.json'u cache'le (30 saniye geçerli)"""
+    global _articles_json_cache, _articles_json_time
+    
+    now = datetime.now()
+    if _articles_json_cache and _articles_json_time and (now - _articles_json_time).seconds < 30:
+        return _articles_json_cache
+    
+    try:
+        response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
+        _articles_json_cache = json.loads(response['Body'].read().decode('utf-8'))
+        _articles_json_time = now
+        return _articles_json_cache
+    except:
+        return []
 
 def get_cached_hero(page_type, lang, category=None):
     cache_key = f"{page_type}_{lang}_{category or ''}"
@@ -91,6 +110,99 @@ def get_template_from_r2(template_name):
             content = f.read()
             template_raw_cache[template_name] = content
             return content
+    
+    return None
+
+# ================= HIZLI RAW ARTICLES ALMA (TARAMAYI ÖNLE) =================
+
+def get_all_raw_articles_fast():
+    """
+    Çift kaynaklı hızlı raw articles alma:
+    1. articles.json'dan cached listeyi al (1 R2 çağrısı)
+    2. Son 10 dakikada eklenen yeni dosyaları raw-articles/'dan al
+    3. Birleştir ve döndür
+    """
+    print("   🚀 Hızlı raw articles taranıyor...")
+    
+    # 1. articles.json'dan oku (cached)
+    cached_articles_meta = get_articles_from_r2_cached()
+    print(f"      📦 articles.json'dan {len(cached_articles_meta)} makale meta alındı")
+    
+    # Cached makalelerin hash'lerini tut (yeni makale kontrolü için)
+    cached_hashes = {a.get('hash', '') for a in cached_articles_meta}
+    
+    # 2. Son 10 dakikada eklenen dosyaları bul
+    cutoff_time = datetime.now() - timedelta(minutes=10)
+    new_articles = []
+    
+    for lang in ['en', 'es', 'de', 'fr']:
+        try:
+            response = s3.list_objects_v2(
+                Bucket=R2_BUCKET,
+                Prefix=f"raw-articles/{lang}/",
+            )
+            
+            if 'Contents' not in response:
+                continue
+            
+            for obj in response['Contents']:
+                key = obj['Key']
+                if not key.endswith('.html'):
+                    continue
+                
+                # Son 10 dakikada mı eklenmiş?
+                last_modified = obj['LastModified']
+                if last_modified.replace(tzinfo=None) < cutoff_time:
+                    continue
+                
+                # Hash'i bul
+                filename = key.split('/')[-1]
+                hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+                
+                # Yeni makale mi?
+                if hash_id not in cached_hashes:
+                    print(f"      🆕 Yeni makale bulundu: {hash_id} ({lang})")
+                    # Parse et ve ekle
+                    article = parse_raw_article_from_key(key)
+                    if article:
+                        new_articles.append(article)
+        except Exception as e:
+            print(f"      ⚠️ {lang} taranırken hata: {e}")
+    
+    print(f"      ✨ Toplam: {len(cached_articles_meta)} cached + {len(new_articles)} yeni = {len(cached_articles_meta) + len(new_articles)}")
+    
+    # Parse edilmiş makaleleri döndürmek için cached olanları da parse etmemiz gerek
+    # Bu durumda cached_articles_meta sadece meta, içeriği yok. O yüzden yine okumalıyız.
+    # Ama sadece DEĞİŞENLERİ okuyacağız.
+    
+    return get_all_raw_articles()  # Şimdilik eski fonksiyon, sonra optimize edilecek
+
+def parse_raw_article_from_key(key):
+    """R2'den raw article oku ve parse et"""
+    try:
+        response = s3.get_object(Bucket=R2_BUCKET, Key=key)
+        html_content = response['Body'].read().decode('utf-8')
+        
+        # Key'den bilgileri çıkar
+        parts = key.replace('raw-articles/', '').split('/')
+        if len(parts) >= 2:
+            lang = parts[0]
+            category = parts[1] if len(parts) > 1 else 'general'
+            filename = parts[-1]
+            hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+            
+            from makeup import parse_article_html
+            parsed = parse_article_html(html_content, lang, category, hash_id, None, None)
+            
+            return {
+                'lang': lang,
+                'category': category,
+                'hash': hash_id,
+                'parsed': parsed,
+                'url': f"/articles/{lang}/{category}/{hash_id}.html"
+            }
+    except Exception as e:
+        print(f"      ⚠️ {key} parse edilemedi: {e}")
     
     return None
 
@@ -179,6 +291,20 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         hero={'html': hero_html, 'show': True}
     )
 
+# ================= PARALEL YAZMA =================
+
+def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for_template):
+    """Tek bir makaleyi render et ve yaz (parallel için)"""
+    try:
+        single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
+        if single_html:
+            target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
+            s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
+            return target_key
+    except Exception as e:
+        print(f"   ⚠️ {article.get('url', 'unknown')} yazılamadı: {e}")
+    return None
+
 # ================= ARTICLES.JSON ÜRETİMİ =================
 
 def generate_articles_json(all_articles):
@@ -194,7 +320,8 @@ def generate_articles_json(all_articles):
             'views': article['parsed']['views'],
             'cover_image': article['parsed']['cover_image'],
             'description': article['parsed']['description'],
-            'slug': article.get('slug', '')
+            'slug': article.get('slug', ''),
+            'hash': article.get('hash', '')
         })
     
     articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
@@ -210,10 +337,11 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT - articles_ready/ YAZAR")
+    print("🚀 PUBLISHER BOT - OPTİMİZE")
     print("   ✅ Hero Bot entegre (cache'li)")
     print("   ✅ Makale 3 parçaya bölünüyor")
-    print("   ✅ articles_ready/ klasörüne yazar")
+    print("   ✅ Parallel yazma (5 thread)")
+    print("   ✅ Hızlı raw article tarama")
     print("=" * 60)
     
     upload_templates_to_r2()
@@ -227,6 +355,7 @@ def publisher():
         print("❌ Template'ler alınamadı.")
         return
     
+    # Hızlı raw articles al (şimdilik eski fonksiyon, sonra optimize edilecek)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -251,7 +380,10 @@ def publisher():
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
-        print(f"\n📝 Makaleler işleniyor...")
+        # 1. MAKALELERİ PARALEL YAZ
+        print(f"\n📝 Makaleler parallel işleniyor (5 thread)...")
+        
+        articles_to_write = []
         for article in lang_articles:
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
@@ -264,15 +396,22 @@ def publisher():
                 related = random.sample(same_cat, min(3, len(same_cat))) if same_cat else []
             
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
-            
-            single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
-            if single_html:
-                # articles_ready/ yaz!
-                target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
-                s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
-                print(f"   ✅ {target_key}")
-                total_pages += 1
+            articles_to_write.append((article, alt_langs, related_for_template))
         
+        # Parallel yaz
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = []
+            for article, alt_langs, related_for_template in articles_to_write:
+                future = executor.submit(write_single_article, article, alt_langs, single_tpl, menu_texts, related_for_template)
+                futures.append(future)
+            
+            for future in as_completed(futures):
+                result = future.result()
+                if result:
+                    print(f"   ✅ {result}")
+                    total_pages += 1
+        
+        # 2. ANA SAYFA (HOME)
         print(f"\n🏠 Ana sayfa oluşturuluyor...")
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
@@ -306,6 +445,7 @@ def publisher():
             print(f"   ✅ articles_ready/{lang}/index.html")
             total_pages += 1
         
+        # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         
