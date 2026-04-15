@@ -81,12 +81,28 @@ def upload_templates_to_r2():
     if not os.path.exists(templates_dir):
         print("⚠️ templates/ klasörü bulunamadı.")
         return
-    for file in os.listdir(templates_dir):
-        if file.endswith('.html'):
-            local_path = os.path.join(templates_dir, file)
-            r2_key = f"templates/{file}"
+    
+    # Tüm dosyaları ve alt klasörleri tara
+    for root, dirs, files in os.walk(templates_dir):
+        for file in files:
+            local_path = os.path.join(root, file)
+            relative_path = os.path.relpath(local_path, templates_dir)
+            r2_key = f"templates/{relative_path}".replace('\\', '/')
             try:
-                s3.upload_file(local_path, R2_BUCKET, r2_key)
+                # Content type belirleme
+                content_type = None
+                if file.endswith('.css'):
+                    content_type = 'text/css'
+                elif file.endswith('.html'):
+                    content_type = 'text/html'
+                elif file.endswith('.json'):
+                    content_type = 'application/json'
+                
+                extra_args = {}
+                if content_type:
+                    extra_args['ContentType'] = content_type
+                
+                s3.upload_file(local_path, R2_BUCKET, r2_key, ExtraArgs=extra_args)
                 print(f"✅ Template yüklendi: {r2_key}")
             except Exception as e:
                 print(f"⚠️ Template yüklenemedi {file}: {e}")
@@ -220,8 +236,12 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     
     hero_html = get_cached_hero('article', article['lang'])
     
+    # Kategori adını al (breadcrumb için)
+    category_name = get_category_name(article['lang'], article['category'])
+    
     return tmpl.render(
         lang=article['lang'],
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         title=parsed['title'],
         description=parsed['description'],
         canonical_url=canonical,
@@ -245,7 +265,9 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         alternate_langs=alt_langs,
         menu=menu_texts,
         related_articles=related_articles,
-        hero={'html': hero_html, 'show': False}
+        hero={'html': hero_html, 'show': False},
+        category=article['category'],  # <--- YENİ: breadcrumb için
+        category_name=category_name     # <--- YENİ: breadcrumb için
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
@@ -257,6 +279,7 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
     
     return tmpl.render(
         lang=lang,
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         menu=menu_texts,
         articles=articles,
         featured_article=featured_article,
@@ -277,6 +300,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     
     return tmpl.render(
         lang=lang,
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         menu=menu_texts,
         category_name=category_name,
         category_description=category_description,
@@ -342,6 +366,7 @@ def publisher():
     print("   ✅ Makale 3 parçaya bölünüyor")
     print("   ✅ Parallel yazma (5 thread)")
     print("   ✅ Hızlı raw article tarama")
+    print("   ✅ R2_PUBLIC_URL template'lere gönderiliyor")
     print("=" * 60)
     
     upload_templates_to_r2()
@@ -523,6 +548,7 @@ def publisher():
     print(f"   ✅ Toplam sayfa: {total_pages}")
     print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
     print(f"   ✅ Template cache: {len(template_cache)} template")
+    print(f"   ✅ R2_PUBLIC_URL template'lere gönderildi")
     print(f"{'=' * 40}")
 
 if __name__ == "__main__":
