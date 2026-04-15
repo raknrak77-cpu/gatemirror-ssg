@@ -184,10 +184,10 @@ BLOCK_RENDERERS = {
 def load_hero_data():
     """R2'den hero.json dosyasını yükler"""
     try:
-        response = s3.get_object(Bucket=R2_BUCKET, Key='data/hero.json')
+        response = s3.get_object(Bucket=R2_BUCKET, Key='templates/hero.json')
         return json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
-        print(f"⚠️ hero.json yüklenemedi: {e}")
+        print(f"⚠️ templates/hero.json yüklenemedi: {e}")
         return None
 
 def get_hero_blocks(page_type, lang, category=None):
