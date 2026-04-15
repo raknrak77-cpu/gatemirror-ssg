@@ -28,6 +28,9 @@ LANGUAGES = ['en', 'es', 'de', 'fr']
 LANG_NAMES = {
     'en': 'English', 'es': 'Español', 'de': 'Deutsch', 'fr': 'Français'
 }
+LANG_FLAGS = {
+    'en': '🇺🇸', 'es': '🇪🇸', 'de': '🇩🇪', 'fr': '🇫🇷'
+}
 
 CATEGORIES = {
     'tech': {'en': 'Technology & AI', 'es': 'Tecnología & IA', 'de': 'Technologie & KI', 'fr': 'Technologie & IA'},
@@ -36,6 +39,114 @@ CATEGORIES = {
     'eco': {'en': 'Eco & Sustainable', 'es': 'Eco & Sostenible', 'de': 'Öko & Nachhaltig', 'fr': 'Éco & Durable'},
     'elearning': {'en': 'E-Learning', 'es': 'E-Aprendizaje', 'de': 'E-Learning', 'fr': 'E-Apprentissage'}
 }
+
+# ================= ORTAK HTML BİLEŞENLERİ =================
+
+def get_side_menu_html(lang):
+    """Side menu HTML'ini oluşturur"""
+    return f'''<div class="side-menu" id="sideMenu">
+    <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <div class="dark-mode-toggle">
+        <span>🌓 Dark Mode</span>
+        <div class="toggle-switch" id="darkModeToggle"></div>
+    </div>
+    <div class="lang-section">
+        <div class="lang-title">READ IN</div>
+        <div class="flags">
+            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/es/" class="flag-link">🇪🇸 ES</a>
+            <a href="/de/" class="flag-link">🇩🇪 DE</a>
+            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="/{lang}/">HOME</a>
+        <a href="/{lang}/wellness/">WELLNESS</a>
+        <a href="/{lang}/tech/">TECH & AI</a>
+        <a href="/{lang}/future-economy/">FUTURE ECONOMY</a>
+        <a href="/{lang}/eco/">ECO & SUSTAINABLE</a>
+        <a href="/{lang}/elearning/">E-LEARNING</a>
+    </div>
+    <div class="footer-links">
+        <a href="/about-us.html">About Gatemirror</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/contact.html">Contact Us</a>
+        <p>&copy; 2026 Gatemirror Media</p>
+    </div>
+</div>'''
+
+def get_nav_html(lang):
+    """Navigasyon HTML'ini oluşturur"""
+    return f'''<nav>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    <div class="nav-links">
+        <a href="/{lang}/">HOME</a>
+        <a href="/{lang}/wellness/">WELLNESS</a>
+        <a href="/{lang}/tech/">TECH & AI</a>
+        <a href="/{lang}/future-economy/">FUTURE ECONOMY</a>
+        <a href="/{lang}/eco/">ECO & SUSTAINABLE</a>
+        <a href="/{lang}/elearning/">E-LEARNING</a>
+    </div>
+</nav>'''
+
+def get_footer_html():
+    """Footer HTML'ini oluşturur"""
+    return '''<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="/about-us.html">About Us</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="/en/tech/">TECH & AI</a>
+            <a href="/en/future-economy/">FUTURE ECONOMY</a>
+            <a href="/en/wellness/">WELLNESS</a>
+            <a href="/en/eco/">ECO & SUSTAINABLE</a>
+            <a href="/en/elearning/">E-LEARNING</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="/">🇺🇸 English</a>
+            <a href="/es/">🇪🇸 Español</a>
+            <a href="/de/">🇩🇪 Deutsch</a>
+            <a href="/fr/">🇫🇷 Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
+</footer>'''
+
+def get_hero_html(title, description):
+    """Hero HTML'ini oluşturur"""
+    return f'''<div class="hero">
+    <h1 class="hero-title">{title}</h1>
+    <p class="hero-description">{description}</p>
+</div>'''
+
+def get_base_js():
+    """Base JavaScript (side menu, dark mode)"""
+    return '''<script>
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('sideMenu');
+        const btn = document.querySelector('.menu-btn');
+        if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
+    });
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark');
+        const observer = new MutationObserver(() => localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled'));
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+</script>'''
 
 # ================= R2 YARDIMCI FONKSİYONLAR =================
 
@@ -120,11 +231,8 @@ def delete_folder(prefix):
 def copy_and_overwrite(source_key, dest_key):
     """Tek bir dosyayı üzerine yazar (parallel için)"""
     try:
-        # Kaynak dosyayı oku
         response = s3.get_object(Bucket=R2_BUCKET, Key=source_key)
         content = response['Body'].read()
-        
-        # Hedefe üzerine yaz
         s3.put_object(Bucket=R2_BUCKET, Key=dest_key, Body=content, ContentType='text/html')
         return True
     except Exception as e:
@@ -143,12 +251,10 @@ def atomic_swap():
     print("🔄 ATOMIC SWAP: articles_ready/ → articles/ (Üzerine Yaz + Parallel)")
     print("=" * 40)
     
-    # 1. articles_ready/ var mı kontrol et
     if not folder_exists('articles_ready/'):
         print("❌ articles_ready/ bulunamadı! Swap iptal.")
         return False
     
-    # 2. Tüm dosyaları listele
     print("📁 articles_ready/ içindeki dosyalar listeleniyor...")
     source_files = list_all_files('articles_ready/')
     
@@ -157,8 +263,6 @@ def atomic_swap():
         return False
     
     print(f"   📄 {len(source_files)} dosya bulundu.")
-    
-    # 3. Parallel olarak üzerine yaz
     print(f"🚀 {len(source_files)} dosya parallel yazılıyor (10 thread)...")
     
     success_count = 0
@@ -172,26 +276,23 @@ def atomic_swap():
         for future in as_completed(futures):
             if future.result():
                 success_count += 1
-            source_key = futures[future]
             if success_count % 50 == 0:
                 print(f"   📊 {success_count}/{len(source_files)} dosya yazıldı...")
     
     print(f"   ✅ {success_count}/{len(source_files)} dosya başarıyla yazıldı")
     
-    # 4. Başarı oranı kontrolü (%90 altı ise hata)
     if success_count < len(source_files) * 0.9:
         print(f"❌ Çok fazla hata ({success_count}/{len(source_files)} başarılı)")
         print("   SEIÇARIZ! Manuel müdahale gerekli.")
         return False
     
-    # 5. articles_ready/ temizle
     print("🗑️ articles_ready/ siliniyor...")
     delete_folder('articles_ready/')
     
     print("✅ Swap tamamlandı!")
     return True
 
-# ================= MEVCUT LİBRARIAN FONKSİYONLARI =================
+# ================= LİBRARIAN FONKSİYONLARI =================
 
 def get_articles_from_r2():
     try:
@@ -236,57 +337,48 @@ def generate_explorer_json(articles):
     print(f"   ✅ explore/explorer.json oluşturuldu ({len(articles)} articles)")
 
 def generate_all_articles_page(articles, lang):
+    """Tüm makaleleri listeleyen statik sayfa - ORTAK CSS + Side menu + Hero ile"""
     lang_articles = [a for a in articles if a.get('lang') == lang]
     lang_articles.sort(key=lambda x: x.get('sort_date', ''), reverse=True)
     lang_name = LANG_NAMES.get(lang, 'English')
     
+    # Dil geçiş bağlantıları
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}">{LANG_FLAGS.get(l, "")} {LANG_NAMES[l]}</a>'
+    
+    hero_title = f"All Articles ({lang_name})"
+    hero_description = f"Browse all {len(lang_articles)} articles in {lang_name}. Find the content that matters to you."
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>All Articles | Gatemirror ({lang_name})</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 2rem; }}
-        .container {{ max-width: 800px; margin: 0 auto; }}
-        h1 {{ color: #2ecc71; margin-bottom: 0.5rem; }}
-        .subtitle {{ color: #888; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem; }}
-        .back-link {{ display: inline-block; margin-bottom: 2rem; color: #2ecc71; text-decoration: none; }}
-        .back-link:hover {{ text-decoration: underline; }}
-        .lang-switch {{ margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }}
-        .lang-btn {{ background: #1a1a1a; padding: 0.25rem 0.75rem; border-radius: 1rem; color: #888; text-decoration: none; font-size: 0.8rem; }}
-        .lang-btn.active {{ background: #2ecc71; color: #0a0a0a; }}
-        .article-list {{ list-style: none; }}
-        .article-item {{ background: #1a1a1a; margin-bottom: 1rem; border-radius: 0.5rem; transition: transform 0.2s; }}
-        .article-item:hover {{ transform: translateX(4px); }}
-        .article-link {{ display: block; padding: 1rem; text-decoration: none; color: inherit; }}
-        .article-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff; }}
-        .article-meta {{ font-size: 0.8rem; color: #888; }}
-        .article-meta span {{ margin-right: 1rem; }}
-        footer {{ margin-top: 3rem; text-align: center; color: #555; font-size: 0.8rem; }}
-        a {{ color: #2ecc71; }}
-    </style>
+    <meta name="description" content="Browse all articles on Gatemirror in {lang_name}. Global insights on technology, wellness, future economy, sustainability and e-learning.">
+    <link rel="canonical" href="{R2_PUBLIC_URL}/explore/all-articles/{lang}.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <a href="/" class="back-link">← Home</a>
-        <h1>📚 All Articles ({lang_name})</h1>
-        <div class="lang-switch">{lang_switch}</div>
-        <div class="subtitle">{len(lang_articles)} articles</div>
-        <ul class="article-list">
+{get_side_menu_html(lang)}
+{get_nav_html(lang)}
+<main>
+    {get_hero_html(hero_title, hero_description)}
+    <div class="page-container">
+        <div class="lang-switch" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            {lang_switch}
+        </div>
+        <ul class="article-list" style="list-style: none; padding: 0;">
 '''
     for article in lang_articles:
         html += f'''
-            <li class="article-item">
-                <a href="{article.get('url', '#')}" class="article-link">
-                    <div class="article-title">{article.get('title', 'Untitled')}</div>
-                    <div class="article-meta">
+            <li class="article-item" style="background: var(--gray); margin-bottom: 1rem; border-radius: 0.5rem; transition: transform 0.2s;">
+                <a href="{article.get('url', '#')}" class="article-link" style="display: block; padding: 1rem; text-decoration: none; color: inherit;">
+                    <div class="article-title" style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">{article.get('title', 'Untitled')}</div>
+                    <div class="article-meta" style="font-size: 0.8rem; color: var(--text-light);">
                         <span>📅 {article.get('date', '')}</span>
                         <span>⏱️ {article.get('reading_time', '')} min read</span>
                         <span>👁️ {article.get('views', '')} views</span>
@@ -294,12 +386,12 @@ def generate_all_articles_page(articles, lang):
                 </a>
             </li>
 '''
-    html += '''
+    html += f'''
         </ul>
-        <footer>
-            <p>Gatemirror — Global insights on Tech, Wellness & Future Economy</p>
-        </footer>
     </div>
+</main>
+{get_footer_html()}
+{get_base_js()}
 </body>
 </html>'''
     
@@ -307,6 +399,7 @@ def generate_all_articles_page(articles, lang):
     print(f"   ✅ explore/all-articles/{lang}.html ({len(lang_articles)} articles)")
 
 def generate_categories_page(articles, lang):
+    """Kategori listesi sayfası - ORTAK CSS + Side menu + Hero ile"""
     lang_articles = [a for a in articles if a.get('lang') == lang]
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
@@ -319,85 +412,71 @@ def generate_categories_page(articles, lang):
     
     lang_name = LANG_NAMES.get(lang, 'English')
     
+    # Dil geçiş bağlantıları
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}">{LANG_FLAGS.get(l, "")} {LANG_NAMES[l]}</a>'
+    
+    hero_title = f"Categories ({lang_name})"
+    hero_description = "Browse articles by category. Find the content that matters to you."
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Categories | Gatemirror ({lang_name})</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 2rem; }}
-        .container {{ max-width: 1000px; margin: 0 auto; }}
-        h1 {{ color: #2ecc71; margin-bottom: 0.5rem; }}
-        .subtitle {{ color: #888; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem; }}
-        .back-link {{ display: inline-block; margin-bottom: 2rem; color: #2ecc71; text-decoration: none; }}
-        .back-link:hover {{ text-decoration: underline; }}
-        .lang-switch {{ margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }}
-        .lang-btn {{ background: #1a1a1a; padding: 0.25rem 0.75rem; border-radius: 1rem; color: #888; text-decoration: none; font-size: 0.8rem; }}
-        .lang-btn.active {{ background: #2ecc71; color: #0a0a0a; }}
-        .category-section {{ margin-bottom: 3rem; }}
-        .category-title {{ font-size: 1.8rem; color: #2ecc71; margin-bottom: 1rem; border-left: 4px solid #2ecc71; padding-left: 1rem; }}
-        .article-list {{ list-style: none; }}
-        .article-item {{ background: #1a1a1a; margin-bottom: 0.75rem; border-radius: 0.5rem; transition: transform 0.2s; }}
-        .article-item:hover {{ transform: translateX(4px); }}
-        .article-link {{ display: block; padding: 0.75rem 1rem; text-decoration: none; color: inherit; }}
-        .article-title {{ font-size: 1rem; font-weight: 500; color: #fff; }}
-        .article-meta {{ font-size: 0.75rem; color: #888; margin-top: 0.25rem; }}
-        .empty-category {{ background: #1a1a1a; padding: 1rem; border-radius: 0.5rem; text-align: center; color: #666; }}
-        .more-link {{ margin-top: 0.5rem; text-align: right; }}
-        .more-link a {{ color: #2ecc71; font-size: 0.85rem; text-decoration: none; }}
-        footer {{ margin-top: 3rem; text-align: center; color: #555; font-size: 0.8rem; }}
-        a {{ color: #2ecc71; }}
-    </style>
+    <meta name="description" content="Browse all categories on Gatemirror in {lang_name}. Technology, Wellness, Future Economy, Eco & Sustainable, E-Learning.">
+    <link rel="canonical" href="{R2_PUBLIC_URL}/explore/categories/{lang}.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <a href="/" class="back-link">← Home</a>
-        <h1>📂 Categories ({lang_name})</h1>
-        <div class="lang-switch">{lang_switch}</div>
-        <div class="subtitle">Browse articles by category</div>
+{get_side_menu_html(lang)}
+{get_nav_html(lang)}
+<main>
+    {get_hero_html(hero_title, hero_description)}
+    <div class="page-container">
+        <div class="lang-switch" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            {lang_switch}
+        </div>
 '''
     for cat_key, cat_names in CATEGORIES.items():
         cat_name = cat_names.get(lang, cat_names['en'])
         cat_arts = category_articles.get(cat_key, [])
         html += f'''
-        <div class="category-section">
-            <h2 class="category-title">{cat_name}</h2>
-            <ul class="article-list">
+        <div class="category-section" style="margin-bottom: 3rem;">
+            <h2 class="category-title" style="font-size: 1.8rem; color: var(--primary); margin-bottom: 1rem; border-left: 4px solid var(--primary); padding-left: 1rem;">{cat_name}</h2>
+            <ul class="article-list" style="list-style: none; padding: 0;">
 '''
         if cat_arts:
             for article in cat_arts[:8]:
                 html += f'''
-                <li class="article-item">
-                    <a href="{article.get('url', '#')}" class="article-link">
-                        <div class="article-title">{article.get('title', 'Untitled')}</div>
-                        <div class="article-meta">📅 {article.get('date', '')}</div>
+                <li class="article-item" style="background: var(--gray); margin-bottom: 0.75rem; border-radius: 0.5rem;">
+                    <a href="{article.get('url', '#')}" class="article-link" style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: inherit;">
+                        <div class="article-title" style="font-size: 1rem; font-weight: 500;">{article.get('title', 'Untitled')}</div>
+                        <div class="article-meta" style="font-size: 0.75rem; color: var(--text-light); margin-top: 0.25rem;">📅 {article.get('date', '')}</div>
                     </a>
                 </li>
 '''
             if len(cat_arts) > 8:
                 html += f'''
-                <div class="more-link">
-                    <a href="/explore/category-archive/{lang}/{cat_key}/">+ {len(cat_arts) - 8} more in {cat_name} →</a>
+                <div class="more-link" style="margin-top: 0.5rem; text-align: right;">
+                    <a href="/explore/category-archive/{lang}/{cat_key}/" style="color: var(--primary);">+ {len(cat_arts) - 8} more in {cat_name} →</a>
                 </div>
 '''
         else:
-            html += '<div class="empty-category">No articles yet</div>'
+            html += '<div class="empty-category" style="background: var(--gray); padding: 1rem; border-radius: 0.5rem; text-align: center; color: var(--text-light);">No articles yet</div>'
         html += '''
             </ul>
         </div>
 '''
-    html += '''
-        <footer>
-            <p>Gatemirror — Global insights on Tech, Wellness & Future Economy</p>
-        </footer>
+    html += f'''
     </div>
+</main>
+{get_footer_html()}
+{get_base_js()}
 </body>
 </html>'''
     
@@ -405,6 +484,7 @@ def generate_categories_page(articles, lang):
     print(f"   ✅ explore/categories/{lang}.html")
 
 def generate_category_archives(articles, lang):
+    """Her kategori için ayrı arşiv sayfası - ORTAK CSS + Side menu + Hero ile"""
     lang_articles = [a for a in articles if a.get('lang') == lang]
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
@@ -418,55 +498,44 @@ def generate_category_archives(articles, lang):
         cat_name = cat_names.get(lang, cat_names['en'])
         lang_name = LANG_NAMES.get(lang, 'English')
         
+        # Dil geçiş bağlantıları
         lang_switch = ''
         for l in LANGUAGES:
             active_class = 'active' if l == lang else ''
-            lang_switch += f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
+            lang_switch += f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}">{LANG_FLAGS.get(l, "")} {LANG_NAMES[l]}</a>'
+        
+        hero_title = f"{cat_name}"
+        hero_description = f"All articles in {cat_name} category ({len(cat_arts)} articles)."
         
         if cat_arts:
             html = f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{cat_name} Archive | Gatemirror ({lang_name})</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 2rem; }}
-        .container {{ max-width: 800px; margin: 0 auto; }}
-        h1 {{ color: #2ecc71; margin-bottom: 0.5rem; }}
-        .subtitle {{ color: #888; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem; }}
-        .back-link {{ display: inline-block; margin-bottom: 2rem; color: #2ecc71; text-decoration: none; }}
-        .back-link:hover {{ text-decoration: underline; }}
-        .lang-switch {{ margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }}
-        .lang-btn {{ background: #1a1a1a; padding: 0.25rem 0.75rem; border-radius: 1rem; color: #888; text-decoration: none; font-size: 0.8rem; }}
-        .lang-btn.active {{ background: #2ecc71; color: #0a0a0a; }}
-        .article-list {{ list-style: none; }}
-        .article-item {{ background: #1a1a1a; margin-bottom: 1rem; border-radius: 0.5rem; transition: transform 0.2s; }}
-        .article-item:hover {{ transform: translateX(4px); }}
-        .article-link {{ display: block; padding: 1rem; text-decoration: none; color: inherit; }}
-        .article-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff; }}
-        .article-meta {{ font-size: 0.8rem; color: #888; }}
-        .article-meta span {{ margin-right: 1rem; }}
-        footer {{ margin-top: 3rem; text-align: center; color: #555; font-size: 0.8rem; }}
-        a {{ color: #2ecc71; }}
-    </style>
+    <meta name="description" content="Browse all {cat_name} articles on Gatemirror in {lang_name}. {len(cat_arts)} articles available.">
+    <link rel="canonical" href="{R2_PUBLIC_URL}/explore/category-archive/{lang}/{cat_key}/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <a href="/" class="back-link">← Home</a>
-        <a href="/explore/categories/{lang}.html" class="back-link" style="margin-left: 1rem;">← Categories</a>
-        <h1>📚 {cat_name}</h1>
-        <div class="lang-switch">{lang_switch}</div>
-        <div class="subtitle">All articles ({len(cat_arts)} articles)</div>
-        <ul class="article-list">
+{get_side_menu_html(lang)}
+{get_nav_html(lang)}
+<main>
+    {get_hero_html(hero_title, hero_description)}
+    <div class="page-container">
+        <div class="lang-switch" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            {lang_switch}
+        </div>
+        <ul class="article-list" style="list-style: none; padding: 0;">
 '''
             for article in cat_arts:
                 html += f'''
-            <li class="article-item">
-                <a href="{article.get('url', '#')}" class="article-link">
-                    <div class="article-title">{article.get('title', 'Untitled')}</div>
-                    <div class="article-meta">
+            <li class="article-item" style="background: var(--gray); margin-bottom: 1rem; border-radius: 0.5rem;">
+                <a href="{article.get('url', '#')}" class="article-link" style="display: block; padding: 1rem; text-decoration: none; color: inherit;">
+                    <div class="article-title" style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">{article.get('title', 'Untitled')}</div>
+                    <div class="article-meta" style="font-size: 0.8rem; color: var(--text-light);">
                         <span>📅 {article.get('date', '')}</span>
                         <span>⏱️ {article.get('reading_time', '')} min read</span>
                         <span>👁️ {article.get('views', '')} views</span>
@@ -474,12 +543,12 @@ def generate_category_archives(articles, lang):
                 </a>
             </li>
 '''
-            html += '''
+            html += f'''
         </ul>
-        <footer>
-            <p>Gatemirror — Global insights on Tech, Wellness & Future Economy</p>
-        </footer>
     </div>
+</main>
+{get_footer_html()}
+{get_base_js()}
 </body>
 </html>'''
             
@@ -492,6 +561,7 @@ def librarian():
     print("\n" + "=" * 60)
     print("📚 KÜTÜPHANECİ BOT (Librarian) - OPTİMİZE")
     print("   ✅ explore/ klasörü oluşturuluyor")
+    print("   ✅ Ortak CSS + Side menu + Hero kullanıyor")
     print("   ✅ Atomic swap: Üzerine Yaz + Parallel (10 thread)")
     print("=" * 60)
     
