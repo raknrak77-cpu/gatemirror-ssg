@@ -218,10 +218,33 @@ kapak_prompt: A child in a rural village with a basic tablet, laughing while a f
 icerik_1_prompt: A screen showing "Personalized Learning Path: Mastered Algebra, Moving to Calculus", with glowing trophy icons, clean gamified UI, photorealistic
 icerik_2_prompt: A split screen: left side "Confused Student in Large Class"; right side "Confident Student with AI Tutor", emotional contrast, photorealistic
 
+
 category: elearning
 cluster: skill_based_nanodegrees
 topic: The Death of the 4-Year Degree? 2026's Rise of AI-Verified Micro-Credentials
 reference_link: https://www.coursera.org/future-of-degrees-2026
 author_persona: Workforce Development Strategist & Academic Reformist
 special_instructions: Focus on job-market demand for specific skills like "AI Prompt Engineering" or "Quantum Security". Discuss blockchain-verified diplomas.
-kapak_prompt: A digital resume glowing on a screen, with "Verified Skills" badges popping out like 3D holographic medals, modern clean office bac
+kapak_prompt: A digital resume glowing on a screen, with "Verified Skills" badges popping out like 3D holographic medals, modern clean office background, 8k
+icerik_1_prompt: A person receiving a "Blockchain Diploma" on their phone after finishing a 3-month AI intensive course, smiling face, photorealistic
+icerik_2_prompt: A split screen: left side "Outdated University Textbook"; right side "Real-time AI Training Module" showing live market data, photorealistic
+
+category: elearning
+cluster: lifelong_learning_platforms
+topic: Lifelong Learning in the AI Age: How 2026 Workers are Reskilling Every 6 Months
+reference_link: https://www.linkedin.com/learning-future-2026
+author_persona: Career Transition Coach & Lifelong Learner Advocate
+special_instructions: Focus on "Micro-Learning" during commutes and AI-curated skill paths. Mention the "Human + AI" collaboration skills.
+kapak_prompt: A professional person in their 50s comfortably learning a new digital skill on a sleek tablet during a commute in a clean autonomous bus, photorealistic, 8k
+icerik_1_prompt: A daily schedule on a smartphone showing "15 min AI Ethics", "10 min Prompt Design", "20 min Data Strategy", clean productivity UI, photorealistic
+icerik_2_prompt: A "Skill Tree" visualization on a screen where new branches are glowing and growing as the user completes micro-lessons, photorealistic
+
+category: elearning
+cluster: gamified_education
+topic: Level Up: How 2026 Gamified Platforms are Turning Hard Sciences into Addictive Games
+reference_link: https://www.duolingo.com/gamified-learning-future
+author_persona: Game Designer & Educational Psychologist
+special_instructions: Focus on "Quest-based" learning and real-world rewards for educational achievements.
+kapak_prompt: A teenager intensely focused on a laptop where a complex physics problem looks like a high-end RPG quest, with glowing swords and "Knowledge XP", 8k
+icerik_1_prompt: A digital leaderboard showing friends competing in a "Global Coding Quest", with glowing avatars and rank badges, vibrant colors, photorealistic
+icerik_2_prompt: A smartphone notification showing "Quest Complete: You earned a local coffee shop discount for mastering Spanish verbs!", clean UI, photorealistic
