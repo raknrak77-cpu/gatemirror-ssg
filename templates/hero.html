@@ -1,0 +1,593 @@
+<!-- ===================== -->
+<!-- HERO COMPONENT - Tam Donanımlı, Çok Dilli, Modüler -->
+<!-- ===================== -->
+
+{% if hero and hero.html %}
+    {{ hero.html | safe }}
+{% else %}
+    <!-- Fallback Hero -->
+    <div class="hero">
+        <h1 class="hero-title">{{ hero_title | default('Gatemirror') }}</h1>
+        <p class="hero-description">{{ hero_description | default('Global insights on technology, wellness, and future economy.') }}</p>
+        {% if hero_cta_url and hero_cta_text %}
+        <a href="{{ hero_cta_url }}" class="hero-cta hero-cta-primary">{{ hero_cta_text }}</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+<style>
+/* ===================== */
+/* HERO COMPONENT CSS */
+/* ===================== */
+
+/* Hero Container */
+.hero {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Title & Description */
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ffffff 0%, #2ecc71 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+}
+
+/* CTA Buttons */
+.hero-cta {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.hero-cta-primary {
+    background: #2ecc71;
+    color: #0a0a0a;
+}
+
+.hero-cta-primary:hover {
+    background: #27ae60;
+    transform: translateY(-2px);
+}
+
+.hero-cta-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.hero-cta-secondary:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+/* Featured Articles Section */
+.hero-featured-section {
+    margin: 2rem 0;
+}
+
+.hero-featured-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.hero-featured-articles {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.featured-article-item {
+    background: rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 200px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.featured-article-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.12);
+}
+
+.featured-article-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.featured-article-item a {
+    text-decoration: none;
+    color: #ffffff;
+    display: block;
+}
+
+.featured-article-title {
+    display: block;
+    padding: 0.75rem 0.75rem 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.featured-article-meta {
+    display: block;
+    padding: 0 0.75rem 0.75rem;
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+/* News Ticker */
+.hero-news-ticker {
+    background: rgba(46,204,113,0.12);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    margin: 1.5rem auto;
+    display: inline-block;
+    overflow: hidden;
+    max-width: 90%;
+    backdrop-filter: blur(4px);
+}
+
+.ticker-wrapper {
+    overflow: hidden;
+}
+
+.ticker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker-scroll 25s linear infinite;
+}
+
+.ticker-item {
+    display: inline-block;
+    margin-right: 2rem;
+    font-size: 0.85rem;
+}
+
+.ticker-item::before {
+    content: "🔥";
+    margin-right: 0.5rem;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* YouTube Video */
+.hero-youtube {
+    max-width: 560px;
+    margin: 1.5rem auto;
+}
+
+.hero-youtube iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.hero-youtube-caption {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* GIF & Image */
+.hero-gif-wrapper,
+.hero-image-wrapper {
+    margin: 1.5rem auto;
+}
+
+.hero-gif,
+.hero-image {
+    max-width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Stats */
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.stat {
+    text-align: center;
+    padding: 0.5rem 1rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2ecc71;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Carousel */
+.hero-carousel {
+    position: relative;
+    max-width: 800px;
+    margin: 1.5rem auto;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.carousel-container {
+    position: relative;
+    aspect-ratio: 16/9;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background: rgba(0,0,0,0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev { left: 1rem; }
+.carousel-next { right: 1rem; }
+
+.carousel-dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot:hover {
+    background: rgba(255,255,255,0.8);
+}
+
+.dot.active {
+    background: #2ecc71;
+    width: 24px;
+    border-radius: 5px;
+}
+
+/* Countdown */
+.hero-countdown {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 1rem;
+    backdrop-filter: blur(4px);
+}
+
+.countdown-timer {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.1em;
+    color: #2ecc71;
+}
+
+.countdown-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* Quote */
+.hero-quote {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid #2ecc71;
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+    border-radius: 0 1rem 1rem 0;
+}
+
+.hero-quote blockquote {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.hero-quote cite {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    font-style: normal;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-title {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .hero-featured-articles {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .featured-article-item {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .hero-stats {
+        gap: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .carousel-prev,
+    .carousel-next {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+    
+    .countdown-timer {
+        font-size: 1.2rem;
+    }
+    
+    .hero-quote blockquote {
+        font-size: 0.95rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-featured-articles {
+        gap: 0.75rem;
+    }
+    
+    .featured-article-item {
+        width: 180px;
+    }
+}
+
+/* Dark Mode Adjustments */
+body.dark .hero {
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+}
+
+body.dark .hero-title {
+    background: linear-gradient(135deg, #ffffff 0%, #2ecc71 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.dark .featured-article-item {
+    background: rgba(255,255,255,0.05);
+}
+
+body.dark .hero-quote {
+    background: rgba(255,255,255,0.02);
+}
+
+/* Animation for hero entrance */
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero > * {
+    animation: heroFadeIn 0.5s ease forwards;
+}
+
+.hero > *:nth-child(1) { animation-delay: 0.05s; }
+.hero > *:nth-child(2) { animation-delay: 0.1s; }
+.hero > *:nth-child(3) { animation-delay: 0.15s; }
+.hero > *:nth-child(4) { animation-delay: 0.2s; }
+.hero > *:nth-child(5) { animation-delay: 0.25s; }
+.hero > *:nth-child(6) { animation-delay: 0.3s; }
+</style>
+
+<script>
+// =====================
+// HERO COMPONENT JS
+// =====================
+
+(function() {
+    'use strict';
+    
+    // Carousel
+    function initHeroCarousel() {
+        const carousels = document.querySelectorAll('.hero-carousel');
+        
+        carousels.forEach(carousel => {
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.dot');
+            const prevBtn = carousel.querySelector('.carousel-prev');
+            const nextBtn = carousel.querySelector('.carousel-next');
+            
+            if (!slides.length) return;
+            
+            let currentIndex = 0;
+            let interval;
+            
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+            
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+                resetInterval();
+            }
+            
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(currentIndex);
+                resetInterval();
+            }
+            
+            function startInterval() {
+                interval = setInterval(nextSlide, 5000);
+            }
+            
+            function resetInterval() {
+                if (interval) clearInterval(interval);
+                startInterval();
+            }
+            
+            if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+            if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+            
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => {
+                    currentIndex = i;
+                    showSlide(currentIndex);
+                    resetInterval();
+                });
+            });
+            
+            startInterval();
+        });
+    }
+    
+    // Countdown Timer
+    function initHeroCountdown() {
+        const countdowns = document.querySelectorAll('.hero-countdown');
+        
+        countdowns.forEach(countdown => {
+            const targetDate = countdown.dataset.target;
+            if (!targetDate) return;
+            
+            const timerEl = countdown.querySelector('.countdown-timer');
+            if (!timerEl) return;
+            
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const target = new Date(targetDate).getTime();
+                const diff = target - now;
+                
+                if (diff <= 0) {
+                    timerEl.textContent = "00:00:00:00";
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (86400000)) / (3600000));
+                const minutes = Math.floor((diff % (3600000)) / (60000));
+                const seconds = Math.floor((diff % (60000)) / 1000);
+                
+                timerEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            initHeroCarousel();
+            initHeroCountdown();
+        });
+    } else {
+        initHeroCarousel();
+        initHeroCountdown();
+    }
+})();
+</script>
