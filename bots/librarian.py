@@ -360,7 +360,7 @@ def generate_all_articles_page(articles, lang):
     <meta name="description" content="Browse all articles on Gatemirror in {lang_name}. Global insights on technology, wellness, future economy, sustainability and e-learning.">
     <link rel="canonical" href="{R2_PUBLIC_URL}/explore/all-articles/{lang}.html">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/assets/css/style.css">
 </head>
 <body>
 {get_side_menu_html(lang)}
@@ -430,7 +430,7 @@ def generate_categories_page(articles, lang):
     <meta name="description" content="Browse all categories on Gatemirror in {lang_name}. Technology, Wellness, Future Economy, Eco & Sustainable, E-Learning.">
     <link rel="canonical" href="{R2_PUBLIC_URL}/explore/categories/{lang}.html">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/assets/css/style.css">
 </head>
 <body>
 {get_side_menu_html(lang)}
@@ -517,7 +517,7 @@ def generate_category_archives(articles, lang):
     <meta name="description" content="Browse all {cat_name} articles on Gatemirror in {lang_name}. {len(cat_arts)} articles available.">
     <link rel="canonical" href="{R2_PUBLIC_URL}/explore/category-archive/{lang}/{cat_key}/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{R2_PUBLIC_URL}/templates/css/style.css">
+    <link rel="stylesheet" href="{R2_PUBLIC_URL}/assets/css/style.css">
 </head>
 <body>
 {get_side_menu_html(lang)}
