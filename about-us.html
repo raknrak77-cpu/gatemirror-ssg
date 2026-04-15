@@ -2,71 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>About Gatemirror | Global Insights & Analysis</title>
-    
-    <!-- SEO -->
     <meta name="description" content="Gatemirror delivers global insights on technology, wellness, future economy, sustainability and digital learning. Clear, structured and multilingual content for a changing world.">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <style>
-        :root { --primary: #2ecc71; --dark: #000; --text: #333; --gray: #f4f4f4; }
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; color: var(--text); line-height: 1.8; overflow-x: hidden; }
-        
-        nav { background: white; padding: 15px 5%; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid var(--dark); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 900; font-size: 26px; color: var(--dark); text-decoration: none; text-transform: uppercase; }
-        .icon-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #000; position: absolute; left: 5%; transition: 0.3s; }
-        .icon-btn:hover { color: var(--primary); }
-
-        #side-menu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: var(--dark); color: white; transition: 0.4s; z-index: 2000; padding: 40px 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); text-align: left; }
-        #side-menu.active { left: 0; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
-        .side-links { margin-top: 50px; }
-        .side-links a { display: block; color: white; text-decoration: none; font-size: 18px; font-weight: 700; padding: 15px 0; border-bottom: 1px solid #333; text-transform: uppercase; }
-        .side-footer { margin-top: 40px; font-size: 13px; color: #888; }
-        .side-footer a { color: #aaa; text-decoration: none; display: block; padding: 5px 0; }
-        .lang-bar { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .flag { cursor: pointer; opacity: 0.7; transition: 0.3s; font-size: 20px; text-decoration: none; }
-        .flag:hover { opacity: 1; transform: scale(1.2); }
-
-        .container { max-width: 800px; margin: 60px auto; padding: 0 20px; }
-        h1 { font-size: 48px; font-weight: 900; letter-spacing: -2px; margin-bottom: 30px; border-left: 10px solid var(--primary); padding-left: 20px; line-height: 1.1; }
-        p { font-size: 18px; margin-bottom: 25px; }
-
-        .mission-box { background: var(--gray); padding: 30px; border: 1px solid #ddd; margin-top: 30px; }
-        .mission-box h3 { margin-bottom: 10px; }
-        .mission-box ul { padding-left: 20px; }
-
-        footer { background: var(--dark); color: white; padding: 40px; text-align: center; margin-top: 60px; }
-
-        @media (max-width: 600px) { h1 { font-size: 32px; } }
-    </style>
+    <link rel="canonical" href="https://gatemirror.com/about-us.html">
+    <meta property="og:title" content="About Gatemirror | Global Insights & Analysis">
+    <meta property="og:description" content="We don't publish content. We decode the world.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Gatemirror">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- MASTER CSS - Tek merkezi stil dosyası -->
+    <link rel="stylesheet" href="/templates/css/style.css">
 </head>
 <body>
 
-<!-- SIDE MENU -->
-<div id="side-menu">
-    <span class="close-btn" onclick="toggleMenu()">&times;</span>
-
-    <div class="lang-bar">
-        <a href="/en/" class="flag">🇺🇸</a>
-        <a href="/de/" class="flag">🇩🇪</a>
-        <a href="/fr/" class="flag">🇫🇷</a>
-        <a href="/es/" class="flag">🇪🇸</a>
+<div class="side-menu" id="sideMenu">
+    <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <div class="dark-mode-toggle">
+        <span>🌓 Dark Mode</span>
+        <div class="toggle-switch" id="darkModeToggle"></div>
     </div>
-
-    <div class="side-links">
-        <a href="/">Home</a>
-        <a href="/en/wellness/">Wellness</a>
-        <a href="/en/tech/">Tech</a>
-        <a href="/en/future-economy/">Future Economy</a>
-        <a href="/en/eco/">Eco</a>
-        <a href="/en/elearning/">E-Learning</a>
+    <div class="lang-section">
+        <div class="lang-title">READ IN</div>
+        <div class="flags">
+            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/es/" class="flag-link">🇪🇸 ES</a>
+            <a href="/de/" class="flag-link">🇩🇪 DE</a>
+            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+        </div>
     </div>
-
-    <div class="side-footer">
+    <div class="nav-links">
+        <a href="/en/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
+    <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
         <a href="/privacy-policy.html">Privacy Policy</a>
         <a href="/contact.html">Contact Us</a>
@@ -74,62 +48,104 @@
     </div>
 </div>
 
-<!-- NAV -->
 <nav>
-    <button class="icon-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
-    <a href="/" class="logo">GATEMIRROR</a>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    <div class="nav-links">
+        <a href="/en/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
 </nav>
 
-<!-- CONTENT -->
-<div class="container">
-
-    <h1>We don’t publish content. We decode the world.</h1>
-
-    <p><strong>Gatemirror</strong> is a next-generation digital publication focused on making complex global topics simple, clear, and actionable.</p>
-
-    <p>We cover the intersection of <strong>technology, wellness, future economy, sustainability, and digital education</strong> — the pillars shaping how people will live, work, and think in the next decade.</p>
-
-    <p>In a world flooded with information, Gatemirror acts as a filter — not just reflecting content, but <strong>structuring it into meaningful insights</strong>.</p>
-
-    <div class="mission-box">
-        <h3>Our Approach</h3>
-        <p>We combine <strong>AI-assisted research</strong> with human editorial logic to produce content that is fast, scalable, and globally accessible.</p>
-
-        <ul>
-            <li>Clear and structured</li>
-            <li>Globally relevant</li>
-            <li>Easy to consume</li>
-            <li>Actionable insights</li>
-        </ul>
+<main>
+    <!-- HERO - Statik sayfa hero -->
+    <div class="hero">
+        <h1 class="hero-title">We don't publish content. We decode the world.</h1>
+        <p class="hero-description">Gatemirror is a next-generation digital publication focused on making complex global topics simple, clear, and actionable.</p>
     </div>
 
-    <div class="mission-box">
-        <h3>Global by Design</h3>
-        <p>Gatemirror publishes content in multiple languages to reach a truly global audience. Our goal is not just translation — but <strong>contextual clarity across cultures</strong>.</p>
+    <div class="page-container">
+        <p><strong>Gatemirror</strong> is a next-generation digital publication focused on making complex global topics simple, clear, and actionable.</p>
+
+        <p>We cover the intersection of <strong>technology, wellness, future economy, sustainability, and digital education</strong> — the pillars shaping how people will live, work, and think in the next decade.</p>
+
+        <p>In a world flooded with information, Gatemirror acts as a filter — not just reflecting content, but <strong>structuring it into meaningful insights</strong>.</p>
+
+        <div class="mission-box">
+            <h3>Our Approach</h3>
+            <p>We combine <strong>AI-assisted research</strong> with human editorial logic to produce content that is fast, scalable, and globally accessible.</p>
+            <ul>
+                <li>Clear and structured</li>
+                <li>Globally relevant</li>
+                <li>Easy to consume</li>
+                <li>Actionable insights</li>
+            </ul>
+        </div>
+
+        <div class="mission-box">
+            <h3>Global by Design</h3>
+            <p>Gatemirror publishes content in multiple languages to reach a truly global audience. Our goal is not just translation — but <strong>contextual clarity across cultures</strong>.</p>
+        </div>
+
+        <div class="mission-box">
+            <h3>Why Gatemirror?</h3>
+            <p>Because information alone is no longer valuable.</p>
+            <p><strong>Clarity is.</strong></p>
+        </div>
+
+        <p><strong>Contact:</strong> hello@gatemirror.com</p>
     </div>
-
-    <div class="mission-box">
-        <h3>Why Gatemirror?</h3>
-        <p>Because information alone is no longer valuable.</p>
-        <p><strong>Clarity is.</strong></p>
-    </div>
-
-    <p>We are building a platform where knowledge is not just consumed — but understood.</p>
-
-    <!-- TRUST SIGNAL -->
-    <p><strong>Contact:</strong> hello@gatemirror.com</p>
-
-</div>
+</main>
 
 <footer>
-    <p>&copy; 2026 Gatemirror Media Group</p>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="/about-us.html">About Us</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="/en/tech/">TECH & AI</a>
+            <a href="/en/future-economy/">FUTURE ECONOMY</a>
+            <a href="/en/wellness/">WELLNESS</a>
+            <a href="/en/eco/">ECO & SUSTAINABLE</a>
+            <a href="/en/elearning/">E-LEARNING</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="/">🇺🇸 English</a>
+            <a href="/es/">🇪🇸 Español</a>
+            <a href="/de/">🇩🇪 Deutsch</a>
+            <a href="/fr/">🇫🇷 Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
 </footer>
 
 <script>
-    function toggleMenu() {
-        document.getElementById('side-menu').classList.toggle('active');
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('sideMenu');
+        const btn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
+    });
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark');
+        const observer = new MutationObserver(() => localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled'));
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     }
 </script>
-
 </body>
-            </html>
+</html>
