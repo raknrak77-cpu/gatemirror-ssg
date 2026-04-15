@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 import boto3
 from collections import defaultdict
 from datetime import datetime
@@ -35,8 +36,135 @@ CATEGORIES = {
     'elearning': {'en': 'E-Learning', 'es': 'E-Aprendizaje', 'de': 'E-Learning', 'fr': 'E-Apprentissage'}
 }
 
+# ================= R2 YARDIMCI FONKSİYONLAR =================
+
+def folder_exists(prefix):
+    """R2'de klasör var mı (içinde en az 1 dosya var mı)"""
+    try:
+        response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, MaxKeys=1)
+        return 'Contents' in response
+    except:
+        return False
+
+def copy_folder(source_prefix, dest_prefix):
+    """R2'de bir klasörün içindeki tüm dosyaları başka klasöre kopyala"""
+    continuation_token = None
+    copied_count = 0
+    
+    while True:
+        try:
+            if continuation_token:
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET, 
+                    Prefix=source_prefix,
+                    ContinuationToken=continuation_token
+                )
+            else:
+                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=source_prefix)
+        except Exception as e:
+            print(f"   ❌ Listeleme hatası: {e}")
+            raise
+        
+        if 'Contents' not in response:
+            break
+        
+        for obj in response['Contents']:
+            source_key = obj['Key']
+            dest_key = source_key.replace(source_prefix, dest_prefix, 1)
+            
+            try:
+                copy_source = {'Bucket': R2_BUCKET, 'Key': source_key}
+                s3.copy_object(CopySource=copy_source, Bucket=R2_BUCKET, Key=dest_key)
+                copied_count += 1
+            except Exception as e:
+                print(f"   ❌ Kopyalama hatası: {source_key} -> {dest_key}: {e}")
+                raise
+        
+        if response.get('IsTruncated'):
+            continuation_token = response.get('NextContinuationToken')
+        else:
+            break
+    
+    print(f"   📁 {copied_count} dosya kopyalandı: {source_prefix} → {dest_prefix}")
+
+def delete_folder(prefix):
+    """R2'de bir klasörün içindeki tüm dosyaları sil"""
+    continuation_token = None
+    deleted_count = 0
+    
+    while True:
+        try:
+            if continuation_token:
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    Prefix=prefix,
+                    ContinuationToken=continuation_token
+                )
+            else:
+                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+        except Exception as e:
+            print(f"   ❌ Listeleme hatası: {e}")
+            raise
+        
+        if 'Contents' not in response:
+            break
+        
+        objects_to_delete = [{'Key': obj['Key']} for obj in response['Contents']]
+        try:
+            s3.delete_objects(Bucket=R2_BUCKET, Delete={'Objects': objects_to_delete})
+            deleted_count += len(objects_to_delete)
+        except Exception as e:
+            print(f"   ❌ Silme hatası: {e}")
+            raise
+        
+        if response.get('IsTruncated'):
+            continuation_token = response.get('NextContinuationToken')
+        else:
+            break
+    
+    print(f"   🗑️ {deleted_count} dosya silindi: {prefix}")
+
+def atomic_swap():
+    """
+    articles_ready/ → articles/ atomik swap işlemi
+    Eğer başarısız olursa hata fırlatır (SEIÇARIZ)
+    """
+    print("\n" + "=" * 40)
+    print("🔄 ATOMIC SWAP: articles_ready/ → articles/")
+    print("=" * 40)
+    
+    # 1. articles_ready/ var mı kontrol et
+    if not folder_exists('articles_ready/'):
+        print("❌ articles_ready/ bulunamadı! Swap iptal.")
+        return False
+    
+    # 2. articles/ varsa backup al
+    if folder_exists('articles/'):
+        print("📦 articles/ → articles_backup/ kopyalanıyor...")
+        copy_folder('articles/', 'articles_backup/')
+        print("✅ Backup alındı")
+    
+    # 3. articles_ready/ → articles/ kopyala
+    print("🚀 articles_ready/ → articles/ kopyalanıyor...")
+    copy_folder('articles_ready/', 'articles/')
+    print("✅ Yeni sürüm aktif!")
+    
+    # 4. Backup'ı sil
+    if folder_exists('articles_backup/'):
+        print("🗑️ articles_backup/ siliniyor...")
+        delete_folder('articles_backup/')
+        print("✅ Backup temizlendi")
+    
+    # 5. articles_ready/ temizle
+    print("🗑️ articles_ready/ siliniyor...")
+    delete_folder('articles_ready/')
+    print("✅ Swap tamamlandı!")
+    
+    return True
+
+# ================= MEVCUT LİBRARIAN FONKSİYONLARI =================
+
 def get_articles_from_r2():
-    """articles.json'dan tüm makaleleri okur"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
         return json.loads(response['Body'].read().decode('utf-8'))
@@ -45,7 +173,6 @@ def get_articles_from_r2():
         return []
 
 def generate_explorer_json(articles):
-    """explore/explorer.json oluşturur - tüm dilleri ve detaylı metadataları içerir"""
     explorer_data = {
         "version": "1.0",
         "generated": datetime.now().isoformat(),
@@ -71,28 +198,23 @@ def generate_explorer_json(articles):
         })
     
     explorer_json = json.dumps(explorer_data, indent=2, ensure_ascii=False)
-    key = "explore/explorer.json"
     s3.put_object(
         Bucket=R2_BUCKET,
-        Key=key,
+        Key='explore/explorer.json',
         Body=explorer_json.encode('utf-8'),
         ContentType='application/json'
     )
-    print(f"   ✅ {key} oluşturuldu ({len(articles)} articles)")
+    print(f"   ✅ explore/explorer.json oluşturuldu ({len(articles)} articles)")
 
 def generate_all_articles_page(articles, lang):
-    """Tüm makaleleri listeleyen statik sayfa oluşturur - explore/all-articles/{lang}.html"""
-    
     lang_articles = [a for a in articles if a.get('lang') == lang]
     lang_articles.sort(key=lambda x: x.get('sort_date', ''), reverse=True)
-    
     lang_name = LANG_NAMES.get(lang, 'English')
     
-    # Dil geçiş bağlantıları
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/all-articles/{l}.html" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -127,30 +249,22 @@ def generate_all_articles_page(articles, lang):
         <a href="/" class="back-link">← Home</a>
         <h1>📚 All Articles ({lang_name})</h1>
         <div class="lang-switch">{lang_switch}</div>
-        <div class="subtitle">''' + str(len(lang_articles)) + ''' articles</div>
+        <div class="subtitle">{len(lang_articles)} articles</div>
         <ul class="article-list">
 '''
-    
     for article in lang_articles:
-        title = article.get('title', 'Untitled')
-        date = article.get('date', '')
-        url = article.get('url', '#')
-        reading_time = article.get('reading_time', '')
-        views = article.get('views', '')
-        
         html += f'''
             <li class="article-item">
-                <a href="{url}" class="article-link">
-                    <div class="article-title">{title}</div>
+                <a href="{article.get('url', '#')}" class="article-link">
+                    <div class="article-title">{article.get('title', 'Untitled')}</div>
                     <div class="article-meta">
-                        <span>📅 {date}</span>
-                        <span>⏱️ {reading_time} min read</span>
-                        <span>👁️ {views} views</span>
+                        <span>📅 {article.get('date', '')}</span>
+                        <span>⏱️ {article.get('reading_time', '')} min read</span>
+                        <span>👁️ {article.get('views', '')} views</span>
                     </div>
                 </a>
             </li>
 '''
-    
     html += '''
         </ul>
         <footer>
@@ -160,20 +274,11 @@ def generate_all_articles_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"explore/all-articles/{lang}.html"
-    s3.put_object(
-        Bucket=R2_BUCKET,
-        Key=key,
-        Body=html.encode('utf-8'),
-        ContentType='text/html'
-    )
-    print(f"   ✅ {key} oluşturuldu ({len(lang_articles)} articles)")
+    s3.put_object(Bucket=R2_BUCKET, Key=f"explore/all-articles/{lang}.html", Body=html.encode('utf-8'), ContentType='text/html')
+    print(f"   ✅ explore/all-articles/{lang}.html ({len(lang_articles)} articles)")
 
 def generate_categories_page(articles, lang):
-    """Kategori listesi sayfası oluşturur - explore/categories/{lang}.html"""
-    
     lang_articles = [a for a in articles if a.get('lang') == lang]
-    
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
         cat = article.get('category', '')
@@ -185,11 +290,10 @@ def generate_categories_page(articles, lang):
     
     lang_name = LANG_NAMES.get(lang, 'English')
     
-    # Dil geçiş bağlantıları
     lang_switch = ''
     for l in LANGUAGES:
         active_class = 'active' if l == lang else ''
-        lang_switch += f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+        lang_switch += f'<a href="/explore/categories/{l}.html" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
     
     html = f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -230,7 +334,6 @@ def generate_categories_page(articles, lang):
         <div class="lang-switch">{lang_switch}</div>
         <div class="subtitle">Browse articles by category</div>
 '''
-    
     for cat_key, cat_names in CATEGORIES.items():
         cat_name = cat_names.get(lang, cat_names['en'])
         cat_arts = category_articles.get(cat_key, [])
@@ -241,32 +344,26 @@ def generate_categories_page(articles, lang):
 '''
         if cat_arts:
             for article in cat_arts[:8]:
-                title = article.get('title', 'Untitled')
-                date = article.get('date', '')
-                url = article.get('url', '#')
                 html += f'''
                 <li class="article-item">
-                    <a href="{url}" class="article-link">
-                        <div class="article-title">{title}</div>
-                        <div class="article-meta">📅 {date}</div>
+                    <a href="{article.get('url', '#')}" class="article-link">
+                        <div class="article-title">{article.get('title', 'Untitled')}</div>
+                        <div class="article-meta">📅 {article.get('date', '')}</div>
                     </a>
                 </li>
 '''
             if len(cat_arts) > 8:
-                archive_url = f"/explore/category-archive/{lang}/{cat_key}/"
                 html += f'''
                 <div class="more-link">
-                    <a href="{archive_url}">+ {len(cat_arts) - 8} more in {cat_name} →</a>
+                    <a href="/explore/category-archive/{lang}/{cat_key}/">+ {len(cat_arts) - 8} more in {cat_name} →</a>
                 </div>
 '''
         else:
             html += '<div class="empty-category">No articles yet</div>'
-        
         html += '''
             </ul>
         </div>
 '''
-    
     html += '''
         <footer>
             <p>Gatemirror — Global insights on Tech, Wellness & Future Economy</p>
@@ -275,20 +372,11 @@ def generate_categories_page(articles, lang):
 </body>
 </html>'''
     
-    key = f"explore/categories/{lang}.html"
-    s3.put_object(
-        Bucket=R2_BUCKET,
-        Key=key,
-        Body=html.encode('utf-8'),
-        ContentType='text/html'
-    )
-    print(f"   ✅ {key} oluşturuldu")
+    s3.put_object(Bucket=R2_BUCKET, Key=f"explore/categories/{lang}.html", Body=html.encode('utf-8'), ContentType='text/html')
+    print(f"   ✅ explore/categories/{lang}.html")
 
 def generate_category_archives(articles, lang):
-    """Her kategori için ayrı arşiv sayfası oluşturur - explore/category-archive/{lang}/{category}/index.html"""
-    
     lang_articles = [a for a in articles if a.get('lang') == lang]
-    
     category_articles = {cat: [] for cat in CATEGORIES}
     for article in lang_articles:
         cat = article.get('category', '')
@@ -301,11 +389,10 @@ def generate_category_archives(articles, lang):
         cat_name = cat_names.get(lang, cat_names['en'])
         lang_name = LANG_NAMES.get(lang, 'English')
         
-        # Dil geçiş bağlantıları
         lang_switch = ''
         for l in LANGUAGES:
             active_class = 'active' if l == lang else ''
-            lang_switch += f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}">🇺🇸 {LANG_NAMES[l]}</a>' if l == 'en' else f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}"> {LANG_NAMES[l]}</a>'
+            lang_switch += f'<a href="/explore/category-archive/{l}/{cat_key}/" class="lang-btn {active_class}">{"🇺🇸 " + LANG_NAMES[l] if l == "en" else " " + LANG_NAMES[l]}</a>'
         
         if cat_arts:
             html = f'''<!DOCTYPE html>
@@ -346,19 +433,14 @@ def generate_category_archives(articles, lang):
         <ul class="article-list">
 '''
             for article in cat_arts:
-                title = article.get('title', 'Untitled')
-                date = article.get('date', '')
-                reading_time = article.get('reading_time', '')
-                views = article.get('views', '')
-                url = article.get('url', '#')
                 html += f'''
             <li class="article-item">
-                <a href="{url}" class="article-link">
-                    <div class="article-title">{title}</div>
+                <a href="{article.get('url', '#')}" class="article-link">
+                    <div class="article-title">{article.get('title', 'Untitled')}</div>
                     <div class="article-meta">
-                        <span>📅 {date}</span>
-                        <span>⏱️ {reading_time} min read</span>
-                        <span>👁️ {views} views</span>
+                        <span>📅 {article.get('date', '')}</span>
+                        <span>⏱️ {article.get('reading_time', '')} min read</span>
+                        <span>👁️ {article.get('views', '')} views</span>
                     </div>
                 </a>
             </li>
@@ -372,59 +454,54 @@ def generate_category_archives(articles, lang):
 </body>
 </html>'''
             
-            key = f"explore/category-archive/{lang}/{cat_key}/index.html"
-            s3.put_object(
-                Bucket=R2_BUCKET,
-                Key=key,
-                Body=html.encode('utf-8'),
-                ContentType='text/html'
-            )
-            print(f"   ✅ {key} oluşturuldu ({len(cat_arts)} articles)")
+            s3.put_object(Bucket=R2_BUCKET, Key=f"explore/category-archive/{lang}/{cat_key}/index.html", Body=html.encode('utf-8'), ContentType='text/html')
+            print(f"   ✅ explore/category-archive/{lang}/{cat_key}/index.html ({len(cat_arts)} articles)")
+
+# ================= ANA LİBRARIAN =================
 
 def librarian():
-    print("\n" + "="*60)
-    print("📚 KÜTÜPHANECİ BOT (Librarian) - Yeni Klasör Yapısı")
-    print("   explore/explorer.json (tüm diller, detaylı metadata)")
-    print("   explore/all-articles/{lang}.html")
-    print("   explore/categories/{lang}.html")
-    print("   explore/category-archive/{lang}/{category}/index.html")
-    print("="*60)
+    print("\n" + "=" * 60)
+    print("📚 KÜTÜPHANECİ BOT (Librarian)")
+    print("   ✅ explore/ klasörü oluşturuluyor")
+    print("   ✅ Atomic swap: articles_ready/ → articles/")
+    print("=" * 60)
     
+    # 1. Önce explore/ sayfalarını oluştur
     articles = get_articles_from_r2()
-    if not articles:
-        print("❌ Hiç makale bulunamadı (articles.json boş veya yok)")
-        return
+    if articles:
+        print(f"\n📊 Toplam {len(articles)} makale bulundu.")
+        
+        print("\n📄 Statik sayfalar oluşturuluyor...")
+        generate_explorer_json(articles)
+        
+        for lang in LANGUAGES:
+            print(f"\n   🌍 {lang.upper()} işleniyor...")
+            generate_all_articles_page(articles, lang)
+            generate_categories_page(articles, lang)
+            generate_category_archives(articles, lang)
+    else:
+        print("⚠️ articles.json okunamadı, explore/ sayfaları atlanıyor.")
     
-    print(f"📊 Toplam {len(articles)} makale bulundu.")
+    # 2. Atomic swap yap (articles_ready/ → articles/)
+    try:
+        swap_success = atomic_swap()
+        if swap_success:
+            print("\n✅ SWAP BAŞARILI! Site yeni içerikle yayında.")
+        else:
+            print("\n❌ SWAP BAŞARISIZ! Site eski içerikle devam ediyor.")
+            print("   Lütfen manuel müdahale gerekebilir.")
+            sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ KRİTİK HATA: {e}")
+        print("   SEIÇARIZ! Manuel müdahale gerekli.")
+        sys.exit(1)
     
-    # Dil bazlı istatistik
-    lang_counts = {}
-    for article in articles:
-        lang = article.get('lang', 'unknown')
-        lang_counts[lang] = lang_counts.get(lang, 0) + 1
-    
-    for lang in LANGUAGES:
-        print(f"   📊 {lang.upper()}: {lang_counts.get(lang, 0)} makale")
-    
-    print("\n📄 Statik sayfalar oluşturuluyor...")
-    
-    # Önce explorer.json oluştur (tüm diller için)
-    generate_explorer_json(articles)
-    
-    # Her dil için sayfaları oluştur
-    for lang in LANGUAGES:
-        print(f"\n   🌍 {lang.upper()} işleniyor...")
-        generate_all_articles_page(articles, lang)
-        generate_categories_page(articles, lang)
-        generate_category_archives(articles, lang)
-    
-    print("\n" + "="*60)
-    print("🏁 Kütüphaneci Bot tamamlandı.")
-    print("   ✅ explore/explorer.json")
-    print("   ✅ explore/all-articles/{lang}.html")
-    print("   ✅ explore/categories/{lang}.html")
-    print("   ✅ explore/category-archive/{lang}/{category}/index.html")
-    print("="*60)
+    print("\n" + "=" * 60)
+    print("🏁 KÜTÜPHANECİ BOT TAMAMLANDI!")
+    print("   ✅ explore/ klasörü güncellendi")
+    print("   ✅ Atomic swap tamamlandı")
+    print("=" * 60)
 
 if __name__ == "__main__":
     librarian()
+
