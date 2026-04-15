@@ -19,7 +19,7 @@ from makeup import (
 )
 
 # Import from hero_bot
-from hero_bot import render_hero, get_hero_data
+from hero_bot import render_hero
 
 # ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
@@ -36,6 +36,26 @@ s3 = boto3.client(
     config=Config(signature_version='s3v4'),
     region_name='auto'
 )
+
+# ================= CACHE MEKANİZMALARI =================
+hero_cache = {}
+template_cache = {}
+template_raw_cache = {}
+
+def get_cached_hero(page_type, lang, category=None):
+    """Hero HTML'ini cache'ler - her tip/dil için 1 kere render"""
+    cache_key = f"{page_type}_{lang}_{category or ''}"
+    if cache_key not in hero_cache:
+        hero_cache[cache_key] = render_hero(page_type, lang, category)
+        print(f"   🚀 Hero cache: {cache_key}")
+    return hero_cache[cache_key]
+
+def get_cached_template(template_str, template_name):
+    """Template'i cache'ler - her template için 1 kere parse"""
+    if template_name not in template_cache:
+        template_cache[template_name] = Template(template_str)
+        print(f"   🚀 Template cache: {template_name}")
+    return template_cache[template_name]
 
 # ================= TEMPLATE YÖNETİMİ =================
 
@@ -56,18 +76,26 @@ def upload_templates_to_r2():
                 print(f"⚠️ Template yüklenemedi {file}: {e}")
 
 def get_template_from_r2(template_name):
-    """R2'den template içeriğini alır, yoksa local'den dener"""
+    """R2'den template içeriğini alır, cache'ler"""
+    if template_name in template_raw_cache:
+        return template_raw_cache[template_name]
+    
     try:
         url = f"{R2_PUBLIC_URL}/templates/{template_name}"
         resp = requests.get(url, timeout=10)
         if resp.status_code == 200:
+            template_raw_cache[template_name] = resp.text
             return resp.text
     except:
         pass
+    
     local_path = os.path.join("templates", template_name)
     if os.path.exists(local_path):
         with open(local_path, 'r', encoding='utf-8') as f:
-            return f.read()
+            content = f.read()
+            template_raw_cache[template_name] = content
+            return content
+    
     return None
 
 # ================= RENDER FONKSİYONLARI =================
@@ -77,7 +105,7 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     Tek makale sayfasını render eder
     Hero: article tipinde (show: false varsayılan)
     """
-    tmpl = Template(template_str)
+    tmpl = get_cached_template(template_str, 'single')
     parsed = article['parsed']
     canonical = f"{R2_PUBLIC_URL}{article['url']}"
     
@@ -86,9 +114,8 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     author_bio = article.get('author_bio', '')
     author_avatar = article.get('author_avatar', '')
     
-    # Hero verisini al (article tipinde - genellikle show: false)
-    hero_html = render_hero('article', article['lang'])
-    hero_data = get_hero_data('article', article['lang'])
+    # Hero cache'den al (article tipinde)
+    hero_html = get_cached_hero('article', article['lang'])
     
     return tmpl.render(
         lang=article['lang'],
@@ -115,7 +142,7 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         alternate_langs=alt_langs,
         menu=menu_texts,
         related_articles=related_articles,
-        hero={'html': hero_html, 'show': hero_data.get('show', False)}
+        hero={'html': hero_html, 'show': False}  # Makalede hero kapalı
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
@@ -123,13 +150,12 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
     Ana sayfayı render eder
     Hero: home tipinde
     """
-    tmpl = Template(template_str)
+    tmpl = get_cached_template(template_str, 'home')
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
     
-    # Hero verisini al (home tipinde)
-    hero_html = render_hero('home', lang)
-    hero_data = get_hero_data('home', lang)
+    # Hero cache'den al (home tipinde)
+    hero_html = get_cached_hero('home', lang)
     
     return tmpl.render(
         lang=lang,
@@ -139,7 +165,7 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
         canonical_url=canonical,
         og_image=og_image,
         alternate_langs=alternate_langs,
-        hero={'html': hero_html, 'show': hero_data.get('show', True)}
+        hero={'html': hero_html, 'show': True}
     )
 
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
@@ -147,15 +173,14 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     Kategori listeleme sayfasını render eder
     Hero: category tipinde
     """
-    tmpl = Template(template_str)
+    tmpl = get_cached_template(template_str, 'list')
     category_name = get_category_name(lang, category)
     category_description = get_category_description(lang, category)
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
     
-    # Hero verisini al (category tipinde)
-    hero_html = render_hero('category', lang, category)
-    hero_data = get_hero_data('category', lang, category)
+    # Hero cache'den al (category tipinde)
+    hero_html = get_cached_hero('category', lang, category)
     
     return tmpl.render(
         lang=lang,
@@ -170,7 +195,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         pagination=None,
         guide_articles=[],
         alternate_langs=alternate_langs,
-        hero={'html': hero_html, 'show': hero_data.get('show', True)}
+        hero={'html': hero_html, 'show': True}
     )
 
 # ================= ARTICLES.JSON ÜRETİMİ =================
@@ -188,7 +213,8 @@ def generate_articles_json(all_articles):
             'reading_time': article['parsed']['reading_time'],
             'views': article['parsed']['views'],
             'cover_image': article['parsed']['cover_image'],
-            'description': article['parsed']['description']
+            'description': article['parsed']['description'],
+            'slug': article.get('slug', '')
         })
     
     articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
@@ -204,17 +230,19 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT - Tam Donanımlı")
+    print("🚀 PUBLISHER BOT - Tam Donanımlı & Optimize")
     print("   ✅ Sitemap + Hreflang + robots.txt")
-    print("   ✅ Hero Bot entegre (çok dilli, modüler)")
+    print("   ✅ Hero Bot entegre (cache'li, çok dilli)")
     print("   ✅ Makale 3 parçaya bölünüyor")
     print("   ✅ AdSense alanı hazır")
+    print("   ✅ Template + Hero cache aktif")
     print("=" * 60)
     
     # Template'leri R2'ye yükle
     upload_templates_to_r2()
     
-    # Template'leri al
+    # Template'leri al (cache'lenecek)
+    print("\n📄 Template'ler yükleniyor...")
     single_tpl = get_template_from_r2("single.html")
     home_tpl = get_template_from_r2("home.html")
     list_tpl = get_template_from_r2("list.html")
@@ -237,6 +265,9 @@ def publisher():
     # Alternatif diller sözlüğü oluştur
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
+    
+    # İstatistik için
+    total_pages = 0
     
     # Her dil için işlem yap
     for lang in languages:
@@ -274,6 +305,7 @@ def publisher():
                 target_key = article['url'].lstrip('/')
                 s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ {target_key}")
+                total_pages += 1
         
         # 2. ANA SAYFA (HOME)
         print(f"\n🏠 Ana sayfa oluşturuluyor...")
@@ -307,6 +339,7 @@ def publisher():
         if home_html:
             s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
             print(f"   ✅ articles/{lang}/index.html")
+            total_pages += 1
         
         # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
@@ -364,6 +397,7 @@ def publisher():
             if list_html:
                 s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ articles/{lang}/{category}/index.html ({len(cat_articles)} makale)")
+                total_pages += 1
     
     # 4. SITEMAP VE ROBOTS.TXT
     print(f"\n{'=' * 40}")
@@ -390,15 +424,19 @@ def publisher():
     for lang in languages:
         count = len([a for a in all_articles if a['lang'] == lang])
         print(f"   {lang.upper()}: {count} makale")
+    print(f"   Toplam oluşturulan sayfa: {total_pages}")
     
     print(f"\n📁 Oluşturulan dosyalar:")
-    print(f"   ✅ articles/{lang}/index.html (her dil için ana sayfa)")
-    print(f"   ✅ articles/{lang}/{category}/index.html (kategori sayfaları)")
-    print(f"   ✅ articles/{lang}/{category}/{yil}/{ay}/{hash}-{slug}.html (makaleler)")
+    print(f"   ✅ articles/{{lang}}/index.html (ana sayfalar)")
+    print(f"   ✅ articles/{{lang}}/{{category}}/index.html (kategori sayfaları)")
+    print(f"   ✅ articles/{{lang}}/{{category}}/{{yil}}/{{ay}}/{{hash}}-{{slug}}.html (makaleler)")
     print(f"   ✅ sitemap.xml")
     print(f"   ✅ robots.txt")
     print(f"   ✅ articles.json")
-    print(f"\n🎨 Hero Bot entegre çalışıyor (hero.json ile yönetiliyor)")
+    
+    print(f"\n🎨 Hero Bot entegre çalışıyor (cache'li)")
+    print(f"   Hero cache: {len(hero_cache)} benzersiz hero")
+    print(f"   Template cache: {len(template_cache)} template")
     print(f"{'=' * 40}")
 
 if __name__ == "__main__":
