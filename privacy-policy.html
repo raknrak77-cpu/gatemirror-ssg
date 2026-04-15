@@ -2,104 +2,173 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Privacy Policy | Gatemirror</title>
-
-    <!-- SEO -->
     <meta name="description" content="Learn how Gatemirror collects, uses, and protects your data. Transparent, global, and user-first privacy approach.">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <style>
-        :root { --primary: #2ecc71; --dark: #000; --text: #333; --gray: #f4f4f4; }
-        body { font-family: Arial, sans-serif; margin: 0; color: var(--text); line-height: 1.7; }
-        
-        nav { background: white; padding: 15px 5%; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid var(--dark); position: sticky; top: 0; }
-        .logo { font-weight: 900; font-size: 26px; color: var(--dark); text-decoration: none; }
-
-        .container { max-width: 900px; margin: 50px auto; padding: 0 20px; }
-
-        h1 { font-size: 40px; border-bottom: 4px solid var(--dark); padding-bottom: 10px; }
-        h2 { margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 10px; }
-
-        .note { background: #f4f4f4; padding: 15px; border-left: 4px solid var(--primary); margin: 20px 0; }
-
-        footer { background: var(--dark); color: white; text-align: center; padding: 30px; margin-top: 60px; }
-    </style>
+    <link rel="canonical" href="https://gatemirror.com/privacy-policy.html">
+    <meta property="og:title" content="Privacy Policy | Gatemirror">
+    <meta property="og:description" content="Learn how Gatemirror collects, uses, and protects your data.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Gatemirror">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- MASTER CSS - Tek merkezi stil dosyası -->
+    <link rel="stylesheet" href="/templates/css/style.css">
 </head>
-
 <body>
 
+<div class="side-menu" id="sideMenu">
+    <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    <div class="dark-mode-toggle">
+        <span>🌓 Dark Mode</span>
+        <div class="toggle-switch" id="darkModeToggle"></div>
+    </div>
+    <div class="lang-section">
+        <div class="lang-title">READ IN</div>
+        <div class="flags">
+            <a href="/" class="flag-link">🇺🇸 EN</a>
+            <a href="/es/" class="flag-link">🇪🇸 ES</a>
+            <a href="/de/" class="flag-link">🇩🇪 DE</a>
+            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="/en/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
+    <div class="footer-links">
+        <a href="/about-us.html">About Gatemirror</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/contact.html">Contact Us</a>
+        <p>&copy; 2026 Gatemirror Media</p>
+    </div>
+</div>
+
 <nav>
-    <a href="/" class="logo">GATEMIRROR</a>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    <div class="nav-links">
+        <a href="/en/">HOME</a>
+        <a href="/en/wellness/">WELLNESS</a>
+        <a href="/en/tech/">TECH & AI</a>
+        <a href="/en/future-economy/">FUTURE ECONOMY</a>
+        <a href="/en/eco/">ECO & SUSTAINABLE</a>
+        <a href="/en/elearning/">E-LEARNING</a>
+    </div>
 </nav>
 
-<div class="container">
+<main>
+    <!-- HERO - Statik sayfa hero -->
+    <div class="hero">
+        <h1 class="hero-title">Privacy & Cookie Policy</h1>
+        <p class="hero-description">We believe privacy should be simple. This page explains what we collect, why we collect it, and how you stay in control.</p>
+    </div>
 
-<h1>Privacy & Cookie Policy</h1>
-<p><strong>Last updated:</strong> April 2026</p>
+    <div class="page-container">
+        <p><strong>Last updated:</strong> April 2026</p>
 
-<div class="note">
-We believe privacy should be simple. This page explains what we collect, why we collect it, and how you stay in control.
-</div>
+        <div class="note-box">
+            We believe privacy should be simple. This page explains what we collect, why we collect it, and how you stay in control.
+        </div>
 
-<h2>1. Information We Collect</h2>
-<p>We collect limited data to improve user experience. This may include:</p>
-<ul>
-<li>Anonymous usage data (pages visited, time spent)</li>
-<li>Device and browser information</li>
-<li>Cookies and tracking technologies</li>
-</ul>
+        <h2>1. Information We Collect</h2>
+        <p>We collect limited data to improve user experience. This may include:</p>
+        <ul>
+            <li>Anonymous usage data (pages visited, time spent)</li>
+            <li>Device and browser information</li>
+            <li>Cookies and tracking technologies</li>
+        </ul>
+        <p>We do <strong>not</strong> intentionally collect sensitive personal data.</p>
 
-<p>We do <strong>not</strong> intentionally collect sensitive personal data.</p>
+        <h2>2. How We Use Data</h2>
+        <p>Data is used to:</p>
+        <ul>
+            <li>Improve content quality and performance</li>
+            <li>Understand user behavior</li>
+            <li>Provide relevant advertising</li>
+        </ul>
 
-<h2>2. How We Use Data</h2>
-<p>Data is used to:</p>
-<ul>
-<li>Improve content quality and performance</li>
-<li>Understand user behavior</li>
-<li>Provide relevant advertising</li>
-</ul>
+        <h2>3. Cookies & Advertising</h2>
+        <p>Gatemirror uses cookies and similar technologies.</p>
+        <p>We may work with third-party vendors such as <strong>Google AdSense</strong>, which may use cookies to serve personalized ads based on your browsing behavior.</p>
+        <p>You can disable cookies through your browser settings.</p>
 
-<h2>3. Cookies & Advertising</h2>
-<p>Gatemirror uses cookies and similar technologies.</p>
+        <h2>4. Your Rights (GDPR & CCPA)</h2>
+        <p>Depending on your location, you may have the right to:</p>
+        <ul>
+            <li>Request access to your data</li>
+            <li>Request deletion of your data</li>
+            <li>Opt out of data tracking or personalized ads</li>
+        </ul>
+        <p>To exercise these rights, contact us below.</p>
 
-<p>We may work with third-party vendors such as <strong>Google AdSense</strong>, which may use cookies to serve personalized ads based on your browsing behavior.</p>
+        <h2>5. Third-Party Links</h2>
+        <p>Our site may include links to external websites. We are not responsible for their privacy practices.</p>
 
-<p>You can disable cookies through your browser settings.</p>
+        <h2>6. Data Security</h2>
+        <p>We apply reasonable technical and organizational measures to protect data, but no system is 100% secure.</p>
 
-<h2>4. Your Rights (GDPR & CCPA)</h2>
-<p>Depending on your location, you may have the right to:</p>
-<ul>
-<li>Request access to your data</li>
-<li>Request deletion of your data</li>
-<li>Opt out of data tracking or personalized ads</li>
-</ul>
+        <h2>7. Children's Privacy</h2>
+        <p>Our content is not directed to individuals under 13. We do not knowingly collect data from children.</p>
 
-<p>To exercise these rights, contact us below.</p>
+        <h2>8. Policy Updates</h2>
+        <p>We may update this policy periodically. Continued use of the site means you accept the updated version.</p>
 
-<h2>5. Third-Party Links</h2>
-<p>Our site may include links to external websites. We are not responsible for their privacy practices.</p>
-
-<h2>6. Data Security</h2>
-<p>We apply reasonable technical and organizational measures to protect data, but no system is 100% secure.</p>
-
-<h2>7. Children’s Privacy</h2>
-<p>Our content is not directed to individuals under 13. We do not knowingly collect data from children.</p>
-
-<h2>8. Policy Updates</h2>
-<p>We may update this policy periodically. Continued use of the site means you accept the updated version.</p>
-
-<h2>9. Contact</h2>
-<p>For privacy-related requests:</p>
-
-<p><strong>Email:</strong> legal@gatemirror.com</p>
-
-</div>
+        <h2>9. Contact</h2>
+        <p>For privacy-related requests:</p>
+        <p><strong>Email:</strong> legal@gatemirror.com</p>
+    </div>
+</main>
 
 <footer>
-<p>&copy; 2026 Gatemirror Media Group</p>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="/about-us.html">About Us</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="/en/tech/">TECH & AI</a>
+            <a href="/en/future-economy/">FUTURE ECONOMY</a>
+            <a href="/en/wellness/">WELLNESS</a>
+            <a href="/en/eco/">ECO & SUSTAINABLE</a>
+            <a href="/en/elearning/">E-LEARNING</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="/">🇺🇸 English</a>
+            <a href="/es/">🇪🇸 Español</a>
+            <a href="/de/">🇩🇪 Deutsch</a>
+            <a href="/fr/">🇫🇷 Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
 </footer>
 
+<script>
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('sideMenu');
+        const btn = document.querySelector('.menu-btn');
+        if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
+    });
+    const toggle = document.getElementById('darkModeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark');
+        const observer = new MutationObserver(() => localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled'));
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+</script>
 </body>
     </html>
