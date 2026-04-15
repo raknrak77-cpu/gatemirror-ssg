@@ -43,7 +43,6 @@ template_cache = {}
 template_raw_cache = {}
 
 def get_cached_hero(page_type, lang, category=None):
-    """Hero HTML'ini cache'ler - her tip/dil için 1 kere render"""
     cache_key = f"{page_type}_{lang}_{category or ''}"
     if cache_key not in hero_cache:
         hero_cache[cache_key] = render_hero(page_type, lang, category)
@@ -51,7 +50,6 @@ def get_cached_hero(page_type, lang, category=None):
     return hero_cache[cache_key]
 
 def get_cached_template(template_str, template_name):
-    """Template'i cache'ler - her template için 1 kere parse"""
     if template_name not in template_cache:
         template_cache[template_name] = Template(template_str)
         print(f"   🚀 Template cache: {template_name}")
@@ -60,7 +58,6 @@ def get_cached_template(template_str, template_name):
 # ================= TEMPLATE YÖNETİMİ =================
 
 def upload_templates_to_r2():
-    """templates/ klasöründeki tüm HTML dosyalarını R2'ye yükler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print("⚠️ templates/ klasörü bulunamadı.")
@@ -76,7 +73,6 @@ def upload_templates_to_r2():
                 print(f"⚠️ Template yüklenemedi {file}: {e}")
 
 def get_template_from_r2(template_name):
-    """R2'den template içeriğini alır, cache'ler"""
     if template_name in template_raw_cache:
         return template_raw_cache[template_name]
     
@@ -101,10 +97,6 @@ def get_template_from_r2(template_name):
 # ================= RENDER FONKSİYONLARI =================
 
 def render_single_page(article, alt_langs, template_str, menu_texts, related_articles):
-    """
-    Tek makale sayfasını render eder
-    Hero: article tipinde (show: false varsayılan)
-    """
     tmpl = get_cached_template(template_str, 'single')
     parsed = article['parsed']
     canonical = f"{R2_PUBLIC_URL}{article['url']}"
@@ -114,7 +106,6 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     author_bio = article.get('author_bio', '')
     author_avatar = article.get('author_avatar', '')
     
-    # Hero cache'den al (article tipinde)
     hero_html = get_cached_hero('article', article['lang'])
     
     return tmpl.render(
@@ -142,19 +133,14 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         alternate_langs=alt_langs,
         menu=menu_texts,
         related_articles=related_articles,
-        hero={'html': hero_html, 'show': False}  # Makalede hero kapalı
+        hero={'html': hero_html, 'show': False}
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
-    """
-    Ana sayfayı render eder
-    Hero: home tipinde
-    """
     tmpl = get_cached_template(template_str, 'home')
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
     
-    # Hero cache'den al (home tipinde)
     hero_html = get_cached_hero('home', lang)
     
     return tmpl.render(
@@ -169,17 +155,12 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
     )
 
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
-    """
-    Kategori listeleme sayfasını render eder
-    Hero: category tipinde
-    """
     tmpl = get_cached_template(template_str, 'list')
     category_name = get_category_name(lang, category)
     category_description = get_category_description(lang, category)
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
     
-    # Hero cache'den al (category tipinde)
     hero_html = get_cached_hero('category', lang, category)
     
     return tmpl.render(
@@ -201,7 +182,6 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
 # ================= ARTICLES.JSON ÜRETİMİ =================
 
 def generate_articles_json(all_articles):
-    """Worker'ın random article seçmesi için articles.json oluşturur"""
     articles_list = []
     for article in all_articles:
         articles_list.append({
@@ -224,24 +204,20 @@ def generate_articles_json(all_articles):
         Body=articles_json.encode('utf-8'),
         ContentType='application/json'
     )
-    print("   ✅ articles.json oluşturuldu (random article için)")
+    print("   ✅ articles.json oluşturuldu")
 
 # ================= ANA PUBLISHER =================
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT - Tam Donanımlı & Optimize")
-    print("   ✅ Sitemap + Hreflang + robots.txt")
-    print("   ✅ Hero Bot entegre (cache'li, çok dilli)")
+    print("🚀 PUBLISHER BOT - articles_ready/ YAZAR")
+    print("   ✅ Hero Bot entegre (cache'li)")
     print("   ✅ Makale 3 parçaya bölünüyor")
-    print("   ✅ AdSense alanı hazır")
-    print("   ✅ Template + Hero cache aktif")
+    print("   ✅ articles_ready/ klasörüne yazar")
     print("=" * 60)
     
-    # Template'leri R2'ye yükle
     upload_templates_to_r2()
     
-    # Template'leri al (cache'lenecek)
     print("\n📄 Template'ler yükleniyor...")
     single_tpl = get_template_from_r2("single.html")
     home_tpl = get_template_from_r2("home.html")
@@ -249,12 +225,8 @@ def publisher():
     
     if not single_tpl or not home_tpl or not list_tpl:
         print("❌ Template'ler alınamadı.")
-        print(f"   single: {'✅' if single_tpl else '❌'}")
-        print(f"   home: {'✅' if home_tpl else '❌'}")
-        print(f"   list: {'✅' if list_tpl else '❌'}")
         return
     
-    # Tüm makaleleri al
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -262,14 +234,10 @@ def publisher():
     
     print(f"\n📊 Toplam {len(all_articles)} makale bulundu.")
     
-    # Alternatif diller sözlüğü oluştur
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
-    
-    # İstatistik için
     total_pages = 0
     
-    # Her dil için işlem yap
     for lang in languages:
         print(f"\n{'=' * 40}")
         print(f"🌍 {lang.upper()} işleniyor...")
@@ -280,17 +248,14 @@ def publisher():
             print(f"   ⚠️ {lang.upper()} için makale bulunamadı.")
             continue
         
-        # Makaleleri tarihe göre sırala (en yeniden eskiye)
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
-        # 1. MAKALELERİ RENDER ET
         print(f"\n📝 Makaleler işleniyor...")
         for article in lang_articles:
             key = (article['category'], article['hash'])
             alt_langs = alt_dict.get(key, [])
             
-            # İlgili makaleleri bul (aynı cluster veya aynı kategori)
             same_cluster = [a for a in lang_articles if a.get('cluster_id') == article.get('cluster_id') and a['hash'] != article['hash']]
             if same_cluster:
                 related = random.sample(same_cluster, min(3, len(same_cluster)))
@@ -302,12 +267,12 @@ def publisher():
             
             single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
             if single_html:
-                target_key = article['url'].lstrip('/')
+                # articles_ready/ yaz!
+                target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
                 s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ {target_key}")
                 total_pages += 1
         
-        # 2. ANA SAYFA (HOME)
         print(f"\n🏠 Ana sayfa oluşturuluyor...")
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
@@ -337,11 +302,10 @@ def publisher():
         
         home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs)
         if home_html:
-            s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-            print(f"   ✅ articles/{lang}/index.html")
+            s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
+            print(f"   ✅ articles_ready/{lang}/index.html")
             total_pages += 1
         
-        # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         
@@ -395,11 +359,10 @@ def publisher():
             
             list_html = render_list_page(lang, category, articles_for_list, featured_for_cat, trending, list_tpl, menu_texts, cat_alt_langs)
             if list_html:
-                s3.put_object(Bucket=R2_BUCKET, Key=f"articles/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
-                print(f"   ✅ articles/{lang}/{category}/index.html ({len(cat_articles)} makale)")
+                s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
+                print(f"   ✅ articles_ready/{lang}/{category}/index.html ({len(cat_articles)} makale)")
                 total_pages += 1
     
-    # 4. SITEMAP VE ROBOTS.TXT
     print(f"\n{'=' * 40}")
     print("📊 Sitemap ve robots.txt oluşturuluyor...")
     print(f"{'=' * 40}")
@@ -412,31 +375,14 @@ def publisher():
     s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
     print("   ✅ robots.txt yüklendi")
     
-    # 5. ARTICLES.JSON (Worker random article için)
     generate_articles_json(all_articles)
     
-    # 6. ÖZET RAPORU
     print(f"\n{'=' * 40}")
     print("🏁 PUBLISHER TAMAMLANDI!")
-    print(f"{'=' * 40}")
-    print(f"\n📊 İstatistikler:")
-    print(f"   Toplam makale: {len(all_articles)}")
-    for lang in languages:
-        count = len([a for a in all_articles if a['lang'] == lang])
-        print(f"   {lang.upper()}: {count} makale")
-    print(f"   Toplam oluşturulan sayfa: {total_pages}")
-    
-    print(f"\n📁 Oluşturulan dosyalar:")
-    print(f"   ✅ articles/{{lang}}/index.html (ana sayfalar)")
-    print(f"   ✅ articles/{{lang}}/{{category}}/index.html (kategori sayfaları)")
-    print(f"   ✅ articles/{{lang}}/{{category}}/{{yil}}/{{ay}}/{{hash}}-{{slug}}.html (makaleler)")
-    print(f"   ✅ sitemap.xml")
-    print(f"   ✅ robots.txt")
-    print(f"   ✅ articles.json")
-    
-    print(f"\n🎨 Hero Bot entegre çalışıyor (cache'li)")
-    print(f"   Hero cache: {len(hero_cache)} benzersiz hero")
-    print(f"   Template cache: {len(template_cache)} template")
+    print(f"   ✅ Tüm içerik articles_ready/ klasörüne yazıldı")
+    print(f"   ✅ Toplam sayfa: {total_pages}")
+    print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
+    print(f"   ✅ Template cache: {len(template_cache)} template")
     print(f"{'=' * 40}")
 
 if __name__ == "__main__":
