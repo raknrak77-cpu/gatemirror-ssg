@@ -1,0 +1,158 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-15",
+  "pages": {
+    "home": {
+      "en": {
+        "blocks": [
+          { "type": "title", "content": "Global Insights on Tech, Wellness & Future Economy" },
+          { "type": "description", "content": "Deep analysis. Multi‑language. Reflecting reality in 5 languages." },
+          { "type": "cta", "url": "/explore/all-articles/en.html", "text": "📚 Browse All Articles", "style": "primary" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Most Popular This Week" },
+          { "type": "news_ticker", "items": [
+            "🚀 AI Trading Bots 2026: 340% ROI Reported",
+            "📈 Crypto Market Cap Hits $4.2T",
+            "🌍 ESG Investing Outperforms Traditional Funds",
+            "💡 New Study: Red Light Therapy Extends Healthspan"
+          ]}
+        ]
+      },
+      "es": {
+        "blocks": [
+          { "type": "title", "content": "Perspectivas Globales sobre Tecnología, Bienestar y Economía Futura" },
+          { "type": "description", "content": "Análisis profundo. Multilingüe. Reflejando la realidad en 5 idiomas." },
+          { "type": "cta", "url": "/explore/all-articles/es.html", "text": "📚 Ver Todos los Artículos", "style": "primary" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Más Populares Esta Semana" },
+          { "type": "news_ticker", "items": [
+            "🚀 Robots de Trading IA 2026: 340% ROI Reportado",
+            "📈 Capitalización del Mercado Crypto Alcanza $4.2B",
+            "🌍 Inversión ESG Supera a Fondos Tradicionales",
+            "💡 Nuevo Estudio: Terapia de Luz Roja Extiende la Salud"
+          ]}
+        ]
+      },
+      "de": {
+        "blocks": [
+          { "type": "title", "content": "Globale Einblicke in Technologie, Wohlbefinden und Zukunftswirtschaft" },
+          { "type": "description", "content": "Tiefgehende Analysen. Mehrsprachig. Realität in 5 Sprachen." },
+          { "type": "cta", "url": "/explore/all-articles/de.html", "text": "📚 Alle Artikel Durchsuchen", "style": "primary" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Am Beliebtesten Diese Woche" },
+          { "type": "news_ticker", "items": [
+            "🚀 KI-Handelsbots 2026: 340% ROI Gemeldet",
+            "📈 Krypto-Marktkapitalisierung Erreicht $4,2B",
+            "🌍 ESG-Investitionen Überfliegen Traditionelle Fonds",
+            "💡 Neue Studie: Rotlichttherapie Verlängert Die Gesundheitsspanne"
+          ]}
+        ]
+      },
+      "fr": {
+        "blocks": [
+          { "type": "title", "content": "Perspectives Mondiales sur la Tech, le Bien-être et l'Économie Future" },
+          { "type": "description", "content": "Analyse approfondie. Multilingue. Reflet de la réalité en 5 langues." },
+          { "type": "cta", "url": "/explore/all-articles/fr.html", "text": "📚 Parcourir Tous les Articles", "style": "primary" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Les Plus Populaires Cette Semaine" },
+          { "type": "news_ticker", "items": [
+            "🚀 Robots de Trading IA 2026: 340% ROI Signalé",
+            "📈 Capitalisation du Marché Crypto Atteint 4,2B$",
+            "🌍 L'Investissement ESG Surpasse les Fonds Traditionnels",
+            "💡 Nouvelle Étude: La Thérapie par Lumière Rouge Prolonge la Santé"
+          ]}
+        ]
+      }
+    },
+    "category": {
+      "tech": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Technology & AI" },
+            { "type": "description", "content": "Latest developments in AI, software, and digital transformation." },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Watch: 2026 AI Trends" },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Articles" },
+              { "value": "45k", "label": "Readers" },
+              { "value": "12", "label": "Experts" }
+            ]}
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Tecnología & IA" },
+            { "type": "description", "content": "Últimos avances en IA, software y transformación digital." },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ver: Tendencias IA 2026" },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Artículos" },
+              { "value": "45k", "label": "Lectores" },
+              { "value": "12", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Technologie & KI" },
+            { "type": "description", "content": "Neueste Entwicklungen in KI, Software und digitaler Transformation." },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ansehen: KI-Trends 2026" },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Artikel" },
+              { "value": "45k", "label": "Leser" },
+              { "value": "12", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Technologie & IA" },
+            { "type": "description", "content": "Derniers développements en IA, logiciels et transformation numérique." },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Regarder: Tendances IA 2026" },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Articles" },
+              { "value": "45k", "label": "Lecteurs" },
+              { "value": "12", "label": "Experts" }
+            ]}
+          ]
+        }
+      },
+      "wellness": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Wellness" },
+            { "type": "description", "content": "Deep insights on physical, mental, and emotional well-being." },
+            { "type": "gif", "url": "/assets/wellness-hero.gif", "alt": "Wellness animation" },
+            { "type": "featured_articles", "source": "popular", "limit": 2 }
+          ]
+        }
+      }
+    },
+    "special": {
+      "all-articles": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "All Articles" },
+            { "type": "description", "content": "Browse all our content in one place. Filter by category or language." },
+            { "type": "carousel", "items": [
+              "/assets/carousel-1.jpg",
+              "/assets/carousel-2.jpg",
+              "/assets/carousel-3.jpg"
+            ]}
+          ]
+        }
+      },
+      "categories": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Categories" },
+            { "type": "description", "content": "Browse articles by category. Find the content that matters to you." },
+            { "type": "image", "url": "/assets/categories-hero.jpg", "alt": "Categories" }
+          ]
+        }
+      }
+    }
+  },
+  "defaults": {
+    "en": {
+      "blocks": [
+        { "type": "title", "content": "Gatemirror" },
+        { "type": "description", "content": "Global insights on technology, wellness, and future economy." }
+      ]
+    }
+  }
+}
