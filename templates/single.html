@@ -100,15 +100,15 @@
             {% if view_count %}<span class="view-count">👁️ {{ view_count }} views</span>{% endif %}
         </div>
 
-        <!-- YAZAR BÖLÜMÜ - Toggle'lı -->
-        <div class="toggle-section">
-            <div class="toggle-header" onclick="toggleSection(this)">
+        <!-- YAZAR BÖLÜMÜ - Native Toggle -->
+        <details class="toggle-details">
+            <summary>
                 <span class="toggle-title">
                     <i class="fas fa-user"></i> {{ author_name }}
                 </span>
-                <span class="toggle-icon">⋮</span>
-            </div>
-            <div class="toggle-content">
+                <span class="toggle-icon">▼</span>
+            </summary>
+            <div class="toggle-content-inner">
                 <div class="author-bio-compact">
                     {% if author_avatar %}
                     <img src="{{ author_avatar }}" alt="{{ author_name }}" class="author-avatar-compact" loading="lazy" onerror="this.style.display='none'">
@@ -122,23 +122,23 @@
                 <div class="author-bio-full">{{ author_bio }}</div>
                 {% endif %}
             </div>
-        </div>
+        </details>
 
-        <!-- KEY TAKEAWAYS - Toggle'lı, 2 satır önizleme -->
-        <div class="toggle-section">
-            <div class="toggle-header" onclick="toggleSection(this)">
+        <!-- KEY TAKEAWAYS - Native Toggle, 2 satır önizleme -->
+        <details class="toggle-details">
+            <summary>
                 <span class="toggle-title">
                     <i class="fas fa-bolt"></i> Key Takeaways
                 </span>
-                <span class="toggle-icon">⋮</span>
-            </div>
-            <div class="takeaways-preview">
-                {{ summary|striptags|truncate(150) }}
-            </div>
-            <div class="toggle-content">
+                <span class="toggle-icon">▼</span>
+            </summary>
+            <div class="toggle-content-inner">
+                <div class="takeaways-preview">
+                    {{ summary|striptags|truncate(150) }}
+                </div>
                 <ul class="summary-list">{{ summary }}</ul>
             </div>
-        </div>
+        </details>
 
         <!-- MAKALE 1. PARÇA -->
         <div class="article-content part-1">
@@ -274,39 +274,6 @@
             .then(data => { window.location.href = data.url; })
             .catch(() => { window.location.href = '/explore/explorer.json'; });
     });
-
-    // Toggle fonksiyonu
-    function toggleSection(header) {
-        const content = header.nextElementSibling;
-        const preview = content.nextElementSibling;
-        
-        if (content.classList.contains('toggle-content')) {
-            content.classList.toggle('open');
-        } else if (preview && preview.classList.contains('takeaways-preview')) {
-            preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
-            content.classList.toggle('open');
-        }
-    }
-
-    // Key Takeaways özel davranış
-    document.querySelectorAll('.toggle-section').forEach(section => {
-        const header = section.querySelector('.toggle-header');
-        const preview = section.querySelector('.takeaways-preview');
-        const content = section.querySelector('.toggle-content');
-        
-        if (preview && content) {
-            header.addEventListener('click', () => {
-                const isOpen = content.classList.contains('open');
-                if (isOpen) {
-                    content.classList.remove('open');
-                    preview.style.display = 'block';
-                } else {
-                    content.classList.add('open');
-                    preview.style.display = 'none';
-                }
-            });
-        }
-    });
 </script>
 </body>
-            </html>
+    </html>
