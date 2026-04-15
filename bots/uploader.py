@@ -77,15 +77,15 @@ def upload_templates():
             upload_file_to_r2(local_path, r2_key)
 
 def upload_hero_json():
-    """Github ana dizininden hero.json'u alıp R2 templates/ klasörüne yükler"""
-    local_path = "hero.json"
+    """Github templates/ klasöründen hero.json'u alıp R2 templates/ klasörüne yükler"""
+    local_path = "templates/hero.json"  # <--- templates/ klasöründen al
     r2_key = "templates/hero.json"
     
     if os.path.exists(local_path):
         print(f"\n🎨 Hero JSON yükleniyor...")
         return upload_file_to_r2(local_path, r2_key, content_type='application/json')
     else:
-        print(f"\n⚠️ hero.json dosyası ana dizinde bulunamadı, atlanıyor.")
+        print(f"\n⚠️ templates/hero.json dosyası bulunamadı, atlanıyor.")
         return False
 
 def uploader():
@@ -96,7 +96,7 @@ def uploader():
     print("-" * 40)
     upload_templates()
     
-    # 2. Hero JSON'u yedekle (templates/ klasörüne)
+    # 2. Hero JSON'u yedekle (templates/ klasöründen)
     upload_hero_json()
     
     # 3. articles/ içini tamamen temizle
@@ -150,7 +150,7 @@ def uploader():
     print("\n" + "=" * 60)
     print("🏁 UPLOADER TAMAMLANDI!")
     print("   ✅ Template'ler → R2/templates/")
-    print("   ✅ hero.json → R2/templates/hero.json")
+    print("   ✅ hero.json (templates/ klasöründen) → R2/templates/hero.json")
     print("   ✅ articles/ klasörü temizlendi")
     print("   ✅ content/ → R2/raw-articles/")
     print("   ✅ Local HTML'ler temizlendi")
