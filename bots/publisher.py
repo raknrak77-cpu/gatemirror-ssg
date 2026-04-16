@@ -46,10 +46,13 @@ _articles_json_cache = None
 _articles_json_time = None
 
 def get_articles_from_r2_cached():
+    """articles.json'u cache'le (30 saniye geçerli)"""
     global _articles_json_cache, _articles_json_time
+    
     now = datetime.now()
     if _articles_json_cache and _articles_json_time and (now - _articles_json_time).seconds < 30:
         return _articles_json_cache
+    
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
         _articles_json_cache = json.loads(response['Body'].read().decode('utf-8'))
@@ -78,23 +81,12 @@ def upload_templates_to_r2():
     if not os.path.exists(templates_dir):
         print("⚠️ templates/ klasörü bulunamadı.")
         return
-    for root, dirs, files in os.walk(templates_dir):
-        for file in files:
-            local_path = os.path.join(root, file)
-            relative_path = os.path.relpath(local_path, templates_dir)
-            r2_key = f"templates/{relative_path}".replace('\\', '/')
+    for file in os.listdir(templates_dir):
+        if file.endswith('.html'):
+            local_path = os.path.join(templates_dir, file)
+            r2_key = f"templates/{file}"
             try:
-                content_type = None
-                if file.endswith('.css'):
-                    content_type = 'text/css'
-                elif file.endswith('.html'):
-                    content_type = 'text/html'
-                elif file.endswith('.json'):
-                    content_type = 'application/json'
-                extra_args = {}
-                if content_type:
-                    extra_args['ContentType'] = content_type
-                s3.upload_file(local_path, R2_BUCKET, r2_key, ExtraArgs=extra_args)
+                s3.upload_file(local_path, R2_BUCKET, r2_key)
                 print(f"✅ Template yüklendi: {r2_key}")
             except Exception as e:
                 print(f"⚠️ Template yüklenemedi {file}: {e}")
@@ -102,6 +94,7 @@ def upload_templates_to_r2():
 def get_template_from_r2(template_name):
     if template_name in template_raw_cache:
         return template_raw_cache[template_name]
+    
     try:
         url = f"{R2_PUBLIC_URL}/templates/{template_name}"
         resp = requests.get(url, timeout=10)
@@ -110,12 +103,14 @@ def get_template_from_r2(template_name):
             return resp.text
     except:
         pass
+    
     local_path = os.path.join("templates", template_name)
     if os.path.exists(local_path):
         with open(local_path, 'r', encoding='utf-8') as f:
             content = f.read()
             template_raw_cache[template_name] = content
             return content
+    
     return None
 
 # ================= RENDER FONKSİYONLARI =================
@@ -131,6 +126,8 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     author_avatar = article.get('author_avatar', '')
     
     hero_html = get_cached_hero('article', article['lang'])
+    
+    # Kategori adını al (breadcrumb için)
     category_name = get_category_name(article['lang'], article['category'])
     
     return tmpl.render(
@@ -168,6 +165,7 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
     tmpl = get_cached_template(template_str, 'home')
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
+    
     hero_html = get_cached_hero('home', lang)
     
     return tmpl.render(
@@ -188,6 +186,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     category_description = get_category_description(lang, category)
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
+    
     hero_html = get_cached_hero('category', lang, category)
     
     return tmpl.render(
@@ -207,13 +206,17 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         hero={'html': hero_html, 'show': True}
     )
 
+# ================= YENİ: EXPLORE SAYFALARI RENDER =================
+
 def render_all_articles_page(lang, all_articles, featured_article, template_str, menu_texts, alternate_langs):
-    """Tüm makaleleri listeleyen sayfa"""
+    """Tüm makaleleri listeleyen sayfa (all-articles.html template'i ile)"""
     tmpl = get_cached_template(template_str, 'all-articles')
     canonical = f"{R2_PUBLIC_URL}/explore/all-articles/{lang}.html"
     og_image = all_articles[0]['image'] if all_articles else ""
+    
     hero_html = get_cached_hero('special', lang, 'all-articles')
     
+    # Makaleleri hazırla
     articles_for_template = []
     for a in all_articles:
         articles_for_template.append({
@@ -253,6 +256,7 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
 # ================= PARALEL YAZMA =================
 
 def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for_template):
+    """Tek bir makaleyi render et ve yaz (parallel için)"""
     try:
         single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
         if single_html:
@@ -295,12 +299,11 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT - TAM DONANIMLI")
-    print("   ✅ Makaleler (single) → articles_ready/")
-    print("   ✅ Ana sayfa (home) → articles_ready/{lang}/")
-    print("   ✅ Kategori sayfaları (list) → articles_ready/{lang}/{cat}/")
-    print("   ✅ Tüm makaleler (all-articles) → articles_ready/explore/all-articles/")
-    print("   ✅ Kategori arşivi → articles_ready/explore/category-archive/")
+    print("🚀 PUBLISHER BOT - OPTİMİZE")
+    print("   ✅ Hero Bot entegre (cache'li)")
+    print("   ✅ Makale 3 parçaya bölünüyor")
+    print("   ✅ Parallel yazma (5 thread)")
+    print("   ✅ Explore sayfaları (all-articles)")
     print("=" * 60)
     
     upload_templates_to_r2()
@@ -312,9 +315,10 @@ def publisher():
     all_articles_tpl = get_template_from_r2("all-articles.html")
     
     if not single_tpl or not home_tpl or not list_tpl:
-        print("❌ Temel template'ler alınamadı.")
+        print("❌ Template'ler alınamadı.")
         return
     
+    # raw-articles/ dan oku (değişen yok, aynı sistem)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -324,7 +328,6 @@ def publisher():
     
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
-    categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
     total_pages = 0
     
     for lang in languages:
@@ -358,6 +361,7 @@ def publisher():
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
             articles_to_write.append((article, alt_langs, related_for_template))
         
+        # Parallel yaz
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for article, alt_langs, related_for_template in articles_to_write:
@@ -404,8 +408,9 @@ def publisher():
             print(f"   ✅ articles_ready/{lang}/index.html")
             total_pages += 1
         
-        # 3. KATEGORİ SAYFALARI (list.html)
+        # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
+        categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         
         for category in categories:
             cat_articles = [a for a in lang_articles if a['category'] == category]
@@ -461,7 +466,7 @@ def publisher():
                 print(f"   ✅ articles_ready/{lang}/{category}/index.html ({len(cat_articles)} makale)")
                 total_pages += 1
         
-        # 4. TÜM MAKALELER SAYFASI (all-articles.html)
+        # 4. YENİ: TÜM MAKALELER SAYFASI (EXPLORE)
         if all_articles_tpl:
             print(f"\n📚 Tüm makaleler sayfası oluşturuluyor...")
             
@@ -474,54 +479,8 @@ def publisher():
                 s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/explore/all-articles/{lang}.html", Body=all_articles_html.encode('utf-8'), ContentType='text/html')
                 print(f"   ✅ articles_ready/explore/all-articles/{lang}.html ({len(lang_articles)} makale)")
                 total_pages += 1
-            
-            # 5. KATEGORİ ARŞİV SAYFALARI (list.html ile - aynı kategori sayfası gibi)
-            print(f"\n📁 Kategori arşiv sayfaları oluşturuluyor...")
-            
-            for category in categories:
-                cat_articles = [a for a in lang_articles if a['category'] == category]
-                if not cat_articles:
-                    continue
-                
-                cat_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
-                
-                featured_cat = cat_articles[0] if cat_articles else None
-                featured_for_archive = None
-                if featured_cat:
-                    featured_for_archive = {
-                        'url': featured_cat['url'],
-                        'image': featured_cat['parsed']['cover_image'],
-                        'title': featured_cat['parsed']['title'],
-                        'date': featured_cat['parsed']['date'],
-                        'reading_time': featured_cat['parsed']['reading_time'],
-                        'views': featured_cat['parsed']['views'],
-                        'excerpt': featured_cat['parsed']['description']
-                    }
-                
-                articles_for_archive = []
-                for a in cat_articles:
-                    articles_for_archive.append({
-                        'url': a['url'],
-                        'image': a['parsed']['cover_image'],
-                        'title': a['parsed']['title'],
-                        'reading_time': a['parsed']['reading_time'],
-                        'views': a['parsed']['views'],
-                        'excerpt': a['parsed']['description']
-                    })
-                
-                archive_alt_langs = []
-                for other_lang in languages:
-                    if other_lang == lang:
-                        continue
-                    archive_alt_langs.append({'lang': other_lang, 'url': f"{R2_PUBLIC_URL}/explore/category-archive/{other_lang}/{category}/"})
-                
-                archive_html = render_list_page(lang, category, articles_for_archive, featured_for_archive, [], list_tpl, menu_texts, archive_alt_langs)
-                if archive_html:
-                    s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/explore/category-archive/{lang}/{category}/index.html", Body=archive_html.encode('utf-8'), ContentType='text/html')
-                    print(f"   ✅ articles_ready/explore/category-archive/{lang}/{category}/index.html ({len(cat_articles)} makale)")
-                    total_pages += 1
         else:
-            print(f"   ⚠️ all-articles.html template'i bulunamadı, explore sayfaları atlanıyor.")
+            print(f"\n⚠️ all-articles.html template'i bulunamadı, explore sayfası atlanıyor.")
     
     print(f"\n{'=' * 40}")
     print("📊 Sitemap ve robots.txt oluşturuluyor...")
@@ -548,3 +507,5 @@ def publisher():
 
 if __name__ == "__main__":
     publisher()
+        
+        
