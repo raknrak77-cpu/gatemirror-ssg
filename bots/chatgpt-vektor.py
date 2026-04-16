@@ -4,14 +4,14 @@ import math
 import svgwrite
 
 # ================= CONFIG =================
-OUTPUT_DIR = "assets/patterns"
+OUTPUT_DIR = "assets/gpt"
 WIDTH = 3840
 HEIGHT = 2160
 COLOR = "#000000"
 
-TOTAL_OUTPUT = 125   # 🔥 BURAYI DEĞİŞTİR → kaç görsel istiyorsan
+TOTAL_OUTPUT = 125   # 125 görsel
 
-CATEGORIES = ["tech", "wellness", "eco", "future-economy"]
+CATEGORIES = ["tech", "wellness", "eco", "future-economy", "elearning"]
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
@@ -94,8 +94,10 @@ class PatternEngine:
 # ================= GENERATOR =================
 def generate_pattern(category, index):
     seed = f"{category}_{index}_{random.randint(0,999999)}"
-    filename = f"{category}_{index}.svg"
-    filepath = os.path.join(OUTPUT_DIR, filename)
+    filename = f"{category}_{index+1:03d}.svg"
+    filepath = os.path.join(OUTPUT_DIR, category, filename)
+    
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     dwg = svgwrite.Drawing(filepath, size=(WIDTH, HEIGHT))
     engine = PatternEngine(dwg, seed)
@@ -110,15 +112,28 @@ def generate_pattern(category, index):
         engine.organic()
     elif category == "future-economy":
         engine.flow()
+    elif category == "elearning":
+        engine.flow()  # elearning için flow kullanalım
 
     dwg.save()
+    print(f"   ✅ {category}/{filename}")
 
 # ================= FACTORY =================
 if __name__ == "__main__":
-    print("🚀 PATTERN FACTORY BAŞLADI")
-
+    print("=" * 60)
+    print("🚀 PATTERN FACTORY - GPT VERSİYON")
+    print(f"   📐 Canvas: {WIDTH}x{HEIGHT}")
+    print(f"   🎨 Renk: {COLOR}")
+    print(f"   📁 Klasör: {OUTPUT_DIR}/")
+    print("=" * 60)
+    
     for i in range(TOTAL_OUTPUT):
-        category = CATEGORIES[i % len(CATEGORIES)]  # dengeli dağılım
+        category = CATEGORIES[i % len(CATEGORIES)]
+        if i % 25 == 0:
+            print(f"\n📁 {category.upper()} desenleri üretiliyor...")
         generate_pattern(category, i)
-
+    
+    print("\n" + "=" * 60)
     print(f"✅ {TOTAL_OUTPUT} adet pattern üretildi.")
+    print(f"📁 Klasör: {OUTPUT_DIR}/")
+    print("=" * 60)
