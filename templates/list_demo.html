@@ -17,26 +17,20 @@
             --primary-dark: #1a8c3f;
             --text: #1e293b;
             --text-light: #64748b;
-            --text-muted: #94a3b8;
             --white: #ffffff;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            --border-radius: 1.5rem;
-            --border-radius-sm: 1rem;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
             
-            --pastel-1: #e8f5e9;
-            --pastel-2: #c8e6c9;
-            --pastel-3: #a5d6a7;
-            --pastel-4: #81c784;
-            --pastel-5: #66bb6a;
+            --green-1: #e8f5e9;
+            --green-2: #c8e6c9;
+            --green-3: #a5d6a7;
+            --green-4: #81c784;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: #f5f5f5;
             color: var(--text);
-            line-height: 1.6;
         }
 
         header {
@@ -46,7 +40,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
         }
 
         .header-container {
@@ -74,7 +67,6 @@
             text-decoration: none;
             color: var(--text-light);
             font-weight: 500;
-            transition: var(--transition);
         }
 
         .nav-links a:hover, .nav-links a.active {
@@ -86,67 +78,65 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            cursor: pointer;
         }
 
-        /* ASİMETRİK BENTO LIST */
-        .bento-list {
+        /* 16:9 BENTO GRID */
+        .bento-grid {
             max-width: 1400px;
             margin: 2rem auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
+            aspect-ratio: 16 / 9;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: minmax(200px, auto);
-            gap: 1.5rem;
+            gap: 1rem;
+            grid-template-columns: 62% 32%;
+            grid-template-rows: 18% 18%;
+            grid-template-areas:
+                "header filters"
+                "articles stats";
         }
 
         .bento-block {
-            border-radius: var(--border-radius);
+            border-radius: 1.5rem;
             padding: 1.5rem;
             transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-            text-decoration: none;
-            color: inherit;
+            box-shadow: var(--shadow);
+            background: var(--white);
             display: flex;
             flex-direction: column;
         }
 
         .bento-block:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
         }
 
-        /* 1. KATEGORİ BAŞLIĞI (2x2) */
-        .block-category-header {
-            background: var(--pastel-1);
-            grid-column: span 2;
-            grid-row: span 2;
+        /* BLOK 1: KATEGORİ BAŞLIĞI */
+        .block-header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--green-1) 0%, var(--green-2) 100%);
             justify-content: center;
-            text-align: center;
         }
 
-        .block-category-header h1 {
-            font-size: 3rem;
+        .block-header h1 {
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .block-category-header p {
+        .block-header p {
             color: var(--text-light);
-            max-width: 80%;
-            margin: 0 auto;
+            font-size: 0.85rem;
         }
 
-        /* 2. FİLTRE BUTONLARI (1x1) */
+        /* BLOK 2: FİLTRELER */
         .block-filters {
-            background: var(--pastel-2);
-            grid-column: span 1;
-            grid-row: span 1;
+            grid-area: filters;
+            background: var(--green-2);
         }
 
         .filter-title {
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .filter-buttons {
@@ -156,13 +146,12 @@
         }
 
         .filter-btn {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             padding: 0.25rem 0.75rem;
             border-radius: 2rem;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-decoration: none;
             color: var(--text);
-            transition: var(--transition);
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -170,38 +159,46 @@
             color: white;
         }
 
-        /* 3. ÖNE ÇIKAN MAKALE (2x1) */
-        .block-featured-article {
-            background: var(--pastel-3);
-            grid-column: span 2;
-            grid-row: span 1;
-            flex-direction: row;
-            gap: 1rem;
-            align-items: center;
+        /* BLOK 3: MAKALE LİSTESİ */
+        .block-articles {
+            grid-area: articles;
+            background: var(--green-3);
+            overflow-y: auto;
         }
 
-        .featured-img {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: var(--border-radius-sm);
+        .block-articles h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .featured-content h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
+        .article-list {
+            list-style: none;
         }
 
-        .featured-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .article-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* 4. İSTATİSTİK (1x1) */
+        .article-list a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .article-title {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .article-meta {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* BLOK 4: İSTATİSTİK */
         .block-stats {
-            background: var(--pastel-4);
-            grid-column: span 1;
-            grid-row: span 1;
+            grid-area: stats;
+            background: var(--green-4);
             text-align: center;
             justify-content: center;
         }
@@ -212,58 +209,21 @@
             color: white;
         }
 
-        /* 5. MAKALE LİSTESİ (2x2) */
-        .block-article-list {
-            background: var(--pastel-5);
-            grid-column: span 2;
-            grid-row: span 2;
-            overflow-y: auto;
-        }
-
-        .article-list {
-            list-style: none;
-            margin-top: 0.5rem;
-        }
-
-        .article-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .article-list a {
-            text-decoration: none;
-            color: white;
-            display: block;
-        }
-
-        .article-list a:hover {
-            opacity: 0.8;
-        }
-
-        .article-title {
-            font-weight: 500;
-        }
-
-        .article-meta {
-            font-size: 0.7rem;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 1024px) {
-            .bento-list {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .block-category-header, .block-article-list, .block-featured-article {
-                grid-column: span 2;
-            }
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 768px) {
-            .bento-list {
+            .bento-grid {
                 grid-template-columns: 1fr;
-            }
-            .block-category-header, .block-article-list, .block-featured-article {
-                grid-column: span 1;
+                grid-template-rows: auto;
+                aspect-ratio: auto;
+                grid-template-areas:
+                    "header"
+                    "filters"
+                    "articles"
+                    "stats";
             }
             .nav-links {
                 display: none;
@@ -278,29 +238,27 @@
 
 <header>
     <div class="header-container">
-        <a href="/" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
+        <a href="#" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/wellness/">Wellness</a>
-            <a href="/tech/" class="active">Tech & AI</a>
-            <a href="/future-economy/">Future Economy</a>
-            <a href="/eco/">Eco</a>
-            <a href="/elearning/">E-Learning</a>
+            <a href="#">Home</a>
+            <a href="#">Wellness</a>
+            <a href="#" class="active">Tech & AI</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco</a>
+            <a href="#">E-Learning</a>
         </div>
         <button class="menu-btn"><i class="fas fa-bars"></i></button>
     </div>
 </header>
 
 <main>
-    <div class="bento-list">
+    <div class="bento-grid">
         
-        <!-- 1. KATEGORİ BAŞLIĞI (2x2) -->
-        <div class="bento-block block-category-header">
+        <div class="bento-block block-header">
             <h1>Technology & AI</h1>
             <p>Latest developments in AI, software, and digital transformation.</p>
         </div>
 
-        <!-- 2. FİLTRE BUTONLARI (1x1) -->
         <div class="bento-block block-filters">
             <div class="filter-title">📂 Filter by</div>
             <div class="filter-buttons">
@@ -308,65 +266,27 @@
                 <a href="#" class="filter-btn">AI</a>
                 <a href="#" class="filter-btn">Cybersecurity</a>
                 <a href="#" class="filter-btn">Cloud</a>
-                <a href="#" class="filter-btn">Trading</a>
             </div>
         </div>
 
-        <!-- 3. ÖNE ÇIKAN MAKALE (2x1) -->
-        <a href="#" class="bento-block block-featured-article">
-            <div class="featured-img"></div>
-            <div class="featured-content">
-                <h3>The Death of Discretionary Trading: 2026 AI Trading Bots</h3>
-                <div class="featured-meta">Alp Deniz · 6 min read · 3.4k views</div>
-            </div>
-        </a>
+        <div class="bento-block block-articles">
+            <h3>📄 All Articles</h3>
+            <ul class="article-list">
+                <li><a href="#"><div class="article-title">AI Trading Bots 2026: Which Strategies Actually Beat the Market</div><div class="article-meta">15 April 2026 · 6 min read</div></a></li>
+                <li><a href="#"><div class="article-title">Generative Search vs Traditional SEO: How Google SGE is Changing Everything</div><div class="article-meta">14 April 2026 · 5 min read</div></a></li>
+                <li><a href="#"><div class="article-title">AI Cybersecurity in 2026: Real-Time Threat Detection vs Zero-Day Exploits</div><div class="article-meta">13 April 2026 · 7 min read</div></a></li>
+                <li><a href="#"><div class="article-title">Cloud Computing for AI Workloads: AWS vs Azure vs GCP 2026</div><div class="article-meta">12 April 2026 · 6 min read</div></a></li>
+            </ul>
+        </div>
 
-        <!-- 4. İSTATİSTİK (1x1) -->
         <div class="bento-block block-stats">
             <div class="stat-number">12</div>
             <div class="stat-label">Articles</div>
             <div class="stat-number" style="margin-top: 0.5rem;">45k</div>
             <div class="stat-label">Readers</div>
         </div>
-
-        <!-- 5. MAKALE LİSTESİ (2x2) -->
-        <div class="bento-block block-article-list">
-            <h3>📄 All Articles</h3>
-            <ul class="article-list">
-                <li>
-                    <a href="#">
-                        <div class="article-title">AI Trading Bots 2026: Which Strategies Actually Beat the Market</div>
-                        <div class="article-meta">15 April 2026 · 6 min read · 3.4k views</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="article-title">Generative Search vs Traditional SEO: How Google SGE is Changing Everything</div>
-                        <div class="article-meta">14 April 2026 · 5 min read · 2.1k views</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="article-title">AI Cybersecurity in 2026: Real-Time Threat Detection vs Zero-Day Exploits</div>
-                        <div class="article-meta">13 April 2026 · 7 min read · 1.8k views</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="article-title">Cloud Computing for AI Workloads: AWS vs Azure vs GCP 2026</div>
-                        <div class="article-meta">12 April 2026 · 6 min read · 2.5k views</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="article-title">AI Productivity Tools 2026: Which One Saves Your Team the Most Time?</div>
-                        <div class="article-meta">11 April 2026 · 4 min read · 1.2k views</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
 </main>
 
 </body>
-                        </html>
+</html>
