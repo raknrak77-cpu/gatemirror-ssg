@@ -36,19 +36,19 @@ def generate_blob_path(x, y, size, complexity=8):
         r = size * (0.7 + random.uniform(-0.2, 0.3))
         px = x + r * math.cos(angle)
         py = y + r * math.sin(angle)
-        points.append(f"{px:.1f},{py:.1f}")
+        points.append((px, py))
     
-    return " ".join(points)
+    # draw.Lines ile çokgen çiz
+    return draw.Lines(*[coord for point in points for coord in point], close=True)
 
-def generate_pattern(category, level, level_name, index):
+def generate_pattern(category, level_config, level_name, index):
     """Bir SVG pattern üretir"""
     d = draw.Drawing(CANVAS_WIDTH, CANVAS_HEIGHT)
     
-    # Arka plan (koyu gri/siyah - hero arka planına uyumlu)
+    # Arka plan (koyu - hero arka planına uyumlu)
     d.append(draw.Rectangle(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, fill='#0a0a0a'))
     
     palette = COLORS.get(category, COLORS['tech'])
-    level_config = LEVELS[level_name]
     num_shapes = level_config['shapes']
     
     for _ in range(num_shapes):
@@ -70,21 +70,26 @@ def generate_pattern(category, level, level_name, index):
         
         if shape_type == 'blob':
             # Dalgalı yumuşak şekil
-            points = generate_blob_path(x, y, size, complexity=random.randint(6, 12))
-            d.append(draw.Polygon(points, fill=color, opacity=opacity))
+            d.append(generate_blob_path(x, y, size, complexity=random.randint(6, 12)).fill(color, opacity=opacity))
             
         elif shape_type == 'ellipse':
             rx = random.randint(size//3, size)
             ry = random.randint(size//4, size//2)
             angle = random.randint(0, 360)
-            d.append(draw.Ellipse(x, y, rx, ry, fill=color, opacity=opacity, transform=f"rotate({angle} {x} {y})"))
+            e = draw.Ellipse(x, y, rx, ry)
+            e = e.fill(color, opacity=opacity)
+            e = e.rotate(angle, center=(x, y))
+            d.append(e)
             
         elif shape_type == 'rounded_rect':
             w = random.randint(size//2, size)
             h = random.randint(size//3, size//2)
             radius = random.randint(20, 80)
             angle = random.randint(0, 360)
-            d.append(draw.RoundedRectangle(x - w//2, y - h//2, w, h, radius, fill=color, opacity=opacity, transform=f"rotate({angle} {x} {y})"))
+            r = draw.RoundedRectangle(x - w//2, y - h//2, w, h, radius)
+            r = r.fill(color, opacity=opacity)
+            r = r.rotate(angle, center=(x, y))
+            d.append(r)
             
         else:  # circle
             d.append(draw.Circle(x, y, size//2, fill=color, opacity=opacity))
