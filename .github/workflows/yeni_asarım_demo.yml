@@ -1,4 +1,4 @@
-name: 🎨 DEMO - SSG Build (Yeni Tasarım Demo)
+name: 🎨 DEMO - SSG Deploy Only (Yeni Tasarım Demo - Creator Yok)
 
 on:
   workflow_dispatch:
@@ -30,22 +30,10 @@ jobs:
           pip install --default-timeout=100 --retries=5 \
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
-      - name: 0. Starter Bot (Template + Task Kontrol - Demo için bypass)
-        run: python bots/starter-bot.py || echo "⚠️ Demo mod: Starter uyarıları bypass edildi"
+      - name: 0. Starter Bot (Template Kontrol - Demo bypass)
+        run: python bots/starter-bot.py || echo "⚠️ Demo mod: Devam ediliyor"
         
-      - name: 1. Creator Bot (4 Dil Tek Prompt + Gorseller)
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
-          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
-        run: python bots/creator.py
-        
-      - name: 2. Uploader (Ham HTML'leri + Hero.json R2'ye Yukle - Tüm Diller)
+      - name: 1. Uploader (Ham HTML'leri R2'ye Yukle)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -54,7 +42,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/uploader.py
         
-      - name: 3. Hero Bot (Hero.json Oku, Dinamik Hero HTML Uret)
+      - name: 2. Hero Bot (Hero.json Oku, Dinamik Hero HTML Uret)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -63,7 +51,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/hero_bot.py
         
-      - name: 4. Publisher (DEMO Template ile Render Et)
+      - name: 3. Publisher (DEMO Template ile Render Et)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -73,7 +61,7 @@ jobs:
           TEMPLATE_VERSION: "demo"
         run: python bots/publisher.py
         
-      - name: 5. Kütüphaneci Bot (Statik Arşiv Sayfaları - Tüm Diller)
+      - name: 4. Kütüphaneci Bot (Statik Arşiv Sayfaları - Tüm Diller)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -82,7 +70,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/librarian.py
         
-      - name: 6. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
+      - name: 5. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -91,6 +79,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
-            git commit -m "🎨 DEMO: Yeni Bento Grid tasarımı test ediliyor"
+            git commit -m "🎨 DEMO: Yeni Bento Grid tasarımı (Creator'sız)"
             git push origin main || git push --force origin main
           fi
