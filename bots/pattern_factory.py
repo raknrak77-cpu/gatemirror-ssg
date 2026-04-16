@@ -8,8 +8,8 @@ OUTPUT_DIR = "assets/patterns"
 CANVAS_WIDTH = 3840
 CANVAS_HEIGHT = 2160
 
-# Renk: Beyaz (dark mod'da görünür)
-LINE_COLOR = "#ffffff"
+# Renk: SİYAH
+LINE_COLOR = "#000000"
 
 # Seviye konfigürasyonları
 LEVELS = {
@@ -23,7 +23,7 @@ LEVELS = {
 def sine_wave_path(start_x, start_y, amplitude, wavelength, cycles, direction):
     """Sinüs dalgası yolu oluşturur"""
     points = []
-    step = 20  # Her 20px'de bir nokta
+    step = 20
     
     if direction == 'horizontal':
         for i in range(0, int(CANVAS_WIDTH * 1.5), step):
@@ -35,7 +35,7 @@ def sine_wave_path(start_x, start_y, amplitude, wavelength, cycles, direction):
             y = start_y + i
             x = start_x + amplitude * math.sin(2 * math.pi * i / wavelength)
             points.append((x, y))
-    else:  # diagonal
+    else:
         for i in range(0, int(max(CANVAS_WIDTH, CANVAS_HEIGHT) * 1.5), step):
             x = start_x + i * 0.7
             y = start_y + i * 0.7 + amplitude * math.sin(2 * math.pi * i / wavelength)
@@ -45,11 +45,9 @@ def sine_wave_path(start_x, start_y, amplitude, wavelength, cycles, direction):
 
 def bezier_wave_path(start_x, start_y, end_x, end_y, amplitude, cycles):
     """Bezier eğrisi ile dalga oluşturur"""
-    # Kontrol noktaları
     mid_x = (start_x + end_x) / 2
     mid_y = (start_y + end_y) / 2
     
-    # Dalga etkisi için kontrol noktalarını kaydır
     ctrl1_x = start_x + (end_x - start_x) * 0.25
     ctrl1_y = start_y + amplitude * math.sin(cycles * math.pi * 0.25)
     ctrl2_x = end_x - (end_x - start_x) * 0.25
@@ -98,7 +96,6 @@ def generate_path(dwg, line_type, stroke_width):
         dwg.add(dwg.path(path_data, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none'))
         
     elif line_type == 'nested':
-        # İç içe geçen paralel çizgiler
         base_x = random.randint(0, CANVAS_WIDTH)
         base_y = random.randint(0, CANVAS_HEIGHT)
         for offset in range(-3, 4):
@@ -115,7 +112,6 @@ def generate_path(dwg, line_type, stroke_width):
             dwg.add(dwg.path(path_data, stroke=LINE_COLOR, stroke_width=offset_width, fill='none'))
             
     elif line_type == 'network':
-        # Ağ yapısı (kesişen çizgiler)
         points = []
         for i in range(6):
             x = random.randint(0, CANVAS_WIDTH)
@@ -131,17 +127,14 @@ def generate_pattern(category, level_name, level_config, index):
     
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
-    # SVG oluştur (arka plan YOK - şeffaf)
     dwg = svgwrite.Drawing(filepath, size=(CANVAS_WIDTH, CANVAS_HEIGHT))
     
     line_types = ['sine_horizontal', 'sine_vertical', 'sine_diagonal', 'bezier', 'nested', 'network']
     num_lines = level_config['lines']
     
     for i in range(num_lines):
-        # Rastgele çizgi tipi
         line_type = random.choice(line_types)
         
-        # Rastgele kalınlık
         if 'stroke_widths' in level_config:
             stroke_width = random.choice(level_config['stroke_widths'])
         else:
@@ -156,7 +149,7 @@ def generate_pattern(category, level_name, level_config, index):
 def pattern_factory():
     """Ana üretim fonksiyonu"""
     print("=" * 60)
-    print("🎨 PATTERN FACTORY - Dalgalı Çizgiler (svgwrite)")
+    print("🎨 PATTERN FACTORY - Dalgalı Çizgiler (SİYAH)")
     print(f"   📐 Canvas: {CANVAS_WIDTH}x{CANVAS_HEIGHT}")
     print(f"   🎨 Renk: {LINE_COLOR}")
     print("   📊 Seviyeler: basic(6) → medium(25) → complex(55) → very_complex(90) → extreme(130)")
