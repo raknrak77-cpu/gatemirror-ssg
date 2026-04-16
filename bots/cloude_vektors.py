@@ -2,13 +2,13 @@ import os
 import random
 import math
 
-OUTPUT_DIR = "assets/patterns"
+# ================= KONFIG =================
+OUTPUT_DIR = "assets/claude"
 W = 3840
 H = 2160
 
 # =====================
 # KATEGORİ ESTETİK TANIMLARI
-# Her kategori farklı bir görsel dil konuşur
 # =====================
 CATEGORY_STYLES = {
     'tech': {
@@ -65,7 +65,7 @@ def svg_open(filepath):
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'width="{W}" height="{H}" viewBox="0 0 {W} {H}">\n'
-        f'<rect width="{W}" height="{H}" fill="white"/>\n'
+        f'<rect width="{W}" height="{H}" fill="transparent"/>\n'  # Şeffaf arka plan
     )
 
 def svg_close():
@@ -89,11 +89,10 @@ def polyline_el(points, stroke_width, opacity):
     )
 
 # =====================
-# ÇİZGİ ÜRETECLER
+# ÇİZGİ ÜRETECLER (TAMAMI AYNI)
 # =====================
 
 def sine_horizontal(sw, op):
-    """Klasik yatay sinüs — ama parametreler daha zengin"""
     start_x = random.uniform(-W * 0.1, W * 0.2)
     y = random.uniform(H * 0.05, H * 0.95)
     amp = random.uniform(H * 0.02, H * 0.18)
@@ -108,7 +107,6 @@ def sine_horizontal(sw, op):
     return polyline_el(pts, sw, op)
 
 def sine_diagonal(sw, op):
-    """Çapraz sinüs — hafif eğik"""
     angle = random.uniform(15, 45) * (1 if random.random() > 0.5 else -1)
     rad = math.radians(angle)
     cx = random.uniform(0, W)
@@ -129,8 +127,6 @@ def sine_diagonal(sw, op):
     return polyline_el(pts, sw, op)
 
 def bezier_arc(sw, op):
-    """Tek geniş Bezier yayı — zarif"""
-    # Kanvas kenarlarından başla/bitir
     edge = random.randint(0, 3)
     if edge == 0:   sx, sy = random.uniform(0, W), 0
     elif edge == 1: sx, sy = W, random.uniform(0, H)
@@ -140,7 +136,6 @@ def bezier_arc(sw, op):
     ex = random.uniform(W * 0.1, W * 0.9)
     ey = random.uniform(H * 0.1, H * 0.9)
     
-    # Kontrol noktaları — dramatik sapma
     cx1 = sx + (ex - sx) * random.uniform(0.1, 0.4) + random.uniform(-W * 0.3, W * 0.3)
     cy1 = sy + (ey - sy) * random.uniform(0.1, 0.4) + random.uniform(-H * 0.3, H * 0.3)
     cx2 = sx + (ex - sx) * random.uniform(0.6, 0.9) + random.uniform(-W * 0.2, W * 0.2)
@@ -150,7 +145,6 @@ def bezier_arc(sw, op):
     return path_el(d, sw, op)
 
 def gentle_arc(sw, op):
-    """Yumuşak çoklu Bezier — wellness/elearning için"""
     y = random.uniform(H * 0.1, H * 0.9)
     num_segments = random.randint(3, 7)
     seg_w = W * 1.2 / num_segments
@@ -169,7 +163,6 @@ def gentle_arc(sw, op):
     return path_el(d, sw, op)
 
 def organic_flow(sw, op):
-    """Organik akan çizgi — Perlin benzeri gürültü ile"""
     x = random.uniform(-W * 0.05, W * 0.15)
     y = random.uniform(H * 0.1, H * 0.9)
     pts = [(x, y)]
@@ -184,12 +177,11 @@ def organic_flow(sw, op):
         x += step
         dy = (amp1 * math.sin(freq1 * x + phase1) +
               amp2 * math.sin(freq2 * x + phase2))
-        y_new = pts[-1][1] + dy * 0.08  # yavaş drift
+        y_new = pts[-1][1] + dy * 0.08
         pts.append((x, y_new))
     return polyline_el(pts, sw, op)
 
 def breath_wave(sw, op):
-    """Nefes dalgası — amplitüd ortada en büyük"""
     sx = random.uniform(-W * 0.05, W * 0.1)
     cy = random.uniform(H * 0.15, H * 0.85)
     max_amp = random.uniform(H * 0.05, H * 0.22)
@@ -198,9 +190,8 @@ def breath_wave(sw, op):
     pts = []
     x = sx
     while x < W * 1.05:
-        # Amplitüd kenarlardan ortaya doğru büyür, sonra küçülür
         t = (x - sx) / (W * 1.1)
-        env = math.sin(math.pi * t)  # 0→1→0 zarf
+        env = math.sin(math.pi * t)
         amp = max_amp * env
         y = cy + amp * math.sin(2 * math.pi * (x - sx) / wl)
         pts.append((x, y))
@@ -208,11 +199,9 @@ def breath_wave(sw, op):
     return polyline_el(pts, sw, op)
 
 def data_stream(sw, op):
-    """Veri akışı — çok hızlı titreşen yatay çizgiler"""
     y = random.uniform(H * 0.05, H * 0.95)
     amp_base = random.uniform(2, 25)
     wl = random.uniform(30, 120)
-    # Zaman zaman ani sıçramalar
     spike_prob = random.uniform(0.02, 0.1)
     step = 8
     pts = []
@@ -228,21 +217,18 @@ def data_stream(sw, op):
     return polyline_el(pts, sw, op)
 
 def grid_flow(sw, op):
-    """Devre izi — yatay/dikey çizgi + köşe kavis"""
     sx = random.uniform(0, W)
     sy = random.uniform(0, H)
     num_turns = random.randint(3, 8)
     d = f"M {sx:.1f},{sy:.1f}"
     x, y = sx, sy
     for _ in range(num_turns):
-        # Yatay veya dikey segment
         if random.random() > 0.5:
             nx = x + random.uniform(-W * 0.25, W * 0.25)
             ny = y
         else:
             nx = x
             ny = y + random.uniform(-H * 0.25, H * 0.25)
-        # Köşeye yuvarlatma (quadratic bezier)
         mx = (x + nx) / 2
         my = (y + ny) / 2
         d += f" Q {x:.1f},{y:.1f} {mx:.1f},{my:.1f} L {nx:.1f},{ny:.1f}"
@@ -250,14 +236,12 @@ def grid_flow(sw, op):
     return path_el(d, sw, op)
 
 def circuit_wave(sw, op):
-    """Devre dalgası — grid + sinüs karışımı"""
     y = random.uniform(H * 0.1, H * 0.9)
     x = 0.0
     segments = random.randint(4, 10)
     seg_w = W / segments
     d = f"M 0,{y:.1f}"
     for i in range(segments):
-        # Kısa yatay → yukarı/aşağı → kısa yatay
         x1 = x + seg_w * 0.2
         mid_y = y + random.choice([-1, 1]) * random.uniform(20, 120)
         x2 = x + seg_w * 0.5
@@ -272,7 +256,6 @@ def circuit_wave(sw, op):
     return path_el(d, sw, op)
 
 def terrain_contour(sw, op):
-    """Topografik kontur — iç içe dalgalar"""
     base_y = random.uniform(H * 0.2, H * 0.8)
     peaks = []
     for _ in range(random.randint(2, 5)):
@@ -291,7 +274,6 @@ def terrain_contour(sw, op):
     return polyline_el(pts, sw, op)
 
 def wind_flow(sw, op):
-    """Rüzgar akışı — çok sinüs harmonik"""
     y = random.uniform(H * 0.05, H * 0.95)
     harmonics = [(random.uniform(0.001, 0.005), random.uniform(20, 150), random.uniform(0, 6.28))
                  for _ in range(random.randint(2, 4))]
@@ -307,7 +289,6 @@ def wind_flow(sw, op):
     return polyline_el(pts, sw, op)
 
 def growth_spiral(sw, op):
-    """Büyüme spirali — merkezdışı logaritmik spiral"""
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
     a = random.uniform(5, 20)
@@ -331,10 +312,9 @@ def growth_spiral(sw, op):
     return ''
 
 def market_wave(sw, op):
-    """Piyasa dalgası — trend + gürültü"""
     x = 0.0
     y = random.uniform(H * 0.2, H * 0.8)
-    trend = random.uniform(-H * 0.0002, H * 0.0002)  # hafif yön
+    trend = random.uniform(-H * 0.0002, H * 0.0002)
     volatility = random.uniform(5, 60)
     mean_revert = 0.05
     pts = [(x, y)]
@@ -343,14 +323,13 @@ def market_wave(sw, op):
         x += step
         drift = trend
         shock = random.gauss(0, volatility)
-        mean_r = mean_revert * (H / 2 - y)  # ortaya çekim
+        mean_r = mean_revert * (H / 2 - y)
         y = y + drift + shock * 0.3 + mean_r
         y = max(H * 0.05, min(H * 0.95, y))
         pts.append((x, y))
     return polyline_el(pts, sw, op)
 
 def flow_network(sw, op):
-    """Akış ağı — birleşen çizgiler"""
     num_sources = random.randint(3, 6)
     target_x = random.uniform(W * 0.3, W * 0.7)
     target_y = random.uniform(H * 0.3, H * 0.7)
@@ -367,17 +346,15 @@ def flow_network(sw, op):
     return result
 
 def knowledge_wave(sw, op):
-    """Bilgi dalgası — giderek artan frekans"""
     sx = -W * 0.05
     y = random.uniform(H * 0.2, H * 0.8)
-    base_wl = random.uniform(W * 0.25, W * 0.5)  # başlangıç dalga boyu (uzun)
+    base_wl = random.uniform(W * 0.25, W * 0.5)
     amp = random.uniform(H * 0.04, H * 0.15)
     step = 10
     pts = []
     x = sx
     while x < W * 1.05:
         t = (x - sx) / (W * 1.1)
-        # Dalga boyu giderek kısalır (hızlanır) — öğrenme ivmesi
         wl = base_wl * (1 - t * 0.6)
         wl = max(wl, 40)
         y_cur = y + amp * math.sin(2 * math.pi * (x - sx) / wl)
@@ -386,7 +363,6 @@ def knowledge_wave(sw, op):
     return polyline_el(pts, sw, op)
 
 def spiral_out(sw, op):
-    """Dışa açılan spiral — wellness için"""
     cx = random.uniform(W * 0.25, W * 0.75)
     cy = random.uniform(H * 0.25, H * 0.75)
     start_r = random.uniform(5, 30)
@@ -457,13 +433,14 @@ def generate_pattern(category, level_name, level_config, index):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(svg)
 
-    print(f"   ✅ {category}/{filename} ({num_lines} lines, style: {line_type})")
+    print(f"   ✅ {category}/{filename} ({num_lines} lines)")
 
 def pattern_factory():
     print("=" * 60)
-    print("🎨 PATTERN FACTORY v2 — Kategori Bazlı Estetik")
+    print("🎨 CLAUDE PATTERN FACTORY — Kategori Bazlı Estetik")
     print(f"   📐 Canvas: {W}x{H}")
     print(f"   🎨 Renk: Siyah, değişken opaklık")
+    print(f"   📁 Çıktı: {OUTPUT_DIR}/")
     levels_str = ' → '.join('%s(%d)' % (k, v['lines']) for k, v in LEVELS.items())
     print(f"   📊 Seviyeler: {levels_str}")
     print("=" * 60)
