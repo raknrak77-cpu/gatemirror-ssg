@@ -17,24 +17,21 @@
             --primary-dark: #1a8c3f;
             --text: #1e293b;
             --text-light: #64748b;
-            --text-muted: #94a3b8;
             --white: #ffffff;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            --border-radius: 1.5rem;
-            --border-radius-sm: 1rem;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
             
-            --pastel-1: #e8f5e9;
-            --pastel-2: #c8e6c9;
-            --pastel-3: #a5d6a7;
+            --green-1: #e8f5e9;
+            --green-2: #c8e6c9;
+            --green-3: #a5d6a7;
+            --green-4: #81c784;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: #f5f5f5;
             color: var(--text);
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
         header {
@@ -44,7 +41,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
         }
 
         .header-container {
@@ -72,7 +68,6 @@
             text-decoration: none;
             color: var(--text-light);
             font-weight: 500;
-            transition: var(--transition);
         }
 
         .nav-links a:hover {
@@ -84,42 +79,46 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            cursor: pointer;
         }
 
-        /* ASİMETRİK BENTO SINGLE */
-        .bento-single {
+        /* 16:9 BENTO GRID */
+        .bento-grid {
             max-width: 1400px;
             margin: 2rem auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
+            aspect-ratio: 16 / 9;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1rem;
+            grid-template-columns: 62% 32%;
+            grid-template-rows: 18% 18%;
+            grid-template-areas:
+                "content author"
+                "content takeaways";
         }
 
         .bento-block {
-            border-radius: var(--border-radius);
+            border-radius: 1.5rem;
             padding: 1.5rem;
             transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
+            background: var(--white);
+            overflow-y: auto;
         }
 
         .bento-block:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
         }
 
-        /* 1. MAKALE İÇERİĞİ (2x2 - büyük) */
-        .block-article {
-            background: var(--white);
-            grid-column: span 2;
-            grid-row: span 2;
+        /* BLOK 1: MAKALE İÇERİĞİ (Büyük) */
+        .block-content {
+            grid-area: content;
+            background: linear-gradient(135deg, var(--green-1) 0%, var(--green-2) 100%);
         }
 
         .breadcrumb {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
         }
 
         .breadcrumb a {
@@ -128,95 +127,76 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 300px;
-            background: var(--pastel-1);
-            border-radius: var(--border-radius-sm);
-            margin: 1rem 0;
+            margin-bottom: 0.5rem;
         }
 
         .meta-info {
             display: flex;
             gap: 1rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .article-content p {
             font-size: 0.85rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .editors-note-rounded {
-            background: var(--pastel-1);
-            border-left: 4px solid var(--primary);
-            padding: 1rem 1.5rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-            border-radius: var(--border-radius-sm);
-        }
-
-        /* 2. YAZAR BİLGİSİ (1x1) */
+        /* BLOK 2: YAZAR */
         .block-author {
-            background: var(--pastel-2);
-            grid-column: span 1;
-            grid-row: span 1;
+            grid-area: author;
+            background: var(--green-2);
         }
 
         .author-name {
-            font-size: 1.2rem;
             font-weight: 700;
+            font-size: 1rem;
             margin-bottom: 0.25rem;
         }
 
         .author-title {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            color: var(--text-light);
             margin-bottom: 0.5rem;
         }
 
         .author-bio {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            font-size: 0.75rem;
         }
 
-        /* 3. KEY TAKEAWAYS (1x1) */
+        /* BLOK 3: KEY TAKEAWAYS */
         .block-takeaways {
-            background: var(--pastel-3);
-            grid-column: span 1;
-            grid-row: span 1;
+            grid-area: takeaways;
+            background: var(--green-3);
+        }
+
+        .block-takeaways h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .takeaways-list {
             list-style: none;
-            margin-top: 0.5rem;
         }
 
         .takeaways-list li {
             padding: 0.5rem 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 1024px) {
-            .bento-single {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .block-article {
-                grid-column: span 2;
-            }
+            font-size: 0.75rem;
         }
 
         @media (max-width: 768px) {
-            .bento-single {
+            .bento-grid {
                 grid-template-columns: 1fr;
-            }
-            .block-article {
-                grid-column: span 1;
-                grid-row: span 1;
+                grid-template-rows: auto;
+                aspect-ratio: auto;
+                grid-template-areas:
+                    "content"
+                    "author"
+                    "takeaways";
             }
             .nav-links {
                 display: none;
@@ -225,7 +205,7 @@
                 display: block;
             }
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -234,62 +214,44 @@
 
 <header>
     <div class="header-container">
-        <a href="/" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
+        <a href="#" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/wellness/">Wellness</a>
-            <a href="/tech/">Tech</a>
-            <a href="/future-economy/">Future Economy</a>
-            <a href="/eco/">Eco</a>
-            <a href="/elearning/">E-Learning</a>
+            <a href="#">Home</a>
+            <a href="#">Wellness</a>
+            <a href="#">Tech</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco</a>
+            <a href="#">E-Learning</a>
         </div>
         <button class="menu-btn"><i class="fas fa-bars"></i></button>
     </div>
 </header>
 
 <main>
-    <div class="bento-single">
+    <div class="bento-grid">
         
-        <!-- 1. MAKALE İÇERİĞİ (2x2) -->
-        <article class="bento-block block-article">
-            <div class="breadcrumb">
-                <a href="/">HOME</a> &gt; <a href="/tech/">TECH</a> &gt; <span>AI Trading Bots 2026</span>
-            </div>
-            
+        <div class="bento-block block-content">
+            <div class="breadcrumb"><a href="#">HOME</a> &gt; <a href="#">TECH</a> &gt; <span>AI Trading Bots 2026</span></div>
             <h1>The Death of Discretionary Trading: 2026 AI Trading Bots and the High-Frequency Revolution</h1>
-            
             <div class="meta-info">
                 <span>✍️ Alp Deniz</span>
                 <span>📅 15 April 2026</span>
                 <span>⏱️ 6 min read</span>
-                <span>👁️ 3,427 views</span>
             </div>
-            
-            <div class="hero-image"></div>
-            
-            <div class="editors-note-rounded">
-                As a Quantitative Architect who has spent a decade building low-latency bridges between Wall Street and the digital asset markets, I am telling you plainly: the era of "manual" trading is over.
-            </div>
-            
             <div class="article-content">
                 <p>By mid-2026, the retail and institutional trading landscapes have merged into a singular, high-velocity environment where 94% of all profitable crypto and equity trades are executed by autonomous agents.</p>
                 <p>The provocative truth is that the human brain is no longer capable of processing the multi-dimensional data streams required to maintain a competitive Sharpe ratio.</p>
-                <h2>The Strategic Shift: Centralized vs. Decentralized AI Bots</h2>
-                <p>The most heated debate in the 2026 trading rooms is the choice between Centralized (CEX) and Decentralized (DEX) execution. Centralized bots, like those integrated with Binance or Coinbase International, offer the highest liquidity and the lowest off-chain latency.</p>
-                <h3>Low-Latency Execution: The 2026 Hardware Moat</h3>
-                <p>We have entered the "Hardware Era" of AI trading. The most successful bots in 2026 are not running on standard cloud instances. They are utilizing edge computing.</p>
+                <p><strong>The Strategic Shift: Centralized vs. Decentralized AI Bots</strong><br>The most heated debate in the 2026 trading rooms is the choice between Centralized (CEX) and Decentralized (DEX) execution.</p>
             </div>
-        </article>
+        </div>
 
-        <!-- 2. YAZAR BİLGİSİ (1x1) -->
-        <aside class="bento-block block-author">
+        <div class="bento-block block-author">
             <div class="author-name">Alp Deniz</div>
             <div class="author-title">Algorithmic Trading Strategist</div>
             <div class="author-bio">Former quantitative analyst at a proprietary trading firm. Specializes in high-frequency AI execution models and portfolio automation. Based in Istanbul.</div>
-        </aside>
+        </div>
 
-        <!-- 3. KEY TAKEAWAYS (1x1) -->
-        <aside class="bento-block block-takeaways">
+        <div class="bento-block block-takeaways">
             <h3>⚡ Key Takeaways</h3>
             <ul class="takeaways-list">
                 <li><strong>Latency is the Only Alpha:</strong> Execution speed is more important than the underlying strategy.</li>
@@ -297,7 +259,7 @@
                 <li><strong>Predictive Risk Management:</strong> "Black Swan Projections" replace static stop-losses.</li>
                 <li><strong>2026 ROI Benchmark:</strong> 18-35% annual ROI with drawdown limited to 5%.</li>
             </ul>
-        </aside>
+        </div>
     </div>
 </main>
 
