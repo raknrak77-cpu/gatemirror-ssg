@@ -1,6 +1,7 @@
 import os
 import random
-import drawsvg as draw
+import svgwrite
+import math
 
 # ================= KONFIGURASYON =================
 OUTPUT_DIR = "assets/patterns"
@@ -18,16 +19,15 @@ COLORS = {
 
 # Zorluk seviyeleri
 LEVELS = {
-    'basic': {'count': 5, 'shapes': 25, 'opacity_min': 0.1, 'opacity_max': 0.25},
-    'medium': {'count': 5, 'shapes': 60, 'opacity_min': 0.1, 'opacity_max': 0.35},
-    'complex': {'count': 5, 'shapes': 120, 'opacity_min': 0.1, 'opacity_max': 0.45},
-    'very_complex': {'count': 5, 'shapes': 200, 'opacity_min': 0.1, 'opacity_max': 0.55},
-    'extreme': {'count': 5, 'shapes': 350, 'opacity_min': 0.1, 'opacity_max': 0.65}
+    'basic': {'shapes': 25, 'opacity_min': 0.1, 'opacity_max': 0.25},
+    'medium': {'shapes': 60, 'opacity_min': 0.1, 'opacity_max': 0.35},
+    'complex': {'shapes': 120, 'opacity_min': 0.1, 'opacity_max': 0.45},
+    'very_complex': {'shapes': 200, 'opacity_min': 0.1, 'opacity_max': 0.55},
+    'extreme': {'shapes': 350, 'opacity_min': 0.1, 'opacity_max': 0.65}
 }
 
-def generate_blob_path(x, y, size, complexity=8):
-    """Dalgalı/yumuşak şekil oluşturur (keskin hatlar yok)"""
-    import math
+def generate_blob_points(x, y, size, complexity=8):
+    """Dalgalı/yumuşak şekil için nokta listesi oluşturur"""
     points = []
     angle_step = 360 / complexity
     
@@ -38,15 +38,49 @@ def generate_blob_path(x, y, size, complexity=8):
         py = y + r * math.sin(angle)
         points.append((px, py))
     
-    # draw.Lines ile çokgen çiz
-    return draw.Lines(*[coord for point in points for coord in point], close=True)
+    return points
 
-def generate_pattern(category, level_config, level_name, index):
+def add_blob(dwg, x, y, size, color, opacity):
+    """Dalgalı yumuşak şekil ekler"""
+    complexity = random.randint(6, 12)
+    points = generate_blob_points(x, y, size, complexity)
+    dwg.add(dwg.polygon(points, fill=color, opacity=opacity))
+
+def add_ellipse(dwg, x, y, size, color, opacity):
+    """Elips ekler"""
+    rx = random.randint(size//3, size)
+    ry = random.randint(size//4, size//2)
+    angle = random.randint(0, 360)
+    ellipse = dwg.ellipse(center=(x, y), r=(rx, ry), fill=color, opacity=opacity)
+    ellipse.rotate(angle, center=(x, y))
+    dwg.add(ellipse)
+
+def add_rounded_rect(dwg, x, y, size, color, opacity):
+    """Yuvarlak köşeli dikdörtgen ekler"""
+    w = random.randint(size//2, size)
+    h = random.randint(size//3, size//2)
+    radius = random.randint(20, 80)
+    angle = random.randint(0, 360)
+    rect = dwg.rect(insert=(x - w//2, y - h//2), size=(w, h), rx=radius, ry=radius, fill=color, opacity=opacity)
+    rect.rotate(angle, center=(x, y))
+    dwg.add(rect)
+
+def add_circle(dwg, x, y, size, color, opacity):
+    """Daire ekler"""
+    dwg.add(dwg.circle(center=(x, y), r=size//2, fill=color, opacity=opacity))
+
+def generate_pattern(category, level_name, level_config, index):
     """Bir SVG pattern üretir"""
-    d = draw.Drawing(CANVAS_WIDTH, CANVAS_HEIGHT)
+    filename = f"{category}_{level_name}_{index+1:02d}.svg"
+    filepath = os.path.join(OUTPUT_DIR, category, filename)
     
-    # Arka plan (koyu - hero arka planına uyumlu)
-    d.append(draw.Rectangle(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, fill='#0a0a0a'))
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    
+    # SVG oluştur
+    dwg = svgwrite.Drawing(filepath, size=(CANVAS_WIDTH, CANVAS_HEIGHT))
+    
+    # Arka plan
+    dwg.add(dwg.rect(insert=(0, 0), size=('100%', '100%'), fill='#0a0a0a'))
     
     palette = COLORS.get(category, COLORS['tech'])
     num_shapes = level_config['shapes']
@@ -56,79 +90,52 @@ def generate_pattern(category, level_config, level_name, index):
         x = random.randint(-CANVAS_WIDTH//4, CANVAS_WIDTH + CANVAS_WIDTH//4)
         y = random.randint(-CANVAS_HEIGHT//4, CANVAS_HEIGHT + CANVAS_HEIGHT//4)
         
-        # Rastgele boyut (50-500px arası)
+        # Rastgele boyut
         size = random.randint(80, 500)
         
-        # Rastgele renk (pastel, kategori bazlı)
+        # Rastgele renk
         color = random.choice(palette)
         
-        # Opaklık (seviyeye göre)
+        # Opaklık
         opacity = random.uniform(level_config['opacity_min'], level_config['opacity_max'])
         
-        # Şekil tipi (yumuşak, dalgalı)
+        # Şekil tipi
         shape_type = random.choice(['blob', 'ellipse', 'rounded_rect', 'circle'])
         
         if shape_type == 'blob':
-            # Dalgalı yumuşak şekil
-            d.append(generate_blob_path(x, y, size, complexity=random.randint(6, 12)).fill(color, opacity=opacity))
-            
+            add_blob(dwg, x, y, size, color, opacity)
         elif shape_type == 'ellipse':
-            rx = random.randint(size//3, size)
-            ry = random.randint(size//4, size//2)
-            angle = random.randint(0, 360)
-            e = draw.Ellipse(x, y, rx, ry)
-            e = e.fill(color, opacity=opacity)
-            e = e.rotate(angle, center=(x, y))
-            d.append(e)
-            
+            add_ellipse(dwg, x, y, size, color, opacity)
         elif shape_type == 'rounded_rect':
-            w = random.randint(size//2, size)
-            h = random.randint(size//3, size//2)
-            radius = random.randint(20, 80)
-            angle = random.randint(0, 360)
-            r = draw.RoundedRectangle(x - w//2, y - h//2, w, h, radius)
-            r = r.fill(color, opacity=opacity)
-            r = r.rotate(angle, center=(x, y))
-            d.append(r)
-            
-        else:  # circle
-            d.append(draw.Circle(x, y, size//2, fill=color, opacity=opacity))
+            add_rounded_rect(dwg, x, y, size, color, opacity)
+        else:
+            add_circle(dwg, x, y, size, color, opacity)
     
-    return d
-
-def save_pattern(d, category, level_name, index):
-    """Pattern'i dosyaya kaydeder"""
-    filename = f"{category}_{level_name}_{index+1:02d}.svg"
-    filepath = os.path.join(OUTPUT_DIR, category, filename)
-    
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    d.save_svg(filepath)
+    dwg.save()
     print(f"   ✅ {category}/{filename}")
-    
     return filepath
 
 def pattern_factory():
     """Ana üretim fonksiyonu"""
     print("=" * 60)
-    print("🎨 PATTERN FACTORY - Vektörel Desen Üretici")
+    print("🎨 PATTERN FACTORY - Vektörel Desen Üretici (svgwrite)")
     print(f"   📐 Canvas: {CANVAS_WIDTH}x{CANVAS_HEIGHT}")
     print("   🎨 Stil: Pastel + Dalgalı şekiller")
     print("=" * 60)
     
     categories = ['tech', 'wellness', 'eco', 'future-economy', 'elearning']
+    level_names = ['basic', 'medium', 'complex', 'very_complex', 'extreme']
     total_count = 0
     
     for category in categories:
         print(f"\n📁 {category.upper()} desenleri üretiliyor...")
         
-        for level_name in ['basic', 'medium', 'complex', 'very_complex', 'extreme']:
+        for level_name in level_names:
             level_config = LEVELS[level_name]
-            count = level_config['count']
             
-            for i in range(count):
-                print(f"   🎨 {level_name} desen {i+1}/{count}...")
-                d = generate_pattern(category, level_config, level_name, i)
-                save_pattern(d, category, level_name, i)
+            for i in range(5):  # Her seviyeden 5 adet
+                print(f"   🎨 {level_name} desen {i+1}/5...")
+                generate_pattern(category, level_name, level_config, i)
                 total_count += 1
     
     print("\n" + "=" * 60)
