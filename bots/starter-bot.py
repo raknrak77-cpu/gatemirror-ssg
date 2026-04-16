@@ -20,19 +20,17 @@ def test_templates():
         with open(path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # hero.html özel kontroller (farklı kurallar)
+        # hero.html özel kontroller
         if file == 'hero.html':
-            # Hero bileşeninde sadece kritik elementleri kontrol et
             if 'class="hero"' not in content:
                 errors.append(f"{file}: .hero sınıfı yok")
             if 'hero-title' not in content:
                 errors.append(f"{file}: hero-title sınıfı yok")
             if 'hero-description' not in content:
                 errors.append(f"{file}: hero-description sınıfı yok")
-            # hero.html'de dark mode butonu ARANMAZ (template'lerde olmalı)
             continue
         
-        # Diğer template'ler (home, list, single) için tam kontroller
+        # Diğer template'ler (home, list, single, all-articles)
         # 1. Lang değişkeni kontrolü
         if '/en/' in content and '{{ lang }}' not in content:
             errors.append(f"{file}: /en/ var ama {{ lang }} yok (dil yönlendirme hatası)")
@@ -41,37 +39,39 @@ def test_templates():
         if 'href="{{ lang }}"' in content or 'href="{{ lang }}/"' in content:
             errors.append(f"{file}: href başında / eksik (href=\"/{{ lang }}/\" olmalı)")
         
-        # 3. Dark mode toggle kontrolü
-        if 'darkModeToggle' not in content:
-            errors.append(f"{file}: Dark mode butonu yok")
+        # 3. Dark mode toggle kontrolü (gömülü JS'de var)
+        if 'darkModeToggle' not in content and 'toggle-switch' not in content:
+            errors.append(f"{file}: Dark mode toggle butonu yok")
         
-        # 4. Toggle switch kontrolü
-        if 'toggle-switch' not in content:
-            errors.append(f"{file}: toggle-switch sınıfı yok")
+        # 4. CSS linki kontrolü - style.css ARANMAZ (gömülü CSS var)
+        # Sadece font-awesome var mı kontrol et
+        if 'font-awesome' not in content and 'fa-bars' not in content:
+            errors.append(f"{file}: Font Awesome linki yok")
         
-        # 5. CSS linki kontrolü (style.css var mı?)
-        if 'style.css' not in content:
-            errors.append(f"{file}: style.css linki yok (master CSS dosyası eklenmeli)")
-        
-        # 6. Hero include kontrolü (artık include değil, variable kullanılıyor)
+        # 5. Hero include kontrolü
         if '{% include "hero.html"' in content:
             errors.append(f"{file}: include hero.html kullanılıyor, hero.html safe ile değiştirin")
+        
+        # 6. Gömülü CSS kontrolü (style etiketi var mı?)
+        if '<style>' not in content:
+            errors.append(f"{file}: Gömülü CSS (<style> etiketi) bulunamadı")
     
     return errors
 
 def test_css():
-    """CSS dosyasını kontrol eder"""
+    """CSS dosyasını kontrol et - ARTIK ZORUNLU DEĞİL (gömülü CSS var)"""
     css_path = "templates/css/style.css"
-    errors = []
+    warnings = []
     
     if not os.path.exists(css_path):
-        errors.append(f"CSS dosyası bulunamadı: {css_path}")
-        return errors
+        # UYARI: style.css yok ama gömülü CSS var, bu normal
+        warnings.append("style.css dosyası bulunamadı (gömülü CSS kullanılıyor, bu normal)")
+        return [], warnings
     
     with open(css_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # Kritik CSS sınıflarının varlığını kontrol et
+    errors = []
     required_classes = [
         '.hero', '.hero-title', '.hero-description',
         '.side-menu', '.nav-links', '.dark-mode-toggle', '.toggle-switch',
@@ -82,22 +82,19 @@ def test_css():
         if cls not in content:
             errors.append(f"CSS: {cls} sınıfı bulunamadı")
     
-    # Dark mode kontrolü
     if 'body.dark' not in content:
         errors.append("CSS: Dark mode stilleri (body.dark) bulunamadı")
     
-    # Responsive kontrolü
     if '@media (max-width: 768px)' not in content:
         errors.append("CSS: Responsive stiller (@media) bulunamadı")
     
-    # Değişken kontrolü (CSS variables)
     if ':root' not in content:
         errors.append("CSS: :root değişkenleri bulunamadı")
     
-    return errors
+    return errors, warnings
 
 def test_static_pages():
-    """Statik sayfaları (about, contact, privacy) kontrol eder"""
+    """Statik sayfaları (about, contact, privacy) kontrol eder - GÜNCELLENDİ"""
     static_pages = ['about-us.html', 'contact.html', 'privacy-policy.html']
     errors = []
     
@@ -110,9 +107,14 @@ def test_static_pages():
         with open(path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # CSS linki kontrolü
-        if 'style.css' not in content:
-            errors.append(f"{page}: style.css linki yok")
+        # CSS linki kontrolü - style.css ARANMAZ (gömülü CSS var)
+        # Sadece font-awesome kontrol et
+        if 'font-awesome' not in content:
+            errors.append(f"{page}: Font Awesome linki yok")
+        
+        # Gömülü CSS kontrolü
+        if '<style>' not in content:
+            errors.append(f"{page}: Gömülü CSS (<style> etiketi) bulunamadı")
         
         # Hero kontrolü
         if 'class="hero"' not in content:
@@ -122,8 +124,8 @@ def test_static_pages():
         if 'side-menu' not in content:
             errors.append(f"{page}: Side menu yok")
         
-        # Dark mode kontrolü
-        if 'darkModeToggle' not in content:
+        # Dark mode kontrolü (gömülü JS'de var)
+        if 'darkModeToggle' not in content and 'toggle-switch' not in content:
             errors.append(f"{page}: Dark mode butonu yok")
     
     return errors
@@ -141,14 +143,12 @@ def test_hero_json():
         with open(hero_path, 'r', encoding='utf-8') as f:
             hero_data = json.load(f)
         
-        # Gerekli alanların varlığını kontrol et
         if 'pages' not in hero_data:
             errors.append("hero.json: 'pages' alanı yok")
         
         if 'home' not in hero_data.get('pages', {}):
             errors.append("hero.json: 'pages.home' alanı yok")
         
-        # Her dil için kontrol
         for lang in ['en', 'es', 'de', 'fr']:
             if lang not in hero_data.get('pages', {}).get('home', {}):
                 errors.append(f"hero.json: pages.home.{lang} alanı yok")
@@ -197,6 +197,7 @@ def check_pending_tasks():
 def starter():
     print("\n" + "=" * 60)
     print("🔍 STARTER BOT - TEMPLATE, CSS, STATİK SAYFA VE TASK KONTROLÜ")
+    print("   ✅ Gömülü CSS sistemi için güncellendi")
     print("=" * 60 + "\n")
     
     all_errors = []
@@ -210,13 +211,17 @@ def starter():
     else:
         print("   ✅ Tüm template'ler doğru görünüyor.")
     
-    # 2. CSS kontrolü
+    # 2. CSS kontrolü (artık zorunlu değil)
     print("\n🎨 CSS dosyası kontrol ediliyor...")
-    css_errors = test_css()
+    css_errors, css_warnings = test_css()
     if css_errors:
         all_errors.extend(css_errors)
-    else:
+    if css_warnings:
+        all_warnings.extend(css_warnings)
+    if not css_errors and not css_warnings:
         print("   ✅ style.css doğru görünüyor.")
+    elif css_warnings and not css_errors:
+        print(f"   ⚠️ {css_warnings[0]}")
     
     # 3. Statik sayfa kontrolü
     print("\n📄 Statik sayfalar kontrol ediliyor...")
@@ -234,7 +239,7 @@ def starter():
     else:
         print("   ✅ hero.json doğru görünüyor.")
     
-    # 5. Explore klasörü uyarıları (opsiyonel)
+    # 5. Explore klasörü uyarıları
     print("\n📂 Explore klasörü kontrol ediliyor...")
     explore_warnings = test_explore_folder()
     if explore_warnings:
