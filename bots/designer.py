@@ -4,13 +4,13 @@ import time
 import random
 import boto3
 import requests
+import fnmatch
 from datetime import datetime
 from botocore.client import Config
 from jinja2 import Template
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from makeup import (
-    get_all_raw_articles,
     build_alternate_langs_dict,
     get_menu_texts,
     get_category_name,
@@ -59,7 +59,6 @@ _articles_json_cache = None
 _articles_json_time = None
 
 def get_articles_from_r2_cached():
-    """articles.json'dan cache'li okuma (30 saniye)"""
     global _articles_json_cache, _articles_json_time
     now = datetime.now()
     if _articles_json_cache and _articles_json_time and (now - _articles_json_time).seconds < 30:
@@ -109,44 +108,37 @@ def get_template_from_r2(template_name):
             return content
     return None
 
-# ================= PARSE ET (JSON'dan) =================
+# ================= RAW ARTICLES OKU (SADECE FİLTRELENENLER) =================
 
-def parse_articles_from_json(articles_meta):
-    """JSON meta verilerini parse edilmiş formata çevir"""
-    parsed_articles = []
-    for meta in articles_meta:
-        parsed_articles.append({
-            'url': meta.get('url'),
-            'lang': meta.get('lang'),
-            'category': meta.get('category'),
-            'hash': meta.get('hash'),
-            'slug': meta.get('slug'),
-            'sort_date': meta.get('date'),
-            'sort_datetime': meta.get('date'),
-            'author_name': meta.get('author_name', 'Gatemirror Expert'),
-            'author_title': meta.get('author_title', ''),
-            'author_bio': meta.get('author_bio', ''),
-            'author_avatar': meta.get('author_avatar', ''),
-            'parsed': {
-                'title': meta.get('title'),
-                'description': meta.get('description'),
-                'date': meta.get('date'),
-                'reading_time': meta.get('reading_time'),
-                'views': meta.get('views'),
-                'cover_image': meta.get('cover_image'),
-                'content_image_1': meta.get('content_image_1', ''),
-                'content_image_2': meta.get('content_image_2', ''),
-                'editors_note': meta.get('editors_note', ''),
-                'summary': meta.get('summary', ''),
-                'sources': meta.get('sources', ''),
-                'content': meta.get('content', ''),
-                'content_part1': meta.get('content_part1', ''),
-                'content_part2': meta.get('content_part2', ''),
-                'content_part3': meta.get('content_part3', ''),
-                'author': meta.get('author_name', 'Gatemirror Expert')
-            }
-        })
-    return parsed_articles
+def get_raw_article_by_hash(hash_id, lang, category):
+    """Sadece belirli bir hash'teki raw article'ı bulur ve parse eder"""
+    prefixes = [
+        f"raw-articles/{lang}/{category}/",
+        f"raw-articles/{lang}/{category}/2026/04/",
+        f"raw-articles/{lang}/{category}/2026/",
+    ]
+    
+    for prefix in prefixes:
+        try:
+            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+            if 'Contents' not in response:
+                continue
+            
+            for obj in response['Contents']:
+                key = obj['Key']
+                filename = key.split('/')[-1]
+                if filename.startswith(hash_id) and filename.endswith('.html'):
+                    # Bulundu!
+                    file_obj = s3.get_object(Bucket=R2_BUCKET, Key=key)
+                    html_content = file_obj['Body'].read().decode('utf-8')
+                    from makeup import parse_article_html
+                    parsed = parse_article_html(html_content, lang, category, hash_id, "2026", "04")
+                    return parsed
+        except:
+            continue
+    
+    print(f"   ⚠️ {hash_id} için raw article bulunamadı")
+    return None
 
 # ================= RENDER =================
 
@@ -175,18 +167,18 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         author_bio=author_bio,
         author_avatar=author_avatar,
         date=parsed['date'],
-        editors_note=parsed['editors_note'],
-        summary=parsed['summary'],
-        content=parsed['content'],
+        editors_note=parsed.get('editors_note', ''),
+        summary=parsed.get('summary', ''),
+        content=parsed.get('content', ''),
         content_part1=parsed.get('content_part1', ''),
         content_part2=parsed.get('content_part2', ''),
         content_part3=parsed.get('content_part3', ''),
-        sources=parsed['sources'],
+        sources=parsed.get('sources', ''),
         cover_image=parsed['cover_image'],
-        content_image_1=parsed['content_image_1'],
-        content_image_2=parsed['content_image_2'],
-        reading_time=parsed['reading_time'],
-        view_count=parsed['views'],
+        content_image_1=parsed.get('content_image_1', ''),
+        content_image_2=parsed.get('content_image_2', ''),
+        reading_time=parsed.get('reading_time', 5),
+        view_count=parsed.get('views', 100),
         alternate_langs=alt_langs,
         menu=menu_texts,
         related_articles=related_articles,
@@ -215,7 +207,7 @@ def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for
 @timing("DESIGNER TOPLAM")
 def designer():
     print("=" * 60)
-    print("🎨 DESIGNER BOT - TASARIM MODU (JSON'DAN OKUYOR)")
+    print("🎨 DESIGNER BOT - TASARIM MODU (SADECE EN + TECH/WELLNESS)")
     print("=" * 60)
     
     # 1. TEMPLATE YÜKLEME
@@ -232,8 +224,8 @@ def designer():
         print("❌ Template alınamadı")
         return
     
-    # 2. JSON'DAN OKU (ÇOK HIZLI)
-    print("\n📖 2. JSON'DAN MAKALE OKUMA")
+    # 2. JSON'DAN LİSTE OKU
+    print("\n📖 2. JSON'DAN MAKALE LİSTESİ OKUMA")
     t_start = time.time()
     articles_meta = get_articles_from_r2_cached()
     timings["JSON_OKUMA"] = time.time() - t_start
@@ -243,28 +235,64 @@ def designer():
         print("❌ articles.json yok veya boş")
         return
     
-    # 3. PARSE ET
-    print("\n🔧 3. MAKALELERİ PARSE ET")
+    # 3. FİLTRELE (sadece EN + tech/wellness)
+    print("\n🔍 3. FİLTRELEME (EN + tech/wellness)")
     t_start = time.time()
-    all_articles = parse_articles_from_json(articles_meta)
-    timings["PARSE_ET"] = time.time() - t_start
-    print(f"   ✅ {len(all_articles)} makale parse edildi: {timings['PARSE_ET']:.2f}s")
-    
-    # 4. Filtreleme (EN + tech/wellness)
-    print("\n🔍 4. FİLTRELEME (EN + tech/wellness)")
-    t_start = time.time()
-    filtered = [a for a in all_articles if a['lang'] == 'en' and a['category'] in ['tech', 'wellness']]
+    filtered_meta = [m for m in articles_meta if m.get('lang') == 'en' and m.get('category') in ['tech', 'wellness']]
     timings["FILTRELEME"] = time.time() - t_start
-    print(f"   ✅ {len(filtered)} makale filtrelendi: {timings['FILTRELEME']:.2f}s")
+    print(f"   ✅ {len(filtered_meta)} makale filtrelendi: {timings['FILTRELEME']:.2f}s")
+    
+    if not filtered_meta:
+        print("❌ Filtreleme sonucu makale kalmadı")
+        return
+    
+    # 4. HER MAKALE İÇİN RAW ARTICLES OKU (SADECE FİLTRELENENLER)
+    print(f"\n📥 4. RAW ARTICLES OKUMA ({len(filtered_meta)} makale)")
+    t_start = time.time()
+    
+    all_articles = []
+    for meta in filtered_meta:
+        hash_id = meta.get('hash')
+        lang = meta.get('lang')
+        category = meta.get('category')
+        
+        print(f"   📥 {hash_id} ({category}) okunuyor...")
+        parsed = get_raw_article_by_hash(hash_id, lang, category)
+        
+        if parsed:
+            all_articles.append({
+                'url': meta.get('url'),
+                'lang': lang,
+                'category': category,
+                'hash': hash_id,
+                'slug': meta.get('slug'),
+                'sort_date': meta.get('date'),
+                'sort_datetime': meta.get('date'),
+                'author_name': meta.get('author_name', 'Gatemirror Expert'),
+                'author_title': meta.get('author_title', ''),
+                'author_bio': meta.get('author_bio', ''),
+                'author_avatar': meta.get('author_avatar', ''),
+                'parsed': parsed
+            })
+            print(f"      ✅ {parsed['title'][:50]}...")
+        else:
+            print(f"      ⚠️ {hash_id} için raw article bulunamadı, atlanıyor")
+    
+    timings["RAW_ARTICLES_OKUMA"] = time.time() - t_start
+    print(f"   ✅ {len(all_articles)} makale başarıyla okundu: {timings['RAW_ARTICLES_OKUMA']:.2f}s")
+    
+    if not all_articles:
+        print("❌ Hiç makale okunamadı")
+        return
     
     # 5. Alternate langs oluştur
     print("\n🌐 5. ALTERNATE LANGS")
     t_start = time.time()
-    alt_dict = build_alternate_langs_dict(filtered)
+    alt_dict = build_alternate_langs_dict(all_articles)
     timings["ALTERNATE_LANGS"] = time.time() - t_start
     print(f"   ✅ Alternate langs: {timings['ALTERNATE_LANGS']:.2f}s")
     
-    lang_articles = filtered
+    lang_articles = all_articles
     lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
     menu_texts = get_menu_texts('en')
     
