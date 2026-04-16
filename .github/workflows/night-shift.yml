@@ -1,4 +1,4 @@
-name: SSG Build & Deploy (Multilingual 4Lang + Hero Bot)
+name: SSG Build & Deploy (nigh 4Lang + Hero Bot)
 
 on:
   workflow_dispatch:
