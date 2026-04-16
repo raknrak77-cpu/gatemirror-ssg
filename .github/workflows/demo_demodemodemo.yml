@@ -16,23 +16,23 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Pip Cache (Hizlandirma)
+      - name: Pip Cache
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+          restore-keys: |
+            ${{ runner.os }}-pip-
           
       - name: Kutuphaneleri Yukle
         run: |
           python -m pip install --upgrade pip
-          pip install --default-timeout=100 --retries=5 \
-            requests boto3 beautifulsoup4 markdown jinja2 pillow
+          pip install requests boto3 beautifulsoup4 markdown jinja2 pillow
           
-      - name: 0. Starter Bot (Template Kontrol - Demo bypass)
+      - name: Starter Bot
         run: python bots/starter-bot.py || echo "Demo mod: Devam ediliyor"
         
-      - name: 1. Uploader (Ham HTML'leri R2'ye Yukle)
+      - name: Uploader
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -41,7 +41,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/uploader.py
         
-      - name: 2. Hero Bot (Hero.json Oku, Dinamik Hero HTML Uret)
+      - name: Hero Bot
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -50,7 +50,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/hero_bot.py
         
-      - name: 3. Publisher (DEMO Template ile Render Et)
+      - name: Publisher
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -60,7 +60,7 @@ jobs:
           TEMPLATE_VERSION: "demo"
         run: python bots/publisher.py
         
-      - name: 4. Kutupheneci Bot (Statik Arsiv Sayfalari - Tum Diller)
+      - name: Librarian
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -69,7 +69,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/librarian.py
         
-      - name: 5. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
+      - name: Git Kayit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -78,6 +78,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "Degisiklik yok, commit atlaniyor."
           else
-            git commit -m "DEMO: Yeni Bento Grid tasarimi (Creator'siz)"
+            git commit -m "DEMO: Yeni Bento Grid tasarimi"
             git push origin main || git push --force origin main
           fi
