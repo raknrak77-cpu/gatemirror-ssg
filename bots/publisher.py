@@ -29,9 +29,6 @@ R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
 
-# Template versiyonu (demo veya legacy)
-TEMPLATE_VERSION = os.getenv('TEMPLATE_VERSION', 'legacy')
-
 s3 = boto3.client(
     's3',
     endpoint_url=f'https://{R2_ID}.r2.cloudflarestorage.com',
@@ -47,12 +44,6 @@ template_cache = {}
 template_raw_cache = {}
 _articles_json_cache = None
 _articles_json_time = None
-
-def get_template_name(base_name):
-    """Template versiyonuna göre dosya adını döndürür"""
-    if TEMPLATE_VERSION == 'demo':
-        return f"{base_name}_demo.html"
-    return f"{base_name}.html"
 
 def get_articles_from_r2_cached():
     """articles.json'u cache'le (30 saniye geçerli)"""
@@ -91,12 +82,14 @@ def upload_templates_to_r2():
         print("⚠️ templates/ klasörü bulunamadı.")
         return
     
+    # Tüm dosyaları ve alt klasörleri tara
     for root, dirs, files in os.walk(templates_dir):
         for file in files:
             local_path = os.path.join(root, file)
             relative_path = os.path.relpath(local_path, templates_dir)
             r2_key = f"templates/{relative_path}".replace('\\', '/')
             try:
+                # Content type belirleme
                 content_type = None
                 if file.endswith('.css'):
                     content_type = 'text/css'
@@ -136,33 +129,56 @@ def get_template_from_r2(template_name):
     
     return None
 
-# ================= HIZLI RAW ARTICLES ALMA =================
+# ================= HIZLI RAW ARTICLES ALMA (TARAMAYI ÖNLE) =================
 
 def get_all_raw_articles_fast():
+    """
+    Çift kaynaklı hızlı raw articles alma:
+    1. articles.json'dan cached listeyi al (1 R2 çağrısı)
+    2. Son 10 dakikada eklenen yeni dosyaları raw-articles/'dan al
+    3. Birleştir ve döndür
+    """
     print("   🚀 Hızlı raw articles taranıyor...")
+    
+    # 1. articles.json'dan oku (cached)
     cached_articles_meta = get_articles_from_r2_cached()
     print(f"      📦 articles.json'dan {len(cached_articles_meta)} makale meta alındı")
+    
+    # Cached makalelerin hash'lerini tut (yeni makale kontrolü için)
     cached_hashes = {a.get('hash', '') for a in cached_articles_meta}
     
+    # 2. Son 10 dakikada eklenen dosyaları bul
     cutoff_time = datetime.now() - timedelta(minutes=10)
     new_articles = []
     
     for lang in ['en', 'es', 'de', 'fr']:
         try:
-            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=f"raw-articles/{lang}/")
+            response = s3.list_objects_v2(
+                Bucket=R2_BUCKET,
+                Prefix=f"raw-articles/{lang}/",
+            )
+            
             if 'Contents' not in response:
                 continue
+            
             for obj in response['Contents']:
                 key = obj['Key']
                 if not key.endswith('.html'):
                     continue
+                
+                # Son 10 dakikada mı eklenmiş?
                 last_modified = obj['LastModified']
                 if last_modified.replace(tzinfo=None) < cutoff_time:
                     continue
+                
+                # Hash'i bul
                 filename = key.split('/')[-1]
                 hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+                
+                # Yeni makale mi?
                 if hash_id not in cached_hashes:
                     print(f"      🆕 Yeni makale bulundu: {hash_id} ({lang})")
+                    # Parse et ve ekle
                     article = parse_raw_article_from_key(key)
                     if article:
                         new_articles.append(article)
@@ -170,20 +186,30 @@ def get_all_raw_articles_fast():
             print(f"      ⚠️ {lang} taranırken hata: {e}")
     
     print(f"      ✨ Toplam: {len(cached_articles_meta)} cached + {len(new_articles)} yeni = {len(cached_articles_meta) + len(new_articles)}")
-    return get_all_raw_articles()
+    
+    # Parse edilmiş makaleleri döndürmek için cached olanları da parse etmemiz gerek
+    # Bu durumda cached_articles_meta sadece meta, içeriği yok. O yüzden yine okumalıyız.
+    # Ama sadece DEĞİŞENLERİ okuyacağız.
+    
+    return get_all_raw_articles()  # Şimdilik eski fonksiyon, sonra optimize edilecek
 
 def parse_raw_article_from_key(key):
+    """R2'den raw article oku ve parse et"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key=key)
         html_content = response['Body'].read().decode('utf-8')
+        
+        # Key'den bilgileri çıkar
         parts = key.replace('raw-articles/', '').split('/')
         if len(parts) >= 2:
             lang = parts[0]
             category = parts[1] if len(parts) > 1 else 'general'
             filename = parts[-1]
             hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+            
             from makeup import parse_article_html
             parsed = parse_article_html(html_content, lang, category, hash_id, None, None)
+            
             return {
                 'lang': lang,
                 'category': category,
@@ -193,6 +219,7 @@ def parse_raw_article_from_key(key):
             }
     except Exception as e:
         print(f"      ⚠️ {key} parse edilemedi: {e}")
+    
     return None
 
 # ================= RENDER FONKSİYONLARI =================
@@ -208,11 +235,13 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     author_avatar = article.get('author_avatar', '')
     
     hero_html = get_cached_hero('article', article['lang'])
+    
+    # Kategori adını al (breadcrumb için)
     category_name = get_category_name(article['lang'], article['category'])
     
     return tmpl.render(
         lang=article['lang'],
-        R2_PUBLIC_URL=R2_PUBLIC_URL,
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         title=parsed['title'],
         description=parsed['description'],
         canonical_url=canonical,
@@ -237,19 +266,20 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         menu=menu_texts,
         related_articles=related_articles,
         hero={'html': hero_html, 'show': False},
-        category=article['category'],
-        category_name=category_name
+        category=article['category'],  # <--- YENİ: breadcrumb için
+        category_name=category_name     # <--- YENİ: breadcrumb için
     )
 
 def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
     tmpl = get_cached_template(template_str, 'home')
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
+    
     hero_html = get_cached_hero('home', lang)
     
     return tmpl.render(
         lang=lang,
-        R2_PUBLIC_URL=R2_PUBLIC_URL,
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         menu=menu_texts,
         articles=articles,
         featured_article=featured_article,
@@ -265,11 +295,12 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
     category_description = get_category_description(lang, category)
     category_url = f"{R2_PUBLIC_URL}/{lang}/{category}/"
     og_image = cat_articles[0]['image'] if cat_articles else ""
+    
     hero_html = get_cached_hero('category', lang, category)
     
     return tmpl.render(
         lang=lang,
-        R2_PUBLIC_URL=R2_PUBLIC_URL,
+        R2_PUBLIC_URL=R2_PUBLIC_URL,  # <--- YENİ: CSS için gerekli
         menu=menu_texts,
         category_name=category_name,
         category_description=category_description,
@@ -287,6 +318,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
 # ================= PARALEL YAZMA =================
 
 def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for_template):
+    """Tek bir makaleyi render et ve yaz (parallel için)"""
     try:
         single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
         if single_html:
@@ -317,7 +349,12 @@ def generate_articles_json(all_articles):
         })
     
     articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
-    s3.put_object(Bucket=R2_BUCKET, Key='articles.json', Body=articles_json.encode('utf-8'), ContentType='application/json')
+    s3.put_object(
+        Bucket=R2_BUCKET,
+        Key='articles.json',
+        Body=articles_json.encode('utf-8'),
+        ContentType='application/json'
+    )
     print("   ✅ articles.json oluşturuldu")
 
 # ================= ANA PUBLISHER =================
@@ -325,37 +362,25 @@ def generate_articles_json(all_articles):
 def publisher():
     print("=" * 60)
     print("🚀 PUBLISHER BOT - OPTİMİZE")
-    print(f"   📁 Template versiyonu: {TEMPLATE_VERSION}")
     print("   ✅ Hero Bot entegre (cache'li)")
     print("   ✅ Makale 3 parçaya bölünüyor")
     print("   ✅ Parallel yazma (5 thread)")
+    print("   ✅ Hızlı raw article tarama")
     print("   ✅ R2_PUBLIC_URL template'lere gönderiliyor")
     print("=" * 60)
     
     upload_templates_to_r2()
     
     print("\n📄 Template'ler yükleniyor...")
-    
-    # Template versiyonuna göre dosya adlarını al
-    home_template_name = get_template_name("home")
-    list_template_name = get_template_name("list")
-    single_template_name = get_template_name("single")
-    
-    print(f"   🏠 Home template: {home_template_name}")
-    print(f"   📂 List template: {list_template_name}")
-    print(f"   📄 Single template: {single_template_name}")
-    
-    single_tpl = get_template_from_r2(single_template_name)
-    home_tpl = get_template_from_r2(home_template_name)
-    list_tpl = get_template_from_r2(list_template_name)
+    single_tpl = get_template_from_r2("single.html")
+    home_tpl = get_template_from_r2("home.html")
+    list_tpl = get_template_from_r2("list.html")
     
     if not single_tpl or not home_tpl or not list_tpl:
         print("❌ Template'ler alınamadı.")
-        print(f"   single: {'✅' if single_tpl else '❌'}")
-        print(f"   home: {'✅' if home_tpl else '❌'}")
-        print(f"   list: {'✅' if list_tpl else '❌'}")
         return
     
+    # Hızlı raw articles al (şimdilik eski fonksiyon, sonra optimize edilecek)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -380,6 +405,7 @@ def publisher():
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
+        # 1. MAKALELERİ PARALEL YAZ
         print(f"\n📝 Makaleler parallel işleniyor (5 thread)...")
         
         articles_to_write = []
@@ -397,6 +423,7 @@ def publisher():
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
             articles_to_write.append((article, alt_langs, related_for_template))
         
+        # Parallel yaz
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for article, alt_langs, related_for_template in articles_to_write:
@@ -409,6 +436,7 @@ def publisher():
                     print(f"   ✅ {result}")
                     total_pages += 1
         
+        # 2. ANA SAYFA (HOME)
         print(f"\n🏠 Ana sayfa oluşturuluyor...")
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
@@ -442,6 +470,7 @@ def publisher():
             print(f"   ✅ articles_ready/{lang}/index.html")
             total_pages += 1
         
+        # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
         
@@ -475,6 +504,7 @@ def publisher():
                     'views': a['parsed']['views'],
                     'excerpt': a['parsed']['description']
                 })
+            
             articles_for_list = []
             for a in cat_articles:
                 articles_for_list.append({
@@ -519,11 +549,7 @@ def publisher():
     print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
     print(f"   ✅ Template cache: {len(template_cache)} template")
     print(f"   ✅ R2_PUBLIC_URL template'lere gönderildi")
-    print(f"   📁 Template versiyonu: {TEMPLATE_VERSION}")
     print(f"{'=' * 40}")
 
 if __name__ == "__main__":
     publisher()
-            
-            
-
