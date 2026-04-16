@@ -212,7 +212,7 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
     """Tüm makaleleri listeleyen sayfa (all-articles.html template'i ile)"""
     tmpl = get_cached_template(template_str, 'all-articles')
     canonical = f"{R2_PUBLIC_URL}/explore/all-articles/{lang}.html"
-    og_image = all_articles[0]['image'] if all_articles else ""
+    og_image = all_articles[0]['parsed']['cover_image'] if all_articles else ""
     
     hero_html = get_cached_hero('special', lang, 'all-articles')
     
