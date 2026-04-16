@@ -35,7 +35,8 @@ class PatternEngine:
                     y += self.rand.choice([-1, 1]) * self.rand.randint(50, 200)
                     y = max(0, min(HEIGHT, y))
                     path += f" V {y}"
-            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=1.5, opacity=0.3))
+            # OPACITY ARTIRILDI: 0.3 → 0.8
+            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=2.5, opacity=0.8))
 
     def waves(self):
         cx, cy = WIDTH // 2, HEIGHT // 2
@@ -51,14 +52,16 @@ class PatternEngine:
                     path += f"M {x} {y}"
                 else:
                     path += f"L {x} {y}"
-            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=1.5, opacity=0.2))
+            # OPACITY ARTIRILDI: 0.2 → 0.7
+            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=2.5, opacity=0.7))
 
     def organic(self):
         for _ in range(self.rand.randint(10, 20)):
             x = self.rand.randint(0, WIDTH)
             y = self.rand.randint(0, HEIGHT)
             r = self.rand.randint(20, 100)
-            self.dwg.add(self.dwg.circle(center=(x, y), r=r, stroke=COLOR, fill="none", stroke_width=1, opacity=0.15))
+            # OPACITY ARTIRILDI: 0.15 → 0.6
+            self.dwg.add(self.dwg.circle(center=(x, y), r=r, stroke=COLOR, fill="none", stroke_width=2, opacity=0.6))
 
     def flow(self):
         for _ in range(self.rand.randint(5, 10)):
@@ -69,11 +72,11 @@ class PatternEngine:
                 y += self.rand.randint(-60, 60)
                 y = max(0, min(HEIGHT, y))
                 path += f"L {x} {y}"
-            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=1.5, opacity=0.25))
+            # OPACITY ARTIRILDI: 0.25 → 0.75
+            self.dwg.add(self.dwg.path(d=path, stroke=COLOR, fill="none", stroke_width=2.5, opacity=0.75))
 
 def generate_pattern(category, index):
     try:
-        # Klasör ve dosya yolu
         category_dir = os.path.join(OUTPUT_DIR, category)
         os.makedirs(category_dir, exist_ok=True)
         
@@ -82,11 +85,14 @@ def generate_pattern(category, index):
         
         print(f"   📝 Yazılıyor: {filepath}")
         
-        # SVG oluştur
+        # Arka plan BEYAZ yapalım ki çizgiler net görünsün
         dwg = svgwrite.Drawing(filepath, size=(WIDTH, HEIGHT))
+        
+        # Beyaz arka plan ekle (çizgilerin görünmesi için)
+        dwg.add(dwg.rect(insert=(0, 0), size=('100%', '100%'), fill='white'))
+        
         engine = PatternEngine(dwg, f"{category}_{index}_{random.randint(0,999999)}")
         
-        # Kategoriye göre desen seç
         if category == "tech":
             engine.circuit()
         elif category == "wellness":
@@ -96,10 +102,8 @@ def generate_pattern(category, index):
         else:
             engine.flow()
         
-        # Kaydet
         dwg.save()
         
-        # Dosyanın gerçekten oluştuğunu kontrol et
         if os.path.exists(filepath):
             size = os.path.getsize(filepath)
             print(f"   ✅ {category}/{filename} ({size} bytes)")
@@ -115,8 +119,10 @@ def generate_pattern(category, index):
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🚀 GPT PATTERN FACTORY (HATA AYIKLAMALI)")
+    print("🚀 GPT PATTERN FACTORY (GÖRÜNÜR ÇİZGİLER)")
     print(f"   📁 Klasör: {os.path.abspath(OUTPUT_DIR)}")
+    print("   🎨 Arka plan: BEYAZ")
+    print("   🖌️ Çizgi opaklığı: 0.6 - 0.8")
     print("=" * 60)
     
     success_count = 0
@@ -132,7 +138,6 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print(f"🏁 TAMAMLANDI! {success_count}/{TOTAL_OUTPUT} desen üretildi")
     
-    # Listele
     if success_count > 0:
         print("\n📂 OLUŞAN DOSYALAR:")
         for root, dirs, files in os.walk(OUTPUT_DIR):
