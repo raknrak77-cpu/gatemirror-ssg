@@ -22,34 +22,59 @@ s3 = boto3.client(
     region_name='auto'
 )
 
+# Dil konfigürasyonu
 LANGUAGES = ['en', 'es', 'de', 'fr']
-CATEGORIES = ['tech', 'wellness', 'future-economy', 'eco', 'elearning']
+LANG_NAMES = {
+    'en': 'English', 'es': 'Español', 'de': 'Deutsch', 'fr': 'Français'
+}
+LANG_FLAGS = {
+    'en': '🇺🇸', 'es': '🇪🇸', 'de': '🇩🇪', 'fr': '🇫🇷'
+}
+
+CATEGORIES = {
+    'tech': {'en': 'Technology & AI', 'es': 'Tecnología & IA', 'de': 'Technologie & KI', 'fr': 'Technologie & IA'},
+    'wellness': {'en': 'Wellness', 'es': 'Bienestar', 'de': 'Wohlbefinden', 'fr': 'Bien-être'},
+    'future-economy': {'en': 'Future Economy', 'es': 'Economía Futura', 'de': 'ZukunftsWirtschaft', 'fr': 'Économie Future'},
+    'eco': {'en': 'Eco & Sustainable', 'es': 'Eco & Sostenible', 'de': 'Öko & Nachhaltig', 'fr': 'Éco & Durable'},
+    'elearning': {'en': 'E-Learning', 'es': 'E-Aprendizaje', 'de': 'E-Learning', 'fr': 'E-Apprentissage'}
+}
 
 # ================= R2 YARDIMCI FONKSİYONLAR =================
 
 def list_all_files(prefix):
+    """R2'deki tüm dosyaları listeler"""
     files = []
     continuation_token = None
+    
     while True:
         try:
             if continuation_token:
-                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, ContinuationToken=continuation_token)
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    Prefix=prefix,
+                    ContinuationToken=continuation_token
+                )
             else:
                 response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
         except Exception as e:
             print(f"   ❌ Listeleme hatası: {e}")
             return []
+        
         if 'Contents' not in response:
             break
+        
         for obj in response['Contents']:
             files.append(obj['Key'])
+        
         if response.get('IsTruncated'):
             continuation_token = response.get('NextContinuationToken')
         else:
             break
+    
     return files
 
 def folder_exists(prefix):
+    """R2'de klasör var mı (içinde en az 1 dosya var mı)"""
     try:
         response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, MaxKeys=1)
         return 'Contents' in response
@@ -57,19 +82,27 @@ def folder_exists(prefix):
         return False
 
 def delete_folder(prefix):
+    """R2'de bir klasörün içindeki tüm dosyaları sil"""
     continuation_token = None
     deleted_count = 0
+    
     while True:
         try:
             if continuation_token:
-                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, ContinuationToken=continuation_token)
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    Prefix=prefix,
+                    ContinuationToken=continuation_token
+                )
             else:
                 response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
         except Exception as e:
             print(f"   ❌ Listeleme hatası: {e}")
             raise
+        
         if 'Contents' not in response:
             break
+        
         objects_to_delete = [{'Key': obj['Key']} for obj in response['Contents']]
         try:
             s3.delete_objects(Bucket=R2_BUCKET, Delete={'Objects': objects_to_delete})
@@ -77,14 +110,17 @@ def delete_folder(prefix):
         except Exception as e:
             print(f"   ❌ Silme hatası: {e}")
             raise
+        
         if response.get('IsTruncated'):
             continuation_token = response.get('NextContinuationToken')
         else:
             break
+    
     if deleted_count > 0:
         print(f"   🗑️ {deleted_count} dosya silindi: {prefix}")
 
 def copy_and_overwrite(source_key, dest_key):
+    """Tek bir dosyayı üzerine yazar (parallel için)"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key=source_key)
         content = response['Body'].read()
@@ -97,8 +133,13 @@ def copy_and_overwrite(source_key, dest_key):
 # ================= ATOMIC SWAP =================
 
 def atomic_swap():
+    """
+    articles_ready/ → articles/ OPTİMİZE swap
+    - Backup YOK (üzerine yaz)
+    - Parallel copy (10 thread)
+    """
     print("\n" + "=" * 40)
-    print("🔄 ATOMIC SWAP: articles_ready/ → articles/")
+    print("🔄 ATOMIC SWAP: articles_ready/ → articles/ (Üzerine Yaz + Parallel)")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
@@ -133,14 +174,16 @@ def atomic_swap():
     
     if success_count < len(source_files) * 0.9:
         print(f"❌ Çok fazla hata ({success_count}/{len(source_files)} başarılı)")
+        print("   SEIÇARIZ! Manuel müdahale gerekli.")
         return False
     
     print("🗑️ articles_ready/ siliniyor...")
     delete_folder('articles_ready/')
+    
     print("✅ Swap tamamlandı!")
     return True
 
-# ================= JSON ÜRETİMİ =================
+# ================= JSON ÜRETİMİ (SADECE) =================
 
 def get_articles_from_r2():
     try:
@@ -151,14 +194,16 @@ def get_articles_from_r2():
         return []
 
 def generate_explorer_json(articles):
+    """Sadece JSON verisi üretir, HTML yok (Publisher üretiyor artık)"""
     explorer_data = {
         "version": "1.0",
         "generated": datetime.now().isoformat(),
         "total_articles": len(articles),
         "languages": LANGUAGES,
-        "categories": CATEGORIES,
+        "categories": list(CATEGORIES.keys()),
         "articles": []
     }
+    
     for article in articles:
         explorer_data["articles"].append({
             "url": article.get('url', '#'),
@@ -173,19 +218,27 @@ def generate_explorer_json(articles):
             "cover_image": article.get('cover_image', ''),
             "slug": article.get('slug', '')
         })
+    
     explorer_json = json.dumps(explorer_data, indent=2, ensure_ascii=False)
-    s3.put_object(Bucket=R2_BUCKET, Key='explore/explorer.json', Body=explorer_json.encode('utf-8'), ContentType='application/json')
+    s3.put_object(
+        Bucket=R2_BUCKET,
+        Key='explore/explorer.json',
+        Body=explorer_json.encode('utf-8'),
+        ContentType='application/json'
+    )
     print(f"   ✅ explore/explorer.json oluşturuldu ({len(articles)} articles)")
 
 # ================= ANA LİBRARIAN =================
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KÜTÜPHANECİ BOT - SADECE SWAP + JSON")
+    print("📚 KÜTÜPHANECİ BOT (Librarian) - SADECE SWAP + JSON")
     print("   ✅ explore/explorer.json oluşturuluyor")
     print("   ✅ Atomic swap: articles_ready/ → articles/")
+    print("   ✅ HTML üretimi PUBLISHER'a devredildi")
     print("=" * 60)
     
+    # 1. Sadece JSON oluştur (HTML yok - Publisher yapacak)
     articles = get_articles_from_r2()
     if articles:
         print(f"\n📊 Toplam {len(articles)} makale bulundu.")
@@ -193,19 +246,24 @@ def librarian():
     else:
         print("⚠️ articles.json okunamadı, explorer.json atlanıyor.")
     
+    # 2. Atomic swap yap (articles_ready/ → articles/)
     try:
         swap_success = atomic_swap()
         if swap_success:
             print("\n✅ SWAP BAŞARILI! Site yeni içerikle yayında.")
         else:
             print("\n❌ SWAP BAŞARISIZ! Site eski içerikle devam ediyor.")
+            print("   Lütfen manuel müdahale gerekebilir.")
             sys.exit(1)
     except Exception as e:
         print(f"\n❌ KRİTİK HATA: {e}")
+        print("   SEIÇARIZ! Manuel müdahale gerekli.")
         sys.exit(1)
     
     print("\n" + "=" * 60)
     print("🏁 KÜTÜPHANECİ BOT TAMAMLANDI!")
+    print("   ✅ explore/explorer.json güncellendi")
+    print("   ✅ Atomic swap tamamlandı")
     print("=" * 60)
 
 if __name__ == "__main__":
