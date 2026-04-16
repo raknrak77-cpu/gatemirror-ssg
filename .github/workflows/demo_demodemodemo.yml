@@ -1,4 +1,4 @@
-name: 🎨 DEMO - SSG Deploy Only (Yeni Tasarım Demo - Creator Yok)
+name: DEMO - SSG Deploy Only (Yeni Tasarim Demo - Creator Yok)
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Pip Cache (Hızlandırma)
+      - name: Pip Cache (Hizlandirma)
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -31,7 +31,7 @@ jobs:
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
       - name: 0. Starter Bot (Template Kontrol - Demo bypass)
-        run: python bots/starter-bot.py || echo "⚠️ Demo mod: Devam ediliyor"
+        run: python bots/starter-bot.py || echo "Demo mod: Devam ediliyor"
         
       - name: 1. Uploader (Ham HTML'leri R2'ye Yukle)
         env:
@@ -61,7 +61,7 @@ jobs:
           TEMPLATE_VERSION: "demo"
         run: python bots/publisher.py
         
-      - name: 4. Kütüphaneci Bot (Statik Arşiv Sayfaları - Tüm Diller)
+      - name: 4. Kutupheneci Bot (Statik Arsiv Sayfalari - Tum Diller)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -74,11 +74,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
+          git pull --rebase origin main || echo "Pull yapilamadi, devam..."
           git add content/ tasks.json
           if git diff --staged --quiet; then
-            echo "📭 Değişiklik yok, commit atlanıyor."
+            echo "Degisiklik yok, commit atlaniyor."
           else
-            git commit -m "🎨 DEMO: Yeni Bento Grid tasarımı (Creator'sız)"
+            git commit -m "DEMO: Yeni Bento Grid tasarimi (Creator'siz)"
             git push origin main || git push --force origin main
           fi
