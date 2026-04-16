@@ -7,174 +7,100 @@ import svgwrite
 OUTPUT_DIR = "assets/patterns"
 CANVAS_WIDTH = 3840
 CANVAS_HEIGHT = 2160
+LINE_COLOR = "#000000" # CSS'te opacity: 0.1 yaparak kullanın
 
-# Renk: SİYAH
-LINE_COLOR = "#000000"
+# Klasör kontrolü
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
-# Seviye konfigürasyonları
-LEVELS = {
-    'basic': {'count': 5, 'lines': 6, 'stroke_widths': [1, 2, 3, 4, 5, 6]},
-    'medium': {'count': 5, 'lines': 25, 'stroke_width_min': 1, 'stroke_width_max': 8},
-    'complex': {'count': 5, 'lines': 55, 'stroke_width_min': 1, 'stroke_width_max': 12},
-    'very_complex': {'count': 5, 'lines': 90, 'stroke_width_min': 1, 'stroke_width_max': 16},
-    'extreme': {'count': 5, 'lines': 130, 'stroke_width_min': 1, 'stroke_width_max': 20}
-}
+class PatternGenerator:
+    def __init__(self, dwg):
+        self.dwg = dwg
 
-def sine_wave_path(start_x, start_y, amplitude, wavelength, cycles, direction):
-    """Sinüs dalgası yolu oluşturur"""
-    points = []
-    step = 20
-    
-    if direction == 'horizontal':
-        for i in range(0, int(CANVAS_WIDTH * 1.5), step):
-            x = start_x + i
-            y = start_y + amplitude * math.sin(2 * math.pi * i / wavelength)
-            points.append((x, y))
-    elif direction == 'vertical':
-        for i in range(0, int(CANVAS_HEIGHT * 1.5), step):
-            y = start_y + i
-            x = start_x + amplitude * math.sin(2 * math.pi * i / wavelength)
-            points.append((x, y))
-    else:
-        for i in range(0, int(max(CANVAS_WIDTH, CANVAS_HEIGHT) * 1.5), step):
-            x = start_x + i * 0.7
-            y = start_y + i * 0.7 + amplitude * math.sin(2 * math.pi * i / wavelength)
-            points.append((x, y))
-    
-    return points
-
-def bezier_wave_path(start_x, start_y, end_x, end_y, amplitude, cycles):
-    """Bezier eğrisi ile dalga oluşturur"""
-    mid_x = (start_x + end_x) / 2
-    mid_y = (start_y + end_y) / 2
-    
-    ctrl1_x = start_x + (end_x - start_x) * 0.25
-    ctrl1_y = start_y + amplitude * math.sin(cycles * math.pi * 0.25)
-    ctrl2_x = end_x - (end_x - start_x) * 0.25
-    ctrl2_y = end_y + amplitude * math.sin(cycles * math.pi * 0.75)
-    
-    return f"M {start_x},{start_y} C {ctrl1_x},{ctrl1_y} {ctrl2_x},{ctrl2_y} {end_x},{end_y}"
-
-def generate_path(dwg, line_type, stroke_width):
-    """Rastgele bir dalgalı çizgi oluşturur"""
-    
-    if line_type == 'sine_horizontal':
-        start_x = random.randint(-CANVAS_WIDTH//4, CANVAS_WIDTH//4)
-        start_y = random.randint(0, CANVAS_HEIGHT)
-        amplitude = random.randint(30, 200)
-        wavelength = random.randint(200, 800)
-        points = sine_wave_path(start_x, start_y, amplitude, wavelength, 3, 'horizontal')
-        polyline = dwg.polyline(points, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none')
-        dwg.add(polyline)
+    def add_circuit_path(self, stroke_width):
+        """90 derece dönen teknolojik devre hatları (TECH için ideal)"""
+        x = random.randint(0, CANVAS_WIDTH)
+        y = random.randint(0, CANVAS_HEIGHT)
+        path_data = f"M {x} {y}"
         
-    elif line_type == 'sine_vertical':
-        start_x = random.randint(0, CANVAS_WIDTH)
-        start_y = random.randint(-CANVAS_HEIGHT//4, CANVAS_HEIGHT//4)
-        amplitude = random.randint(30, 200)
-        wavelength = random.randint(200, 800)
-        points = sine_wave_path(start_x, start_y, amplitude, wavelength, 3, 'vertical')
-        polyline = dwg.polyline(points, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none')
-        dwg.add(polyline)
-        
-    elif line_type == 'sine_diagonal':
-        start_x = random.randint(-CANVAS_WIDTH//4, CANVAS_WIDTH//4)
-        start_y = random.randint(-CANVAS_HEIGHT//4, CANVAS_HEIGHT//4)
-        amplitude = random.randint(30, 200)
-        wavelength = random.randint(200, 800)
-        points = sine_wave_path(start_x, start_y, amplitude, wavelength, 3, 'diagonal')
-        polyline = dwg.polyline(points, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none')
-        dwg.add(polyline)
-        
-    elif line_type == 'bezier':
-        start_x = random.randint(-CANVAS_WIDTH//4, CANVAS_WIDTH + CANVAS_WIDTH//4)
-        start_y = random.randint(-CANVAS_HEIGHT//4, CANVAS_HEIGHT + CANVAS_HEIGHT//4)
-        end_x = start_x + random.randint(CANVAS_WIDTH//2, CANVAS_WIDTH)
-        end_y = start_y + random.randint(-CANVAS_HEIGHT//2, CANVAS_HEIGHT//2)
-        amplitude = random.randint(50, 300)
-        cycles = random.uniform(1, 5)
-        path_data = bezier_wave_path(start_x, start_y, end_x, end_y, amplitude, cycles)
-        dwg.add(dwg.path(path_data, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none'))
-        
-    elif line_type == 'nested':
-        base_x = random.randint(0, CANVAS_WIDTH)
-        base_y = random.randint(0, CANVAS_HEIGHT)
-        for offset in range(-3, 4):
-            offset_width = max(1, stroke_width - abs(offset) * 2)
-            if offset_width < 1:
-                continue
-            start_x = base_x + offset * 15
-            start_y = base_y + offset * 15
-            end_x = base_x + CANVAS_WIDTH//2 + offset * 15
-            end_y = base_y + CANVAS_HEIGHT//2 + offset * 15
-            amplitude = random.randint(30, 150)
-            cycles = random.uniform(1, 3)
-            path_data = bezier_wave_path(start_x, start_y, end_x, end_y, amplitude, cycles)
-            dwg.add(dwg.path(path_data, stroke=LINE_COLOR, stroke_width=offset_width, fill='none'))
+        segments = random.randint(5, 15)
+        for _ in range(segments):
+            direction = random.choice(['h', 'v'])
+            length = random.randint(150, 600)
             
-    elif line_type == 'network':
-        points = []
-        for i in range(6):
-            x = random.randint(0, CANVAS_WIDTH)
-            y = random.randint(0, CANVAS_HEIGHT)
-            points.append((x, y))
-        polyline = dwg.polyline(points, stroke=LINE_COLOR, stroke_width=stroke_width, fill='none')
-        dwg.add(polyline)
+            if direction == 'h':
+                x = max(0, min(CANVAS_WIDTH, x + random.choice([-length, length])))
+                path_data += f" H {x}"
+            else:
+                y = max(0, min(CANVAS_HEIGHT, y + random.choice([-length, length])))
+                path_data += f" V {y}"
+            
+        self.dwg.add(self.dwg.path(d=path_data, stroke=LINE_COLOR, fill="none", 
+                                   stroke_width=stroke_width, stroke_linecap="round",
+                                   opacity=random.uniform(0.1, 0.4)))
 
-def generate_pattern(category, level_name, level_config, index):
-    """Bir SVG pattern üretir"""
-    filename = f"{category}_{level_name}_{index+1:02d}.svg"
-    filepath = os.path.join(OUTPUT_DIR, category, filename)
-    
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    
+    def add_concentric_waves(self, stroke_width):
+        """Merkezden yayılan düzenli biyo-dalgalar (WELLNESS için ideal)"""
+        cx, cy = CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2
+        # Rastgele bir merkez kayması ekle (asimetri için)
+        cx += random.randint(-500, 500)
+        cy += random.randint(-300, 300)
+
+        for r in range(200, 2500, 200):
+            path_data = ""
+            for a in range(0, 365, 5):
+                angle = math.radians(a)
+                # Yumuşak bir dalgalanma efekti
+                variation = math.sin(a * 0.05) * 30
+                px = cx + (r + variation) * math.cos(angle)
+                py = cy + (r + variation) * math.sin(angle)
+                
+                if a == 0: path_data += f"M {px} {py} "
+                else: path_data += f"L {px} {py} "
+            
+            self.dwg.add(self.dwg.path(d=path_data, stroke=LINE_COLOR, fill="none", 
+                                       stroke_width=stroke_width, opacity=0.15,
+                                       stroke_dasharray="20,10"))
+
+    def add_bento_grid(self):
+        """Arka plan için modern rehber ızgarası (Tüm sayfalar için)"""
+        grid_size = 120
+        for x in range(0, CANVAS_WIDTH, grid_size):
+            self.dwg.add(self.dwg.line((x, 0), (x, CANVAS_HEIGHT), stroke=LINE_COLOR, stroke_width=1, opacity=0.05))
+        for y in range(0, CANVAS_HEIGHT, grid_size):
+            self.dwg.add(self.dwg.line((0, y), (CANVAS_WIDTH, y), stroke=LINE_COLOR, stroke_width=1, opacity=0.05))
+
+def generate_master_pattern(category, filename):
+    filepath = os.path.join(OUTPUT_DIR, filename)
     dwg = svgwrite.Drawing(filepath, size=(CANVAS_WIDTH, CANVAS_HEIGHT))
+    gen = PatternGenerator(dwg)
+
+    # 1. Her zaman ince bir ızgara ekle (Modern görünümün temeli)
+    gen.add_bento_grid()
+
+    # 2. Kategoriye göre ana deseni çiz
+    if category in ['tech', 'future-economy']:
+        for _ in range(12): # 12 adet devre hattı
+            gen.add_circuit_path(stroke_width=random.randint(2, 6))
     
-    line_types = ['sine_horizontal', 'sine_vertical', 'sine_diagonal', 'bezier', 'nested', 'network']
-    num_lines = level_config['lines']
-    
-    for i in range(num_lines):
-        line_type = random.choice(line_types)
+    elif category in ['wellness', 'eco']:
+        gen.add_concentric_waves(stroke_width=3)
         
-        if 'stroke_widths' in level_config:
-            stroke_width = random.choice(level_config['stroke_widths'])
-        else:
-            stroke_width = random.uniform(level_config['stroke_width_min'], level_config['stroke_width_max'])
-            stroke_width = round(stroke_width, 1)
-        
-        generate_path(dwg, line_type, stroke_width)
-    
+    else: # Genel kullanım için karışık
+        for _ in range(6): gen.add_circuit_path(2)
+        gen.add_concentric_waves(1)
+
     dwg.save()
-    print(f"   ✅ {category}/{filename} ({num_lines} lines)")
+    print(f"   ✅ {category.upper()} tasarımı kaydedildi: {filename}")
 
-def pattern_factory():
-    """Ana üretim fonksiyonu"""
-    print("=" * 60)
-    print("🎨 PATTERN FACTORY - Dalgalı Çizgiler (SİYAH)")
-    print(f"   📐 Canvas: {CANVAS_WIDTH}x{CANVAS_HEIGHT}")
-    print(f"   🎨 Renk: {LINE_COLOR}")
-    print("   📊 Seviyeler: basic(6) → medium(25) → complex(55) → very_complex(90) → extreme(130)")
-    print("=" * 60)
-    
-    categories = ['tech', 'wellness', 'eco', 'future-economy', 'elearning']
-    level_names = ['basic', 'medium', 'complex', 'very_complex', 'extreme']
-    total_count = 0
-    
-    for category in categories:
-        print(f"\n📁 {category.upper()} desenleri üretiliyor...")
-        
-        for level_name in level_names:
-            level_config = LEVELS[level_name]
-            
-            for i in range(level_config['count']):
-                print(f"   🎨 {level_name} desen {i+1}/{level_config['count']}...")
-                generate_pattern(category, level_name, level_config, i)
-                total_count += 1
-    
-    print("\n" + "=" * 60)
-    print("🏁 PATTERN FACTORY TAMAMLANDI!")
-    print(f"   ✅ Toplam {total_count} desen üretildi")
-    print(f"   📁 Klasör: {OUTPUT_DIR}/")
-    print("=" * 60)
-
+# Üretim döngüsü
 if __name__ == "__main__":
-    pattern_factory()
+    print("🚀 GATEMIRROR PATTERN FACTORY 2026 BAŞLATILDI")
+    categories = ['tech', 'wellness', 'eco', 'future-economy']
+    
+    for cat in categories:
+        for i in range(1, 4): # Her kategori için 3 farklı varyasyon
+            generate_master_pattern(cat, f"pattern_{cat}_{i}.svg")
+    
+    print("\n🫡 Hürgeneralim, tüm fütüristik desenler 'assets/patterns' klasörüne istiflendi!")
+    
