@@ -1,5 +1,7 @@
 import os
+import json
 import time
+import random
 import boto3
 import requests
 from datetime import datetime
@@ -53,6 +55,22 @@ def timing(name):
 hero_cache = {}
 template_cache = {}
 template_raw_cache = {}
+_articles_json_cache = None
+_articles_json_time = None
+
+def get_articles_from_r2_cached():
+    """articles.json'dan cache'li okuma (30 saniye)"""
+    global _articles_json_cache, _articles_json_time
+    now = datetime.now()
+    if _articles_json_cache and _articles_json_time and (now - _articles_json_time).seconds < 30:
+        return _articles_json_cache
+    try:
+        response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
+        _articles_json_cache = json.loads(response['Body'].read().decode('utf-8'))
+        _articles_json_time = now
+        return _articles_json_cache
+    except:
+        return []
 
 def get_cached_hero(page_type, lang, category=None):
     cache_key = f"{page_type}_{lang}_{category or ''}"
@@ -90,6 +108,45 @@ def get_template_from_r2(template_name):
             print(f"   📁 Template local: {template_name} ({time.time()-start:.2f}s)")
             return content
     return None
+
+# ================= PARSE ET (JSON'dan) =================
+
+def parse_articles_from_json(articles_meta):
+    """JSON meta verilerini parse edilmiş formata çevir"""
+    parsed_articles = []
+    for meta in articles_meta:
+        parsed_articles.append({
+            'url': meta.get('url'),
+            'lang': meta.get('lang'),
+            'category': meta.get('category'),
+            'hash': meta.get('hash'),
+            'slug': meta.get('slug'),
+            'sort_date': meta.get('date'),
+            'sort_datetime': meta.get('date'),
+            'author_name': meta.get('author_name', 'Gatemirror Expert'),
+            'author_title': meta.get('author_title', ''),
+            'author_bio': meta.get('author_bio', ''),
+            'author_avatar': meta.get('author_avatar', ''),
+            'parsed': {
+                'title': meta.get('title'),
+                'description': meta.get('description'),
+                'date': meta.get('date'),
+                'reading_time': meta.get('reading_time'),
+                'views': meta.get('views'),
+                'cover_image': meta.get('cover_image'),
+                'content_image_1': meta.get('content_image_1', ''),
+                'content_image_2': meta.get('content_image_2', ''),
+                'editors_note': meta.get('editors_note', ''),
+                'summary': meta.get('summary', ''),
+                'sources': meta.get('sources', ''),
+                'content': meta.get('content', ''),
+                'content_part1': meta.get('content_part1', ''),
+                'content_part2': meta.get('content_part2', ''),
+                'content_part3': meta.get('content_part3', ''),
+                'author': meta.get('author_name', 'Gatemirror Expert')
+            }
+        })
+    return parsed_articles
 
 # ================= RENDER =================
 
@@ -137,7 +194,7 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         category=article['category'],
         category_name=category_name
     )
-    print(f"      📄 Render: {article['parsed']['title'][:40]}... ({time.time()-start:.2f}s)")
+    print(f"      📄 Render: {parsed['title'][:40]}... ({time.time()-start:.2f}s)")
     return result
 
 def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for_template):
@@ -158,7 +215,7 @@ def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for
 @timing("DESIGNER TOPLAM")
 def designer():
     print("=" * 60)
-    print("🎨 DESIGNER BOT - TASARIM MODU (ZAMANLAMALI)")
+    print("🎨 DESIGNER BOT - TASARIM MODU (JSON'DAN OKUYOR)")
     print("=" * 60)
     
     # 1. TEMPLATE YÜKLEME
@@ -175,26 +232,33 @@ def designer():
         print("❌ Template alınamadı")
         return
     
-    # 2. RAW ARTICLES OKUMA
-    print("\n📖 2. RAW ARTICLES OKUMA")
+    # 2. JSON'DAN OKU (ÇOK HIZLI)
+    print("\n📖 2. JSON'DAN MAKALE OKUMA")
     t_start = time.time()
-    all_articles = get_all_raw_articles()
-    timings["RAW_ARTICLES_OKUMA"] = time.time() - t_start
-    print(f"   ✅ {len(all_articles)} makale okundu: {timings['RAW_ARTICLES_OKUMA']:.2f}s")
+    articles_meta = get_articles_from_r2_cached()
+    timings["JSON_OKUMA"] = time.time() - t_start
+    print(f"   ✅ {len(articles_meta)} makale meta okundu: {timings['JSON_OKUMA']:.2f}s")
     
-    if not all_articles:
-        print("❌ Makale yok")
+    if not articles_meta:
+        print("❌ articles.json yok veya boş")
         return
     
-    # 3. Filtreleme (EN + tech/wellness)
-    print("\n🔍 3. FİLTRELEME (EN + tech/wellness)")
+    # 3. PARSE ET
+    print("\n🔧 3. MAKALELERİ PARSE ET")
+    t_start = time.time()
+    all_articles = parse_articles_from_json(articles_meta)
+    timings["PARSE_ET"] = time.time() - t_start
+    print(f"   ✅ {len(all_articles)} makale parse edildi: {timings['PARSE_ET']:.2f}s")
+    
+    # 4. Filtreleme (EN + tech/wellness)
+    print("\n🔍 4. FİLTRELEME (EN + tech/wellness)")
     t_start = time.time()
     filtered = [a for a in all_articles if a['lang'] == 'en' and a['category'] in ['tech', 'wellness']]
     timings["FILTRELEME"] = time.time() - t_start
     print(f"   ✅ {len(filtered)} makale filtrelendi: {timings['FILTRELEME']:.2f}s")
     
-    # 4. Alternate langs oluştur
-    print("\n🌐 4. ALTERNATE LANGS")
+    # 5. Alternate langs oluştur
+    print("\n🌐 5. ALTERNATE LANGS")
     t_start = time.time()
     alt_dict = build_alternate_langs_dict(filtered)
     timings["ALTERNATE_LANGS"] = time.time() - t_start
@@ -204,8 +268,8 @@ def designer():
     lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
     menu_texts = get_menu_texts('en')
     
-    # 5. MAKALELERİ PARALEL YAZ
-    print(f"\n📝 5. MAKALELERİ PARALEL YAZMA ({len(lang_articles)} makale)")
+    # 6. MAKALELERİ PARALEL YAZ
+    print(f"\n📝 6. MAKALELERİ PARALEL YAZMA ({len(lang_articles)} makale)")
     t_start = time.time()
     
     articles_to_write = []
@@ -213,7 +277,6 @@ def designer():
         key = (article['category'], article['hash'])
         alt_langs = alt_dict.get(key, [])
         same_cat = [a for a in lang_articles if a['category'] == article['category'] and a['hash'] != article['hash']]
-        import random
         related = random.sample(same_cat, min(3, len(same_cat))) if same_cat else []
         related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
         articles_to_write.append((article, alt_langs, related_for_template))
@@ -231,8 +294,8 @@ def designer():
     timings["MAKALE_YAZMA"] = time.time() - write_start
     print(f"   ✅ Makale yazma: {timings['MAKALE_YAZMA']:.2f}s")
     
-    # 6. HOME PAGE
-    print("\n🏠 6. HOME PAGE")
+    # 7. HOME PAGE
+    print("\n🏠 7. HOME PAGE")
     t_start = time.time()
     featured = lang_articles[0] if lang_articles else None
     featured_for_home = None
@@ -275,8 +338,8 @@ def designer():
     timings["HOME_PAGE"] = time.time() - t_start
     print(f"   ✅ Home page: {timings['HOME_PAGE']:.2f}s")
     
-    # 7. KATEGORİ SAYFALARI
-    print("\n📂 7. KATEGORİ SAYFALARI")
+    # 8. KATEGORİ SAYFALARI
+    print("\n📂 8. KATEGORİ SAYFALARI")
     t_start = time.time()
     categories = ['tech', 'wellness']
     
@@ -335,9 +398,9 @@ def designer():
     timings["KATEGORI_SAYFALARI"] = time.time() - t_start
     print(f"   ✅ Kategori sayfaları: {timings['KATEGORI_SAYFALARI']:.2f}s")
     
-    # 8. ALL ARTICLES SAYFASI
+    # 9. ALL ARTICLES SAYFASI
     if all_articles_tpl:
-        print("\n📚 8. ALL ARTICLES SAYFASI")
+        print("\n📚 9. ALL ARTICLES SAYFASI")
         t_start = time.time()
         tmpl = get_cached_template(all_articles_tpl, 'all-articles')
         hero_html = get_cached_hero('special', 'en', 'all-articles')
@@ -382,39 +445,6 @@ def designer():
         timings["ALL_ARTICLES"] = time.time() - t_start
         print(f"   ✅ All articles: {timings['ALL_ARTICLES']:.2f}s")
     
-    # 9. JSON, SITEMAP, ROBOTS
-    print("\n📊 9. JSON + SITEMAP + ROBOTS")
-    t_start = time.time()
-    
-    # Articles.json
-    articles_list = []
-    for article in lang_articles:
-        articles_list.append({
-            'url': article['url'],
-            'lang': article['lang'],
-            'category': article['category'],
-            'title': article['parsed']['title'],
-            'date': article['parsed']['date'],
-            'reading_time': article['parsed']['reading_time'],
-            'views': article['parsed']['views'],
-            'cover_image': article['parsed']['cover_image'],
-            'description': article['parsed']['description'],
-            'slug': article.get('slug', ''),
-            'hash': article.get('hash', '')
-        })
-    s3.put_object(Bucket=R2_BUCKET, Key='articles.json', Body=json.dumps(articles_list, indent=2, ensure_ascii=False).encode('utf-8'), ContentType='application/json')
-    
-    # Sitemap
-    sitemap_xml = generate_sitemap(lang_articles, alt_dict)
-    s3.put_object(Bucket=R2_BUCKET, Key='sitemap.xml', Body=sitemap_xml.encode('utf-8'), ContentType='application/xml')
-    
-    # Robots
-    robots_txt = generate_robots_txt()
-    s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
-    
-    timings["JSON_SITEMAP_ROBOTS"] = time.time() - t_start
-    print(f"   ✅ JSON + Sitemap + Robots: {timings['JSON_SITEMAP_ROBOTS']:.2f}s")
-    
     # 10. ZAMAN RAPORU
     print("\n" + "=" * 60)
     print("📊 ZAMAN RAPORU")
@@ -423,7 +453,7 @@ def designer():
     for name, duration in sorted(timings.items(), key=lambda x: x[1], reverse=True):
         print(f"   {name:25}: {duration:8.2f} saniye")
         total += duration
-    print(f"   {'TOPLAM':25}: {total:8.2f} saniye")
+    print(f"   {'TOPLAM (ölçülen)':25}: {total:8.2f} saniye")
     print("=" * 60)
     
     print("\n🏁 DESIGNER TAMAMLANDI!")
