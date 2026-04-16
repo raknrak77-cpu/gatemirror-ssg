@@ -8,7 +8,7 @@ OUTPUT_DIR = "assets/gpt"
 WIDTH = 1920
 HEIGHT = 1080
 COLOR = "#000000"
-TOTAL_OUTPUT = 10
+TOTAL_OUTPUT = 125
 
 CATEGORIES = ["tech", "wellness", "eco", "future-economy", "elearning"]
 
