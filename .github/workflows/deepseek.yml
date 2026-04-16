@@ -1,11 +1,13 @@
-name: Wellness Pattern Generator
+name: Deepseek Pattern - Wellness Vektör Desenleri
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       
@@ -18,34 +20,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           
-      - name: Wellness Pattern Uret
-        run: python bots/wellness_pattern.py
+      - name: Deepseek Wellness Pattern Üret
+        run: python bots/deepseek-pattern.py
         
-      - name: Pattern'leri R2'ye Yukle
-        env:
-          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+      - name: GitHub'a Kaydet
         run: |
-          python -c "
-import boto3
-import os
-from botocore.client import Config
-
-s3 = boto3.client(
-    's3',
-    endpoint_url=f'https://{os.environ["R2_ACCOUNT_ID"]}.r2.cloudflarestorage.com',
-    aws_access_key_id=os.environ['R2_ACCESS_KEY_ID'],
-    aws_secret_access_key=os.environ['R2_SECRET_ACCESS_KEY'],
-    config=Config(signature_version='s3v4'),
-    region_name='auto'
-)
-
-for root, dirs, files in os.walk('assets/Deepseek'):
-    for file in files:
-        local_path = os.path.join(root, file)
-        r2_key = local_path.replace('assets/', 'assets/')
-        s3.upload_file(local_path, os.environ['R2_BUCKET_NAME'], r2_key)
-        print(f'✅ Yüklendi: {r2_key}')
-"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
+          git add assets/Deepseek/
+          if git diff --staged --quiet; then
+            echo "📭 Yeni desen yok, commit atlanıyor."
+          else
+            git commit -m "🌿 Deepseek Wellness Pattern: 9 desen eklendi (assets/Deepseek/)"
+            git push origin main || git push --force origin main
+          fi
+          
+      - name: Upload Artifact (ZIP)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-wellness-patterns
+          path: assets/Deepseek/
