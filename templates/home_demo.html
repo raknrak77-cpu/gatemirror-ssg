@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gatemirror - Modern Bento Grid</title>
+    <title>Gatemirror - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * {
@@ -17,21 +17,15 @@
             --primary-dark: #1a8c3f;
             --text: #1e293b;
             --text-light: #64748b;
-            --text-muted: #94a3b8;
             --white: #ffffff;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            --border-radius: 1.5rem;
-            --border-radius-sm: 1rem;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
             
             /* Pastel Yeşil Tonları */
-            --pastel-1: #e8f5e9;
-            --pastel-2: #c8e6c9;
-            --pastel-3: #a5d6a7;
-            --pastel-4: #81c784;
-            --pastel-5: #66bb6a;
-            --pastel-6: #4caf50;
+            --green-1: #e8f5e9;
+            --green-2: #c8e6c9;
+            --green-3: #a5d6a7;
+            --green-4: #81c784;
         }
 
         body {
@@ -41,9 +35,7 @@
             line-height: 1.6;
         }
 
-        /* ===================== */
         /* HEADER */
-        /* ===================== */
         header {
             padding: 1rem 2rem;
             background: rgba(255, 255, 255, 0.9);
@@ -94,175 +86,135 @@
             cursor: pointer;
         }
 
-        /* ===================== */
-        /* ASİMETRİK BENTO HERO */
-        /* ===================== */
-        .bento-hero {
+        /* 16:9 BENTO GRID - ANA KONTEYNER */
+        .bento-grid {
             max-width: 1400px;
             margin: 2rem auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
+            aspect-ratio: 16 / 9;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: minmax(180px, auto);
-            gap: 1.5rem;
+            gap: 1rem;
+            grid-template-columns: 62% 32%;
+            grid-template-rows: 18% 18%;
+            grid-template-areas:
+                "hero stats"
+                "featured latest";
         }
 
-        /* Blok stilleri */
+        /* TÜM BLOKLAR */
         .bento-block {
-            border-radius: var(--border-radius);
+            border-radius: 1.5rem;
             padding: 1.5rem;
             transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
         }
 
         .bento-block:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        /* 1. HERO MESAJI (büyük - 2x2) */
+        /* BLOK 1: HERO (Sol üst) */
         .block-hero {
-            grid-column: span 2;
-            grid-row: span 2;
-            background: linear-gradient(135deg, var(--pastel-1) 0%, var(--pastel-2) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            grid-area: hero;
+            background: linear-gradient(135deg, var(--green-1) 0%, var(--green-2) 100%);
         }
 
         .block-hero h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #1a8c3f 0%, #2ecc71 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
         }
 
         .block-hero p {
             color: var(--text-light);
-            margin-bottom: 1.5rem;
-            max-width: 80%;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .btn-group {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
+            margin-top: auto;
         }
 
         .btn-primary {
             background: var(--primary-dark);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 2rem;
             text-decoration: none;
+            font-size: 0.8rem;
             font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--text);
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 2rem;
             text-decoration: none;
+            font-size: 0.8rem;
             font-weight: 600;
-            border: 1px solid var(--text-muted);
+            border: 1px solid var(--text-light);
         }
 
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* 2. YOUTUBE BLOĞU */
-        .block-youtube {
-            background: var(--pastel-2);
-            grid-column: span 1;
-            grid-row: span 1;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .block-youtube iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* 3. NEWS TICKER */
-        .block-ticker {
-            background: var(--pastel-3);
-            grid-column: span 1;
-            grid-row: span 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .ticker-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--primary-dark);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .ticker-items {
-            animation: scrollTicker 20s linear infinite;
-        }
-
-        .ticker-item {
-            padding: 0.25rem 0;
-            font-size: 0.85rem;
-            white-space: nowrap;
-        }
-
-        @keyframes scrollTicker {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100%); }
-        }
-
-        /* 4. STATS BLOĞU */
+        /* BLOK 2: STATS (Sağ üst) */
         .block-stats {
-            background: var(--pastel-4);
-            grid-column: span 1;
-            grid-row: span 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            grid-area: stats;
+            background: var(--green-2);
             text-align: center;
+            justify-content: center;
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 800;
-            color: white;
+            color: var(--primary-dark);
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-light);
         }
 
-        /* 5. SON MAKALELER */
+        /* BLOK 3: FEATURED (Sol alt) */
+        .block-featured {
+            grid-area: featured;
+            background: var(--green-3);
+        }
+
+        .featured-img {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .featured-meta {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* BLOK 4: LATEST (Sağ alt) */
         .block-latest {
-            background: var(--pastel-5);
-            grid-column: span 1;
-            grid-row: span 1;
+            grid-area: latest;
+            background: var(--green-4);
         }
 
         .block-latest h3 {
             font-size: 1rem;
-            margin-bottom: 1rem;
-            color: white;
+            margin-bottom: 0.5rem;
         }
 
         .latest-list {
@@ -271,78 +223,37 @@
 
         .latest-list li {
             margin-bottom: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .latest-list a {
-            color: white;
             text-decoration: none;
-            opacity: 0.9;
-        }
-
-        .latest-list a:hover {
-            opacity: 1;
-        }
-
-        /* 6. FEATURED ARTICLE */
-        .block-featured {
-            background: var(--pastel-6);
-            grid-column: span 2;
-            grid-row: span 1;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            padding: 1rem;
-        }
-
-        .featured-img {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius-sm);
-        }
-
-        .featured-content h4 {
             color: white;
-            margin-bottom: 0.25rem;
         }
 
-        .featured-content p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-        }
-
-        /* ===================== */
         /* RESPONSIVE */
-        /* ===================== */
-        @media (max-width: 1024px) {
-            .bento-hero {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .block-hero {
-                grid-column: span 2;
-            }
-            .block-featured {
-                grid-column: span 2;
-            }
-        }
-
         @media (max-width: 768px) {
-            .bento-hero {
+            .bento-grid {
                 grid-template-columns: 1fr;
+                grid-template-rows: auto;
                 gap: 1rem;
+                aspect-ratio: auto;
+                grid-template-areas:
+                    "hero"
+                    "stats"
+                    "featured"
+                    "latest";
             }
-            .block-hero, .block-featured {
-                grid-column: span 1;
-            }
+            
             .nav-links {
                 display: none;
             }
             .menu-btn {
                 display: block;
             }
+            
             .block-hero h1 {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -365,51 +276,34 @@
 </header>
 
 <main>
-    <!-- ASİMETRİK BENTO HERO -->
-    <div class="bento-hero">
+    <div class="bento-grid">
         
-        <!-- 1. HERO MESAJI (2x2) -->
+        <!-- BLOK 1: HERO -->
         <div class="bento-block block-hero">
             <h1>Global Insights for the <span style="color: var(--primary);">Next Era</span></h1>
-            <p>Deep analysis on technology, wellness, future economy, and sustainable living. Read in 5 languages.</p>
+            <p>Deep analysis on technology, wellness, future economy, and sustainable living.</p>
             <div class="btn-group">
                 <a href="#" class="btn-primary">Explore Articles</a>
                 <a href="#" class="btn-secondary">Learn More</a>
             </div>
         </div>
 
-        <!-- 2. YOUTUBE (1x1) -->
-        <div class="bento-block block-youtube">
-            <iframe 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                title="YouTube video"
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- 3. NEWS TICKER (1x1) -->
-        <div class="bento-block block-ticker">
-            <div class="ticker-title">🔥 Breaking News</div>
-            <div class="ticker-items">
-                <div class="ticker-item">AI Trading Bots 2026: 340% ROI Reported</div>
-                <div class="ticker-item">Crypto Market Cap Hits $4.2T</div>
-                <div class="ticker-item">ESG Investing Outperforms Traditional Funds</div>
-                <div class="ticker-item">New Study: Red Light Therapy Extends Healthspan</div>
-                <div class="ticker-item">Quantum Computing Breakthrough in Pharma</div>
-            </div>
-        </div>
-
-        <!-- 4. STATS (1x1) -->
+        <!-- BLOK 2: STATS -->
         <div class="bento-block block-stats">
             <div class="stat-number">256+</div>
-            <div class="stat-label">Articles Published</div>
+            <div class="stat-label">Articles</div>
             <div class="stat-number" style="margin-top: 0.5rem;">5</div>
             <div class="stat-label">Languages</div>
         </div>
 
-        <!-- 5. SON MAKALELER (1x1) -->
+        <!-- BLOK 3: FEATURED ARTICLE -->
+        <div class="bento-block block-featured">
+            <div class="featured-img"></div>
+            <div class="featured-title">The Death of Discretionary Trading</div>
+            <div class="featured-meta">Alp Deniz · 6 min read</div>
+        </div>
+
+        <!-- BLOK 4: LATEST ARTICLES -->
         <div class="bento-block block-latest">
             <h3>📖 Latest Articles</h3>
             <ul class="latest-list">
@@ -418,18 +312,8 @@
                 <li><a href="#">DeFi Yield Truth 2026: Sustainable APY</a></li>
             </ul>
         </div>
-
-        <!-- 6. FEATURED ARTICLE (2x1) -->
-        <div class="bento-block block-featured">
-            <div class="featured-img"></div>
-            <div class="featured-content">
-                <h4>⭐ Featured Article</h4>
-                <p>The Death of Discretionary Trading: 2026 AI Trading Bots and the High-Frequency Revolution</p>
-                <small>Alp Deniz · 6 min read</small>
-            </div>
-        </div>
     </div>
 </main>
 
 </body>
-                    </html>
+</html>
