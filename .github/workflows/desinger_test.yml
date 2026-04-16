@@ -1,0 +1,83 @@
+name: SSG Designer Mode (Tasarım - EN + Tech/Wellness)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Pip Cache (Hızlandırma)
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          python -m pip install --upgrade pip
+          pip install --default-timeout=100 --retries=5 \
+            requests boto3 beautifulsoup4 markdown jinja2 pillow
+          
+      - name: 0. Starter Bot (Template + Task Kontrol)
+        run: python bots/starter-bot.py
+        
+      - name: 1. Uploader (Templates + Hero.json R2'ye Yukle)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/uploader.py
+        
+      - name: 2. Hero Bot (Hero.json Oku, Dinamik Hero HTML Uret)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/hero_bot.py
+        
+      - name: 3. Designer Bot (Sadece EN + Tech/Wellness - Tasarim Testi)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/designer.py
+        
+      - name: 4. Librarian Bot (Atomic Swap - articles_ready/ → articles/)
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: python bots/librarian.py
+        
+      - name: 5. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
+          git add content/ tasks.json
+          if git diff --staged --quiet; then
+            echo "📭 Değişiklik yok, commit atlanıyor."
+          else
+            git commit -m "🎨 Designer Mode: EN + Tech/Wellness tasarım testi"
+            git push origin main || git push --force origin main
+          fi
