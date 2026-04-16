@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gatemirror - Technology & AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #1a8c3f;
+            --dark: #0f172a;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --cream: #fbfbfb;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            --border-radius: 1rem;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        header {
+            padding: 1rem 2rem;
+            background: rgba(251, 251, 251, 0.9);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* Category Hero */
+        .category-hero {
+            background: linear-gradient(135deg, #e8f5e9 0%, var(--cream) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .category-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .category-hero p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+
+        /* Filter Buttons */
+        .filter-bar {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Article Grid */
+        .articles-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .article-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 1.25rem;
+        }
+
+        .article-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .article-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            background: var(--white);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .category-hero h1 {
+                font-size: 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Wellness</a>
+            <a href="#" class="active">Tech & AI</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco</a>
+            <a href="#">E-Learning</a>
+        </div>
+        <button class="menu-btn" style="display: none;"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<section class="category-hero">
+    <h1>Technology & AI</h1>
+    <p>Latest developments in AI, software, and digital transformation.</p>
+</section>
+
+<div class="filter-bar">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">AI</button>
+    <button class="filter-btn">Cybersecurity</button>
+    <button class="filter-btn">Cloud</button>
+    <button class="filter-btn">Trading Bots</button>
+</div>
+
+<div class="articles-container">
+    <div class="articles-grid">
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/e8f5e9/2ecc71?text=AI+Trading" alt="Article">
+            <div class="article-content">
+                <span class="article-category">AI TRADING</span>
+                <h3 class="article-title">AI Trading Bots 2026: Which Strategies Actually Beat the Market</h3>
+                <div class="article-meta">
+                    <span>📅 15 April 2026</span>
+                    <span>⏱️ 6 min read</span>
+                    <span>👁️ 3.4k views</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Generative+Search" alt="Article">
+            <div class="article-content">
+                <span class="article-category">GENERATIVE AI</span>
+                <h3 class="article-title">Generative Search vs Traditional SEO: How Google SGE is Changing Everything</h3>
+                <div class="article-meta">
+                    <span>📅 14 April 2026</span>
+                    <span>⏱️ 5 min read</span>
+                    <span>👁️ 2.1k views</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Cybersecurity" alt="Article">
+            <div class="article-content">
+                <span class="article-category">CYBERSECURITY</span>
+                <h3 class="article-title">AI Cybersecurity in 2026: Real-Time Threat Detection vs Zero-Day Exploits</h3>
+                <div class="article-meta">
+                    <span>📅 13 April 2026</span>
+                    <span>⏱️ 7 min read</span>
+                    <span>👁️ 1.8k views</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Cloud" alt="Article">
+            <div class="article-content">
+                <span class="article-category">CLOUD</span>
+                <h3 class="article-title">Cloud Computing for AI Workloads: AWS vs Azure vs GCP 2026</h3>
+                <div class="article-meta">
+                    <span>📅 12 April 2026</span>
+                    <span>⏱️ 6 min read</span>
+                    <span>👁️ 2.5k views</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Productivity" alt="Article">
+            <div class="article-content">
+                <span class="article-category">PRODUCTIVITY</span>
+                <h3 class="article-title">AI Productivity Tools 2026: Which One Saves Your Team the Most Time?</h3>
+                <div class="article-meta">
+                    <span>📅 11 April 2026</span>
+                    <span>⏱️ 4 min read</span>
+                    <span>👁️ 1.2k views</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="article-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Infrastructure" alt="Article">
+            <div class="article-content">
+                <span class="article-category">INFRASTRUCTURE</span>
+                <h3 class="article-title">AI Infrastructure Costs 2026: How to Cut Cloud Bills by 40%</h3>
+                <div class="article-meta">
+                    <span>📅 10 April 2026</span>
+                    <span>⏱️ 5 min read</span>
+                    <span>👁️ 3.1k views</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="#">Technology & AI</a>
+            <a href="#">Wellness</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco & Sustainable</a>
+            <a href="#">E-Learning</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="#">English</a>
+            <a href="#">Español</a>
+            <a href="#">Deutsch</a>
+            <a href="#">Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
