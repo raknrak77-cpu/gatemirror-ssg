@@ -3377,11 +3377,12 @@
                 "height": 1024
             }
         },
-        "status": "pending",
+        "status": "processed",
         "created_at": "2026-04-15",
         "date": "2026-04-15",
         "display_date": "15 April 2026",
-        "processed_at": ""
+        "processed_at": "2026-04-16 09:07:40",
+        "hash": "8656379e"
     },
     {
         "task_id": "0106",
