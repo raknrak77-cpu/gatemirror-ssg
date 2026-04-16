@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gatemirror - Modern Bento Grid</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #1a8c3f;
+            --primary-light: #5ee0a0;
+            --dark: #0f172a;
+            --dark-bg: #0a0a0a;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --cream: #fbfbfb;
+            --cream-dark: #f5f2eb;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+            --border-radius: 1.5rem;
+            --border-radius-sm: 0.75rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ===================== */
+        /* HEADER */
+        /* ===================== */
+        header {
+            padding: 1rem 2rem;
+            background: rgba(251, 251, 251, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* ===================== */
+        /* HERO - Gradient */
+        /* ===================== */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 50%, #e8f5e9 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--dark);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* ===================== */
+        /* BENTO GRID */
+        /* ===================== */
+        .bento-container {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            grid-auto-rows: minmax(200px, auto);
+        }
+
+        .bento-card {
+            background: var(--white);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bento-card.featured {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .bento-card.large {
+            grid-column: span 2;
+        }
+
+        .bento-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .bento-card.featured img {
+            height: 240px;
+        }
+
+        .card-content {
+            padding: 1.25rem;
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .bento-card.featured .card-title {
+            font-size: 1.5rem;
+        }
+
+        .card-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ===================== */
+        /* NEWSLETTER */
+        /* ===================== */
+        .newsletter {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border-radius: 2rem;
+            border: none;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .newsletter-form button {
+            background: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .newsletter-form button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* ===================== */
+        /* FOOTER */
+        /* ===================== */
+        footer {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===================== */
+        /* RESPONSIVE */
+        /* ===================== */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .menu-btn {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-card.featured {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            .newsletter-form {
+                flex-direction: column;
+                align-items: center;
+            }
+            .newsletter-form input {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">GATE<span style="color: var(--primary);">MIRROR</span></a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Wellness</a>
+            <a href="#">Tech</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco</a>
+            <a href="#">E-Learning</a>
+        </div>
+        <button class="menu-btn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Global Insights for the <span style="color: var(--primary);">Next Era</span></h1>
+    <p>Deep analysis on technology, wellness, future economy, and sustainable living. Read in 5 languages.</p>
+    <div class="btn-group">
+        <a href="#" class="btn-primary">Explore Articles</a>
+        <a href="#" class="btn-secondary">Learn More</a>
+    </div>
+</section>
+
+<div class="bento-container">
+    <h2 class="section-title">Latest Stories</h2>
+    <div class="bento-grid">
+        <!-- FEATURED CARD (Büyük) -->
+        <a href="#" class="bento-card featured">
+            <img src="https://placehold.co/800x400/e8f5e9/2ecc71?text=Featured+Image" alt="Featured">
+            <div class="card-content">
+                <span class="card-category">TECHNOLOGY</span>
+                <h3 class="card-title">AI Trading Bots 2026: Which Strategies Actually Beat the Market</h3>
+                <div class="card-meta">15 April 2026 · 6 min read · 3.4k views</div>
+            </div>
+        </a>
+
+        <!-- NORMAL CARDS -->
+        <a href="#" class="bento-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Image" alt="Article">
+            <div class="card-content">
+                <span class="card-category">WELLNESS</span>
+                <h3 class="card-title">Personalized Nutrition for Women 2026</h3>
+                <div class="card-meta">15 April 2026 · 5 min read</div>
+            </div>
+        </a>
+
+        <a href="#" class="bento-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Image" alt="Article">
+            <div class="card-content">
+                <span class="card-category">FUTURE ECONOMY</span>
+                <h3 class="card-title">DeFi Yield Truth 2026: Sustainable APY Analysis</h3>
+                <div class="card-meta">14 April 2026 · 7 min read</div>
+            </div>
+        </a>
+
+        <a href="#" class="bento-card large">
+            <img src="https://placehold.co/800x200/white/2ecc71?text=Image" alt="Article">
+            <div class="card-content">
+                <span class="card-category">ECO</span>
+                <h3 class="card-title">Circular Economy Profits 2026: How Companies Turn Waste into Revenue</h3>
+                <div class="card-meta">14 April 2026 · 6 min read · 2.1k views</div>
+            </div>
+        </a>
+
+        <a href="#" class="bento-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Image" alt="Article">
+            <div class="card-content">
+                <span class="card-category">E-LEARNING</span>
+                <h3 class="card-title">Coding Bootcamp ROI 2026: Which Programs Lead to $80K+ Jobs</h3>
+                <div class="card-meta">13 April 2026 · 5 min read</div>
+            </div>
+        </a>
+
+        <a href="#" class="bento-card">
+            <img src="https://placehold.co/400x200/white/2ecc71?text=Image" alt="Article">
+            <div class="card-content">
+                <span class="card-category">TECH</span>
+                <h3 class="card-title">Generative Search Revolution 2026</h3>
+                <div class="card-meta">12 April 2026 · 4 min read</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<section class="newsletter">
+    <h2>Stay ahead of the curve</h2>
+    <p>Get the latest insights delivered to your inbox weekly.</p>
+    <div class="newsletter-form">
+        <input type="email" placeholder="Your email address">
+        <button>Subscribe →</button>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>Gatemirror</h4>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-column">
+            <h4>Categories</h4>
+            <a href="#">Technology & AI</a>
+            <a href="#">Wellness</a>
+            <a href="#">Future Economy</a>
+            <a href="#">Eco & Sustainable</a>
+            <a href="#">E-Learning</a>
+        </div>
+        <div class="footer-column">
+            <h4>Read in</h4>
+            <a href="#">English</a>
+            <a href="#">Español</a>
+            <a href="#">Deutsch</a>
+            <a href="#">Français</a>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
