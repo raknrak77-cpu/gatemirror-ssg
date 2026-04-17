@@ -11,9 +11,9 @@ H = 2160
 LEVELS = {
     'basic':       6,
     'medium':      15,
-    'extra':       30,
+    'extra':       20,
 }
-COUNT_PER_LEVEL = 3
+COUNT_PER_LEVEL = 6
 
 # ================= SVG YARDIMCI =================
 def svg_open(filepath):
