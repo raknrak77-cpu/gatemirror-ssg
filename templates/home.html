@@ -308,10 +308,10 @@
 }
 
 .pattern-layer svg {
-    width: 100%;
+    width: 200%;   /* 🔥 150% → 100% */
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center;  /* 🔥 left top → center */
 }
 
 /* Arka katman (svg1) */
@@ -320,7 +320,7 @@
 }
 
 .layer-back svg {
-    opacity: 0.5;
+    opacity: 0.7;  /* 🔥 0.3 → 0.5 */
     animation: slowDriftBack 40s ease-in-out infinite;
     color: var(--tech-1);
 }
@@ -331,7 +331,7 @@
 }
 
 .layer-front svg {
-    opacity: 0.7;
+    opacity: 0.9;  /* 🔥 0.4 → 0.7 */
     animation: slowDriftFront 20s ease-in-out infinite reverse;
     color: var(--tech-4);
 }
