@@ -30,7 +30,7 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
     return False
 
 def upload_templates():
-    """templates/ klasöründeki dosyaları R2'ye yedekler (css hariç)"""
+    """templates/ klasöründeki dosyaları R2'ye yedekler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
@@ -66,34 +66,9 @@ def upload_hero_json():
         print(f"\n⚠️ templates/hero.json dosyası bulunamadı, atlanıyor.")
         return False
 
-def upload_assets_folder():
-    """assets/ klasörü varsa (diğer statik dosyalar için) R2'ye yükler"""
-    assets_dir = "assets"
-    if not os.path.exists(assets_dir):
-        return
-    
-    print(f"\n📁 {assets_dir}/ klasörü taranıyor...")
-    for root, dirs, files in os.walk(assets_dir):
-        for file in files:
-            local_path = os.path.join(root, file)
-            relative_path = os.path.relpath(local_path, assets_dir)
-            r2_key = f"assets/{relative_path}".replace('\\', '/')
-            
-            content_type = None
-            if file.endswith('.css'):
-                content_type = 'text/css'
-            elif file.endswith('.js'):
-                content_type = 'application/javascript'
-            elif file.endswith('.json'):
-                content_type = 'application/json'
-            elif file.endswith('.svg'):
-                content_type = 'image/svg+xml'
-            
-            upload_file_to_r2(local_path, r2_key, content_type)
-
 def upload_svg_patterns():
-    """Özel SVG pattern'lerini R2'ye assets/ klasörüne yükler (isim değiştirerek)"""
-    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME")
+    """SADECE 2 SVG pattern'ini R2'ye assets/ klasörüne yükler (isim değiştirerek)"""
+    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME (SADECE 2 DOSYA)")
     print("-" * 40)
     
     svg_files = [
@@ -108,10 +83,10 @@ def upload_svg_patterns():
             print(f"⚠️ Dosya bulunamadı: {local_path}")
 
 def uploader():
-    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler - articles/ SİLMEZ"""
+    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler"""
     
-    # 1. Önce template'leri yedekle (css hariç - çünkü css assets'e gidecek)
-    print("\n📁 TEMPLATE YEDEKLEME (css hariç)")
+    # 1. Template'leri yedekle
+    print("\n📁 TEMPLATE YEDEKLEME")
     print("-" * 40)
     upload_templates()
     
@@ -121,13 +96,10 @@ def uploader():
     # 3. Hero JSON'u yedekle
     upload_hero_json()
     
-    # 4. Varsa diğer assets dosyalarını yükle
-    upload_assets_folder()
-    
-    # 5. ÖZEL SVG PATTERN'LERİNİ YÜKLE (SADECE 2 DOSYA)
+    # 4. SADECE 2 ÖZEL SVG PATTERN YÜKLE (assets/ klasörünü tarama YOK!)
     upload_svg_patterns()
     
-    # 6. content/ altındaki ham HTML'leri raw-articles/ altına yükle
+    # 5. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -148,7 +120,7 @@ def uploader():
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 7. Local dosyaları temizle
+    # 6. Local dosyaları temizle
     print("\n🗑️ LOCAL TEMİZLİK")
     print("-" * 40)
     for file_path in uploaded_files:
@@ -158,7 +130,7 @@ def uploader():
         except Exception as e:
             print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    # 8. Boş klasörleri temizle
+    # 7. Boş klasörleri temizle
     for root, dirs, files in os.walk(content_base, topdown=False):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
@@ -171,12 +143,12 @@ def uploader():
     
     print("\n" + "=" * 60)
     print("🏁 UPLOADER TAMAMLANDI!")
-    print("   ✅ Template'ler → R2/templates/ (css hariç)")
+    print("   ✅ Template'ler → R2/templates/")
     print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ hero.json → R2/templates/hero.json")
-    print("   ✅ Özel SVG pattern'ler → R2/assets/svg1.svg, svg2.svg")
-    print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
-    print("   ✅ Local HTML'ler temizlendi")
+    print("   ✅ svg1.svg → R2/assets/svg1.svg")
+    print("   ✅ svg2.svg → R2/assets/svg2.svg")
+    print("   ✅ content/ → R2/raw-articles/")
     print("=" * 60)
 
 if __name__ == "__main__":
