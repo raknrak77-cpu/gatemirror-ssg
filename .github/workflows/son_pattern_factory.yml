@@ -1,0 +1,43 @@
+name: Son Pattern Factory - 13 Desen × 3 Seviye
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Kutuphaneleri Yukle
+        run: |
+          python -m pip install --upgrade pip
+          
+      - name: Son Pattern Factory Üret
+        run: python bots/son_pattern_factory.py
+        
+      - name: GitHub'a Kaydet
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull --rebase origin main || echo "Pull yapılamadı, devam..."
+          git add assets/all-patterns/
+          if git diff --staged --quiet; then
+            echo "📭 Yeni desen yok, commit atlanıyor."
+          else
+            git commit -m "🎨 Son Pattern Factory: 13 desen türü × 3 seviye (78 desen)"
+            git push origin main || git push --force origin main
+          fi
+          
+      - name: Upload Artifact (ZIP)
+        uses: actions/upload-artifact@v4
+        with:
+          name: son-patterns
+          path: assets/all-patterns/
