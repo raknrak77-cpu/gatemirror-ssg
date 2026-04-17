@@ -515,9 +515,8 @@
         font-size: 0.9rem;
     }
     
-/* ===================== */
-
-/* ===================== */
+    /* ===================== */
+    /* ===================== */
 /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI */
 /* ===================== */
 
@@ -527,13 +526,13 @@
     border-radius: 16px;
     overflow: hidden;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap;           /* 🔥 YENİ: Sığmazsa alt satıra geç */
     border: 1px solid rgba(0,0,0,0.08);
 }
 
 .category-segment {
-    flex: 1;
-    min-width: 100px;
+    flex: 1;                   /* 🔥 Eşit genişlik */
+    min-width: 100px;          /* 🔥 YENİ: Çok küçülmesin */
     transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     cursor: pointer;
@@ -542,17 +541,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem;
+    padding: 0.5rem;           /* 🔥 YENİ: İç boşluk */
 }
 
 /* Hover'da genişleme (sadece desktop'ta) */
-@media (min-width: 1201px) {
+@media (min-width: 769px) {
     .category-segment:hover {
         flex: 2.5;
     }
 }
 
-/* Etiket - normalde görünmez, hover'da görünür (desktop) */
+/* Etiket - normalde görünmez, hover'da görünür */
 .category-label {
     position: absolute;
     inset: 0;
@@ -568,102 +567,94 @@
     transition: opacity 0.3s;
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     gap: 6px;
-    white-space: nowrap;
+    white-space: nowrap;       /* 🔥 Normalde tek satır */
 }
 
+/* Uzun metin için (Almanca vb.) - hover'da kırılabilir */
 .category-segment:hover .category-label {
-    opacity: 1;
-    white-space: normal;
+    white-space: normal;       /* 🔥 Hover'da uzun metin alt satıra geçebilir */
     text-align: center;
     padding: 0 0.5rem;
 }
 
+.category-segment:hover .category-label {
+    opacity: 1;
+}
+
 .category-icon {
     font-size: 14px;
-    flex-shrink: 0;
+    flex-shrink: 0;            /* 🔥 İkon küçülmesin */
 }
 
 /* ===================== */
-/* BÜYÜK TELEFONLAR + TABLET (600px - 1200px) - YAN YANA */
+/* MOBİL (iPhone 13 ve benzeri - yan yana) */
 /* ===================== */
-@media (min-width: 600px) and (max-width: 1200px) {
+@media (max-width: 768px) {
     .category-bottom-bar {
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        border: none;
+        flex-wrap: wrap;       /* Yan yana, sığmazsa alt satıra */
+        gap: 0.5rem;
         background: transparent;
+        border: none;
     }
     
     .category-segment {
-        flex: 1 1 auto;
-        min-width: 110px;
-        border-radius: 40px;
-        min-height: 64px;
+        flex: 1 1 auto;        /* 🔥 Esnek genişlik */
+        min-width: 90px;       /* Minimum genişlik */
+        border-radius: 40px;   /* Yuvarlak buton gibi */
+        min-height: 56px;
+        margin: 0 0.25rem;
     }
     
-    /* Büyük telefon/tablet'de etiket her zaman görünsün */
-    .category-label {
-        position: static;
-        opacity: 1;
-        white-space: normal;
-        font-size: 10px;
-        text-align: center;
-        gap: 6px;
-        flex-direction: column;
-    }
-    
-    .category-icon {
-        font-size: 18px;
-    }
-    
-    /* Hover genişlemesi YOK */
+    /* Mobilde hover genişlemesi YOK */
     .category-segment:hover {
         flex: 1 1 auto;
     }
-}
-
-/* ===================== */
-/* KÜÇÜK TELEFONLAR (600px altı) - ALT ALTA */
-/* ===================== */
-@media (max-width: 599px) {
-    .category-bottom-bar {
-        flex-direction: column;
-        gap: 0.5rem;
-        max-width: 280px;
-        margin-left: auto;
-        margin-right: auto;
-        border: none;
-        background: transparent;
-    }
     
-    .category-segment {
-        width: 100%;
-        border-radius: 40px;
-        min-height: 52px;
-    }
-    
+    /* Mobilde etiket HER ZAMAN görünür (hover yok) */
     .category-label {
         position: static;
         opacity: 1;
-        flex-direction: row;
-        justify-content: center;
-        gap: 8px;
-        white-space: normal;
-        font-size: 10px;
+        white-space: normal;    /* Uzun metin alt satıra geçebilir */
+        font-size: 9px;
+        text-align: center;
+        gap: 4px;
+        flex-direction: column; /* İkon üstte, yazı altta */
     }
     
     .category-icon {
         font-size: 16px;
     }
-        }
+    
+    /* Hover'da özel bir şey olmasın */
+    .category-segment:hover .category-label {
+        white-space: normal;
+    }
+}
 
-/* 6. Kategori renkleri */
-.segment-tech     { background: linear-gradient(135deg, var(--tech-3), var(--tech-4)); }
-.segment-wellness { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-4)); }
-.segment-eco      { background: linear-gradient(135deg, var(--eco-3), var(--eco-4)); }
-.segment-fe       { background: linear-gradient(135deg, var(--fe-3), var(--fe-4)); }
-.segment-el       { background: linear-gradient(135deg, var(--el-3), var(--el-4)); }
-        
+/* ===================== */
+/* DAR TELEFONLAR (iPhone SE, küçük ekran) - ALT ALTA */
+/* ===================== */
+@media (max-width: 480px) {
+    .category-bottom-bar {
+        flex-direction: column;  /* Alt alta */
+        gap: 0.5rem;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .category-segment {
+        width: 100%;
+        border-radius: 40px;
+    }
+    
+    .category-label {
+        flex-direction: row;     /* İkon yanında yazı */
+        justify-content: center;
+        gap: 8px;
+    }
+}
+    
     /* Kategori segment renkleri */
     .segment-tech {
         background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%);
@@ -774,7 +765,7 @@
         opacity: 0.3;
     }
     
-    /* ===================== */
+      /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
     @media (max-width: 768px) {
