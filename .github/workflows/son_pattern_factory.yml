@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           
       - name: Son Pattern Factory Üret
-        run: python bots/son_pattern_factory.py
+        run: python bots/deepseek-pattern.py
         
       - name: GitHub'a Kaydet
         run: |
