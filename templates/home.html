@@ -516,132 +516,96 @@
     }
     
     /* ===================== */
-    /* KATEGORİ BÖLÜMÜ - Footer üzerinde (YENİ - HOVER EFEKTLİ) */
+    /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer üzerinde) */
     /* ===================== */
-    .categories-section {
+    .category-bottom-bar {
         max-width: 1200px;
         margin: 3rem auto 2rem auto;
-        padding: 0 1.5rem;
-        position: relative;
-    }
-    
-    .categories-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .categories-label {
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--text-light);
-        font-weight: 500;
-    }
-    
-    .categories-divider {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #ddd, transparent);
-        max-width: 200px;
-    }
-    
-    body.dark .categories-divider {
-        background: linear-gradient(90deg, transparent, #444, transparent);
-    }
-    
-    /* Butonlar - Bottom bar segment gibi hover efekti */
-    .category-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 0.75rem;
-        flex-wrap: wrap;
         border-radius: 16px;
         overflow: hidden;
-        background: rgba(0,0,0,0.02);
-        padding: 0.5rem;
+        display: flex;
+        border: 1px solid rgba(0,0,0,0.08);
     }
     
-    body.dark .category-buttons {
-        background: rgba(255,255,255,0.02);
+    body.dark .category-bottom-bar {
+        border: 1px solid rgba(255,255,255,0.08);
     }
     
-    .cat-btn {
+    .category-segment {
         flex: 1;
-        display: inline-flex;
+        transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        cursor: pointer;
+        text-decoration: none;
+        min-height: 72px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        padding: 0.8rem 1.2rem;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.8rem;
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        border: none;
-        cursor: pointer;
-        color: white;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        position: relative;
     }
     
-    .cat-icon {
-        font-size: 1rem;
-    }
-    
-    /* Hover efekti - genişleme (bottom-bar segment gibi) */
-    .cat-btn:hover {
+    .category-segment:hover {
         flex: 2.5;
-        padding: 0.8rem 1.5rem;
     }
     
-    /* KATEGORİ BUTON RENKLERİ */
-    .cat-btn-tech {
-        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
-        box-shadow: 0 2px 8px rgba(77, 56, 184, 0.3);
-    }
-    .cat-btn-tech:hover {
-        background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
-        box-shadow: 0 6px 16px rgba(77, 56, 184, 0.4);
-    }
-    
-    .cat-btn-wellness {
-        background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-4) 100%);
-        box-shadow: 0 2px 8px rgba(122, 74, 106, 0.3);
-    }
-    .cat-btn-wellness:hover {
-        background: linear-gradient(135deg, var(--wellness-4) 0%, var(--wellness-5) 100%);
-        box-shadow: 0 6px 16px rgba(122, 74, 106, 0.4);
+    .category-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        opacity: 0;
+        transition: opacity 0.3s;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        gap: 6px;
     }
     
-    .cat-btn-eco {
-        background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-4) 100%);
-        box-shadow: 0 2px 8px rgba(46, 102, 69, 0.3);
-    }
-    .cat-btn-eco:hover {
-        background: linear-gradient(135deg, var(--eco-4) 0%, var(--eco-5) 100%);
-        box-shadow: 0 6px 16px rgba(46, 102, 69, 0.4);
+    .category-segment:hover .category-label {
+        opacity: 1;
     }
     
-    .cat-btn-fe {
-        background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-4) 100%);
-        box-shadow: 0 2px 8px rgba(138, 100, 0, 0.3);
-    }
-    .cat-btn-fe:hover {
-        background: linear-gradient(135deg, var(--fe-4) 0%, var(--fe-5) 100%);
-        box-shadow: 0 6px 16px rgba(138, 100, 0, 0.4);
+    .category-icon {
+        font-size: 14px;
     }
     
-    .cat-btn-el {
-        background: linear-gradient(135deg, var(--el-3) 0%, var(--el-4) 100%);
-        box-shadow: 0 2px 8px rgba(0, 96, 128, 0.3);
+    /* Kategori segment renkleri */
+    .segment-tech {
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%);
     }
-    .cat-btn-el:hover {
-        background: linear-gradient(135deg, var(--el-4) 0%, var(--el-5) 100%);
-        box-shadow: 0 6px 16px rgba(0, 96, 128, 0.4);
+    .segment-tech:hover {
+        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-5) 100%);
+    }
+    
+    .segment-wellness {
+        background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%);
+    }
+    .segment-wellness:hover {
+        background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%);
+    }
+    
+    .segment-eco {
+        background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%);
+    }
+    .segment-eco:hover {
+        background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%);
+    }
+    
+    .segment-fe {
+        background: linear-gradient(135deg, var(--fe-2) 0%, var(--fe-4) 100%);
+    }
+    .segment-fe:hover {
+        background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%);
+    }
+    
+    .segment-el {
+        background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%);
+    }
+    .segment-el:hover {
+        background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%);
     }
     
     /* ===================== */
@@ -718,10 +682,6 @@
         opacity: 0.3;
     }
     
-    body.dark .categories-label {
-        color: #888;
-    }
-    
     /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
@@ -761,15 +721,23 @@
         .hero-description {
             font-size: 0.9rem;
         }
-        .category-buttons {
+        .category-bottom-bar {
             flex-direction: column;
-            gap: 0.5rem;
+            border-radius: 12px;
+            margin: 2rem 1rem;
         }
-        .cat-btn:hover {
+        .category-segment {
+            min-height: 48px;
+        }
+        .category-segment:hover {
             flex: 1;
         }
-        .categories-label {
-            font-size: 0.6rem;
+        .category-label {
+            opacity: 1;
+            font-size: 10px;
+        }
+        .category-icon {
+            font-size: 12px;
         }
     }
     </style>
@@ -841,31 +809,6 @@
             <a href="/{{ lang }}/tech/" class="hero-cta hero-cta-primary">Explore →</a>
         </div>
     </div>
-    
-    <!-- YENİ KATEGORİ BÖLÜMÜ - Footer üzerinde, HOVER EFEKTLİ -->
-    <div class="categories-section">
-        <div class="categories-header">
-            <span class="categories-label">EXPLORE CATEGORIES →</span>
-            <div class="categories-divider"></div>
-        </div>
-        <div class="category-buttons">
-            <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn cat-btn-tech">
-                <span class="cat-icon">⚡</span> TECH & AI
-            </a>
-            <a href="/explore/category-archive/{{ lang }}/wellness/" class="cat-btn cat-btn-wellness">
-                <span class="cat-icon">🧘</span> WELLNESS
-            </a>
-            <a href="/explore/category-archive/{{ lang }}/future-economy/" class="cat-btn cat-btn-fe">
-                <span class="cat-icon">📈</span> FUTURE ECONOMY
-            </a>
-            <a href="/explore/category-archive/{{ lang }}/eco/" class="cat-btn cat-btn-eco">
-                <span class="cat-icon">🌿</span> ECO
-            </a>
-            <a href="/explore/category-archive/{{ lang }}/elearning/" class="cat-btn cat-btn-el">
-                <span class="cat-icon">📚</span> E-LEARNING
-            </a>
-        </div>
-    </div>
 
     {% if featured_article %}
     <div class="featured">
@@ -905,6 +848,25 @@
         </div>
     </div>
 </main>
+
+<!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer hemen üzerinde) -->
+<div class="category-bottom-bar">
+    <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
+        <span class="category-label"><span class="category-icon">⚡</span> TECH & AI</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
+        <span class="category-label"><span class="category-icon">🧘</span> WELLNESS</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
+        <span class="category-label"><span class="category-icon">📈</span> FUTURE ECONOMY</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
+        <span class="category-label"><span class="category-icon">🌿</span> ECO</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
+        <span class="category-label"><span class="category-icon">📚</span> E-LEARNING</span>
+    </a>
+</div>
 
 <footer>
     <div class="footer-content">
@@ -962,4 +924,4 @@
     }
 </script>
 </body>
-</html>
+                    </html>
