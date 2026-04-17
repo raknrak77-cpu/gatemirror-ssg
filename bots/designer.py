@@ -322,9 +322,22 @@ def designer():
     timings["MAKALE_YAZMA"] = time.time() - write_start
     print(f"   ✅ Makale yazma: {timings['MAKALE_YAZMA']:.2f}s")
     
-    # 7. HOME PAGE
+    # ================= 7. HOME PAGE (DÜZELTİLMİŞ) =================
     print("\n🏠 7. HOME PAGE")
     t_start = time.time()
+
+    # R2_PUBLIC_URL kontrolü
+    if not R2_PUBLIC_URL:
+        print("   ⚠️ R2_PUBLIC_URL boş! Varsayılan değer kullanılıyor.")
+        r2_url = "https://gatemirror-ssg-assets.d71a.r2.cloudflarestorage.com"
+    else:
+        r2_url = R2_PUBLIC_URL
+    print(f"   🔍 Kullanılacak R2_URL: {r2_url}")
+
+    # SVG URL'lerini logla
+    print(f"   🔍 SVG1: {r2_url}/assets/svg1.svg")
+    print(f"   🔍 SVG2: {r2_url}/assets/svg2.svg")
+
     featured = lang_articles[0] if lang_articles else None
     featured_for_home = None
     if featured:
@@ -337,7 +350,7 @@ def designer():
             'views': featured['parsed']['views'],
             'excerpt': featured['parsed']['description']
         }
-    
+
     articles_for_home = []
     for a in lang_articles[:12]:
         articles_for_home.append({
@@ -348,23 +361,28 @@ def designer():
             'views': a['parsed']['views'],
             'excerpt': a['parsed']['description']
         })
-    
-    tmpl = get_cached_template(home_tpl, 'home')
-    hero_html = get_cached_hero('home', 'en')
-    home_html = tmpl.render(
-        lang='en',
-        R2_PUBLIC_URL=R2_PUBLIC_URL,
-        menu=menu_texts,
-        articles=articles_for_home,
-        featured_article=featured_for_home,
-        canonical_url=f"{R2_PUBLIC_URL}/en/",
-        og_image=articles_for_home[0]['image'] if articles_for_home else "",
-        alternate_langs=[],
-        hero={'html': hero_html, 'show': True}
-    )
-    s3.put_object(Bucket=R2_BUCKET, Key="articles_ready/en/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-    timings["HOME_PAGE"] = time.time() - t_start
-    print(f"   ✅ Home page: {timings['HOME_PAGE']:.2f}s")
+
+    try:
+        tmpl = get_cached_template(home_tpl, 'home')
+        hero_html = get_cached_hero('home', 'en')
+        home_html = tmpl.render(
+            lang='en',
+            R2_PUBLIC_URL=r2_url,
+            menu=menu_texts,
+            articles=articles_for_home,
+            featured_article=featured_for_home,
+            canonical_url=f"{r2_url}/en/",
+            og_image=articles_for_home[0]['image'] if articles_for_home else "",
+            alternate_langs=[],
+            hero={'html': hero_html, 'show': True}
+        )
+        s3.put_object(Bucket=R2_BUCKET, Key="articles_ready/en/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
+        timings["HOME_PAGE"] = time.time() - t_start
+        print(f"   ✅ Home page: {timings['HOME_PAGE']:.2f}s")
+    except Exception as e:
+        print(f"   ❌ HOME PAGE RENDER HATASI: {e}")
+        timings["HOME_PAGE"] = time.time() - t_start
+        print(f"   ⚠️ Home page başarısız: {timings['HOME_PAGE']:.2f}s")
     
     # 8. KATEGORİ SAYFALARI
     print("\n📂 8. KATEGORİ SAYFALARI")
@@ -473,7 +491,7 @@ def designer():
         timings["ALL_ARTICLES"] = time.time() - t_start
         print(f"   ✅ All articles: {timings['ALL_ARTICLES']:.2f}s")
     
-    # 10. ZAMAN RAPORU
+      # 10. ZAMAN RAPORU
     print("\n" + "=" * 60)
     print("📊 ZAMAN RAPORU")
     print("=" * 60)
