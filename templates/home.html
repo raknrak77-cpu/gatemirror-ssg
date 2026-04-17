@@ -515,62 +515,137 @@
         font-size: 0.9rem;
     }
        
-    /* ===================== */
-    /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer üzerinde) */
-    /* ===================== */
+/* KATEGORİ BÖLÜMÜ - PROFESYONEL ÇÖZÜM */
+/* ===================== */
+
+/* 1. KAPSAYICI - Asla alt satıra geçme, gerekirse kaydır */
+.category-bottom-bar {
+    display: flex;
+    flex-wrap: nowrap;              /* 🔥 ASLA ALT SATIRA GEÇME */
+    overflow-x: auto;              /* Daralırsa yatay kaydır */
+    -webkit-overflow-scrolling: touch;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 3rem auto 2rem auto;
+    padding: 0.5rem 1rem;
+    scrollbar-width: thin;         /* İnce scrollbar */
+}
+
+/* 2. SEGMENTLER - Eşit başlangıç, hover'da büyü */
+.category-segment {
+    flex: 1;
+    min-width: 80px;               /* Çok küçülmesin */
+    transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.8rem;
+    border-radius: 40px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;           /* 🔥 SATIR KIRILMAZ */
+}
+
+/* 3. Hover'da büyüme (tüm cihazlarda) */
+.category-segment:hover {
+    flex: 2.2;
+}
+
+/* 4. Etiket - her zaman görünür (mobilde hover yok) */
+.category-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;           /* 🔥 SATIR KIRILMAZ */
+    z-index: 2;
+}
+
+.category-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ===================== */
+/* TABLET (769-1100px) - AYRI BREAKPOINT */
+/* ===================== */
+@media (min-width: 769px) and (max-width: 1100px) {
     .category-bottom-bar {
-        max-width: 1200px;
-        margin: 3rem auto 2rem auto;
-        border-radius: 16px;
-        overflow: hidden;
-        display: flex;
-        border: 1px solid rgba(0,0,0,0.08);
-    }
-    
-    body.dark .category-bottom-bar {
-        border: 1px solid rgba(255,255,255,0.08);
+        gap: 0.4rem;
     }
     
     .category-segment {
-        flex: 1;
-        transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        position: relative;
-        cursor: pointer;
-        text-decoration: none;
-        min-height: 72px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .category-segment:hover {
-        flex: 2.5;
+        font-size: 0.6rem;
+        padding: 0.5rem 0.6rem;
+        min-width: 70px;
     }
     
     .category-label {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: rgba(255,255,255,0.9);
-        opacity: 0;
-        transition: opacity 0.3s;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        gap: 6px;
-    }
-    
-    .category-segment:hover .category-label {
-        opacity: 1;
+        gap: 0.3rem;
     }
     
     .category-icon {
-        font-size: 14px;
+        font-size: 0.8rem;
     }
+}
+
+/* ===================== */
+/* TELEFON (768px altı) - AYNI MANTIK, SADECE DAHA KÜÇÜK */
+/* ===================== */
+@media (max-width: 768px) {
+    .category-bottom-bar {
+        gap: 0.3rem;
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .category-segment {
+        font-size: 0.55rem;
+        padding: 0.4rem 0.5rem;
+        min-width: 60px;
+    }
+    
+    .category-label {
+        gap: 0.2rem;
+    }
+    
+    .category-icon {
+        font-size: 0.75rem;
+    }
+}
+
+/* ===================== */
+/* ÇOK DAR (480px altı) - YİNE AYNI, SADECE BİRAZ DAHA KÜÇÜK */
+/* ===================== */
+@media (max-width: 480px) {
+    .category-segment {
+        font-size: 0.5rem;
+        padding: 0.35rem 0.4rem;
+        min-width: 55px;
+    }
+    
+    .category-icon {
+        font-size: 0.7rem;
+    }
+}
+
+/* ===================== */
+/* KATEGORİ RENKLERİ */
+/* ===================== */
+.segment-tech     { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
+.segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
+.segment-eco      { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
+.segment-fe       { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
+.segment-el       { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
+
+.segment-tech:hover     { background: linear-gradient(135deg, var(--tech-3), var(--tech-5)); }
+.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-5)); }
+.segment-eco:hover      { background: linear-gradient(135deg, var(--eco-3), var(--eco-5)); }
+.segment-fe:hover       { background: linear-gradient(135deg, var(--fe-3), var(--fe-5)); }
+.segment-el:hover       { background: linear-gradient(135deg, var(--el-3), var(--el-5)); }
         
     /* Kategori segment renkleri */
     .segment-tech {
