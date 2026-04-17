@@ -47,7 +47,7 @@
         --border-radius: 1rem;
         --transition: all 0.3s ease;
         
-        /* TECH Renk Paleti (dıştan içe) */
+        /* TECH Renk Paleti */
         --tech-1: #1a1040;
         --tech-2: #2e1f72;
         --tech-3: #4d38b8;
@@ -82,7 +82,6 @@
         --el-4: #2a98b8;
         --el-5: #a8dce8;
         
-        /* Varsayılan kategori rengi (Tech) */
         --category-color: var(--tech-3);
     }
     
@@ -317,7 +316,6 @@
         background: transparent;
     }
     
-    /* SVG katmanları (ARKA PLAN) */
     .pattern-layer {
         position: absolute;
         top: 0;
@@ -334,7 +332,6 @@
         object-position: left top;
     }
     
-    /* Arka katman (svg1) */
     .layer-back {
         z-index: 1;
     }
@@ -345,7 +342,6 @@
         color: var(--tech-1);
     }
     
-    /* Ön katman (svg2) */
     .layer-front {
         z-index: 2;
     }
@@ -356,7 +352,6 @@
         color: var(--tech-4);
     }
     
-    /* Hero içerik - EN ÖNDE */
     .hero-content {
         position: relative;
         z-index: 3;
@@ -367,7 +362,6 @@
         margin: 0 auto;
     }
     
-    /* Başlık - KOYU MOR (tech-2 → tech-3) */
     .hero-title {
         font-size: clamp(1.8rem, 4vw, 2.8rem);
         font-weight: 800;
@@ -379,7 +373,6 @@
         background-clip: text;
     }
     
-    /* Açıklama - KOYU MOR (tech-3) */
     .hero-description {
         font-size: 1rem;
         opacity: 0.9;
@@ -390,7 +383,6 @@
         text-shadow: none;
     }
     
-    /* Buton - KOYU MOR (tech-2 → tech-3) */
     .hero-cta-primary {
         background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
         color: var(--tech-5);
@@ -524,7 +516,7 @@
     }
     
     /* ===================== */
-    /* KATEGORİ BÖLÜMÜ - Footer üzerinde (YENİ) */
+    /* KATEGORİ BÖLÜMÜ - Footer üzerinde (YENİ - HOVER EFEKTLİ) */
     /* ===================== */
     .categories-section {
         max-width: 1200px;
@@ -560,25 +552,34 @@
         background: linear-gradient(90deg, transparent, #444, transparent);
     }
     
-    /* Butonlar yanyana */
+    /* Butonlar - Bottom bar segment gibi hover efekti */
     .category-buttons {
         display: flex;
         justify-content: center;
         gap: 0.75rem;
         flex-wrap: wrap;
+        border-radius: 16px;
+        overflow: hidden;
+        background: rgba(0,0,0,0.02);
+        padding: 0.5rem;
     }
     
-    /* Temel buton stili */
+    body.dark .category-buttons {
+        background: rgba(255,255,255,0.02);
+    }
+    
     .cat-btn {
+        flex: 1;
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-        padding: 0.6rem 1.2rem;
-        border-radius: 2rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 12px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        font-size: 0.8rem;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         border: none;
         cursor: pointer;
         color: white;
@@ -588,40 +589,13 @@
     }
     
     .cat-icon {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
     
-    /* Hover efekti - yukarı kalk + genişle */
+    /* Hover efekti - genişleme (bottom-bar segment gibi) */
     .cat-btn:hover {
-        transform: translateY(-3px);
-        padding: 0.6rem 1.4rem;
-    }
-    
-    /* Hover bandı - butonların altında renkli çizgi */
-    .categories-hover-band {
-        position: relative;
-        height: 2px;
-        margin-top: 1rem;
-        background: linear-gradient(90deg, 
-            transparent, 
-            var(--tech-3) 0%, 
-            var(--tech-3) 20%,
-            var(--wellness-3) 20%,
-            var(--wellness-3) 40%,
-            var(--fe-3) 40%,
-            var(--fe-3) 60%,
-            var(--eco-3) 60%,
-            var(--eco-3) 80%,
-            var(--el-3) 80%,
-            var(--el-3) 100%,
-            transparent);
-        border-radius: 2px;
-        opacity: 0.5;
-        transition: opacity 0.3s;
-    }
-    
-    .categories-section:hover .categories-hover-band {
-        opacity: 1;
+        flex: 2.5;
+        padding: 0.8rem 1.5rem;
     }
     
     /* KATEGORİ BUTON RENKLERİ */
@@ -748,7 +722,7 @@
         color: #888;
     }
     
-      /* ===================== */
+    /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
     @media (max-width: 768px) {
@@ -788,11 +762,11 @@
             font-size: 0.9rem;
         }
         .category-buttons {
+            flex-direction: column;
             gap: 0.5rem;
         }
-        .cat-btn {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.65rem;
+        .cat-btn:hover {
+            flex: 1;
         }
         .categories-label {
             font-size: 0.6rem;
@@ -849,7 +823,7 @@
 </nav>
 
 <main>
-    <!-- 2 KATMANLI HERO (TECH PALETİ) -->
+    <!-- 2 KATMANLI HERO -->
     <div class="hero-wrapper">
         <div class="pattern-layer layer-back">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
@@ -868,7 +842,7 @@
         </div>
     </div>
     
-    <!-- YENİ KATEGORİ BÖLÜMÜ - Footer üzerinde -->
+    <!-- YENİ KATEGORİ BÖLÜMÜ - Footer üzerinde, HOVER EFEKTLİ -->
     <div class="categories-section">
         <div class="categories-header">
             <span class="categories-label">EXPLORE CATEGORIES →</span>
@@ -891,7 +865,6 @@
                 <span class="cat-icon">📚</span> E-LEARNING
             </a>
         </div>
-        <div class="categories-hover-band"></div>
     </div>
 
     {% if featured_article %}
