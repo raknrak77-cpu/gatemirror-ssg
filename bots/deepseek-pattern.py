@@ -12,12 +12,9 @@ LEVELS = {
     'basic': {'lines': 4, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.3, 'op_max': 0.5},
     'medium': {'lines': 10, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.4, 'op_max': 0.6},
 }
-COUNT_PER_LEVEL = 8
-
 
 # ================= SVG YARDIMCI =================
 def svg_open(filepath):
-    # İÇİNDE RECT YOK - TAMAMEN ŞEFFAF
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">\n'
 
 def svg_close():
@@ -29,7 +26,6 @@ def polyline_el(points, sw, op):
     pts = ' '.join(f'{x:.1f},{y:.1f}' for x, y in points)
     return f'<polyline points="{pts}" stroke="currentColor" stroke-width="{sw:.1f}" fill="none" opacity="{op}" stroke-linecap="round" stroke-linejoin="round"/>\n'
 
-# ========== 1. DAİRESEL SPIRAL ==========
 def draw_circular_spiral(sw, op):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
@@ -47,7 +43,6 @@ def draw_circular_spiral(sw, op):
         theta += 0.06
     return polyline_el(pts, sw, op)
 
-# ========== 2. ELİPTİK SPIRAL ==========
 def draw_elliptic_spiral(sw, op, var_num):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
@@ -76,19 +71,18 @@ def draw_elliptic_spiral(sw, op, var_num):
 # ================= ANA ÜRETİM =================
 def generate_spiral_variations():
     print("=" * 60)
-    print("🌀 SPIRAL OUT VARYASYONLARI (Dairesel + Eliptik)")
+    print("🌀 SPIRAL OUT VARYASYONLARI (120 adet)")
     print(f"   📐 Canvas: {W}x{H}")
     print(f"   🎨 Renk: currentColor (CSS ile kontrol)")
-    print(f"   🖼️ Arka plan: TAMAMEN ŞEFFAF (rect yok)")
     print(f"   📁 Çıktı: {OUTPUT_DIR}/")
     print("=" * 60)
     
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     total = 0
     
-    # ===== 1. DAİRESEL SPİRALLER (20 varyasyon) =====
-    print("\n🔘 DAİRESEL SPİRALLER (20 adet)")
-    for v in range(1, 21):
+    # ===== 1. DAİRESEL SPİRALLER (30 varyasyon) =====
+    print("\n🔘 DAİRESEL SPİRALLER (30 adet)")
+    for v in range(1, 31):  # 🔥 20 → 30
         for level_name, level in LEVELS.items():
             filename = f"spiral_circular_{level_name}_{v:02d}.svg"
             filepath = os.path.join(OUTPUT_DIR, filename)
@@ -107,9 +101,9 @@ def generate_spiral_variations():
             print(f"   ✅ {filename}")
             total += 1
     
-    # ===== 2. ELİPTİK SPİRALLER (20 varyasyon) =====
-    print("\n🥚 ELİPTİK SPİRALLER (20 adet)")
-    for v in range(1, 21):
+    # ===== 2. ELİPTİK SPİRALLER (30 varyasyon) =====
+    print("\n🥚 ELİPTİK SPİRALLER (30 adet)")
+    for v in range(1, 31):  # 🔥 20 → 30
         for level_name, level in LEVELS.items():
             filename = f"spiral_elliptic_{level_name}_{v:02d}.svg"
             filepath = os.path.join(OUTPUT_DIR, filename)
@@ -131,13 +125,12 @@ def generate_spiral_variations():
     print("\n" + "=" * 60)
     print(f"🏁 TAMAMLANDI! Toplam {total} desen üretildi")
     print(f"   📁 {OUTPUT_DIR}/")
-    print("\n📂 DOSYA İSİMLENDİRME:")
-    print("   spiral_circular_basic_01.svg  → Dairesel, basic, varyasyon 1")
-    print("   spiral_elliptic_medium_05.svg → Eliptik, medium, varyasyon 5")
+    print("\n📊 HESAPLAMA:")
+    print("   30 dairesel × 2 seviye = 60")
+    print("   30 eliptik × 2 seviye = 60")
+    print("   TOPLAM = 120")
     print("\n💡 CSS ile renk değiştirmek için:")
     print("   .pattern svg { color: #2ecc71; }")
-    print("   NOT: GitHub'da SVG preview her zaman BEYAZ arka plan gösterir.")
-    print("         Canlıda şeffaf olacaktır.")
     print("=" * 60)
 
 if __name__ == "__main__":
