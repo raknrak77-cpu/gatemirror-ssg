@@ -8,9 +8,16 @@ W = 1920
 H = 1080
 
 # ================= SEVİYE TANIMLARI =================
-LEVELS = {
-    'basic': {'lines': 4, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.3, 'op_max': 0.5},
-    'medium': {'lines': 10, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.4, 'op_max': 0.6},
+# Spiraller için (KALIN çizgiler)
+SPIRAL_LEVELS = {
+    'basic': {'lines': 4, 'sw_min': 2.5, 'sw_max': 4.0, 'op_min': 0.3, 'op_max': 0.5},
+    'medium': {'lines': 10, 'sw_min': 2.5, 'sw_max': 4.0, 'op_min': 0.4, 'op_max': 0.6},
+}
+
+# Breath Wave için (İNCE çizgiler)
+BREATH_LEVELS = {
+    'basic': {'lines': 6, 'sw_min': 0.8, 'sw_max': 1.5, 'op_min': 0.2, 'op_max': 0.4},
+    'medium': {'lines': 15, 'sw_min': 0.8, 'sw_max': 1.5, 'op_min': 0.3, 'op_max': 0.5},
 }
 
 # ================= SVG YARDIMCI =================
@@ -26,6 +33,7 @@ def polyline_el(points, sw, op):
     pts = ' '.join(f'{x:.1f},{y:.1f}' for x, y in points)
     return f'<polyline points="{pts}" stroke="currentColor" stroke-width="{sw:.1f}" fill="none" opacity="{op}" stroke-linecap="round" stroke-linejoin="round"/>\n'
 
+# ========== 1. DAİRESEL SPIRAL ==========
 def draw_circular_spiral(sw, op):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
@@ -43,6 +51,7 @@ def draw_circular_spiral(sw, op):
         theta += 0.06
     return polyline_el(pts, sw, op)
 
+# ========== 2. ELİPTİK SPIRAL ==========
 def draw_elliptic_spiral(sw, op, var_num):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
@@ -68,10 +77,28 @@ def draw_elliptic_spiral(sw, op, var_num):
         theta += 0.06
     return polyline_el(pts, sw, op)
 
+# ========== 3. BREATH WAVE (İNCE ÇİZGİLER) ==========
+def draw_breath_wave(sw, op):
+    sx = random.uniform(-W * 0.05, W * 0.1)
+    cy = random.uniform(H * 0.15, H * 0.85)
+    max_amp = random.uniform(H * 0.05, H * 0.22)
+    wl = random.uniform(W * 0.15, W * 0.5)
+    step = 10
+    pts = []
+    x = sx
+    while x < W * 1.05:
+        t = (x - sx) / (W * 1.1)
+        env = math.sin(math.pi * t)
+        amp = max_amp * env
+        y = cy + amp * math.sin(2 * math.pi * (x - sx) / wl)
+        pts.append((x, y))
+        x += step
+    return polyline_el(pts, sw, op)
+
 # ================= ANA ÜRETİM =================
 def generate_spiral_variations():
     print("=" * 60)
-    print("🌀 SPIRAL OUT VARYASYONLARI (120 adet)")
+    print("🌀 DESEN FACTORY - 90 DESEN")
     print(f"   📐 Canvas: {W}x{H}")
     print(f"   🎨 Renk: currentColor (CSS ile kontrol)")
     print(f"   📁 Çıktı: {OUTPUT_DIR}/")
@@ -81,9 +108,9 @@ def generate_spiral_variations():
     total = 0
     
     # ===== 1. DAİRESEL SPİRALLER (30 varyasyon) =====
-    print("\n🔘 DAİRESEL SPİRALLER (30 adet)")
-    for v in range(1, 31):  # 🔥 20 → 30
-        for level_name, level in LEVELS.items():
+    print("\n🔘 DAİRESEL SPİRALLER (30 adet) - KALIN ÇİZGİ")
+    for v in range(1, 31):
+        for level_name, level in SPIRAL_LEVELS.items():
             filename = f"spiral_circular_{level_name}_{v:02d}.svg"
             filepath = os.path.join(OUTPUT_DIR, filename)
             
@@ -102,9 +129,9 @@ def generate_spiral_variations():
             total += 1
     
     # ===== 2. ELİPTİK SPİRALLER (30 varyasyon) =====
-    print("\n🥚 ELİPTİK SPİRALLER (30 adet)")
-    for v in range(1, 31):  # 🔥 20 → 30
-        for level_name, level in LEVELS.items():
+    print("\n🥚 ELİPTİK SPİRALLER (30 adet) - KALIN ÇİZGİ")
+    for v in range(1, 31):
+        for level_name, level in SPIRAL_LEVELS.items():
             filename = f"spiral_elliptic_{level_name}_{v:02d}.svg"
             filepath = os.path.join(OUTPUT_DIR, filename)
             
@@ -122,15 +149,38 @@ def generate_spiral_variations():
             print(f"   ✅ {filename}")
             total += 1
     
+    # ===== 3. BREATH WAVE (30 varyasyon) =====
+    print("\n🌊 BREATH WAVE (30 adet) - İNCE ÇİZGİ")
+    for v in range(1, 31):
+        for level_name, level in BREATH_LEVELS.items():
+            filename = f"breath_wave_{level_name}_{v:02d}.svg"
+            filepath = os.path.join(OUTPUT_DIR, filename)
+            
+            sw = random.uniform(level['sw_min'], level['sw_max'])
+            op = random.uniform(level['op_min'], level['op_max'])
+            num_lines = level['lines']
+            
+            svg = svg_open(filepath)
+            for _ in range(num_lines):
+                svg += draw_breath_wave(sw, op)
+            svg += svg_close()
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(svg)
+            print(f"   ✅ {filename}")
+            total += 1
+    
     print("\n" + "=" * 60)
     print(f"🏁 TAMAMLANDI! Toplam {total} desen üretildi")
     print(f"   📁 {OUTPUT_DIR}/")
     print("\n📊 HESAPLAMA:")
     print("   30 dairesel × 2 seviye = 60")
     print("   30 eliptik × 2 seviye = 60")
-    print("   TOPLAM = 120")
-    print("\n💡 CSS ile renk değiştirmek için:")
-    print("   .pattern svg { color: #2ecc71; }")
+    print("   30 breath wave × 2 seviye = 60")
+    print("   TOPLAM = 90")
+    print("\n📏 KALINLIK FARKI:")
+    print("   Spiraller: 2.5 - 4.0 px (kalın)")
+    print("   Breath Wave: 0.8 - 1.5 px (ince)")
     print("=" * 60)
 
 if __name__ == "__main__":
