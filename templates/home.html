@@ -514,6 +514,83 @@
         color: var(--text-light);
         font-size: 0.9rem;
     }
+/* ===================================================== */
+/* KATEGORİ MENÜSÜ - ESNEK VE KAYDIRMALI */
+/* ===================================================== */
+
+/* 1. KAPSAYICI */
+.category-bottom-bar {
+    display: flex;
+    flex-wrap: nowrap;              /* Asla alt satıra inme */
+    overflow-x: auto;              /* Daralırsa kaydırma */
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+    width: 100%;
+    margin: 3rem auto 2rem auto;
+    padding: 0.5rem 1rem;
+    scrollbar-width: thin;
+}
+
+/* 2. BUTONLAR - ESNEK AMA DARALINCA KAYDIRMALI */
+.category-segment {
+    flex: 1 1 auto;                /* 🔥 ESNEK: Geniş ekranda yayıl, daralınca küçül */
+    min-width: 80px;               /* Çok küçülmesin */
+    max-width: 180px;              /* Çok büyümesin */
+    padding: 0.6rem 0.8rem;
+    border-radius: 40px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* Hover'da hafif büyüme */
+.category-segment:hover {
+    transform: translateY(-2px);
+    flex: 1.2 1 auto;             /* 🔥 Hover'da biraz büyüsün */
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-5));
+}
+
+/* Tablet (769-1100px) - butonlar biraz küçülsün */
+@media (min-width: 769px) and (max-width: 1100px) {
+    .category-segment {
+        font-size: 0.6rem;
+        padding: 0.5rem 0.6rem;
+        min-width: 70px;
+    }
+}
+
+/* Telefon (768px altı) - yine yan yana, kaydırmalı */
+@media (max-width: 768px) {
+    .category-bottom-bar {
+        gap: 0.5rem;
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .category-segment {
+        font-size: 0.55rem;
+        padding: 0.4rem 0.5rem;
+        min-width: 65px;
+    }
+    
+    /* Hover'da genişleme yok (mobilde anlamsız) */
+    .category-segment:hover {
+        flex: 1 1 auto;
+        transform: none;
+    }
+}
+
+/* Çok dar (480px altı) - alt alta geçiş yok, sadece daha küçük */
+@media (max-width: 480px) {
+    .category-segment {
+        font-size: 0.5rem;
+        padding: 0.35rem 0.4rem;
+        min-width: 55px;
+    }
+}
 
 /* ===================== */
 /* KATEGORİ RENKLERİ */
