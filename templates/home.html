@@ -54,6 +54,34 @@
         --tech-4: #7c66d6;
         --tech-5: #c4b9f0;
         
+        /* WELLNESS Renk Paleti */
+        --wellness-1: #1a1217;
+        --wellness-2: #3d2635;
+        --wellness-3: #7a4a6a;
+        --wellness-4: #b8849a;
+        --wellness-5: #e8cdd8;
+        
+        /* ECO Renk Paleti */
+        --eco-1: #0d1a12;
+        --eco-2: #1a3322;
+        --eco-3: #2e6645;
+        --eco-4: #5fa878;
+        --eco-5: #b8ddc7;
+        
+        /* FUTURE ECONOMY Renk Paleti */
+        --fe-1: #1a1200;
+        --fe-2: #3d2c00;
+        --fe-3: #8a6400;
+        --fe-4: #c9960a;
+        --fe-5: #f0d98a;
+        
+        /* ELEARNING Renk Paleti */
+        --el-1: #001820;
+        --el-2: #003044;
+        --el-3: #006080;
+        --el-4: #2a98b8;
+        --el-5: #a8dce8;
+        
         /* Varsayılan kategori rengi (Tech) */
         --category-color: var(--tech-3);
     }
@@ -69,7 +97,7 @@
     /* ===================== */
     /* BUTTONS */
     /* ===================== */
-    .btn, .cat-btn, .archive-btn, .random-btn {
+    .btn, .archive-btn, .random-btn {
         display: inline-block;
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         color: white;
@@ -84,17 +112,9 @@
         box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
     }
     
-    .btn:hover, .cat-btn:hover, .archive-btn:hover, .random-btn:hover {
+    .btn:hover, .archive-btn:hover, .random-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
-    }
-    
-    .category-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin: 2rem 0;
     }
     
     /* ===================== */
@@ -286,116 +306,116 @@
         left: 26px;
     }
     
-/* ===================== */
-/* HERO - KATMANLI SVG ARKA PLAN */
-/* ===================== */
-
-.hero-wrapper {
-    position: relative;
-    min-height: auto;
-    overflow: hidden;
-    background: transparent;
-}
-
-/* SVG katmanları (ARKA PLAN) */
-.pattern-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-.pattern-layer svg {
-    width: 300%;   /* 🔥 150% → 100% */
-    height: 250%;
-    object-fit: cover;
-    object-position: left top;  /* 🔥 left top → center */
-}
-
-/* Arka katman (svg1) */
-.layer-back {
-    z-index: 1;
-}
-
-.layer-back svg {
-    opacity: 1.0;  /* 🔥 0.3 → 0.5 */
-    animation: slowDriftBack 40s ease-in-out infinite;
-    color: var(--tech-1);
-}
-
-/* Ön katman (svg2) */
-.layer-front {
-    z-index: 2;
-}
-
-.layer-front svg {
-    opacity: 1.5;  /* 🔥 0.4 → 0.7 */
-    animation: slowDriftFront 20s ease-in-out infinite reverse;
-    color: var(--tech-4);
-}
-
-/* Hero içerik - EN ÖNDE */
-.hero-content {
-    position: relative;
-    z-index: 3;
-    background: transparent;
-    text-align: center;
-    padding: 3rem 1.5rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* Başlık - KOYU MOR (tech-2 → tech-3) */
-.hero-title {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Açıklama - KOYU MOR (tech-3) */
-.hero-description {
-    font-size: 1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto 1.5rem;
-    line-height: 1.6;
-    color: var(--tech-3);
-    text-shadow: none;
-}
-
-/* Buton - KOYU MOR (tech-2 → tech-3) */
-.hero-cta-primary {
-    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-    color: var(--tech-5);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.hero-cta-primary:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
-    color: #ffffff;
-}
-
-@keyframes slowDriftBack {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
-    66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
-    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-}
-
-@keyframes slowDriftFront {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
-    66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
-    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-}
+    /* ===================== */
+    /* HERO - KATMANLI SVG ARKA PLAN (SİZİN AYARLARINIZ AYNEN) */
+    /* ===================== */
+    
+    .hero-wrapper {
+        position: relative;
+        min-height: auto;
+        overflow: hidden;
+        background: transparent;
+    }
+    
+    /* SVG katmanları (ARKA PLAN) */
+    .pattern-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    
+    .pattern-layer svg {
+        width: 300%;
+        height: 250%;
+        object-fit: cover;
+        object-position: left top;
+    }
+    
+    /* Arka katman (svg1) */
+    .layer-back {
+        z-index: 1;
+    }
+    
+    .layer-back svg {
+        opacity: 1.0;
+        animation: slowDriftBack 40s ease-in-out infinite;
+        color: var(--tech-1);
+    }
+    
+    /* Ön katman (svg2) */
+    .layer-front {
+        z-index: 2;
+    }
+    
+    .layer-front svg {
+        opacity: 1.5;
+        animation: slowDriftFront 20s ease-in-out infinite reverse;
+        color: var(--tech-4);
+    }
+    
+    /* Hero içerik - EN ÖNDE */
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        background: transparent;
+        text-align: center;
+        padding: 3rem 1.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    /* Başlık - KOYU MOR (tech-2 → tech-3) */
+    .hero-title {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Açıklama - KOYU MOR (tech-3) */
+    .hero-description {
+        font-size: 1rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.6;
+        color: var(--tech-3);
+        text-shadow: none;
+    }
+    
+    /* Buton - KOYU MOR (tech-2 → tech-3) */
+    .hero-cta-primary {
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+        color: var(--tech-5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-cta-primary:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+        color: #ffffff;
+    }
+    
+    @keyframes slowDriftBack {
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
+        66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
+        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    }
+    
+    @keyframes slowDriftFront {
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
+        66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
+        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    }
     
     /* ===================== */
     /* FEATURED ARTICLE */
@@ -504,13 +524,160 @@
     }
     
     /* ===================== */
+    /* KATEGORİ BÖLÜMÜ - Footer üzerinde (YENİ) */
+    /* ===================== */
+    .categories-section {
+        max-width: 1200px;
+        margin: 3rem auto 2rem auto;
+        padding: 0 1.5rem;
+        position: relative;
+    }
+    
+    .categories-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .categories-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+    
+    .categories-divider {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #ddd, transparent);
+        max-width: 200px;
+    }
+    
+    body.dark .categories-divider {
+        background: linear-gradient(90deg, transparent, #444, transparent);
+    }
+    
+    /* Butonlar yanyana */
+    .category-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Temel buton stili */
+    .cat-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        border: none;
+        cursor: pointer;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        position: relative;
+    }
+    
+    .cat-icon {
+        font-size: 0.9rem;
+    }
+    
+    /* Hover efekti - yukarı kalk + genişle */
+    .cat-btn:hover {
+        transform: translateY(-3px);
+        padding: 0.6rem 1.4rem;
+    }
+    
+    /* Hover bandı - butonların altında renkli çizgi */
+    .categories-hover-band {
+        position: relative;
+        height: 2px;
+        margin-top: 1rem;
+        background: linear-gradient(90deg, 
+            transparent, 
+            var(--tech-3) 0%, 
+            var(--tech-3) 20%,
+            var(--wellness-3) 20%,
+            var(--wellness-3) 40%,
+            var(--fe-3) 40%,
+            var(--fe-3) 60%,
+            var(--eco-3) 60%,
+            var(--eco-3) 80%,
+            var(--el-3) 80%,
+            var(--el-3) 100%,
+            transparent);
+        border-radius: 2px;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+    }
+    
+    .categories-section:hover .categories-hover-band {
+        opacity: 1;
+    }
+    
+    /* KATEGORİ BUTON RENKLERİ */
+    .cat-btn-tech {
+        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+        box-shadow: 0 2px 8px rgba(77, 56, 184, 0.3);
+    }
+    .cat-btn-tech:hover {
+        background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+        box-shadow: 0 6px 16px rgba(77, 56, 184, 0.4);
+    }
+    
+    .cat-btn-wellness {
+        background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-4) 100%);
+        box-shadow: 0 2px 8px rgba(122, 74, 106, 0.3);
+    }
+    .cat-btn-wellness:hover {
+        background: linear-gradient(135deg, var(--wellness-4) 0%, var(--wellness-5) 100%);
+        box-shadow: 0 6px 16px rgba(122, 74, 106, 0.4);
+    }
+    
+    .cat-btn-eco {
+        background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-4) 100%);
+        box-shadow: 0 2px 8px rgba(46, 102, 69, 0.3);
+    }
+    .cat-btn-eco:hover {
+        background: linear-gradient(135deg, var(--eco-4) 0%, var(--eco-5) 100%);
+        box-shadow: 0 6px 16px rgba(46, 102, 69, 0.4);
+    }
+    
+    .cat-btn-fe {
+        background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-4) 100%);
+        box-shadow: 0 2px 8px rgba(138, 100, 0, 0.3);
+    }
+    .cat-btn-fe:hover {
+        background: linear-gradient(135deg, var(--fe-4) 0%, var(--fe-5) 100%);
+        box-shadow: 0 6px 16px rgba(138, 100, 0, 0.4);
+    }
+    
+    .cat-btn-el {
+        background: linear-gradient(135deg, var(--el-3) 0%, var(--el-4) 100%);
+        box-shadow: 0 2px 8px rgba(0, 96, 128, 0.3);
+    }
+    .cat-btn-el:hover {
+        background: linear-gradient(135deg, var(--el-4) 0%, var(--el-5) 100%);
+        box-shadow: 0 6px 16px rgba(0, 96, 128, 0.4);
+    }
+    
+    /* ===================== */
     /* FOOTER */
     /* ===================== */
     footer {
         background: var(--dark);
         color: white;
         padding: 3rem 5%;
-        margin-top: 3rem;
+        margin-top: 2rem;
     }
     
     .footer-content {
@@ -577,7 +744,11 @@
         opacity: 0.3;
     }
     
-    /* ===================== */
+    body.dark .categories-label {
+        color: #888;
+    }
+    
+      /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
     @media (max-width: 768px) {
@@ -615,6 +786,16 @@
         }
         .hero-description {
             font-size: 0.9rem;
+        }
+        .category-buttons {
+            gap: 0.5rem;
+        }
+        .cat-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.65rem;
+        }
+        .categories-label {
+            font-size: 0.6rem;
         }
     }
     </style>
@@ -670,21 +851,16 @@
 <main>
     <!-- 2 KATMANLI HERO (TECH PALETİ) -->
     <div class="hero-wrapper">
-        <!-- Arka katman (svg1) - Dıştan içe: koyudan açığa -->
         <div class="pattern-layer layer-back">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
                 <use href="{{ R2_PUBLIC_URL }}/assets/svg1.svg"></use>
             </svg>
         </div>
-        
-         <!-- Ön katman (svg2) - İçten dışa: açıktan koyuya -->
         <div class="pattern-layer layer-front">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
                 <use href="{{ R2_PUBLIC_URL }}/assets/svg2.svg"></use>
             </svg>
         </div>
-        
-        <!-- İçerik -->
         <div class="hero-content">
             <h1 class="hero-title">Global Insights<br>for a Changing World</h1>
             <p class="hero-description">Deep analysis on technology, wellness, future economy, and sustainable living.</p>
@@ -692,22 +868,30 @@
         </div>
     </div>
     
-    <div class="category-buttons">
-        <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn">
-            {% if lang == 'en' %}📚 EXPLORE TECH{% elif lang == 'es' %}📚 EXPLORAR TECH{% elif lang == 'de' %}📚 TECH ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER TECH{% endif %}
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/wellness/" class="cat-btn">
-            {% if lang == 'en' %}📚 EXPLORE WELLNESS{% elif lang == 'es' %}📚 EXPLORAR BIENESTAR{% elif lang == 'de' %}📚 WELLNESS ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER BIEN-ÊTRE{% endif %}
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/future-economy/" class="cat-btn">
-            {% if lang == 'en' %}📚 EXPLORE FUTURE ECONOMY{% elif lang == 'es' %}📚 EXPLORAR ECONOMÍA FUTURA{% elif lang == 'de' %}📚 ZUKUNFTSWIRTSCHAFT ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER ÉCONOMIE FUTURE{% endif %}
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/eco/" class="cat-btn">
-            {% if lang == 'en' %}📚 EXPLORE ECO{% elif lang == 'es' %}📚 EXPLORAR ECO{% elif lang == 'de' %}📚 ÖKO ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER ÉCO{% endif %}
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/elearning/" class="cat-btn">
-            {% if lang == 'en' %}📚 EXPLORE E-LEARNING{% elif lang == 'es' %}📚 EXPLORAR E-APRENDIZAJE{% elif lang == 'de' %}📚 E-LEARNING ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER E-APPRENTISSAGE{% endif %}
-        </a>
+    <!-- YENİ KATEGORİ BÖLÜMÜ - Footer üzerinde -->
+    <div class="categories-section">
+        <div class="categories-header">
+            <span class="categories-label">EXPLORE CATEGORIES →</span>
+            <div class="categories-divider"></div>
+        </div>
+        <div class="category-buttons">
+            <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn cat-btn-tech">
+                <span class="cat-icon">⚡</span> TECH & AI
+            </a>
+            <a href="/explore/category-archive/{{ lang }}/wellness/" class="cat-btn cat-btn-wellness">
+                <span class="cat-icon">🧘</span> WELLNESS
+            </a>
+            <a href="/explore/category-archive/{{ lang }}/future-economy/" class="cat-btn cat-btn-fe">
+                <span class="cat-icon">📈</span> FUTURE ECONOMY
+            </a>
+            <a href="/explore/category-archive/{{ lang }}/eco/" class="cat-btn cat-btn-eco">
+                <span class="cat-icon">🌿</span> ECO
+            </a>
+            <a href="/explore/category-archive/{{ lang }}/elearning/" class="cat-btn cat-btn-el">
+                <span class="cat-icon">📚</span> E-LEARNING
+            </a>
+        </div>
+        <div class="categories-hover-band"></div>
     </div>
 
     {% if featured_article %}
