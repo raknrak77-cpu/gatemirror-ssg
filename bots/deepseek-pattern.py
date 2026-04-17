@@ -3,18 +3,17 @@ import random
 import math
 
 # ================= KONFIGÜRASYON =================
-OUTPUT_DIR = "assets/Deepseek"
+OUTPUT_DIR = "assets/wellness-variations"  # 🔥 SADECE BURASI DEĞİŞTİ
 W = 3840
 H = 2160
 
 # ================= WELLNESS ÜRETİM SAYILARI =================
-# Her desende kaç çizgi olacağını belirler
 LEVELS = {
     'basic':       6,
     'medium':      15,
     'extra':       30,
 }
-COUNT_PER_LEVEL = 3  # Her seviyeden 3 desen
+COUNT_PER_LEVEL = 3
 
 # ================= SVG YARDIMCI =================
 def svg_open(filepath):
@@ -163,8 +162,8 @@ def generate_pattern(level_name, num_lines, index):
 
     for _ in range(num_lines):
         gen = random.choice(GENERATORS)
-        sw = random.uniform(0.5, 6)      # wellness stroke range
-        op = random.uniform(0.1, 0.7)    # wellness opacity range
+        sw = random.uniform(0.5, 6)
+        op = random.uniform(0.1, 0.7)
         svg += gen(sw, op)
 
     svg += svg_close()
@@ -194,7 +193,7 @@ def pattern_factory():
     print(f"🏁 TAMAMLANDI! {total} desen üretildi")
     print(f"   📁 {OUTPUT_DIR}/")
     print("\n💡 CSS ile renk değiştirmek için:")
-    print("   .wellness-bg svg { color: #2ecc71; }")
+    print("   .wellness-bg svg { color: #7a4a6a; }")
     print("=" * 60)
 
 if __name__ == "__main__":
