@@ -671,7 +671,7 @@
         </div>
     </div>
     
-    <div class="category-buttons">
+<div class="category-buttons">
         <a href="/explore/category-archive/{{ lang }}/tech/" class="cat-btn">
             {% if lang == 'en' %}📚 EXPLORE TECH{% elif lang == 'es' %}📚 EXPLORAR TECH{% elif lang == 'de' %}📚 TECH ENTDECKEN{% elif lang == 'fr' %}📚 EXPLORER TECH{% endif %}
         </a>
@@ -784,25 +784,8 @@
     }
 </script>
 </body>
-</html>
-        
-        
-        
-            <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" onerror="this.style.display='none'">
-            <div class="featured-content">
-                <div class="featured-meta">
-                    <span>📅 {{ featured_article.date }}</span>
-                    <span>⏱️ {{ featured_article.reading_time }} min read</span>
-                    <span>👁️ {{ featured_article.views }} views</span>
-                </div>
-                <h2>{{ featured_article.title }}</h2>
-                <p class="featured-excerpt">{{ featured_article.excerpt }}</p>
-            </div>
-        </a>
-    </div>
-    {% endif %}
+    </html>
 
-    <div class="container">
-        <h2 class="section-title">
-            {% if lang == 'en' %}Latest Stories{% elif lang == 'es' %}Últimas Historias{% elif lang == 'de' %}Neueste Geschichten{% elif lang == 'fr' %}Dernières Histoires{% endif %}
-   
+
+
+    
