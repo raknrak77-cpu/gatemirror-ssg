@@ -92,11 +92,10 @@ def upload_assets_folder():
             upload_file_to_r2(local_path, r2_key, content_type)
 
 def upload_svg_patterns():
-    """Özel SVG pattern'lerini R2'ye assets/ klasörüne yükler"""
-    print("\n🎨 SVG PATTERN YÜKLEME")
+    """Özel SVG pattern'lerini R2'ye assets/ klasörüne yükler (isim değiştirerek)"""
+    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME")
     print("-" * 40)
     
-    # Kaynak -> Hedef eşlemesi
     svg_files = [
         ("assets/all-patterns/spiral_out/spiral_circular_basic_12.svg", "assets/svg1.svg"),
         ("assets/all-patterns/spiral_out/spiral_circular_basic_04.svg", "assets/svg2.svg"),
@@ -125,7 +124,7 @@ def uploader():
     # 4. Varsa diğer assets dosyalarını yükle
     upload_assets_folder()
     
-    # 5. Özel SVG pattern'lerini yükle
+    # 5. ÖZEL SVG PATTERN'LERİNİ YÜKLE (SADECE 2 DOSYA)
     upload_svg_patterns()
     
     # 6. content/ altındaki ham HTML'leri raw-articles/ altına yükle
@@ -175,7 +174,7 @@ def uploader():
     print("   ✅ Template'ler → R2/templates/ (css hariç)")
     print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ hero.json → R2/templates/hero.json")
-    print("   ✅ SVG pattern'ler → R2/assets/svg1.svg, svg2.svg")
+    print("   ✅ Özel SVG pattern'ler → R2/assets/svg1.svg, svg2.svg")
     print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
     print("   ✅ Local HTML'ler temizlendi")
     print("=" * 60)
