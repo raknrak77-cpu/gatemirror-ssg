@@ -15,7 +15,7 @@ VARIATIONS = {
     'horizontal_flow': {'count': 3, 'lines': 15},
     'layered_combo': {'count': 3, 'lines': 20},  # 3 katman tek dosyada
 }
-COUNT_PER_VARIATION = 3
+COUNT_PER_VARIATION = 6
 
 # ================= SVG YARDIMCI =================
 def svg_open(filepath):
