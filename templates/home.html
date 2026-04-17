@@ -24,7 +24,7 @@
     
     <style>
     /* =====================================================
-       GATEMIRROR - CHATGPT YÖNTEMİ (TEST)
+       GATEMIRROR - MASTER CSS (GÖMÜLÜ)
        ===================================================== */
     
     * {
@@ -36,6 +36,7 @@
     :root {
         --primary: #2ecc71;
         --primary-dark: #1a8c3f;
+        --primary-light: #5ee0a0;
         --dark: #0a0a0a;
         --text: #1a1a1a;
         --text-light: #666;
@@ -52,6 +53,36 @@
         --tech-3: #4d38b8;
         --tech-4: #7c66d6;
         --tech-5: #c4b9f0;
+        
+        /* WELLNESS Renk Paleti */
+        --wellness-1: #1a1217;
+        --wellness-2: #3d2635;
+        --wellness-3: #7a4a6a;
+        --wellness-4: #b8849a;
+        --wellness-5: #e8cdd8;
+        
+        /* ECO Renk Paleti */
+        --eco-1: #0d1a12;
+        --eco-2: #1a3322;
+        --eco-3: #2e6645;
+        --eco-4: #5fa878;
+        --eco-5: #b8ddc7;
+        
+        /* FUTURE ECONOMY Renk Paleti */
+        --fe-1: #1a1200;
+        --fe-2: #3d2c00;
+        --fe-3: #8a6400;
+        --fe-4: #c9960a;
+        --fe-5: #f0d98a;
+        
+        /* ELEARNING Renk Paleti */
+        --el-1: #001820;
+        --el-2: #003044;
+        --el-3: #006080;
+        --el-4: #2a98b8;
+        --el-5: #a8dce8;
+        
+        --category-color: var(--tech-3);
     }
     
     body {
@@ -60,6 +91,29 @@
         background: var(--white);
         line-height: 1.6;
         overflow-x: hidden;
+    }
+    
+    /* ===================== */
+    /* BUTTONS */
+    /* ===================== */
+    .btn, .archive-btn, .random-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+    }
+    
+    .btn:hover, .archive-btn:hover, .random-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
     }
     
     /* ===================== */
@@ -252,154 +306,107 @@
     }
     
     /* ===================== */
-    /* HERO - CHATGPT YÖNTEMİ (FINAL WORKING) */
+    /* HERO - KATMANLI SVG ARKA PLAN (SİZİN AYARLARINIZ AYNEN) */
     /* ===================== */
     
     .hero-wrapper {
         position: relative;
-        min-height: 420px;
+        min-height: auto;
         overflow: hidden;
-        background: #0a0a0a;  /* KONTRAST için önemli */
+        background: transparent;
     }
     
-    /* Gradient base (asıl renk motoru) */
-    .hero-wrapper::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            120deg,
-            var(--tech-1),
-            var(--tech-3),
-            var(--tech-5),
-            var(--tech-2)
-        );
-        background-size: 300% 300%;
-        animation: gradientFlow 12s ease infinite;
-        z-index: 0;
-    }
-    
-    /* Işık efekti (ultra premium) */
-    .hero-wrapper::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.08), transparent 60%);
-        z-index: 2;
-        pointer-events: none;
-    }
-    
-    /* SVG katmanları */
     .pattern-layer {
         position: absolute;
-        inset: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         pointer-events: none;
     }
     
     .pattern-layer svg {
-        width: 160%;
-        height: 160%;
-        position: absolute;
-        top: -20%;
-        left: -20%;
+        width: 300%;
+        height: 400%;
+        object-fit: cover;
+        object-position: right top;
     }
     
-    .pattern-layer svg image {
-        width: 100%;
-        height: 100%;
-    }
-    
-    /* Arka katman (svg1) */
     .layer-back {
         z-index: 1;
     }
     
     .layer-back svg {
-        opacity: 0.25;
-        mix-blend-mode: overlay;
+        opacity: 1.0;
         animation: slowDriftBack 40s ease-in-out infinite;
+        color: var(--tech-1);
     }
     
-    /* Ön katman (svg2) */
     .layer-front {
         z-index: 2;
     }
     
     .layer-front svg {
-        opacity: 0.4;
-        mix-blend-mode: soft-light;
-        animation: slowDriftFront 25s ease-in-out infinite reverse;
+        opacity: 1.5;
+        animation: slowDriftFront 20s ease-in-out infinite reverse;
+        color: var(--tech-4);
     }
     
-    /* Hero içerik */
     .hero-content {
         position: relative;
         z-index: 3;
+        background: transparent;
         text-align: center;
-        padding: 4rem 1.5rem;
+        padding: 3rem 1.5rem;
         max-width: 800px;
         margin: 0 auto;
-        color: white;
     }
     
     .hero-title {
-        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
         font-weight: 800;
         letter-spacing: -0.02em;
         margin-bottom: 1rem;
-        background: linear-gradient(135deg, #ffffff 0%, var(--tech-4) 100%);
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
     
     .hero-description {
-        font-size: 1.2rem;
-        opacity: 0.85;
+        font-size: 1rem;
+        opacity: 0.9;
         max-width: 600px;
         margin: 0 auto 1.5rem;
         line-height: 1.6;
-    }
-    
-    .hero-cta {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        border-radius: 2rem;
-        font-weight: 600;
-        transition: var(--transition);
+        color: var(--tech-3);
+        text-shadow: none;
     }
     
     .hero-cta-primary {
-        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+        color: var(--tech-5);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     
     .hero-cta-primary:hover {
         transform: translateY(-2px);
-        background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
-    }
-    
-    /* ===================== */
-    /* ANIMATIONS */
-    /* ===================== */
-    
-    @keyframes gradientFlow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+        color: #ffffff;
     }
     
     @keyframes slowDriftBack {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(3%, 2%) scale(1.05); }
-        100% { transform: translate(0, 0) scale(1); }
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
+        66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
+        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
     }
     
     @keyframes slowDriftFront {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(-3%, -2%) scale(1.08); }
-        100% { transform: translate(0, 0) scale(1); }
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
+        66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
+        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
     }
     
     /* ===================== */
@@ -507,46 +514,114 @@
         color: var(--text-light);
         font-size: 0.9rem;
     }
-    
-    /* ===================== */
-    /* KATEGORİ BÖLÜMÜ */
+
+ /* ===================== */
+    /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer üzerinde) */
     /* ===================== */
     .category-bottom-bar {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 0.75rem;
-        width: 100%;
-        max-width: 100%;
+        max-width: 1200px;
         margin: 3rem auto 2rem auto;
-        padding: 0.5rem 1rem;
-        scrollbar-width: thin;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        border: 1px solid rgba(0,0,0,0.08);
+    }
+    
+    body.dark .category-bottom-bar {
+        border: 1px solid rgba(255,255,255,0.08);
     }
     
     .category-segment {
-        flex: 0 0 auto;
-        padding: 0.6rem 1.2rem;
-        border-radius: 40px;
+        flex: 1;
+        transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        cursor: pointer;
         text-decoration: none;
-        color: white;
-        font-weight: 600;
-        font-size: 0.7rem;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        white-space: nowrap;
-        transition: all 0.3s ease;
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .category-segment:hover {
-        transform: translateY(-2px);
-        filter: brightness(1.1);
+        flex: 2.5;
     }
     
-    .segment-tech     { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
-    .segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
-    .segment-eco      { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
-    .segment-fe       { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
-    .segment-el       { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
+    .category-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        opacity: 0;
+        transition: opacity 0.3s;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        gap: 6px;
+    }
+    
+    .category-segment:hover .category-label {
+        opacity: 1;
+    }
+    
+    .category-icon {
+        font-size: 14px;
+    }      
+
+/* ===================== */
+/* KATEGORİ RENKLERİ */
+/* ===================== */
+.segment-tech     { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
+.segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
+.segment-eco      { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
+.segment-fe       { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
+.segment-el       { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
+
+.segment-tech:hover     { background: linear-gradient(135deg, var(--tech-3), var(--tech-5)); }
+.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-5)); }
+.segment-eco:hover      { background: linear-gradient(135deg, var(--eco-3), var(--eco-5)); }
+.segment-fe:hover       { background: linear-gradient(135deg, var(--fe-3), var(--fe-5)); }
+.segment-el:hover       { background: linear-gradient(135deg, var(--el-3), var(--el-5)); }
+        
+    /* Kategori segment renkleri */
+    .segment-tech {
+        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%);
+    }
+    .segment-tech:hover {
+        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-5) 100%);
+    }
+    
+    .segment-wellness {
+        background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%);
+    }
+    .segment-wellness:hover {
+        background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%);
+    }
+    
+    .segment-eco {
+        background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%);
+    }
+    .segment-eco:hover {
+        background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%);
+    }
+    
+    .segment-fe {
+        background: linear-gradient(135deg, var(--fe-2) 0%, var(--fe-4) 100%);
+    }
+    .segment-fe:hover {
+        background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%);
+    }
+    
+    .segment-el {
+        background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%);
+    }
+    .segment-el:hover {
+        background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%);
+    }
     
     /* ===================== */
     /* FOOTER */
@@ -614,11 +689,15 @@
         background: #1e1e1e;
     }
     
-    body.dark .hero-wrapper {
-        background: #0a0a0a;
+    body.dark .layer-back svg {
+        opacity: 0.2;
     }
     
-    /* ===================== */
+    body.dark .layer-front svg {
+        opacity: 0.3;
+    }
+    
+      /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
     @media (max-width: 768px) {
@@ -645,21 +724,35 @@
             grid-template-columns: 1fr;
             text-align: center;
         }
+        .hero-wrapper {
+            padding: 2rem 0;
+        }
         .hero-content {
-            padding: 2rem 1rem;
+            padding: 1rem;
         }
         .hero-title {
-            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-size: clamp(1.5rem, 5vw, 2rem);
         }
         .hero-description {
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         .category-bottom-bar {
-            gap: 0.5rem;
+            flex-direction: column;
+            border-radius: 12px;
+            margin: 2rem 1rem;
         }
         .category-segment {
-            font-size: 0.6rem;
-            padding: 0.5rem 0.8rem;
+            min-height: 48px;
+        }
+        .category-segment:hover {
+            flex: 1;
+        }
+        .category-label {
+            opacity: 1;
+            font-size: 10px;
+        }
+        .category-icon {
+            font-size: 12px;
         }
     }
     </style>
@@ -713,242 +806,23 @@
 </nav>
 
 <main>
-    /* ===================== */
-    /* KATEGORİ BÖLÜMÜ */
-    /* ===================== */
-    .category-bottom-bar {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 0.75rem;
-        width: 100%;
-        max-width: 100%;
-        margin: 3rem auto 2rem auto;
-        padding: 0.5rem 1rem;
-        scrollbar-width: thin;
-    }
-    
-    .category-segment {
-        flex: 0 0 auto;
-        padding: 0.6rem 1.2rem;
-        border-radius: 40px;
-        text-decoration: none;
-        color: white;
-        font-weight: 600;
-        font-size: 0.7rem;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        white-space: nowrap;
-        transition: all 0.3s ease;
-    }
-    
-    .category-segment:hover {
-        transform: translateY(-2px);
-        filter: brightness(1.1);
-    }
-    
-    .segment-tech     { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
-    .segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
-    .segment-eco      { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
-    .segment-fe       { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
-    .segment-el       { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
-    
-    /* ===================== */
-    /* FOOTER */
-    /* ===================== */
-    footer {
-        background: var(--dark);
-        color: white;
-        padding: 3rem 5%;
-        margin-top: 2rem;
-    }
-    
-    .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 2rem;
-    }
-    
-    .footer-column h4 {
-        margin-bottom: 1rem;
-        font-size: 1rem;
-    }
-    
-    .footer-column a {
-        display: block;
-        color: #aaa;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-    }
-    
-    .footer-column a:hover {
-        color: var(--primary);
-    }
-    
-    .footer-copyright {
-        text-align: center;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #444;
-        font-size: 0.8rem;
-        color: #aaa;
-    }
-    
-    /* ===================== */
-    /* DARK MODE */
-    /* ===================== */
-    body.dark {
-        background: #121212;
-        color: #e0e0e0;
-    }
-    
-    body.dark nav {
-        background: rgba(18, 18, 18, 0.98);
-        border-bottom-color: #333;
-    }
-    
-    body.dark .logo,
-    body.dark .nav-links a {
-        color: #e0e0e0;
-    }
-    
-    body.dark .article-card,
-    body.dark .featured-card {
-        background: #1e1e1e;
-    }
-    
-    body.dark .hero-wrapper {
-        background: #0a0a0a;
-    }
-    
-    /* ===================== */
-    /* RESPONSIVE */
-    /* ===================== */
-    @media (max-width: 768px) {
-        .nav-links {
-            display: none;
-        }
-        .menu-btn {
-            display: block;
-        }
-        .article-grid {
-            grid-template-columns: 1fr;
-        }
-        .featured-card {
-            flex-direction: column;
-        }
-        .featured-card img {
-            width: 100%;
-            height: 200px;
-        }
-        .featured-content {
-            padding: 1.5rem;
-        }
-        .footer-content {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-        .hero-content {
-            padding: 2rem 1rem;
-        }
-        .hero-title {
-            font-size: clamp(1.5rem, 6vw, 2rem);
-        }
-        .hero-description {
-            font-size: 1rem;
-        }
-        .category-bottom-bar {
-            gap: 0.5rem;
-        }
-        .category-segment {
-            font-size: 0.6rem;
-            padding: 0.5rem 0.8rem;
-        }
-    }
-    </style>
-</head>
-<body>
-
-<div class="side-menu" id="sideMenu">
-    <div class="close-menu" onclick="toggleMenu()">&times;</div>
-    <div class="dark-mode-toggle">
-        <span>🌓 Dark Mode</span>
-        <div class="toggle-switch" id="darkModeToggle"></div>
-    </div>
-    <div class="lang-section">
-        <div class="lang-title">READ IN</div>
-        <div class="flags">
-            <a href="/" class="flag-link">🇺🇸 EN</a>
-            <a href="/es/" class="flag-link">🇪🇸 ES</a>
-            <a href="/de/" class="flag-link">🇩🇪 DE</a>
-            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
-        </div>
-    </div>
-    <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        <a href="/{{ lang }}/wellness/">WELLNESS</a>
-        <a href="/{{ lang }}/tech/">TECH & AI</a>
-        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
-        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
-        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
-    </div>
-    <div class="footer-links">
-        <a href="/about-us.html">About Gatemirror</a>
-        <a href="/privacy-policy.html">Privacy Policy</a>
-        <a href="/contact.html">Contact Us</a>
-        <p>&copy; 2026 Gatemirror Media</p>
-    </div>
-</div>
-
-<nav>
-    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
-        <i class="fas fa-bars"></i>
-    </button>
-    <a href="/" class="logo">GATE<span>MIRROR</span></a>
-    <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        <a href="/{{ lang }}/wellness/">WELLNESS</a>
-        <a href="/{{ lang }}/tech/">TECH & AI</a>
-        <a href="/{{ lang }}/future-economy/">FUTURE ECONOMY</a>
-        <a href="/{{ lang }}/eco/">ECO & SUSTAINABLE</a>
-        <a href="/{{ lang }}/elearning/">E-LEARNING</a>
-    </div>
-</nav>
-
-<main>
-    <!-- 2 KATMANLI HERO - CHATGPT YÖNTEMİ -->
+    <!-- 2 KATMANLI HERO -->
     <div class="hero-wrapper">
-        <!-- Arka katman (svg1) -->
         <div class="pattern-layer layer-back">
-            <svg viewBox="0 0 3840 2160" preserveAspectRatio="xMidYMid slice">
-                <image href="{{ R2_PUBLIC_URL }}/assets/svg1.svg" width="100%" height="100%" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
+                <use href="{{ R2_PUBLIC_URL }}/assets/svg1.svg"></use>
             </svg>
         </div>
-        
-        <!-- Ön katman (svg2) -->
         <div class="pattern-layer layer-front">
-            <svg viewBox="0 0 3840 2160" preserveAspectRatio="xMidYMid slice">
-                <image href="{{ R2_PUBLIC_URL }}/assets/svg2.svg" width="100%" height="100%" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
+                <use href="{{ R2_PUBLIC_URL }}/assets/svg2.svg"></use>
             </svg>
         </div>
-        
-        <!-- İçerik -->
         <div class="hero-content">
             <h1 class="hero-title">Global Insights<br>for a Changing World</h1>
             <p class="hero-description">Deep analysis on technology, wellness, future economy, and sustainable living.</p>
             <a href="/{{ lang }}/tech/" class="hero-cta hero-cta-primary">Explore →</a>
         </div>
-    </div>
-    
-    <!-- KATEGORİ BÖLÜMÜ -->
-    <div class="category-bottom-bar">
-        <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">⚡ TECH & AI</a>
-        <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">🧘 WELLNESS</a>
-        <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">📈 FUTURE ECONOMY</a>
-        <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">🌿 ECO</a>
-        <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">📚 E-LEARNING</a>
     </div>
 
     {% if featured_article %}
@@ -989,6 +863,25 @@
         </div>
     </div>
 </main>
+
+<!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer hemen üzerinde) -->
+<div class="category-bottom-bar">
+    <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
+        <span class="category-label"><span class="category-icon">⚡</span> TECH & AI</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
+        <span class="category-label"><span class="category-icon">🧘</span> WELLNESS</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
+        <span class="category-label"><span class="category-icon">📈</span> FUTURE ECONOMY</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
+        <span class="category-label"><span class="category-icon">🌿</span> ECO</span>
+    </a>
+    <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
+        <span class="category-label"><span class="category-icon">📚</span> E-LEARNING</span>
+    </a>
+</div>
 
 <footer>
     <div class="footer-content">
