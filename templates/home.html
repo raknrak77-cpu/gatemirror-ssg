@@ -516,104 +516,146 @@
     }
     
 /* ===================== */
-/* KATEGORİ BÖLÜMÜ - PROFESYONEL ÇÖZÜM */
+
+/* ===================== */
+/* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI */
 /* ===================== */
 
-/* 1. Kapsayıcı - flex-wrap ile esnek yapı */
 .category-bottom-bar {
-    display: flex;
-    flex-wrap: wrap;           /* 🔥 Sığmazsa alt satıra geç */
-    justify-content: center;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    max-width: 100%;
+    max-width: 1000px;
     margin: 3rem auto 2rem auto;
-    padding: 0 1rem;
-    box-sizing: border-box;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid rgba(0,0,0,0.08);
 }
 
-/* 2. Her bir segment - KRİTİK: min-width: 0 ! */
 .category-segment {
+    flex: 1;
+    min-width: 100px;
+    transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    min-height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    border-radius: 40px;
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    
-    /* 🔥🔥🔥 KRİTİK DÜZELTMELER 🔥🔥🔥 */
-    flex: 0 1 auto;           /* Kendi boyutunu koru, gerektiğinde küçül */
-    min-width: 0;             /* 🔥 ESAS SORUN: Varsayılan 'auto' değil '0' olmalı! */
-    max-width: 100%;
-    box-sizing: border-box;
-    
-    /* Geçiş efekti */
-    transition: all 0.3s ease;
+    padding: 0.5rem;
 }
 
-/* Uzun metin için (Almanca) - yumuşak kırılma */
-.category-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: normal;      /* Uzun metin alt satıra geçebilir */
-    word-break: keep-all;     /* Kelimeler bölünmesin */
-    text-align: center;
-}
-
-.category-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-/* 3. Media Query ile kontrol (geniş ekran -> yan yana) */
-@media (min-width: 641px) {
-    .category-segment {
-        flex: 1 1 auto;       /* Eşit dağıl, gerektiğinde büyü/küçül */
-        min-width: 100px;
-        justify-content: center;
+/* Hover'da genişleme (sadece desktop'ta) */
+@media (min-width: 1201px) {
+    .category-segment:hover {
+        flex: 2.5;
     }
 }
 
-/* 4. Telefon (dar ekran -> alt alta) */
-@media (max-width: 640px) {
+/* Etiket - normalde görünmez, hover'da görünür (desktop) */
+.category-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.category-segment:hover .category-label {
+    opacity: 1;
+    white-space: normal;
+    text-align: center;
+    padding: 0 0.5rem;
+}
+
+.category-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* ===================== */
+/* BÜYÜK TELEFONLAR + TABLET (600px - 1200px) - YAN YANA */
+/* ===================== */
+@media (min-width: 600px) and (max-width: 1200px) {
+    .category-bottom-bar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        border: none;
+        background: transparent;
+    }
+    
+    .category-segment {
+        flex: 1 1 auto;
+        min-width: 110px;
+        border-radius: 40px;
+        min-height: 64px;
+    }
+    
+    /* Büyük telefon/tablet'de etiket her zaman görünsün */
+    .category-label {
+        position: static;
+        opacity: 1;
+        white-space: normal;
+        font-size: 10px;
+        text-align: center;
+        gap: 6px;
+        flex-direction: column;
+    }
+    
+    .category-icon {
+        font-size: 18px;
+    }
+    
+    /* Hover genişlemesi YOK */
+    .category-segment:hover {
+        flex: 1 1 auto;
+    }
+}
+
+/* ===================== */
+/* KÜÇÜK TELEFONLAR (600px altı) - ALT ALTA */
+/* ===================== */
+@media (max-width: 599px) {
     .category-bottom-bar {
         flex-direction: column;
-        align-items: stretch;
         gap: 0.5rem;
-        max-width: 300px;
+        max-width: 280px;
         margin-left: auto;
         margin-right: auto;
+        border: none;
+        background: transparent;
     }
     
     .category-segment {
         width: 100%;
-        justify-content: center;
+        border-radius: 40px;
+        min-height: 52px;
     }
     
     .category-label {
+        position: static;
+        opacity: 1;
+        flex-direction: row;
         justify-content: center;
-    }
-}
-
-/* 5. Desktop Hover Efekti (isteğe bağlı) */
-@media (min-width: 1025px) {
-    .category-segment {
-        transition: flex 0.3s ease, padding 0.3s ease;
+        gap: 8px;
+        white-space: normal;
+        font-size: 10px;
     }
     
-    .category-segment:hover {
-        flex: 2 1 auto;
-        padding: 0.6rem 1.5rem;
+    .category-icon {
+        font-size: 16px;
     }
-}
+        }
 
 /* 6. Kategori renkleri */
 .segment-tech     { background: linear-gradient(135deg, var(--tech-3), var(--tech-4)); }
