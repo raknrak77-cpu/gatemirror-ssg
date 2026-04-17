@@ -28,16 +28,16 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          git add assets/Deepseek/
+          git add assets/wellness-variations/
           if git diff --staged --quiet; then
             echo "📭 Yeni desen yok, commit atlanıyor."
           else
-            git commit -m "🌿 Deepseek Wellness Pattern: 9 desen eklendi (assets/Deepseek/)"
+            git commit -m "🌿 Wellness Variations: Yatay/eliptik/dalgalı spiral desenler eklendi"
             git push origin main || git push --force origin main
           fi
           
       - name: Upload Artifact (ZIP)
         uses: actions/upload-artifact@v4
         with:
-          name: deepseek-wellness-patterns
-          path: assets/Deepseek/
+          name: wellness-variations-patterns
+          path: assets/wellness-variations/
