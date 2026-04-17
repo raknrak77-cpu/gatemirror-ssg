@@ -86,8 +86,27 @@ def upload_assets_folder():
                 content_type = 'application/javascript'
             elif file.endswith('.json'):
                 content_type = 'application/json'
+            elif file.endswith('.svg'):
+                content_type = 'image/svg+xml'
             
             upload_file_to_r2(local_path, r2_key, content_type)
+
+def upload_svg_patterns():
+    """Özel SVG pattern'lerini R2'ye assets/ klasörüne yükler"""
+    print("\n🎨 SVG PATTERN YÜKLEME")
+    print("-" * 40)
+    
+    # Kaynak -> Hedef eşlemesi
+    svg_files = [
+        ("assets/all-patterns/spiral_out/spiral_circular_basic_12.svg", "assets/svg1.svg"),
+        ("assets/all-patterns/spiral_out/spiral_circular_basic_04.svg", "assets/svg2.svg"),
+    ]
+    
+    for local_path, r2_key in svg_files:
+        if os.path.exists(local_path):
+            upload_file_to_r2(local_path, r2_key, content_type='image/svg+xml')
+        else:
+            print(f"⚠️ Dosya bulunamadı: {local_path}")
 
 def uploader():
     """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler - articles/ SİLMEZ"""
@@ -106,7 +125,10 @@ def uploader():
     # 4. Varsa diğer assets dosyalarını yükle
     upload_assets_folder()
     
-    # 5. content/ altındaki ham HTML'leri raw-articles/ altına yükle
+    # 5. Özel SVG pattern'lerini yükle
+    upload_svg_patterns()
+    
+    # 6. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -127,7 +149,7 @@ def uploader():
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 6. Local dosyaları temizle
+    # 7. Local dosyaları temizle
     print("\n🗑️ LOCAL TEMİZLİK")
     print("-" * 40)
     for file_path in uploaded_files:
@@ -137,7 +159,7 @@ def uploader():
         except Exception as e:
             print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    # 7. Boş klasörleri temizle
+    # 8. Boş klasörleri temizle
     for root, dirs, files in os.walk(content_base, topdown=False):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
@@ -153,6 +175,7 @@ def uploader():
     print("   ✅ Template'ler → R2/templates/ (css hariç)")
     print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ hero.json → R2/templates/hero.json")
+    print("   ✅ SVG pattern'ler → R2/assets/svg1.svg, svg2.svg")
     print("   ✅ content/ → R2/raw-articles/ (articles/ SİLİNMEDİ!)")
     print("   ✅ Local HTML'ler temizlendi")
     print("=" * 60)
