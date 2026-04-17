@@ -3,7 +3,7 @@ import random
 import math
 
 # ================= KONFIGÜRASYON =================
-OUTPUT_DIR = "assets/selected-patterns"
+OUTPUT_DIR = "assets/all-patterns/"
 W = 1920
 H = 1080
 
