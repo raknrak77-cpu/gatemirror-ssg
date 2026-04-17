@@ -10,7 +10,7 @@ H = 1080
 # ================= SEVİYE TANIMLARI =================
 LEVELS = {
     'basic': {'lines': 3, 'sw_min': 3.5, 'sw_max': 3.5, 'op_min': 0.5, 'op_max': 1},
-    'medium': {'lines': 4, 'sw_min': 4.5, 'sw_max': 6.5, 'op_min': 0.7, 'op_max': 1},
+    'medium': {'lines': 2, 'sw_min': 4.5, 'sw_max': 6.5, 'op_min': 0.7, 'op_max': 1},
 }
 
 # ================= SVG YARDIMCI =================
@@ -30,7 +30,7 @@ def draw_circular_spiral(sw, op):
     cx = random.uniform(W * 0.3, W * 0.8)
     cy = random.uniform(H * 0.3, H * 0.8)
     start_r = random.uniform(10, 50)
-    grow = random.uniform(11, 22)
+    grow = random.uniform(15, 35)
     theta = 0
     pts = []
     while True:
@@ -40,7 +40,7 @@ def draw_circular_spiral(sw, op):
         if x < -W * 0.1 or x > W * 1.1 or y < -H * 0.1 or y > H * 1.1:
             break
         pts.append((x, y))
-        theta += 0.06
+        theta += 0.08
     return polyline_el(pts, sw, op)
 
 def draw_elliptic_spiral(sw, op, var_num):
