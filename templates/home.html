@@ -376,38 +376,121 @@
     .hero-description {
         font-size: 1rem;
         opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto 1.5rem;
-        line-height: 1.6;
-        color: var(--tech-3);
-        text-shadow: none;
-    }
-    
-    .hero-cta-primary {
-        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-        color: var(--tech-5);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    
-    .hero-cta-primary:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
-        color: #ffffff;
-    }
-    
-    @keyframes slowDriftBack {
-        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-        33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
-        66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
-        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    }
-    
-    @keyframes slowDriftFront {
-        0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-        33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
-        66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
-        100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    }
+/* ===================== */
+/* HERO - KATMANLI SVG ARKA PLAN */
+/* ===================== */
+
+.hero-wrapper {
+    position: relative;
+    min-height: auto;
+    overflow: hidden;
+    background: transparent;
+}
+
+.pattern-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.pattern-layer svg {
+    width: 300%;
+    height: 400%;
+    object-fit: cover;
+    object-position: right top;
+}
+
+.layer-back {
+    z-index: 1;
+}
+
+.layer-back svg {
+    opacity: 1.0;
+    animation: slowDriftBack 40s ease-in-out infinite, colorCycleBack 18s ease-in-out infinite;
+}
+
+.layer-front {
+    z-index: 2;
+}
+
+.layer-front svg {
+    opacity: 1.5;
+    animation: slowDriftFront 20s ease-in-out infinite reverse, colorCycleFront 14s ease-in-out infinite;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    background: transparent;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+    color: var(--tech-3);
+    text-shadow: none;
+}
+
+.hero-cta-primary {
+    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+    color: var(--tech-5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hero-cta-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+    color: #ffffff;
+}
+
+@keyframes slowDriftBack {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
+    66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
+    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes slowDriftFront {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
+    66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
+    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+/* Renk döngüsü animasyonları */
+@keyframes colorCycleBack {
+    0%   { filter: hue-rotate(0deg); }
+    33%  { filter: hue-rotate(90deg); }
+    66%  { filter: hue-rotate(180deg); }
+    100% { filter: hue-rotate(0deg); }
+}
+
+@keyframes colorCycleFront {
+    0%   { filter: hue-rotate(0deg); }
+    50%  { filter: hue-rotate(60deg); }
+    100% { filter: hue-rotate(0deg); }
+}
     
     /* ===================== */
     /* FEATURED ARTICLE */
