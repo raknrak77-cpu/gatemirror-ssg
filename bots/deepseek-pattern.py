@@ -3,7 +3,7 @@ import random
 import math
 
 # ================= KONFIGÜRASYON =================
-OUTPUT_DIR = "assets/wellness-variations"  # 🔥 SADECE BURASI DEĞİŞTİ
+OUTPUT_DIR = "assets/wellness-variations"
 W = 3840
 H = 2160
 
@@ -15,38 +15,49 @@ LEVELS = {
 }
 COUNT_PER_LEVEL = 6
 
+# ================= RENK PALETİ (TEST İÇİN) =================
+# Her fonksiyon farklı renkte gözüksün
+FUNCTION_COLORS = {
+    'organic_flow': '#FF0000',     # Kırmızı
+    'breath_wave': '#00FF00',       # Yeşil
+    'spiral_out': '#0000FF',        # Mavi
+    'gentle_arc': '#FF00FF',        # Magenta
+    'sine_diagonal': '#FFA500',     # Turuncu
+}
+
 # ================= SVG YARDIMCI =================
 def svg_open(filepath):
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'width="{W}" height="{H}" viewBox="0 0 {W} {H}">\n'
-        f'<rect width="{W}" height="{H}" fill="transparent"/>\n'
+        f'<rect width="{W}" height="{H}" fill="#1a1a1a"/>\n'  # Koyu arka plan (renkler görünsün)
     )
 
 def svg_close():
     return '</svg>'
 
-def path_el(d, stroke_width, opacity):
+def path_el(d, stroke_width, opacity, color):
     return (
-        f'<path d="{d}" stroke="currentColor" '
+        f'<path d="{d}" stroke="{color}" '
         f'stroke-width="{stroke_width:.1f}" '
         f'fill="none" opacity="{opacity:.2f}" '
         f'stroke-linecap="round" stroke-linejoin="round"/>\n'
     )
 
-def polyline_el(points, stroke_width, opacity):
+def polyline_el(points, stroke_width, opacity, color):
     pts = ' '.join(f'{x:.1f},{y:.1f}' for x, y in points)
     return (
-        f'<polyline points="{pts}" stroke="currentColor" '
+        f'<polyline points="{pts}" stroke="{color}" '
         f'stroke-width="{stroke_width:.1f}" '
         f'fill="none" opacity="{opacity:.2f}" '
         f'stroke-linecap="round" stroke-linejoin="round"/>\n'
     )
 
 # ================= WELLNESS ÇİZGİ ÜRETECLERİ =================
+# HER FONKSİYON KENDİ RENGİNİ KULLANACAK
 
 def organic_flow(sw, op):
-    """Organik akış - wellness"""
+    color = FUNCTION_COLORS['organic_flow']
     x = random.uniform(-W * 0.05, W * 0.15)
     y = random.uniform(H * 0.1, H * 0.9)
     pts = [(x, y)]
@@ -63,10 +74,10 @@ def organic_flow(sw, op):
               amp2 * math.sin(freq2 * x + phase2))
         y_new = pts[-1][1] + dy * 0.08
         pts.append((x, y_new))
-    return polyline_el(pts, sw, op)
+    return polyline_el(pts, sw, op, color)
 
 def breath_wave(sw, op):
-    """Nefes ritmi - wellness"""
+    color = FUNCTION_COLORS['breath_wave']
     sx = random.uniform(-W * 0.05, W * 0.1)
     cy = random.uniform(H * 0.15, H * 0.85)
     max_amp = random.uniform(H * 0.05, H * 0.22)
@@ -81,10 +92,10 @@ def breath_wave(sw, op):
         y = cy + amp * math.sin(2 * math.pi * (x - sx) / wl)
         pts.append((x, y))
         x += step
-    return polyline_el(pts, sw, op)
+    return polyline_el(pts, sw, op, color)
 
 def spiral_out(sw, op):
-    """Dışa açılan spiral - wellness"""
+    color = FUNCTION_COLORS['spiral_out']
     cx = random.uniform(W * 0.25, W * 0.75)
     cy = random.uniform(H * 0.25, H * 0.75)
     start_r = random.uniform(5, 30)
@@ -100,11 +111,11 @@ def spiral_out(sw, op):
         pts.append((x, y))
         theta += 0.06
     if len(pts) > 2:
-        return polyline_el(pts, sw, op)
+        return polyline_el(pts, sw, op, color)
     return ''
 
 def gentle_arc(sw, op):
-    """Yumuşak yay - wellness"""
+    color = FUNCTION_COLORS['gentle_arc']
     y = random.uniform(H * 0.1, H * 0.9)
     num_segments = random.randint(3, 7)
     seg_w = W * 1.2 / num_segments
@@ -120,10 +131,10 @@ def gentle_arc(sw, op):
         d += f" C {cx1:.1f},{cy1:.1f} {cx2:.1f},{cy2:.1f} {ex:.1f},{ey:.1f}"
         x = ex
         y = ey
-    return path_el(d, sw, op)
+    return path_el(d, sw, op, color)
 
 def sine_diagonal(sw, op):
-    """Diyagonal sinüs - wellness"""
+    color = FUNCTION_COLORS['sine_diagonal']
     angle = random.uniform(15, 45) * (1 if random.random() > 0.5 else -1)
     rad = math.radians(angle)
     cx = random.uniform(0, W)
@@ -141,7 +152,7 @@ def sine_diagonal(sw, op):
         perp_y = math.cos(rad)
         offset = amp * math.sin(2 * math.pi * t / wl)
         pts.append((px + offset * perp_x, py + offset * perp_y))
-    return polyline_el(pts, sw, op)
+    return polyline_el(pts, sw, op, color)
 
 # ================= ÜRETEC MAP =================
 GENERATORS = [
@@ -175,11 +186,12 @@ def generate_pattern(level_name, num_lines, index):
 
 def pattern_factory():
     print("=" * 60)
-    print("🌿 WELLNESS PATTERN FACTORY")
+    print("🌿 WELLNESS PATTERN FACTORY (RENK KODLU TEST)")
     print(f"   📐 Canvas: {W}x{H}")
-    print(f"   🎨 Renk: currentColor (CSS ile kontrol)")
     print(f"   📁 Çıktı: {OUTPUT_DIR}/")
-    print(f"   🧬 Desenler: organic_flow, breath_wave, spiral_out, gentle_arc, sine_diagonal")
+    print(f"   🎨 Renk kodları:")
+    for func, color in FUNCTION_COLORS.items():
+        print(f"      {func:15} → {color}")
     print("=" * 60)
 
     total = 0
@@ -192,8 +204,6 @@ def pattern_factory():
     print("\n" + "=" * 60)
     print(f"🏁 TAMAMLANDI! {total} desen üretildi")
     print(f"   📁 {OUTPUT_DIR}/")
-    print("\n💡 CSS ile renk değiştirmek için:")
-    print("   .wellness-bg svg { color: #7a4a6a; }")
     print("=" * 60)
 
 if __name__ == "__main__":
