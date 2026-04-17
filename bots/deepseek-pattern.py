@@ -9,8 +9,8 @@ H = 1080
 
 # ================= SEVİYE TANIMLARI =================
 LEVELS = {
-    'basic': {'lines': 4, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.3, 'op_max': 0.5},
-    'medium': {'lines': 10, 'sw_min': 1.5, 'sw_max': 2.5, 'op_min': 0.4, 'op_max': 0.6},
+    'basic': {'lines': 3, 'sw_min': 1.8, 'sw_max': 2.5, 'op_min': 0.4, 'op_max': 0.6},
+    'medium': {'lines': 5, 'sw_min': 1.8, 'sw_max': 2.5, 'op_min': 0.5, 'op_max': 0.7},
 }
 
 # ================= SVG YARDIMCI =================
