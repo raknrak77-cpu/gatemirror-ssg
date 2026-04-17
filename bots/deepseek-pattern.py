@@ -10,8 +10,8 @@ H = 1080
 # ================= SEVİYE TANIMLARI =================
 # Spiraller için (KALIN çizgiler)
 SPIRAL_LEVELS = {
-    'basic': {'lines': 4, 'sw_min': 2.5, 'sw_max': 4.0, 'op_min': 0.3, 'op_max': 0.5},
-    'medium': {'lines': 10, 'sw_min': 2.5, 'sw_max': 4.0, 'op_min': 0.4, 'op_max': 0.6},
+    'basic': {'lines': 3, 'sw_min': 3, 'sw_max': 5.0, 'op_min': 0.5, 'op_max': 0.7},
+    'medium': {'lines': 4, 'sw_min': 3, 'sw_max': 5.0, 'op_min': 0.7, 'op_max': 1},
 }
 
 # Breath Wave için (İNCE çizgiler)
@@ -37,8 +37,8 @@ def polyline_el(points, sw, op):
 def draw_circular_spiral(sw, op):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
-    start_r = random.uniform(10, 50)
-    grow = random.uniform(8, 22)
+    start_r = random.uniform(15, 40)
+    grow = random.uniform(10, 22)
     theta = 0
     pts = []
     while True:
@@ -179,7 +179,7 @@ def generate_spiral_variations():
     print("   30 breath wave × 2 seviye = 60")
     print("   TOPLAM = 90")
     print("\n📏 KALINLIK FARKI:")
-    print("   Spiraller: 2.5 - 4.0 px (kalın)")
+    print("   Spiraller: 3 - 5.0 px (kalın)")
     print("   Breath Wave: 0.8 - 1.5 px (ince)")
     print("=" * 60)
 
