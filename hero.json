@@ -5,8 +5,8 @@
     "home": {
       "en": {
         "blocks": [
-          { "type": "title", "content": "Global Insights on Tech, Wellness & Future Economy", "grid": "col-left" },
-          { "type": "description", "content": "Deep analysis. Multi‑language. Reflecting reality in 5 languages.", "grid": "col-left" },
+          { "type": "title", "content": "Global Insights on<br>TECH & AI,FUTURE ECONOMY,<br>WELLNESS,ECO & SUSTAINABLE,E-LEARNING", "grid": "col-left" },
+          { "type": "description", "content": "Deep analysis. Multi‑language. Reflecting reality in 4 languages.", "grid": "col-left" },
           { "type": "cta", "url": "/explore/all-articles/en.html", "text": "📚 Browse All Articles", "style": "primary", "grid": "col-left" },
           { "type": "stats", "items": [
             { "value": "500+", "label": "Articles" },
