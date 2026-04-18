@@ -410,18 +410,39 @@
         pointer-events: none;
     }
     
-    .hero-content {
+    /* ===================== */
+    /* HERO GRID SİSTEMİ - 2 KOLON (YENİ EKLENDİ) */
+    /* ===================== */
+    
+    .hero-grid {
         position: relative;
-        z-index: 5;  /* 3 → 5 kaydırıldı */
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(3px);
-        border-radius: 2rem;
-        text-align: center;
-        padding: 3rem 1.5rem;
-        max-width: 800px;
+        z-index: 5;
+        max-width: 1200px;
         margin: 0 auto;
+        padding: 3rem 1.5rem;
     }
     
+    .hero-grid-row-2cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-grid-col-left {
+        text-align: left;
+    }
+    
+    .hero-grid-col-right {
+        text-align: center;
+    }
+    
+    .hero-grid-full {
+        margin-top: 2rem;
+    }
+    
+    /* Hero içi element stilleri (grid içinde) */
     .hero-title {
         font-size: clamp(1.8rem, 4vw, 2.8rem);
         font-weight: 800;
@@ -431,29 +452,153 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     
     .hero-description {
         font-size: 1rem;
-        opacity: 0.95;
-        max-width: 600px;
-        margin: 0 auto 1.5rem;
+        opacity: 0.9;
+        max-width: 500px;
+        margin-bottom: 1.5rem;
         line-height: 1.6;
         color: var(--tech-3);
-        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
     }
     
     .hero-cta-primary {
+        display: inline-block;
         background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
         color: var(--tech-5);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
     .hero-cta-primary:hover {
         transform: translateY(-2px);
         background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
         color: #ffffff;
+    }
+    
+    /* Stats bloğu - dikey (sağ sütun için) */
+    .hero-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        justify-content: center;
+    }
+    
+    .stat {
+        text-align: center;
+        padding: 0.5rem;
+    }
+    
+    .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Featured Articles - 3 kart yan yana */
+    .hero-featured-section {
+        margin: 1rem 0;
+    }
+    
+    .hero-featured-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+    
+    .hero-featured-articles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .featured-article-item {
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    
+    .featured-article-item:hover {
+        transform: translateY(-3px);
+        background: rgba(0, 0, 0, 0.05);
+    }
+    
+    .featured-article-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+    }
+    
+    .featured-article-item a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .featured-article-title {
+        display: block;
+        padding: 0.75rem 0.75rem 0.25rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    
+    .featured-article-meta {
+        display: block;
+        padding: 0 0.75rem 0.75rem;
+        font-size: 0.7rem;
+        opacity: 0.6;
+    }
+    
+    /* News Ticker */
+    .hero-news-ticker {
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 2rem;
+        padding: 0.75rem 1rem;
+        overflow: hidden;
+    }
+    
+    .ticker-wrapper {
+        overflow: hidden;
+    }
+    
+    .ticker {
+        display: inline-block;
+        white-space: nowrap;
+        animation: ticker-scroll 25s linear infinite;
+    }
+    
+    .ticker-item {
+        display: inline-block;
+        margin-right: 2rem;
+        font-size: 0.85rem;
+    }
+    
+    .ticker-item::before {
+        content: "🔥";
+        margin-right: 0.5rem;
+    }
+    
+    @keyframes ticker-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
     }
     
     @keyframes colorCycleBack {
@@ -484,6 +629,42 @@
         33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
         66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
         100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    }
+    
+    /* Responsive grid */
+    @media (max-width: 768px) {
+        .hero-grid-row-2cols {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            text-align: center;
+        }
+        
+        .hero-grid-col-left {
+            text-align: center;
+        }
+        
+        .hero-grid-col-right {
+            text-align: center;
+        }
+        
+        .hero-description {
+            max-width: 100%;
+        }
+        
+        .hero-featured-articles {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .hero-stats {
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            min-width: 100px;
+        }
     }
     
     /* ===================== */
@@ -817,12 +998,6 @@
         );
     }
     
-    /* Dark mode hero content arka planı */
-    body.dark .hero-content {
-        background: rgba(18, 24, 38, 0.7);
-        backdrop-filter: blur(3px);
-    }
-    
     body.dark .hero-title {
         background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
         -webkit-background-clip: text;
@@ -831,6 +1006,18 @@
     
     body.dark .hero-description {
         color: var(--tech-4);
+    }
+    
+    body.dark .featured-article-item {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    body.dark .featured-article-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+    
+    body.dark .hero-news-ticker {
+        background: rgba(255, 255, 255, 0.05);
     }
     
     /* Dark mode SVG katmanları */
@@ -885,16 +1072,6 @@
         .hero-wrapper {
             padding: 2rem 0;
         }
-        .hero-content {
-            padding: 1.5rem;
-            margin: 0 1rem;
-        }
-        .hero-title {
-            font-size: clamp(1.5rem, 5vw, 2rem);
-        }
-        .hero-description {
-            font-size: 0.9rem;
-        }
         .category-bottom-bar { 
             margin: 2rem 1rem; 
         }
@@ -935,7 +1112,6 @@
         <p>&copy; 2026 Gatemirror Media</p>
     </div>
 </div>
-
 <nav>
     <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
         <i class="fas fa-bars"></i>
@@ -952,26 +1128,21 @@
 </nav>
 
 <main>
-    <!-- 3 KATMANLI HERO + GRADIENT OVERLAY (GÜNCELLENDİ) -->
+    <!-- 3 KATMANLI HERO + GRADIENT OVERLAY -->
     <div class="hero-wrapper">
         <div class="pattern-layer layer-back">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="" aria-hidden="true">
         </div>
         
-        <!-- YENİ: Color Overlay (z-index:2) -->
+        <!-- Color Overlay (z-index:2) -->
         <div class="color-overlay"></div>
         
         <div class="pattern-layer layer-front">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="" aria-hidden="true">
         </div>
         
-        <!-- YENİ: Gradient Overlay ::after ile gelecek (CSS'te) -->
-        
-        <div class="hero-content">
-            <h1 class="hero-title">Global Insights<br>for a Changing World</h1>
-            <p class="hero-description">Deep analysis on technology, wellness, future economy, and sustainable living.</p>
-            <a href="/{{ lang }}/tech/" class="hero-cta hero-cta-primary">Explore →</a>
-        </div>
+        <!-- HERO İÇERİK - hero.json'dan dinamik olarak geliyor -->
+        {{ hero.html | safe }}
     </div>
 
     {% if featured_article %}
@@ -1088,6 +1259,4 @@
     }
 </script>
 </body>
-    </html>
-
-    
+</html>
