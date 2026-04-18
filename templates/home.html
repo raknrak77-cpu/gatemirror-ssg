@@ -1266,14 +1266,10 @@
         </div>
         
         <!-- DEBUG: HERO DEĞİŞKENİ KONTROLÜ -->
-        <div style="background: red; color: white; padding: 10px; margin: 10px; border-radius: 5px; z-index: 9999; position: relative; font-family: monospace; font-size: 14px;">
-            <strong>🔍 DEBUG:</strong><br>
-            hero var mı: {{ hero is defined }}<br>
-            hero.html uzunluğu: {{ hero.html | length if hero else 0 }}<br>
-            {% if hero and hero.html %}
-                hero.html içinde "hero-grid" var mı: {{ 'hero-grid' in hero.html }}
-            {% endif %}
-        </div>
+        <div style="background: yellow; padding: 20px; margin: 20px; z-index: 9999; position: relative; border: 2px solid black;">
+    <strong>HERO İÇERİĞİ (RAW):</strong>
+    <pre>{{ hero.html | escape | truncate(500) }}</pre>
+</div>
 
        <!-- ===================== -->
     <!-- FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) -->
