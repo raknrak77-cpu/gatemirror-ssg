@@ -36,143 +36,28 @@ def extract_youtube_id(url):
             return match.group(1)
     return None
 
-def get_popular_articles(limit=3, lang='en'):
-    """
-    TEST MODU: Örnek veri döndürür
-    Gerçek sistemde R2'den articles.json okuyacak
-    """
-    # ========== TEST VERİSİ ==========
-    test_articles = {
-        'en': [
-            {
-                'url': '/en/tech/ai-revolution-2026.html',
-                'image': '',
-                'title': 'AI Revolution 2026: What\'s Coming',
-                'reading_time': 8
-            },
-            {
-                'url': '/en/wellness/red-light-therapy.html',
-                'image': '',
-                'title': 'Red Light Therapy: Science Update 2026',
-                'reading_time': 6
-            },
-            {
-                'url': '/en/eco/carbon-capture-breakthrough.html',
-                'image': '',
-                'title': 'Carbon Capture Breakthrough: New Tech',
-                'reading_time': 7
-            }
-        ],
-        'es': [
-            {
-                'url': '/es/tech/revolucion-ia-2026.html',
-                'image': '',
-                'title': 'Revolución IA 2026: Lo Que Viene',
-                'reading_time': 8
-            },
-            {
-                'url': '/es/wellness/terapia-luz-roja.html',
-                'image': '',
-                'title': 'Terapia de Luz Roja: Actualización 2026',
-                'reading_time': 6
-            },
-            {
-                'url': '/es/eco/captura-carbono.html',
-                'image': '',
-                'title': 'Avance en Captura de Carbono',
-                'reading_time': 7
-            }
-        ],
-        'de': [
-            {
-                'url': '/de/tech/ki-revolution-2026.html',
-                'image': '',
-                'title': 'KI-Revolution 2026: Was Kommt',
-                'reading_time': 8
-            },
-            {
-                'url': '/de/wellness/rotlicht-therapie.html',
-                'image': '',
-                'title': 'Rotlichttherapie: Wissenschaft 2026',
-                'reading_time': 6
-            },
-            {
-                'url': '/de/eco/kohlenstoffabscheidung.html',
-                'image': '',
-                'title': 'Durchbruch bei CO2-Abscheidung',
-                'reading_time': 7
-            }
-        ],
-        'fr': [
-            {
-                'url': '/fr/tech/revolution-ia-2026.html',
-                'image': '',
-                'title': 'Révolution IA 2026: Ce Qui Vient',
-                'reading_time': 8
-            },
-            {
-                'url': '/fr/wellness/therapie-lumiere-rouge.html',
-                'image': '',
-                'title': 'Thérapie par Lumière Rouge: Mise à Jour',
-                'reading_time': 6
-            },
-            {
-                'url': '/fr/eco/captage-carbone.html',
-                'image': '',
-                'title': 'Percée dans le Captage du Carbone',
-                'reading_time': 7
-            }
-        ]
-    }
-    
-    # Dile göre test verisini döndür, yoksa İngilizce
-    articles = test_articles.get(lang, test_articles['en'])
-    return articles[:limit]
-
-def get_featured_articles(limit=3, lang='en'):
-    """Öne çıkan makaleleri döndürür (aynı popular kullanılabilir)"""
-    return get_popular_articles(limit, lang)
-
 # ================= BLOK RENDER FONKSİYONLARI =================
 
 def render_title_block(block):
     return f'<h1 class="hero-title">{block["content"]}</h1>'
 
 def render_description_block(block):
-    return f'<p class="hero-description">{block["content"]}</p>'
+    # description içindeki \n'leri <br> yap
+    content = block["content"].replace('\n', '<br>')
+    return f'<p class="hero-description">{content}</p>'
 
 def render_cta_block(block):
     style = block.get('style', 'primary')
     return f'<a href="{block["url"]}" class="hero-cta hero-cta-{style}">{block["text"]}</a>'
 
-def render_featured_articles_block(block, lang):
-    articles = get_popular_articles(limit=block.get('limit', 3), lang=lang)
-    if not articles:
-        return ''
-    
-    show_images = block.get('show_images', True)
-    no_images_class = '' if show_images else ' no-images'
-    
-    html = f'<div class="hero-featured-section"><h3 class="hero-featured-title">{block.get("title", "Featured")}</h3>'
-    html += f'<div class="hero-featured-articles{no_images_class}">'
-    for article in articles:
-        html += f'''
-        <div class="featured-article-item">
-            <a href="{article['url']}">
-                {f'<img src="{article["image"]}" alt="{article["title"]}" loading="lazy">' if show_images else ''}
-                <span class="featured-article-title">{article['title']}</span>
-                <span class="featured-article-meta">⏱️ {article.get('reading_time', 5)} min read</span>
-            </a>
-        </div>'''
-    html += '</div></div>'
-    return html
-
 def render_news_ticker_block(block):
+    """Sadece hero.json'daki items'ları render eder (Librarian günceller)"""
     items = block.get('items', [])
     if not items:
         return ''
     
     html = '<div class="hero-news-ticker"><div class="ticker-wrapper"><div class="ticker">'
+    html += '<span class="ticker-label">🔥 Latest:</span>'
     for item in items:
         if '→' in item:
             parts = item.split('→')
@@ -182,6 +67,21 @@ def render_news_ticker_block(block):
         else:
             html += f'<span class="ticker-item">{item}</span>'
     html += '</div></div></div>'
+    return html
+
+def render_stats_block(block):
+    items = block.get('items', [])
+    if not items:
+        return ''
+    
+    html = '<div class="hero-stats">'
+    for stat in items:
+        html += f'''
+        <div class="stat">
+            <span class="stat-value">{stat["value"]}</span>
+            <span class="stat-label">{stat["label"]}</span>
+        </div>'''
+    html += '</div>'
     return html
 
 def render_youtube_block(block):
@@ -207,21 +107,6 @@ def render_gif_block(block):
 
 def render_image_block(block):
     return f'<div class="hero-image-wrapper"><img src="{block["url"]}" alt="{block.get("alt", "")}" class="hero-image" loading="lazy"></div>'
-
-def render_stats_block(block):
-    items = block.get('items', [])
-    if not items:
-        return ''
-    
-    html = '<div class="hero-stats">'
-    for stat in items:
-        html += f'''
-        <div class="stat">
-            <span class="stat-value">{stat["value"]}</span>
-            <span class="stat-label">{stat["label"]}</span>
-        </div>'''
-    html += '</div>'
-    return html
 
 def render_carousel_block(block):
     items = block.get('items', [])
@@ -264,12 +149,11 @@ BLOCK_RENDERERS = {
     'title': render_title_block,
     'description': render_description_block,
     'cta': render_cta_block,
-    'featured_articles': lambda b, lang=None: render_featured_articles_block(b, lang),
     'news_ticker': render_news_ticker_block,
+    'stats': render_stats_block,
     'youtube': render_youtube_block,
     'gif': render_gif_block,
     'image': render_image_block,
-    'stats': render_stats_block,
     'carousel': render_carousel_block,
     'countdown': render_countdown_block,
     'quote': render_quote_block
@@ -289,20 +173,15 @@ def load_hero_data():
 def get_hero_blocks(page_type, lang, category=None):
     """
     Sayfa tipine ve dile göre hero bloklarını döndürür
-    
-    page_type: 'home', 'category', 'special', 'article'
-    lang: 'en', 'es', 'de', 'fr'
-    category: 'tech', 'wellness', 'future-economy', 'eco', 'elearning' (sadece category için)
     """
     hero_data = load_hero_data()
     
     if not hero_data:
-        # Fallback: varsayılan hero
-        return [{'type': 'title', 'content': 'Gatemirror'}, {'type': 'description', 'content': 'Global insights'}]
+        return [{'type': 'title', 'content': 'Gatemirror'}, 
+                {'type': 'description', 'content': 'Global insights'}]
     
     pages = hero_data.get('pages', {})
     
-    # Sayfa tipine göre veriyi al
     if page_type == 'home':
         page_data = pages.get('home', {})
     elif page_type == 'category' and category:
@@ -314,11 +193,9 @@ def get_hero_blocks(page_type, lang, category=None):
     else:
         page_data = {}
     
-    # Dil bazlı veriyi al
     lang_data = page_data.get(lang, {})
     blocks = lang_data.get('blocks', [])
     
-    # Eğer dil bazlı blok yoksa, defaults'u dene
     if not blocks:
         defaults = hero_data.get('defaults', {})
         default_data = defaults.get(lang, defaults.get('en', {}))
@@ -333,72 +210,31 @@ def render_block(block, lang=None):
     
     if renderer:
         try:
-            if block_type == 'featured_articles':
-                return renderer(block, lang)
-            else:
-                return renderer(block)
+            return renderer(block)
         except Exception as e:
             print(f"⚠️ Hero bloğu render hatası ({block_type}): {e}")
     return ''
 
 def render_hero(page_type, lang, category=None):
     """
-    Hero HTML'ini oluşturur - 2 KOLONLU GRID DESTEKLİ
-    
-    page_type: 'home', 'category', 'special', 'article'
-    lang: 'en', 'es', 'de', 'fr'
-    category: 'tech', 'wellness', 'future-economy', 'eco', 'elearning' veya special_type
+    Hero HTML'ini oluşturur - TEK SÜTUN (grid yok)
     """
     blocks = get_hero_blocks(page_type, lang, category)
     
     if not blocks:
         return ''
     
-    # Grid'e göre ayır
-    left_column = []
-    right_column = []
-    full_width = []
-    
+    html = '<div class="hero-container">\n'
     for block in blocks:
-        grid_type = block.get('grid', 'full')
-        
-        if grid_type == 'col-left':
-            left_column.append(block)
-        elif grid_type == 'col-right':
-            right_column.append(block)
-        else:  # 'full'
-            full_width.append(block)
-    
-    html = '<div class="hero-grid">\n'
-    
-    # Sol ve sağ sütunlar (2 kolon) - sadece ikisi de boş değilse
-    if left_column or right_column:
-        html += '    <div class="hero-grid-row-2cols">\n'
-        html += '        <div class="hero-grid-col-left">\n'
-        for block in left_column:
-            html += render_block(block, lang)
-        html += '        </div>\n'
-        html += '        <div class="hero-grid-col-right">\n'
-        for block in right_column:
-            html += render_block(block, lang)
-        html += '        </div>\n'
-        html += '    </div>\n'
-    
-    # Tam genişlik bloklar
-    for block in full_width:
-        html += '    <div class="hero-grid-full">\n'
-        html += render_block(block, lang)
-        html += '    </div>\n'
-    
+        block_html = render_block(block, lang)
+        if block_html:
+            html += f'    <div class="hero-block">{block_html}</div>\n'
     html += '</div>'
     return html
 
 # ================= PUBLISHER İÇİN HAZIR FONKSİYON =================
 
 def get_hero_data(page_type, lang, category=None):
-    """
-    Publisher için hero verisini döndürür (render edilmiş HTML olarak)
-    """
     return {
         'html': render_hero(page_type, lang, category),
         'has_hero': True
@@ -406,19 +242,10 @@ def get_hero_data(page_type, lang, category=None):
 
 # ================= TEST =================
 if __name__ == "__main__":
-    print("🧪 Hero Bot Testi (TEST MODU - Örnek Verilerle)")
+    print("🧪 Hero Bot Testi (Sade Render)")
     print("-" * 50)
     
-    print("\n🏠 HOME (EN) - Grid Düzeni:")
+    print("\n🏠 HOME (EN):")
     print(render_hero('home', 'en'))
     
-    print("\n🏠 HOME (ES) - Grid Düzeni:")
-    print(render_hero('home', 'es'))
-    
-    print("\n🏠 HOME (DE) - Grid Düzeni:")
-    print(render_hero('home', 'de'))
-    
-    print("\n🏠 HOME (FR) - Grid Düzeni:")
-    print(render_hero('home', 'fr'))
-    
-    print("\n✅ Hero Bot TEST MODU çalışıyor!")
+    print("\n✅ Hero Bot çalışıyor!")
