@@ -13,7 +13,7 @@
             { "value": "50k+", "label": "Readers" },
             { "value": "5", "label": "Languages" }
           ], "grid": "col-right" },
-          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Most Popular This Week", "grid": "full" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "📄 Most Popular This Week", "show_images": false, "grid": "full" },
           { "type": "news_ticker", "items": [
             "🚀 AI Trading Bots 2026: 340% ROI Reported",
             "📈 Crypto Market Cap Hits $4.2T",
