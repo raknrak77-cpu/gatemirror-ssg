@@ -1,62 +1,82 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-15",
+  "last_updated": "2026-04-18",
   "pages": {
     "home": {
       "en": {
         "blocks": [
-          { "type": "title", "content": "Global Insights on Tech, Wellness & Future Economy" },
-          { "type": "description", "content": "Deep analysis. Multi‑language. Reflecting reality in 5 languages." },
-          { "type": "cta", "url": "/explore/all-articles/en.html", "text": "📚 Browse All Articles", "style": "primary" },
-          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Most Popular This Week" },
+          { "type": "title", "content": "Global Insights on Tech, Wellness & Future Economy", "grid": "col-left" },
+          { "type": "description", "content": "Deep analysis. Multi‑language. Reflecting reality in 5 languages.", "grid": "col-left" },
+          { "type": "cta", "url": "/explore/all-articles/en.html", "text": "📚 Browse All Articles", "style": "primary", "grid": "col-left" },
+          { "type": "stats", "items": [
+            { "value": "500+", "label": "Articles" },
+            { "value": "50k+", "label": "Readers" },
+            { "value": "5", "label": "Languages" }
+          ], "grid": "col-right" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Most Popular This Week", "grid": "full" },
           { "type": "news_ticker", "items": [
             "🚀 AI Trading Bots 2026: 340% ROI Reported",
             "📈 Crypto Market Cap Hits $4.2T",
             "🌍 ESG Investing Outperforms Traditional Funds",
             "💡 New Study: Red Light Therapy Extends Healthspan"
-          ]}
+          ], "grid": "full" }
         ]
       },
       "es": {
         "blocks": [
-          { "type": "title", "content": "Perspectivas Globales sobre Tecnología, Bienestar y Economía Futura" },
-          { "type": "description", "content": "Análisis profundo. Multilingüe. Reflejando la realidad en 5 idiomas." },
-          { "type": "cta", "url": "/explore/all-articles/es.html", "text": "📚 Ver Todos los Artículos", "style": "primary" },
-          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Más Populares Esta Semana" },
+          { "type": "title", "content": "Perspectivas Globales sobre Tecnología, Bienestar y Economía Futura", "grid": "col-left" },
+          { "type": "description", "content": "Análisis profundo. Multilingüe. Reflejando la realidad en 5 idiomas.", "grid": "col-left" },
+          { "type": "cta", "url": "/explore/all-articles/es.html", "text": "📚 Ver Todos los Artículos", "style": "primary", "grid": "col-left" },
+          { "type": "stats", "items": [
+            { "value": "500+", "label": "Artículos" },
+            { "value": "50k+", "label": "Lectores" },
+            { "value": "5", "label": "Idiomas" }
+          ], "grid": "col-right" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Más Populares Esta Semana", "grid": "full" },
           { "type": "news_ticker", "items": [
             "🚀 Robots de Trading IA 2026: 340% ROI Reportado",
             "📈 Capitalización del Mercado Crypto Alcanza $4.2B",
             "🌍 Inversión ESG Supera a Fondos Tradicionales",
             "💡 Nuevo Estudio: Terapia de Luz Roja Extiende la Salud"
-          ]}
+          ], "grid": "full" }
         ]
       },
       "de": {
         "blocks": [
-          { "type": "title", "content": "Globale Einblicke in Technologie, Wohlbefinden und Zukunftswirtschaft" },
-          { "type": "description", "content": "Tiefgehende Analysen. Mehrsprachig. Realität in 5 Sprachen." },
-          { "type": "cta", "url": "/explore/all-articles/de.html", "text": "📚 Alle Artikel Durchsuchen", "style": "primary" },
-          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Am Beliebtesten Diese Woche" },
+          { "type": "title", "content": "Globale Einblicke in Technologie, Wohlbefinden und Zukunftswirtschaft", "grid": "col-left" },
+          { "type": "description", "content": "Tiefgehende Analysen. Mehrsprachig. Realität in 5 Sprachen.", "grid": "col-left" },
+          { "type": "cta", "url": "/explore/all-articles/de.html", "text": "📚 Alle Artikel Durchsuchen", "style": "primary", "grid": "col-left" },
+          { "type": "stats", "items": [
+            { "value": "500+", "label": "Artikel" },
+            { "value": "50k+", "label": "Leser" },
+            { "value": "5", "label": "Sprachen" }
+          ], "grid": "col-right" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Am Beliebtesten Diese Woche", "grid": "full" },
           { "type": "news_ticker", "items": [
             "🚀 KI-Handelsbots 2026: 340% ROI Gemeldet",
             "📈 Krypto-Marktkapitalisierung Erreicht $4,2B",
             "🌍 ESG-Investitionen Überfliegen Traditionelle Fonds",
             "💡 Neue Studie: Rotlichttherapie Verlängert Die Gesundheitsspanne"
-          ]}
+          ], "grid": "full" }
         ]
       },
       "fr": {
         "blocks": [
-          { "type": "title", "content": "Perspectives Mondiales sur la Tech, le Bien-être et l'Économie Future" },
-          { "type": "description", "content": "Analyse approfondie. Multilingue. Reflet de la réalité en 5 langues." },
-          { "type": "cta", "url": "/explore/all-articles/fr.html", "text": "📚 Parcourir Tous les Articles", "style": "primary" },
-          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Les Plus Populaires Cette Semaine" },
+          { "type": "title", "content": "Perspectives Mondiales sur la Tech, le Bien-être et l'Économie Future", "grid": "col-left" },
+          { "type": "description", "content": "Analyse approfondie. Multilingue. Reflet de la réalité en 5 langues.", "grid": "col-left" },
+          { "type": "cta", "url": "/explore/all-articles/fr.html", "text": "📚 Parcourir Tous les Articles", "style": "primary", "grid": "col-left" },
+          { "type": "stats", "items": [
+            { "value": "500+", "label": "Articles" },
+            { "value": "50k+", "label": "Lecteurs" },
+            { "value": "5", "label": "Langues" }
+          ], "grid": "col-right" },
+          { "type": "featured_articles", "source": "popular", "limit": 3, "title": "🔥 Les Plus Populaires Cette Semaine", "grid": "full" },
           { "type": "news_ticker", "items": [
             "🚀 Robots de Trading IA 2026: 340% ROI Signalé",
             "📈 Capitalisation du Marché Crypto Atteint 4,2B$",
             "🌍 L'Investissement ESG Surpasse les Fonds Traditionnels",
             "💡 Nouvelle Étude: La Thérapie par Lumière Rouge Prolonge la Santé"
-          ]}
+          ], "grid": "full" }
         ]
       }
     },
@@ -64,60 +84,60 @@
       "tech": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "Technology & AI" },
-            { "type": "description", "content": "Latest developments in AI, software, and digital transformation." },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Watch: 2026 AI Trends" },
+            { "type": "title", "content": "Technology & AI", "grid": "full" },
+            { "type": "description", "content": "Latest developments in AI, software, and digital transformation.", "grid": "full" },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Watch: 2026 AI Trends", "grid": "full" },
             { "type": "stats", "items": [
               { "value": "156", "label": "Articles" },
               { "value": "45k", "label": "Readers" },
               { "value": "12", "label": "Experts" }
-            ]}
+            ], "grid": "full" }
           ]
         },
         "es": {
           "blocks": [
-            { "type": "title", "content": "Tecnología & IA" },
-            { "type": "description", "content": "Últimos avances en IA, software y transformación digital." },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ver: Tendencias IA 2026" },
+            { "type": "title", "content": "Tecnología & IA", "grid": "full" },
+            { "type": "description", "content": "Últimos avances en IA, software y transformación digital.", "grid": "full" },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ver: Tendencias IA 2026", "grid": "full" },
             { "type": "stats", "items": [
               { "value": "156", "label": "Artículos" },
               { "value": "45k", "label": "Lectores" },
               { "value": "12", "label": "Expertos" }
-            ]}
+            ], "grid": "full" }
           ]
         },
         "de": {
           "blocks": [
-            { "type": "title", "content": "Technologie & KI" },
-            { "type": "description", "content": "Neueste Entwicklungen in KI, Software und digitaler Transformation." },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ansehen: KI-Trends 2026" },
+            { "type": "title", "content": "Technologie & KI", "grid": "full" },
+            { "type": "description", "content": "Neueste Entwicklungen in KI, Software und digitaler Transformation.", "grid": "full" },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ansehen: KI-Trends 2026", "grid": "full" },
             { "type": "stats", "items": [
               { "value": "156", "label": "Artikel" },
               { "value": "45k", "label": "Leser" },
               { "value": "12", "label": "Experten" }
-            ]}
+            ], "grid": "full" }
           ]
         },
         "fr": {
           "blocks": [
-            { "type": "title", "content": "Technologie & IA" },
-            { "type": "description", "content": "Derniers développements en IA, logiciels et transformation numérique." },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Regarder: Tendances IA 2026" },
+            { "type": "title", "content": "Technologie & IA", "grid": "full" },
+            { "type": "description", "content": "Derniers développements en IA, logiciels et transformation numérique.", "grid": "full" },
+            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Regarder: Tendances IA 2026", "grid": "full" },
             { "type": "stats", "items": [
               { "value": "156", "label": "Articles" },
               { "value": "45k", "label": "Lecteurs" },
               { "value": "12", "label": "Experts" }
-            ]}
+            ], "grid": "full" }
           ]
         }
       },
       "wellness": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "Wellness" },
-            { "type": "description", "content": "Deep insights on physical, mental, and emotional well-being." },
-            { "type": "gif", "url": "/assets/wellness-hero.gif", "alt": "Wellness animation" },
-            { "type": "featured_articles", "source": "popular", "limit": 2 }
+            { "type": "title", "content": "Wellness", "grid": "full" },
+            { "type": "description", "content": "Deep insights on physical, mental, and emotional well-being.", "grid": "full" },
+            { "type": "gif", "url": "/assets/wellness-hero.gif", "alt": "Wellness animation", "grid": "full" },
+            { "type": "featured_articles", "source": "popular", "limit": 2, "title": "Popular Wellness", "grid": "full" }
           ]
         }
       }
@@ -126,22 +146,22 @@
       "all-articles": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "All Articles" },
-            { "type": "description", "content": "Browse all our content in one place. Filter by category or language." },
+            { "type": "title", "content": "All Articles", "grid": "full" },
+            { "type": "description", "content": "Browse all our content in one place. Filter by category or language.", "grid": "full" },
             { "type": "carousel", "items": [
               "/assets/carousel-1.jpg",
               "/assets/carousel-2.jpg",
               "/assets/carousel-3.jpg"
-            ]}
+            ], "grid": "full" }
           ]
         }
       },
       "categories": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "Categories" },
-            { "type": "description", "content": "Browse articles by category. Find the content that matters to you." },
-            { "type": "image", "url": "/assets/categories-hero.jpg", "alt": "Categories" }
+            { "type": "title", "content": "Categories", "grid": "full" },
+            { "type": "description", "content": "Browse articles by category. Find the content that matters to you.", "grid": "full" },
+            { "type": "image", "url": "/assets/categories-hero.jpg", "alt": "Categories", "grid": "full" }
           ]
         }
       }
@@ -150,9 +170,9 @@
   "defaults": {
     "en": {
       "blocks": [
-        { "type": "title", "content": "Gatemirror" },
-        { "type": "description", "content": "Global insights on technology, wellness, and future economy." }
+        { "type": "title", "content": "Gatemirror", "grid": "full" },
+        { "type": "description", "content": "Global insights on technology, wellness, and future economy.", "grid": "full" }
       ]
     }
   }
-}
+            }
