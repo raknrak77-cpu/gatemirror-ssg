@@ -27,6 +27,9 @@
        GATEMIRROR - MASTER CSS (GÖMÜLÜ)
        ===================================================== */
     
+    /* ===================== */
+    /* RESET & VARIABLES */
+    /* ===================== */
     * {
         margin: 0;
         padding: 0;
@@ -47,6 +50,9 @@
         --border-radius: 1rem;
         --transition: all 0.3s ease;
         
+        /* ===================== */
+        /* RENK PALETLERİ - 5 KATEGORİ */
+        /* ===================== */
         /* TECH Renk Paleti */
         --tech-1: #1a1040;
         --tech-2: #2e1f72;
@@ -85,6 +91,9 @@
         --category-color: var(--tech-3);
     }
     
+    /* ===================== */
+    /* GLOBAL BODY */
+    /* ===================== */
     body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         color: var(--text);
@@ -170,7 +179,7 @@
     }
     
     /* ===================== */
-    /* SIDE MENU */
+    /* SIDE MENU (MOBİL) */
     /* ===================== */
     .side-menu {
         position: fixed;
@@ -306,7 +315,7 @@
     }
     
     /* ===================== */
-    /* HERO - KATMANLI SİSTEM (GÜNCELLENDİ) */
+    /* HERO - KATMANLI SİSTEM (ŞEFFAF) */
     /* ===================== */
     
     .hero-wrapper {
@@ -342,12 +351,14 @@
     .layer-back img {
         width: 222%;
         height: 333%;
-        opacity: 0.5;
+        opacity: 0.6;
         animation: slowDriftBack 40s ease-in-out infinite,
                    colorCycleBack 10s ease-in-out infinite;
     }
     
-    /* YENİ: Color Overlay (z-index:2) - SVG'lerin arasında */
+    /* ===================== */
+    /* COLOR OVERLAY (z-index:2) */
+    /* ===================== */
     .color-overlay {
         position: absolute;
         inset: 0;
@@ -384,18 +395,20 @@
     }
     
     .layer-front {
-        z-index: 3;  /* 2 → 3 kaydırıldı */
+        z-index: 3;
     }
     
     .layer-front img {
         width: 300%;
         height: 400%;
-        opacity: 0.3;
+        opacity: 0.4;
         animation: slowDriftFront 20s ease-in-out infinite reverse,
                    colorCycleFront 8s ease-in-out infinite reverse;
     }
     
-    /* YENİ: Hero Gradient Overlay (z-index:4) - Hero'dan content'e geçiş */
+    /* ===================== */
+    /* HERO GRADIENT OVERLAY (z-index:4) */
+    /* ===================== */
     .hero-wrapper::after {
         content: "";
         position: absolute;
@@ -411,21 +424,20 @@
     }
     
     /* ===================== */
-    /* HERO GRID SİSTEMİ - 2 KOLON (YENİ EKLENDİ) */
+    /* HERO GRID SİSTEMİ - 2 KOLON (z-index:5) */
     /* ===================== */
-    
     .hero-grid {
         position: relative;
         z-index: 5;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 3rem 1.5rem;
+        padding: 2rem 1.5rem;
     }
     
     .hero-grid-row-2cols {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 3rem;
+        gap: 2rem;
         align-items: center;
         margin-bottom: 2rem;
     }
@@ -442,7 +454,9 @@
         margin-top: 2rem;
     }
     
-    /* Hero içi element stilleri (grid içinde) */
+    /* ===================== */
+    /* HERO İÇİ ELEMENTLER */
+    /* ===================== */
     .hero-title {
         font-size: clamp(1.8rem, 4vw, 2.8rem);
         font-weight: 800;
@@ -452,15 +466,17 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     
     .hero-description {
-        font-size: 1rem;
+        font-size: 1.05rem;
         opacity: 0.9;
         max-width: 500px;
         margin-bottom: 1.5rem;
-        line-height: 1.6;
+        line-height: 1.5;
         color: var(--tech-3);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
     
     .hero-cta-primary {
@@ -481,7 +497,9 @@
         color: #ffffff;
     }
     
-    /* Stats bloğu - dikey (sağ sütun için) */
+    /* ===================== */
+    /* STATS BLOĞU (SAĞ SÜTUN) */
+    /* ===================== */
     .hero-stats {
         display: flex;
         flex-direction: column;
@@ -510,7 +528,9 @@
         letter-spacing: 1px;
     }
     
-    /* Featured Articles - 3 kart yan yana */
+    /* ===================== */
+    /* FEATURED ARTICLES BLOĞU */
+    /* ===================== */
     .hero-featured-section {
         margin: 1rem 0;
     }
@@ -526,6 +546,38 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
+    }
+    
+    /* Fotoğrafsız versiyon */
+    .hero-featured-articles.no-images {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .hero-featured-articles.no-images .featured-article-item {
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .hero-featured-articles.no-images .featured-article-item a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .hero-featured-articles.no-images .featured-article-title {
+        padding: 0;
+        font-size: 0.9rem;
+        flex: 1;
+    }
+    
+    .hero-featured-articles.no-images .featured-article-meta {
+        padding: 0;
+        font-size: 0.7rem;
+        white-space: nowrap;
     }
     
     .featured-article-item {
@@ -567,7 +619,9 @@
         opacity: 0.6;
     }
     
-    /* News Ticker */
+    /* ===================== */
+    /* NEWS TICKER (KAYAN YAZI) */
+    /* ===================== */
     .hero-news-ticker {
         background: rgba(0, 0, 0, 0.03);
         border-radius: 2rem;
@@ -589,6 +643,12 @@
         display: inline-block;
         margin-right: 2rem;
         font-size: 0.85rem;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .ticker-item:hover {
+        color: var(--primary);
     }
     
     .ticker-item::before {
@@ -601,6 +661,9 @@
         100% { transform: translateX(-50%); }
     }
     
+    /* ===================== */
+    /* ANİMASYONLAR (SVG DRIFT + RENK DÖNGÜSÜ) */
+    /* ===================== */
     @keyframes colorCycleBack {
         0%   { filter: hue-rotate(0deg)   saturate(2) brightness(0.5); }
         20%  { filter: hue-rotate(100deg) saturate(2) brightness(0.5); }
@@ -631,44 +694,8 @@
         100% { transform: translate(0, 0) scale(1) rotate(0deg); }
     }
     
-    /* Responsive grid */
-    @media (max-width: 768px) {
-        .hero-grid-row-2cols {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            text-align: center;
-        }
-        
-        .hero-grid-col-left {
-            text-align: center;
-        }
-        
-        .hero-grid-col-right {
-            text-align: center;
-        }
-        
-        .hero-description {
-            max-width: 100%;
-        }
-        
-        .hero-featured-articles {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .hero-stats {
-            flex-direction: row;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .stat {
-            min-width: 100px;
-        }
-    }
-    
     /* ===================== */
-    /* FEATURED ARTICLE */
+    /* FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) */
     /* ===================== */
     .featured {
         max-width: 1200px;
@@ -713,8 +740,8 @@
         gap: 1rem;
     }
     
-    /* ===================== */
-    /* ARTICLE GRID */
+      /* ===================== */
+    /* ARTICLE GRID (MAKALE LİSTESİ) */
     /* ===================== */
     .container {
         max-width: 1200px;
@@ -772,9 +799,9 @@
         color: var(--text-light);
         font-size: 0.9rem;
     }
-       
+    
     /* ===================== */
-    /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI */
+    /* KATEGORİ BÖLÜMÜ - BOTTOM BAR (FOOTER ÜZERİ) */
     /* ===================== */
     .category-bottom-bar {
         max-width: 1200px;
@@ -867,7 +894,9 @@
         .category-icon { font-size: 16px; }
     }
     
-    /* Kategori segment renkleri */
+    /* ===================== */
+    /* KATEGORİ SEGMENT RENKLERİ */
+    /* ===================== */
     .segment-tech {
         background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%);
     }
@@ -903,7 +932,7 @@
         background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%);
     }
     
-     /* ===================== */
+    /* ===================== */
     /* FOOTER */
     /* ===================== */
     footer {
@@ -947,10 +976,10 @@
     }
     
     /* ===================== */
-    /* MODERN DARK MODE (AÇIK LACİVERT - GÜNCELLENDİ) */
+    /* DARK MODE (AÇIK LACİVERT) */
     /* ===================== */
     body.dark {
-        background-color: #121826; /* Daha açık lacivert-antrasit */
+        background-color: #121826;
         color: #E8EDF5;
     }
     
@@ -982,13 +1011,11 @@
         background: rgba(30, 37, 56, 0.5);
     }
     
-    /* Dark mode için color-overlay daha hafif */
     body.dark .color-overlay {
         opacity: 0.35;
         mix-blend-mode: soft-light;
     }
     
-    /* Dark mode için hero gradient overlay */
     body.dark .hero-wrapper::after {
         background: linear-gradient(
             to bottom,
@@ -1020,17 +1047,34 @@
         background: rgba(255, 255, 255, 0.05);
     }
     
-    /* Dark mode SVG katmanları */
+    body.dark .hero-news-ticker .ticker-item {
+        color: #E8EDF5;
+    }
+    
+    body.dark .hero-news-ticker .ticker-item:hover {
+        color: var(--primary);
+    }
+    
+    body.dark .hero-featured-articles.no-images .featured-article-item {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    body.dark .hero-featured-articles.no-images .featured-article-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+    
     body.dark .layer-back img {
-        opacity: 0.2;
+        opacity: 0.3;
         filter: brightness(0.9) contrast(1.1);
     }
     
     body.dark .layer-front img {
-        opacity: 0.25;
+        opacity: 0.35;
     }
-    
-    /* Scrollbar */
+
+        /* ===================== */
+    /* SCROLLBAR */
+    /* ===================== */
     body.dark ::-webkit-scrollbar {
         width: 10px;
     }
@@ -1043,8 +1087,33 @@
     }
     
     /* ===================== */
-    /* RESPONSIVE */
+    /* RESPONSIVE (MOBİL + TABLET) */
     /* ===================== */
+    
+    /* Tablet ve küçük desktop (max-width: 900px) */
+    @media (max-width: 900px) {
+        .hero-grid-row-2cols {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            text-align: center;
+        }
+        
+        .hero-grid-col-left {
+            text-align: center;
+        }
+        
+        .hero-grid-col-right {
+            text-align: center;
+        }
+        
+        .hero-description {
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    
+    /* Mobil (max-width: 768px) */
     @media (max-width: 768px) {
         .nav-links {
             display: none;
@@ -1052,29 +1121,73 @@
         .menu-btn {
             display: block;
         }
+        
+        .hero-grid {
+            padding: 1.5rem 1rem;
+        }
+        
+        .hero-grid-row-2cols {
+            gap: 1rem;
+        }
+        
+        .hero-featured-articles {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        .hero-stats {
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .stat {
+            min-width: 80px;
+        }
+        
+        .hero-title {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+        }
+        
+        .hero-description {
+            font-size: 0.95rem;
+        }
+        
+        .ticker-item {
+            font-size: 0.75rem;
+        }
+        
         .article-grid {
             grid-template-columns: 1fr;
         }
+        
         .featured-card {
             flex-direction: column;
         }
+        
         .featured-card img {
             width: 100%;
             height: 200px;
         }
+        
         .featured-content {
             padding: 1.5rem;
         }
+        
         .footer-content {
             grid-template-columns: 1fr;
             text-align: center;
         }
+        
         .hero-wrapper {
             padding: 2rem 0;
         }
+        
         .category-bottom-bar { 
             margin: 2rem 1rem; 
         }
+        
         .category-segment { 
             min-height: 48px; 
         }
@@ -1082,7 +1195,11 @@
     </style>
 </head>
 <body>
-    <div class="side-menu" id="sideMenu">
+
+<!-- ===================== -->
+<!-- SIDE MENU (MOBİL) -->
+<!-- ===================== -->
+<div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
     <div class="dark-mode-toggle">
         <span>🌓 Dark Mode</span>
@@ -1112,6 +1229,10 @@
         <p>&copy; 2026 Gatemirror Media</p>
     </div>
 </div>
+
+<!-- ===================== -->
+<!-- HEADER & NAVIGATION -->
+<!-- ===================== -->
 <nav>
     <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
         <i class="fas fa-bars"></i>
@@ -1128,23 +1249,30 @@
 </nav>
 
 <main>
-    <!-- 3 KATMANLI HERO + GRADIENT OVERLAY -->
+    <!-- ===================== -->
+    <!-- HERO BÖLÜMÜ (KATMANLI SVG + GRID İÇERİK) -->
+    <!-- ===================== -->
     <div class="hero-wrapper">
+        <!-- KATMAN 1: ARKA SVG -->
         <div class="pattern-layer layer-back">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="" aria-hidden="true">
         </div>
         
-        <!-- Color Overlay (z-index:2) -->
+        <!-- KATMAN 2: RENK OVERLAY -->
         <div class="color-overlay"></div>
         
+        <!-- KATMAN 3: ÖN SVG -->
         <div class="pattern-layer layer-front">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="" aria-hidden="true">
         </div>
         
-        <!-- HERO İÇERİK - hero.json'dan dinamik olarak geliyor -->
+        <!-- KATMAN 4: HERO İÇERİK (hero.json'dan dinamik) -->
         {{ hero.html | safe }}
     </div>
 
+    <!-- ===================== -->
+    <!-- FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) -->
+    <!-- ===================== -->
     {% if featured_article %}
     <div class="featured">
         <a href="{{ featured_article.url }}" class="featured-card">
@@ -1162,6 +1290,9 @@
     </div>
     {% endif %}
 
+    <!-- ===================== -->
+    <!-- LATEST STORIES (MAKALE GRID) -->
+    <!-- ===================== -->
     <div class="container">
         <h2 class="section-title">
             {% if lang == 'en' %}Latest Stories{% elif lang == 'es' %}Últimas Historias{% elif lang == 'de' %}Neueste Geschichten{% elif lang == 'fr' %}Dernières Histoires{% endif %}
@@ -1184,7 +1315,9 @@
     </div>
 </main>
 
-<!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
+<!-- ===================== -->
+<!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR (FOOTER ÜZERİ) -->
+<!-- ===================== -->
 <div class="category-bottom-bar">
     <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
         <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
@@ -1203,6 +1336,9 @@
     </a>
 </div>
 
+<!-- ===================== -->
+<!-- FOOTER -->
+<!-- ===================== -->
 <footer>
     <div class="footer-content">
         <div class="footer-column">
@@ -1232,6 +1368,9 @@
     </div>
 </footer>
 
+<!-- ===================== -->
+<!-- SCHEMA.ORG (STRUCTURED DATA) -->
+<!-- ===================== -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -1243,6 +1382,9 @@
 }
 </script>
 
+<!-- ===================== -->
+<!-- JAVASCRIPT (MENU, DARK MODE) -->
+<!-- ===================== -->
 <script>
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
     document.addEventListener('click', function(e) {
