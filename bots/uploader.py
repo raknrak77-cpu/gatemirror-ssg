@@ -29,6 +29,21 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
         return True
     return False
 
+def convert_to_webp(input_path, output_path):
+    """PNG/JPG'yi WebP'ye dönüştürür"""
+    try:
+        from PIL import Image
+        with Image.open(input_path) as img:
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                img = background
+            img.save(output_path, 'WEBP', quality=85)
+        return True
+    except Exception as e:
+        print(f"⚠️ WebP dönüşüm hatası: {e}")
+        return False
+
 def upload_templates():
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
@@ -68,6 +83,30 @@ def upload_svg_patterns():
         else:
             print(f"⚠️ Dosya bulunamadı: {local_path}")
 
+def upload_manifesto_images():
+    """manifesto görsellerini yükler ve WebP'ye çevirir"""
+    local_dir = "assets/manifesto"
+    if not os.path.exists(local_dir):
+        print(f"⚠️ {local_dir} klasörü yok, atlanıyor.")
+        return
+    
+    print("\n🎨 MANIFESTO GÖRSELLERİ YÜKLENİYOR...")
+    for file in os.listdir(local_dir):
+        if file.endswith(('.jpg', '.jpeg', '.png')):
+            local_path = os.path.join(local_dir, file)
+            name = os.path.splitext(file)[0]
+            webp_file = f"{name}.webp"
+            webp_path = os.path.join(local_dir, webp_file)
+            
+            print(f"   📸 {file} → WebP dönüştürülüyor...")
+            if convert_to_webp(local_path, webp_path):
+                r2_key = f"assets/manifesto/{webp_file}"
+                upload_file_to_r2(webp_path, r2_key, content_type='image/webp')
+                os.remove(webp_path)
+                print(f"   ✅ {webp_file} yüklendi")
+            else:
+                print(f"   ⚠️ {file} dönüştürülemedi")
+
 def uploader():
     print("\n📁 TEMPLATE YEDEKLEME")
     print("-" * 40)
@@ -78,6 +117,7 @@ def uploader():
     # HERO.JSON YÜKLEME KALDIRILDI - Librarian assets/hero.json yazacak
     
     upload_svg_patterns()
+    upload_manifesto_images()  # YENİ
     
     content_base = "content"
     if not os.path.exists(content_base):
@@ -124,6 +164,7 @@ def uploader():
     print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ svg1.svg → R2/assets/svg1.svg")
     print("   ✅ svg2.svg → R2/assets/svg2.svg")
+    print("   ✅ Manifesto görselleri → R2/assets/manifesto/")
     print("   ✅ content/ → R2/raw-articles/")
     print("=" * 60)
 
