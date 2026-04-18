@@ -36,15 +36,102 @@ def extract_youtube_id(url):
             return match.group(1)
     return None
 
-def get_popular_articles(limit=3):
-    """En çok okunan makaleleri döndürür (Publisher'dan alınacak)"""
-    # Bu fonksiyon Publisher'dan gelen veriyle doldurulacak
-    # Şimdilik boş liste döndür
-    return []
+def get_popular_articles(limit=3, lang='en'):
+    """
+    TEST MODU: Örnek veri döndürür
+    Gerçek sistemde R2'den articles.json okuyacak
+    """
+    # ========== TEST VERİSİ ==========
+    test_articles = {
+        'en': [
+            {
+                'url': '/en/tech/ai-revolution-2026.html',
+                'image': 'https://picsum.photos/id/1/300/200',
+                'title': 'AI Revolution 2026: What\'s Coming',
+                'reading_time': 8
+            },
+            {
+                'url': '/en/wellness/red-light-therapy.html',
+                'image': 'https://picsum.photos/id/20/300/200',
+                'title': 'Red Light Therapy: Science Update 2026',
+                'reading_time': 6
+            },
+            {
+                'url': '/en/eco/carbon-capture-breakthrough.html',
+                'image': 'https://picsum.photos/id/29/300/200',
+                'title': 'Carbon Capture Breakthrough: New Tech',
+                'reading_time': 7
+            }
+        ],
+        'es': [
+            {
+                'url': '/es/tech/revolucion-ia-2026.html',
+                'image': 'https://picsum.photos/id/1/300/200',
+                'title': 'Revolución IA 2026: Lo Que Viene',
+                'reading_time': 8
+            },
+            {
+                'url': '/es/wellness/terapia-luz-roja.html',
+                'image': 'https://picsum.photos/id/20/300/200',
+                'title': 'Terapia de Luz Roja: Actualización 2026',
+                'reading_time': 6
+            },
+            {
+                'url': '/es/eco/captura-carbono.html',
+                'image': 'https://picsum.photos/id/29/300/200',
+                'title': 'Avance en Captura de Carbono',
+                'reading_time': 7
+            }
+        ],
+        'de': [
+            {
+                'url': '/de/tech/ki-revolution-2026.html',
+                'image': 'https://picsum.photos/id/1/300/200',
+                'title': 'KI-Revolution 2026: Was Kommt',
+                'reading_time': 8
+            },
+            {
+                'url': '/de/wellness/rotlicht-therapie.html',
+                'image': 'https://picsum.photos/id/20/300/200',
+                'title': 'Rotlichttherapie: Wissenschaft 2026',
+                'reading_time': 6
+            },
+            {
+                'url': '/de/eco/kohlenstoffabscheidung.html',
+                'image': 'https://picsum.photos/id/29/300/200',
+                'title': 'Durchbruch bei CO2-Abscheidung',
+                'reading_time': 7
+            }
+        ],
+        'fr': [
+            {
+                'url': '/fr/tech/revolution-ia-2026.html',
+                'image': 'https://picsum.photos/id/1/300/200',
+                'title': 'Révolution IA 2026: Ce Qui Vient',
+                'reading_time': 8
+            },
+            {
+                'url': '/fr/wellness/therapie-lumiere-rouge.html',
+                'image': 'https://picsum.photos/id/20/300/200',
+                'title': 'Thérapie par Lumière Rouge: Mise à Jour',
+                'reading_time': 6
+            },
+            {
+                'url': '/fr/eco/captage-carbone.html',
+                'image': 'https://picsum.photos/id/29/300/200',
+                'title': 'Percée dans le Captage du Carbone',
+                'reading_time': 7
+            }
+        ]
+    }
+    
+    # Dile göre test verisini döndür, yoksa İngilizce
+    articles = test_articles.get(lang, test_articles['en'])
+    return articles[:limit]
 
-def get_featured_articles(limit=3):
-    """Öne çıkan makaleleri döndürür"""
-    return []
+def get_featured_articles(limit=3, lang='en'):
+    """Öne çıkan makaleleri döndürür (aynı popular kullanılabilir)"""
+    return get_popular_articles(limit, lang)
 
 # ================= BLOK RENDER FONKSİYONLARI =================
 
@@ -59,7 +146,7 @@ def render_cta_block(block):
     return f'<a href="{block["url"]}" class="hero-cta hero-cta-{style}">{block["text"]}</a>'
 
 def render_featured_articles_block(block, lang):
-    articles = get_popular_articles(limit=block.get('limit', 3))
+    articles = get_popular_articles(limit=block.get('limit', 3), lang=lang)
     if not articles:
         return ''
     
@@ -69,7 +156,7 @@ def render_featured_articles_block(block, lang):
         html += f'''
         <div class="featured-article-item">
             <a href="{article['url']}">
-                <img src="{article['image']}" alt="{article['title']}" loading="lazy">
+                <img src="{article['image']}" alt="{article['title']}" loading="lazy" onerror="this.style.display=\'none\'">
                 <span class="featured-article-title">{article['title']}</span>
                 <span class="featured-article-meta">⏱️ {article.get('reading_time', 5)} min read</span>
             </a>
@@ -197,7 +284,6 @@ def get_hero_blocks(page_type, lang, category=None):
     page_type: 'home', 'category', 'special', 'article'
     lang: 'en', 'es', 'de', 'fr'
     category: 'tech', 'wellness', 'future-economy', 'eco', 'elearning' (sadece category için)
-    special_type: 'all-articles', 'categories' (sadece special için)
     """
     hero_data = load_hero_data()
     
@@ -215,7 +301,7 @@ def get_hero_blocks(page_type, lang, category=None):
         page_data = category_data.get(category, {})
     elif page_type == 'special':
         special_data = pages.get('special', {})
-        page_data = special_data.get(category, {})  # category burada special_type oluyor
+        page_data = special_data.get(category, {})
     else:
         page_data = {}
     
@@ -231,9 +317,24 @@ def get_hero_blocks(page_type, lang, category=None):
     
     return blocks
 
+def render_block(block, lang=None):
+    """Tek bir bloğu render eder"""
+    block_type = block.get('type')
+    renderer = BLOCK_RENDERERS.get(block_type)
+    
+    if renderer:
+        try:
+            if block_type == 'featured_articles':
+                return renderer(block, lang)
+            else:
+                return renderer(block)
+        except Exception as e:
+            print(f"⚠️ Hero bloğu render hatası ({block_type}): {e}")
+    return ''
+
 def render_hero(page_type, lang, category=None):
     """
-    Hero HTML'ini oluşturur
+    Hero HTML'ini oluşturur - 2 KOLONLU GRID DESTEKLİ
     
     page_type: 'home', 'category', 'special', 'article'
     lang: 'en', 'es', 'de', 'fr'
@@ -244,23 +345,41 @@ def render_hero(page_type, lang, category=None):
     if not blocks:
         return ''
     
-    html = '<div class="hero">\n'
+    # Grid'e göre ayır
+    left_column = []
+    right_column = []
+    full_width = []
     
     for block in blocks:
-        block_type = block.get('type')
-        renderer = BLOCK_RENDERERS.get(block_type)
+        grid_type = block.get('grid', 'full')
         
-        if renderer:
-            try:
-                if block_type == 'featured_articles':
-                    block_html = renderer(block, lang)
-                else:
-                    block_html = renderer(block)
-                
-                if block_html:
-                    html += f'    {block_html}\n'
-            except Exception as e:
-                print(f"⚠️ Hero bloğu render hatası ({block_type}): {e}")
+        if grid_type == 'col-left':
+            left_column.append(block)
+        elif grid_type == 'col-right':
+            right_column.append(block)
+        else:  # 'full'
+            full_width.append(block)
+    
+    html = '<div class="hero-grid">\n'
+    
+    # Sol ve sağ sütunlar (2 kolon) - sadece ikisi de boş değilse
+    if left_column or right_column:
+        html += '    <div class="hero-grid-row-2cols">\n'
+        html += '        <div class="hero-grid-col-left">\n'
+        for block in left_column:
+            html += render_block(block, lang)
+        html += '        </div>\n'
+        html += '        <div class="hero-grid-col-right">\n'
+        for block in right_column:
+            html += render_block(block, lang)
+        html += '        </div>\n'
+        html += '    </div>\n'
+    
+    # Tam genişlik bloklar
+    for block in full_width:
+        html += '    <div class="hero-grid-full">\n'
+        html += render_block(block, lang)
+        html += '    </div>\n'
     
     html += '</div>'
     return html
@@ -278,22 +397,19 @@ def get_hero_data(page_type, lang, category=None):
 
 # ================= TEST =================
 if __name__ == "__main__":
-    print("🧪 Hero Bot Testi")
+    print("🧪 Hero Bot Testi (TEST MODU - Örnek Verilerle)")
     print("-" * 50)
     
-    print("\n🏠 HOME (EN):")
+    print("\n🏠 HOME (EN) - Grid Düzeni:")
     print(render_hero('home', 'en'))
     
-    print("\n🏠 HOME (ES):")
+    print("\n🏠 HOME (ES) - Grid Düzeni:")
     print(render_hero('home', 'es'))
     
-    print("\n📁 CATEGORY - Tech (EN):")
-    print(render_hero('category', 'en', 'tech'))
+    print("\n🏠 HOME (DE) - Grid Düzeni:")
+    print(render_hero('home', 'de'))
     
-    print("\n📁 CATEGORY - Wellness (FR):")
-    print(render_hero('category', 'fr', 'wellness'))
+    print("\n🏠 HOME (FR) - Grid Düzeni:")
+    print(render_hero('home', 'fr'))
     
-    print("\n📄 ALL ARTICLES (EN):")
-    print(render_hero('special', 'en', 'all-articles'))
-    
-    print("\n✅ Hero Bot çalışıyor!")
+    print("\n✅ Hero Bot TEST MODU çalışıyor!")
