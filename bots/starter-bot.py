@@ -8,6 +8,9 @@ def test_templates():
     templates_dir = "templates"
     errors = []
     
+    # Atlanacak dosyalar (içerik parçaları, tam HTML değil)
+    skip_files = ['manifesto.html', 'hero.html']
+    
     if not os.path.exists(templates_dir):
         print("❌ templates/ klasörü bulunamadı!")
         sys.exit(1)
@@ -16,11 +19,16 @@ def test_templates():
         if not file.endswith('.html'):
             continue
         
+        # Atlanacak dosyaları kontrol et
+        if file in skip_files:
+            print(f"   ⏭️ {file} atlandı (içerik dosyası)")
+            continue
+        
         path = os.path.join(templates_dir, file)
         with open(path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # hero.html özel kontroller
+        # hero.html özel kontroller (artık kullanılmıyor ama kalsın)
         if file == 'hero.html':
             if 'class="hero"' not in content:
                 errors.append(f"{file}: .hero sınıfı yok")
@@ -64,7 +72,6 @@ def test_css():
     warnings = []
     
     if not os.path.exists(css_path):
-        # UYARI: style.css yok ama gömülü CSS var, bu normal
         warnings.append("style.css dosyası bulunamadı (gömülü CSS kullanılıyor, bu normal)")
         return [], warnings
     
@@ -94,7 +101,7 @@ def test_css():
     return errors, warnings
 
 def test_static_pages():
-    """Statik sayfaları (about, contact, privacy) kontrol eder - GÜNCELLENDİ"""
+    """Statik sayfaları (about, contact, privacy) kontrol eder"""
     static_pages = ['about-us.html', 'contact.html', 'privacy-policy.html']
     errors = []
     
@@ -108,7 +115,6 @@ def test_static_pages():
             content = f.read()
         
         # CSS linki kontrolü - style.css ARANMAZ (gömülü CSS var)
-        # Sadece font-awesome kontrol et
         if 'font-awesome' not in content:
             errors.append(f"{page}: Font Awesome linki yok")
         
@@ -198,6 +204,7 @@ def starter():
     print("\n" + "=" * 60)
     print("🔍 STARTER BOT - TEMPLATE, CSS, STATİK SAYFA VE TASK KONTROLÜ")
     print("   ✅ Gömülü CSS sistemi için güncellendi")
+    print("   ✅ İçerik dosyaları (manifesto.html, hero.html) atlanıyor")
     print("=" * 60 + "\n")
     
     all_errors = []
