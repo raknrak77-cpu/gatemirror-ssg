@@ -720,35 +720,65 @@
     }
     
     /* ===================== */
-    /* DARK MODE */
-    /* ===================== */
-    body.dark {
-        background: #121212;
-        color: #e0e0e0;
-    }
-    
-    body.dark nav {
-        background: rgba(18, 18, 18, 0.98);
-        border-bottom-color: #333;
-    }
-    
-    body.dark .logo,
-    body.dark .nav-links a {
-        color: #e0e0e0;
-    }
-    
-    body.dark .article-card,
-    body.dark .featured-card {
-        background: #1e1e1e;
-    }
-    
-    body.dark .layer-back img {
-        opacity: 0.25;
-    }
-    
-    body.dark .layer-front img {
-        opacity: 0.15;
-    }
+/* MODERN DARK MODE (DEEP SPACE) */
+/* ===================== */
+body.dark {
+    background-color: #0D1117; /* Ana derin antrasit-lacivert zemin */
+    color: #C9D1D9; /* Göz yormayan yumuşak gri-beyaz metin */
+}
+
+body.dark nav {
+    background: rgba(13, 17, 23, 0.95); /* Zeminle uyumlu yarı şeffaf nav */
+    border-bottom: 1px solid #30363D;
+    backdrop-filter: blur(12px);
+}
+
+body.dark .logo,
+body.dark .nav-links a {
+    color: #F0F6FC;
+}
+
+/* Makale Kartları: Zeminden hafifçe yükselmiş (elevated) hissi verir */
+body.dark .article-card,
+body.dark .featured-card {
+    background: #161B22;
+    border: 1px solid #30363D;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .article-card h3, 
+body.dark .featured-content h2 {
+    color: #F0F6FC;
+}
+
+/* Kategori barı karanlık modda daha "soft" durmalı */
+body.dark .category-bottom-bar {
+    border-color: #30363D;
+    background: rgba(22, 27, 34, 0.5);
+}
+
+/* SVG Desen Katmanları İçin Optimize Edilmiş Opaklık */
+body.dark .layer-back svg {
+    opacity: 0.12; /* Çok hafif bir doku hissi */
+    filter: brightness(0.8) contrast(1.2);
+}
+
+body.dark .layer-front svg {
+    opacity: 0.18; /* Biraz daha belirgin ön katman */
+    filter: drop-shadow(0 0 8px rgba(26, 35, 126, 0.3));
+}
+
+/* Scrollbar (Kaydırma Çubuğu) Makyajı */
+body.dark ::-webkit-scrollbar {
+    width: 10px;
+}
+body.dark ::-webkit-scrollbar-track {
+    background: #0D1117;
+}
+body.dark ::-webkit-scrollbar-thumb {
+    background: #30363D;
+    border-radius: 5px;
+}
     
       /* ===================== */
     /* RESPONSIVE */
