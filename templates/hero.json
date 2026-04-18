@@ -15,7 +15,14 @@
           },
           {
             "type": "news_ticker",
-            "items": []
+            "items": [
+              "AI Trading Bots 2026: Which Strategies Actually Beat the Market → /en/tech/ai-trading-bots-2026-strategies",
+              "Generative Search vs Traditional SEO: How Google SGE Is Killing the 10 Blue Links → /en/tech/generative-search-vs-traditional-seo",
+              "Agentic AI: The Rise of Autonomous Digital Workers → /en/tech/agentic-ai-autonomous-workforce",
+              "AI Cybersecurity 2026: Real-Time Threat Detection → /en/tech/ai-cybersecurity-2026",
+              "Circadian Alignment 2.0: Optimizing Sleep and Energy → /en/wellness/circadian-alignment-2026",
+              "The 2026 Longevity Blueprints: Cellular Reprogramming → /en/wellness/2026-longevity-blueprints"
+            ]
           }
         ]
       },
@@ -31,7 +38,12 @@
           },
           {
             "type": "news_ticker",
-            "items": []
+            "items": [
+              "Revolución IA 2026: Lo Que Viene → /es/tech/revolucion-ia-2026",
+              "Terapia de Luz Roja: Actualización 2026 → /es/wellness/terapia-luz-roja",
+              "Avance en Captura de Carbono → /es/eco/captura-carbono",
+              "Capitalización Crypto Alcanza $4.2B → /es/future-economy/cripto"
+            ]
           }
         ]
       },
@@ -47,7 +59,12 @@
           },
           {
             "type": "news_ticker",
-            "items": []
+            "items": [
+              "KI-Revolution 2026: Was Kommt → /de/tech/ki-revolution-2026",
+              "Rotlichttherapie: Wissenschaft → /de/wellness/rotlicht-therapie",
+              "Durchbruch bei CO2-Abscheidung → /de/eco/kohlenstoffabscheidung",
+              "Krypto-Marktkapitalisierung Erreicht $4,2B → /de/future-economy/krypto"
+            ]
           }
         ]
       },
@@ -63,7 +80,12 @@
           },
           {
             "type": "news_ticker",
-            "items": []
+            "items": [
+              "Révolution IA 2026: Ce Qui Vient → /fr/tech/revolution-ia-2026",
+              "Thérapie par Lumière Rouge: Mise à Jour → /fr/wellness/therapie-lumiere-rouge",
+              "Percée dans le Captage du Carbone → /fr/eco/captage-carbone",
+              "Capitalisation Crypto Atteint 4,2B$ → /fr/future-economie/crypto"
+            ]
           }
         ]
       }
@@ -80,6 +102,39 @@
               { "value": "12", "label": "Experts" }
             ]}
           ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Tecnología & IA" },
+            { "type": "description", "content": "Últimos avances en IA, software y transformación digital." },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Artículos" },
+              { "value": "45k", "label": "Lectores" },
+              { "value": "12", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Technologie & KI" },
+            { "type": "description", "content": "Neueste Entwicklungen in KI, Software und digitaler Transformation." },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Artikel" },
+              { "value": "45k", "label": "Leser" },
+              { "value": "12", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Technologie & IA" },
+            { "type": "description", "content": "Derniers développements en IA, logiciels et transformation numérique." },
+            { "type": "stats", "items": [
+              { "value": "156", "label": "Articles" },
+              { "value": "45k", "label": "Lecteurs" },
+              { "value": "12", "label": "Experts" }
+            ]}
+          ]
         }
       },
       "wellness": {
@@ -93,6 +148,177 @@
               { "value": "8", "label": "Experts" }
             ]}
           ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Bienestar" },
+            { "type": "description", "content": "Perspectivas profundas sobre bienestar físico, mental y emocional." },
+            { "type": "stats", "items": [
+              { "value": "120+", "label": "Artículos" },
+              { "value": "35k", "label": "Lectores" },
+              { "value": "8", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Wohlbefinden" },
+            { "type": "description", "content": "Tiefe Einblicke in körperliches, geistiges und emotionales Wohlbefinden." },
+            { "type": "stats", "items": [
+              { "value": "120+", "label": "Artikel" },
+              { "value": "35k", "label": "Leser" },
+              { "value": "8", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Bien-être" },
+            { "type": "description", "content": "Aperçus approfondis sur le bien-être physique, mental et émotionnel." },
+            { "type": "stats", "items": [
+              { "value": "120+", "label": "Articles" },
+              { "value": "35k", "label": "Lecteurs" },
+              { "value": "8", "label": "Experts" }
+            ]}
+          ]
+        }
+      },
+      "future-economy": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Future Economy" },
+            { "type": "description", "content": "Finance, DeFi, tokenomics, and algorithmic trading." },
+            { "type": "stats", "items": [
+              { "value": "98", "label": "Articles" },
+              { "value": "32k", "label": "Readers" },
+              { "value": "9", "label": "Experts" }
+            ]}
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Economía Futura" },
+            { "type": "description", "content": "Finanzas, DeFi, tokenomics y trading algorítmico." },
+            { "type": "stats", "items": [
+              { "value": "98", "label": "Artículos" },
+              { "value": "32k", "label": "Lectores" },
+              { "value": "9", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Zukunftswirtschaft" },
+            { "type": "description", "content": "Finanzen, DeFi, Tokenomics und algorithmischer Handel." },
+            { "type": "stats", "items": [
+              { "value": "98", "label": "Artikel" },
+              { "value": "32k", "label": "Leser" },
+              { "value": "9", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Économie Future" },
+            { "type": "description", "content": "Finance, DeFi, tokenomics et trading algorithmique." },
+            { "type": "stats", "items": [
+              { "value": "98", "label": "Articles" },
+              { "value": "32k", "label": "Lecteurs" },
+              { "value": "9", "label": "Experts" }
+            ]}
+          ]
+        }
+      },
+      "eco": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Eco & Sustainable" },
+            { "type": "description", "content": "Sustainable living, green energy, and climate solutions." },
+            { "type": "stats", "items": [
+              { "value": "112", "label": "Articles" },
+              { "value": "28k", "label": "Readers" },
+              { "value": "7", "label": "Experts" }
+            ]}
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Eco & Sostenible" },
+            { "type": "description", "content": "Vida sostenible, energía verde y soluciones climáticas." },
+            { "type": "stats", "items": [
+              { "value": "112", "label": "Artículos" },
+              { "value": "28k", "label": "Lectores" },
+              { "value": "7", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Öko & Nachhaltig" },
+            { "type": "description", "content": "Nachhaltiges Leben, grüne Energie und Klimaschutzlösungen." },
+            { "type": "stats", "items": [
+              { "value": "112", "label": "Artikel" },
+              { "value": "28k", "label": "Leser" },
+              { "value": "7", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Éco & Durable" },
+            { "type": "description", "content": "Vie durable, énergie verte et solutions climatiques." },
+            { "type": "stats", "items": [
+              { "value": "112", "label": "Articles" },
+              { "value": "28k", "label": "Lecteurs" },
+              { "value": "7", "label": "Experts" }
+            ]}
+          ]
+        }
+      },
+      "elearning": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "E-Learning" },
+            { "type": "description", "content": "Online education, career development, and digital skills." },
+            { "type": "stats", "items": [
+              { "value": "134", "label": "Articles" },
+              { "value": "41k", "label": "Readers" },
+              { "value": "11", "label": "Experts" }
+            ]}
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "E-Aprendizaje" },
+            { "type": "description", "content": "Educación en línea, desarrollo profesional y habilidades digitales." },
+            { "type": "stats", "items": [
+              { "value": "134", "label": "Artículos" },
+              { "value": "41k", "label": "Lectores" },
+              { "value": "11", "label": "Expertos" }
+            ]}
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "E-Learning" },
+            { "type": "description", "content": "Online-Bildung, Karriereentwicklung und digitale Kompetenzen." },
+            { "type": "stats", "items": [
+              { "value": "134", "label": "Artikel" },
+              { "value": "41k", "label": "Leser" },
+              { "value": "11", "label": "Experten" }
+            ]}
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "E-Apprentissage" },
+            { "type": "description", "content": "Éducation en ligne, développement de carrière et compétences numériques." },
+            { "type": "stats", "items": [
+              { "value": "134", "label": "Articles" },
+              { "value": "41k", "label": "Lecteurs" },
+              { "value": "11", "label": "Experts" }
+            ]}
+          ]
         }
       }
     },
@@ -101,7 +327,51 @@
         "en": {
           "blocks": [
             { "type": "title", "content": "All Articles" },
-            { "type": "description", "content": "Browse all our content in one place." }
+            { "type": "description", "content": "Browse all our content in one place. Filter by category or language." }
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Todos los Artículos" },
+            { "type": "description", "content": "Explore todo nuestro contenido en un solo lugar. Filtre por categoría o idioma." }
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Alle Artikel" },
+            { "type": "description", "content": "Durchsuchen Sie alle unsere Inhalte an einem Ort. Filtern Sie nach Kategorie oder Sprache." }
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Tous les Articles" },
+            { "type": "description", "content": "Parcourez tout notre contenu en un seul endroit. Filtrez par catégorie ou par langue." }
+          ]
+        }
+      },
+      "categories": {
+        "en": {
+          "blocks": [
+            { "type": "title", "content": "Categories" },
+            { "type": "description", "content": "Browse articles by category. Find the content that matters to you." }
+          ]
+        },
+        "es": {
+          "blocks": [
+            { "type": "title", "content": "Categorías" },
+            { "type": "description", "content": "Explore artículos por categoría. Encuentre el contenido que le importa." }
+          ]
+        },
+        "de": {
+          "blocks": [
+            { "type": "title", "content": "Kategorien" },
+            { "type": "description", "content": "Durchsuchen Sie Artikel nach Kategorie. Finden Sie die Inhalte, die für Sie wichtig sind." }
+          ]
+        },
+        "fr": {
+          "blocks": [
+            { "type": "title", "content": "Catégories" },
+            { "type": "description", "content": "Parcourez les articles par catégorie. Trouvez le contenu qui vous intéresse." }
           ]
         }
       }
@@ -112,6 +382,24 @@
       "blocks": [
         { "type": "title", "content": "Gatemirror" },
         { "type": "description", "content": "Global insights on technology, wellness, and future economy." }
+      ]
+    },
+    "es": {
+      "blocks": [
+        { "type": "title", "content": "Gatemirror" },
+        { "type": "description", "content": "Perspectivas globales sobre tecnología, bienestar y economía futura." }
+      ]
+    },
+    "de": {
+      "blocks": [
+        { "type": "title", "content": "Gatemirror" },
+        { "type": "description", "content": "Globale Einblicke in Technologie, Wohlbefinden und Zukunftswirtschaft." }
+      ]
+    },
+    "fr": {
+      "blocks": [
+        { "type": "title", "content": "Gatemirror" },
+        { "type": "description", "content": "Perspectives mondiales sur la technologie, le bien-être et l'économie future." }
       ]
     }
   }
