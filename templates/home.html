@@ -122,7 +122,7 @@
     nav {
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(10px);
-        padding: 1rem 5%;
+        padding: 1rem 3%;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -130,6 +130,8 @@
         top: 0;
         z-index: 1000;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        gap: 1rem;
+        overflow: visible;
     }
     
     .logo {
@@ -146,13 +148,17 @@
     
     .nav-links {
         display: flex;
-        gap: 2rem;
+        gap: 1.2rem;
+        flex-wrap: nowrap;
+        align-items: center;
     }
     
     .nav-links a {
         text-decoration: none;
         color: var(--text);
         font-weight: 500;
+        font-size: 0.82rem;
+        white-space: nowrap;
         transition: var(--transition);
     }
     
@@ -305,8 +311,7 @@
         left: 26px;
     }
     
-
-/* ===================== */
+    /* ===================== */
     /* HERO - KATMANLI SVG ARKA PLAN (SİZİN AYARLARINIZ AYNEN) */
     /* ===================== */
     
@@ -327,8 +332,8 @@
     }
     
     .pattern-layer svg {
-        width: 250%;
-        height: 250%;
+        width: 300%;
+        height: 400%;
         object-fit: cover;
         object-position: right top;
     }
@@ -339,8 +344,8 @@
     
     .layer-back svg {
         opacity: 0.55;
-        animation: slowDriftBack 20s ease-in-out infinite,
-                   colorCycleBack 9s ease-in-out infinite;
+        animation: slowDriftBack 40s ease-in-out infinite,
+                   colorCycleBack 18s ease-in-out infinite;
     }
     
     .layer-front {
@@ -349,8 +354,8 @@
     
     .layer-front svg {
         opacity: 0.35;
-        animation: slowDriftFront 10s ease-in-out infinite reverse,
-                   colorCycleFront 7s ease-in-out infinite reverse;
+        animation: slowDriftFront 20s ease-in-out infinite reverse,
+                   colorCycleFront 14s ease-in-out infinite reverse;
     }
     
     .hero-content {
@@ -536,8 +541,8 @@
         color: var(--text-light);
         font-size: 0.9rem;
     }
-
- /* ===================== */
+       
+    /* ===================== */
     /* KATEGORİ BÖLÜMÜ - BOTTOM BAR TARZI (Footer üzerinde) */
     /* ===================== */
     .category-bottom-bar {
@@ -592,22 +597,7 @@
     
     .category-icon {
         font-size: 14px;
-    }      
-
-/* ===================== */
-/* KATEGORİ RENKLERİ */
-/* ===================== */
-.segment-tech     { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
-.segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
-.segment-eco      { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
-.segment-fe       { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
-.segment-el       { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
-
-.segment-tech:hover     { background: linear-gradient(135deg, var(--tech-3), var(--tech-5)); }
-.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-5)); }
-.segment-eco:hover      { background: linear-gradient(135deg, var(--eco-3), var(--eco-5)); }
-.segment-fe:hover       { background: linear-gradient(135deg, var(--fe-3), var(--fe-5)); }
-.segment-el:hover       { background: linear-gradient(135deg, var(--el-3), var(--el-5)); }
+    }
         
     /* Kategori segment renkleri */
     .segment-tech {
@@ -719,9 +709,25 @@
         opacity: 0.3;
     }
     
-      /* ===================== */
+    /* ===================== */
     /* RESPONSIVE */
     /* ===================== */
+    /* Tablet yatay (768-1024px): nav göster ama küçük font */
+    @media (min-width: 769px) and (max-width: 1100px) {
+        nav {
+            padding: 0.8rem 2%;
+        }
+        .nav-links {
+            gap: 0.7rem;
+        }
+        .nav-links a {
+            font-size: 0.74rem;
+        }
+        .logo {
+            font-size: 1.2rem;
+        }
+    }
+
     @media (max-width: 768px) {
         .nav-links {
             display: none;
@@ -960,5 +966,7 @@
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     }
 </script>
-</body>
+</body> 
 </html>
+
+        
