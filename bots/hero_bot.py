@@ -174,7 +174,13 @@ def render_news_ticker_block(block):
     
     html = '<div class="hero-news-ticker"><div class="ticker-wrapper"><div class="ticker">'
     for item in items:
-        html += f'<span class="ticker-item">{item}</span>'
+        if '→' in item:
+            parts = item.split('→')
+            text = parts[0].strip()
+            url = parts[1].strip()
+            html += f'<a href="{url}" class="ticker-item">{text}</a>'
+        else:
+            html += f'<span class="ticker-item">{item}</span>'
     html += '</div></div></div>'
     return html
 
