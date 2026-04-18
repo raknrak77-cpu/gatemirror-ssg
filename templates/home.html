@@ -474,95 +474,164 @@
         );
         pointer-events: none;
     }
+        /* =================================================================== */
+/* HERO BÖLÜMÜ - TÜM DEĞİŞKENLER VE AÇIKLAMALARI */
+/* =================================================================== */
+
+/* 
+   ===================== HERO CONTAINER =====================
+   Hero içeriğini saran ana kap. Tüm hero elemanları bu kutu içinde.
+*/
+.hero-container {
+    position: relative;     /* İçindeki absolute elemanlar bu kutuya göre hizalanır */
+    z-index: 5;            /* Katman sırası (büyük sayı = üstte). Alt katmanlarda SVG var */
+    max-width: 800px;      /* EN FAZLA GENİŞLİK: 800px (büyük ekranda bile bu kadar) */
+    margin: 0 auto;        /* Otomatik sağ-sol boşluk = ORTALAR */
+    padding: 2rem 1.5rem;  /* İÇ BOŞLUK: üst/alt 2rem, sağ/sol 1.5rem */
+    text-align: center;    /* İçindeki tüm metinleri ORTALAR */
+}
+
+/*
+   ===================== HERO TITLE (BAŞLIK) =====================
+*/
+.hero-title {
+    /* clamp(MİN, TERCH, MAKS) - EKRANA GÖRE OTOMATİK BOYUTLANIR */
+    font-size: clamp(2.5rem, 5vw, 3.7rem);
+    /* MİN: 2.5rem (40px) - en küçük telefonda bile bu kadar */
+    /* TERCH: 5vw (ekran genişliğinin %5'i) - normalde bu kadar olur */
+    /* MAKS: 3.7rem (59px) - büyük ekranda bile bu kadar büyür */
     
-    /* ===================== */
-    /* HERO İÇERİK (SADE - GRİD YOK) */
-    /* ===================== */
-    .hero-container {
-        position: relative;
-        z-index: 5;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem 1.5rem;
-        text-align: center;
+    font-weight: 800;              /* Kalınlık: 800 (extra bold) */
+    letter-spacing: -0.02em;      /* Harf aralığı: hafif sıkışık (negatif değer) */
+    margin-bottom: 1rem;          /* Alt boşluk: 16px */
+    
+    /* RENK GEÇİŞİ - metne gradient uygular */
+    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+    -webkit-background-clip: text;   /* Gradient'i sadece metne uygula */
+    -webkit-text-fill-color: transparent; /* Normal renk yok, gradient görünsün */
+    background-clip: text;
+    
+    /* GÖLGE - metne hafif gölge, okunurluğu artırır */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    /* 0: yatay kayma, 2px: dikey kayma, 8px: bulanıklık, siyah %15 opaklık */
+}
+
+/*
+   ===================== HERO DESCRIPTION (AÇIKLAMA) =====================
+*/
+.hero-description {
+    font-size: 2.0rem;           /* YAZI BOYUTU: 32px (BÜYÜK!) */
+    opacity: 0.9;                /* Saydamlık: %90 (biraz hafif) */
+    max-width: 600px;            /* EN FAZLA GENİŞLİK: 600px (orta ekran) */
+    margin: 0 auto 1.5rem;       /* Üst:0, sağ/sol:auto(ortalar), alt:1.5rem */
+    line-height: 1.5;            /* Satır yüksekliği: yazı boyutunun 1.5 katı */
+    color: var(--tech-3);        /* Yazı rengi: tech palet 3.mor */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+/*
+   ===================== NEWS TICKER (KAYAN YAZI KUTUSU) =====================
+*/
+.hero-news-ticker {
+    background: rgba(0, 0, 0, 0.03);  /* ARKA PLAN: siyah %3 opaklık (çok hafif gri) */
+    border-radius: 2rem;              /* KÖŞE YUMUŞATMA: 32px (tam yuvarlak değil) */
+    padding: 0.75rem 1rem;            /* İÇ BOŞLUK: üst/alt 0.75rem, sağ/sol 1rem */
+    overflow: hidden;                 /* TAŞAN İÇERİK: gizle (kayan yazı için önemli) */
+    margin-top: 1rem;                 /* ÜST BOŞLUK: 16px */
+}
+
+/*
+   ===================== TICKER WRAPPER =====================
+   Kayan yazının taşmasını engelleyen kutu
+*/
+.ticker-wrapper {
+    overflow: hidden;    /* Taşan içeriği gizle */
+}
+
+/*
+   ===================== TICKER (KAYAN YAZI) =====================
+*/
+.ticker {
+    display: inline-block;        /* YAN YANA DİZİLİM: inline (blok değil) */
+    white-space: nowrap;          /* SATIR SONU YAPMA: hepsi aynı satırda */
+    animation: ticker-scroll 25s linear infinite;  /* ANİMASYON */
+    /* 25s: 25 saniyede bir tam tur */
+    /* linear: sabit hız */
+    /* infinite: sonsuz döngü */
+}
+
+/*
+   ===================== TICKER LABEL (ETİKET - "🔥 Latest:") =====================
+*/
+.ticker-label {
+    display: inline-block;        /* Yan yana dizilim */
+    margin-right: 1rem;           /* SAĞ BOŞLUK: 16px (yazılardan ayrılır) */
+    font-weight: 700;             /* Kalınlık: 700 (bold) */
+    color: var(--primary);        /* Renk: ana yeşil */
+    background: rgba(0,0,0,0.05); /* Arka plan: siyah %5 opaklık */
+    padding: 0.2rem 0.8rem;       /* İç boşluk: üst/alt 0.2rem, sağ/sol 0.8rem */
+    border-radius: 2rem;          /* Köşe yumuşatma: 32px */
+    font-size: 1.3rem;            /* YAZI BOYUTU: 20.8px */
+}
+
+/*
+   ===================== TICKER ITEM (HER BİR KAYAN YAZI ÖĞESİ) =====================
+*/
+.ticker-item {
+    display: inline-block;        /* Yan yana dizilim */
+    margin-right: 2rem;           /* SAĞ BOŞLUK: 32px (öğeler arası mesafe) */
+    font-size: 0.85rem;           /* YAZI BOYUTU: 13.6px (küçük) */
+    text-decoration: none;        /* Alt çizgi yok */
+    color: inherit;               /* Renk: aynı (üst elementten alır) */
+}
+
+.ticker-item:hover {
+    color: var(--primary);        /* Fare üzerine gelince: ana yeşil olur */
+}
+
+.ticker-item::before {
+    content: "🪩";                /* HER ÖĞENİN BAŞINA EMOJI EKLER */
+    margin-right: 0.5rem;         /* EMOJİDEN SONRA BOŞLUK: 8px */
+}
+
+/*
+   ===================== KAYMA ANİMASYONU =====================
+*/
+@keyframes ticker-scroll {
+    0% { 
+        transform: translateX(0); 
+        /* BAŞLANGIÇ: hiç kaymamış */
     }
-    
-    .hero-title {
-        font-size: clamp(2.5rem, 5vw, 3.7rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    100% { 
+        transform: translateX(-50%); 
+        /* BİTİŞ: yarım genişlik kadar sola kaymış */
+        /* Yarısı kayınca içerik tekrar başa sarar */
     }
-    
-    .hero-description {
-        font-size: 2.0rem;
-        opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto 1.5rem;
-        line-height: 1.5;
-        color: var(--tech-3);
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* ===================== */
-    /* NEWS TICKER (KAYAN YAZI) */
-    /* ===================== */
-    .hero-news-ticker {
-        background: rgba(0, 0, 0, 0.03);
-        border-radius: 2rem;
-        padding: 0.75rem 1rem;
-        overflow: hidden;
-        margin-top: 1rem;
-    }
-    
-    .ticker-wrapper {
-        overflow: hidden;
-    }
-    
-    .ticker {
-        display: inline-block;
-        white-space: nowrap;
-        animation: ticker-scroll 25s linear infinite;
-    }
-    
-    .ticker-label {
-        display: inline-block;
-        margin-right: 1rem;
-        font-weight: 700;
-        color: var(--primary);
-        background: rgba(0,0,0,0.05);
-        padding: 0.2rem 0.8rem;
-        border-radius: 2rem;
-        font-size: 1.3rem;
-    }
-    
-    .ticker-item {
-        display: inline-block;
-        margin-right: 2rem;
-        font-size: 0.85rem;
-        text-decoration: none;
-        color: inherit;
-    }
-    
-    .ticker-item:hover {
-        color: var(--primary);
-    }
-    
-    .ticker-item::before {
-        content: "🪩";
-        margin-right: 0.5rem;
-    }
-    
-    @keyframes ticker-scroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-    
+}
+
+/*
+   =================================================================== */
+   /* ÖRNEK BOYUT DEĞİŞİKLİKLERİ - İHTİYACINA GÖRE AYARLA */
+   /* =================================================================== */
+   
+   /* Başlık küçük olsun istersen: clamp(2rem, 4vw, 3rem) */
+   /* Başlık büyük olsun istersen: clamp(3rem, 6vw, 4.5rem) */
+   
+   /* Açıklama küçük olsun istersen: font-size: 1.2rem */
+   /* Açıklama büyük olsun istersen: font-size: 2.5rem */
+   
+   /* Ticker hızı yavaş olsun: animation: ticker-scroll 35s linear infinite; */
+   /* Ticker hızı hızlı olsun: animation: ticker-scroll 15s linear infinite; */
+   
+   /* Ticker label küçük: font-size: 0.9rem */
+   /* Ticker label büyük: font-size: 1.6rem */
+   
+   /* Ticker item küçük: font-size: 0.7rem */
+   /* Ticker item büyük: font-size: 1rem */
+   
+   /* Öğeler arası mesafe az: margin-right: 1rem */
+   /* Öğeler arası mesafe çok: margin-right: 4rem */
+        
     /* ===================== */
     /* ANİMASYONLAR (SVG DRIFT + RENK DÖNGÜSÜ) */
     /* ===================== */
