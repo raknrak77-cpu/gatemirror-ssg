@@ -146,17 +146,21 @@ def render_cta_block(block):
     return f'<a href="{block["url"]}" class="hero-cta hero-cta-{style}">{block["text"]}</a>'
 
 def render_featured_articles_block(block, lang):
+def render_featured_articles_block(block, lang):
     articles = get_popular_articles(limit=block.get('limit', 3), lang=lang)
     if not articles:
         return ''
     
+    show_images = block.get('show_images', True)
+    no_images_class = '' if show_images else ' no-images'
+    
     html = f'<div class="hero-featured-section"><h3 class="hero-featured-title">{block.get("title", "Featured")}</h3>'
-    html += '<div class="hero-featured-articles">'
+    html += f'<div class="hero-featured-articles{no_images_class}">'
     for article in articles:
         html += f'''
         <div class="featured-article-item">
             <a href="{article['url']}">
-                <img src="{article['image']}" alt="{article['title']}" loading="lazy" onerror="this.style.display=\'none\'">
+                {f'<img src="{article["image"]}" alt="{article["title"]}" loading="lazy">' if show_images else ''}
                 <span class="featured-article-title">{article['title']}</span>
                 <span class="featured-article-meta">⏱️ {article.get('reading_time', 5)} min read</span>
             </a>
