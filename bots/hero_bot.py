@@ -46,19 +46,19 @@ def get_popular_articles(limit=3, lang='en'):
         'en': [
             {
                 'url': '/en/tech/ai-revolution-2026.html',
-                'image': 'https://picsum.photos/id/1/300/200',
+                'image': '',
                 'title': 'AI Revolution 2026: What\'s Coming',
                 'reading_time': 8
             },
             {
                 'url': '/en/wellness/red-light-therapy.html',
-                'image': 'https://picsum.photos/id/20/300/200',
+                'image': '',
                 'title': 'Red Light Therapy: Science Update 2026',
                 'reading_time': 6
             },
             {
                 'url': '/en/eco/carbon-capture-breakthrough.html',
-                'image': 'https://picsum.photos/id/29/300/200',
+                'image': '',
                 'title': 'Carbon Capture Breakthrough: New Tech',
                 'reading_time': 7
             }
@@ -66,19 +66,19 @@ def get_popular_articles(limit=3, lang='en'):
         'es': [
             {
                 'url': '/es/tech/revolucion-ia-2026.html',
-                'image': 'https://picsum.photos/id/1/300/200',
+                'image': '',
                 'title': 'Revolución IA 2026: Lo Que Viene',
                 'reading_time': 8
             },
             {
                 'url': '/es/wellness/terapia-luz-roja.html',
-                'image': 'https://picsum.photos/id/20/300/200',
+                'image': '',
                 'title': 'Terapia de Luz Roja: Actualización 2026',
                 'reading_time': 6
             },
             {
                 'url': '/es/eco/captura-carbono.html',
-                'image': 'https://picsum.photos/id/29/300/200',
+                'image': '',
                 'title': 'Avance en Captura de Carbono',
                 'reading_time': 7
             }
@@ -86,19 +86,19 @@ def get_popular_articles(limit=3, lang='en'):
         'de': [
             {
                 'url': '/de/tech/ki-revolution-2026.html',
-                'image': 'https://picsum.photos/id/1/300/200',
+                'image': '',
                 'title': 'KI-Revolution 2026: Was Kommt',
                 'reading_time': 8
             },
             {
                 'url': '/de/wellness/rotlicht-therapie.html',
-                'image': 'https://picsum.photos/id/20/300/200',
+                'image': '',
                 'title': 'Rotlichttherapie: Wissenschaft 2026',
                 'reading_time': 6
             },
             {
                 'url': '/de/eco/kohlenstoffabscheidung.html',
-                'image': 'https://picsum.photos/id/29/300/200',
+                'image': '',
                 'title': 'Durchbruch bei CO2-Abscheidung',
                 'reading_time': 7
             }
@@ -106,19 +106,19 @@ def get_popular_articles(limit=3, lang='en'):
         'fr': [
             {
                 'url': '/fr/tech/revolution-ia-2026.html',
-                'image': 'https://picsum.photos/id/1/300/200',
+                'image': '',
                 'title': 'Révolution IA 2026: Ce Qui Vient',
                 'reading_time': 8
             },
             {
                 'url': '/fr/wellness/therapie-lumiere-rouge.html',
-                'image': 'https://picsum.photos/id/20/300/200',
+                'image': '',
                 'title': 'Thérapie par Lumière Rouge: Mise à Jour',
                 'reading_time': 6
             },
             {
                 'url': '/fr/eco/captage-carbone.html',
-                'image': 'https://picsum.photos/id/29/300/200',
+                'image': '',
                 'title': 'Percée dans le Captage du Carbone',
                 'reading_time': 7
             }
@@ -145,7 +145,6 @@ def render_cta_block(block):
     style = block.get('style', 'primary')
     return f'<a href="{block["url"]}" class="hero-cta hero-cta-{style}">{block["text"]}</a>'
 
-def render_featured_articles_block(block, lang):
 def render_featured_articles_block(block, lang):
     articles = get_popular_articles(limit=block.get('limit', 3), lang=lang)
     if not articles:
