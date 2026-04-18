@@ -128,7 +128,6 @@ def get_raw_article_by_hash(hash_id, lang, category):
                 key = obj['Key']
                 filename = key.split('/')[-1]
                 if filename.startswith(hash_id) and filename.endswith('.html'):
-                    # Bulundu!
                     file_obj = s3.get_object(Bucket=R2_BUCKET, Key=key)
                     html_content = file_obj['Body'].read().decode('utf-8')
                     from makeup import parse_article_html
@@ -322,7 +321,7 @@ def designer():
     timings["MAKALE_YAZMA"] = time.time() - write_start
     print(f"   ✅ Makale yazma: {timings['MAKALE_YAZMA']:.2f}s")
     
-    # ================= 7. HOME PAGE (DÜZELTİLMİŞ) =================
+    # ================= 7. HOME PAGE (DÜZELTİLMİŞ + MANIFESTO) =================
     print("\n🏠 7. HOME PAGE")
     t_start = time.time()
 
@@ -337,6 +336,17 @@ def designer():
     # SVG URL'lerini logla
     print(f"   🔍 SVG1: {r2_url}/assets/svg1.svg")
     print(f"   🔍 SVG2: {r2_url}/assets/svg2.svg")
+
+    # Manifesto içeriğini oku
+    manifesto_html = ""
+    try:
+        with open("templates/manifesto.html", "r", encoding="utf-8") as f:
+            manifesto_html = f.read()
+            # R2_PUBLIC_URL değişkenini manifesto içinde kullanmak için
+            manifesto_html = manifesto_html.replace("{{ R2_PUBLIC_URL }}", r2_url)
+        print("   ✅ manifesto.html okundu")
+    except Exception as e:
+        print(f"   ⚠️ manifesto.html okunamadı: {e}")
 
     featured = lang_articles[0] if lang_articles else None
     featured_for_home = None
@@ -374,7 +384,8 @@ def designer():
             canonical_url=f"{r2_url}/en/",
             og_image=articles_for_home[0]['image'] if articles_for_home else "",
             alternate_langs=[],
-            hero={'html': hero_html, 'show': True}
+            hero={'html': hero_html, 'show': True},
+            manifesto=manifesto_html  # YENİ
         )
         s3.put_object(Bucket=R2_BUCKET, Key="articles_ready/en/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
         timings["HOME_PAGE"] = time.time() - t_start
@@ -491,7 +502,7 @@ def designer():
         timings["ALL_ARTICLES"] = time.time() - t_start
         print(f"   ✅ All articles: {timings['ALL_ARTICLES']:.2f}s")
     
-      # 10. ZAMAN RAPORU
+    # 10. ZAMAN RAPORU
     print("\n" + "=" * 60)
     print("📊 ZAMAN RAPORU")
     print("=" * 60)
