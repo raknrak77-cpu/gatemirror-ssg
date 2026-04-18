@@ -135,11 +135,9 @@ def copy_and_overwrite(source_key, dest_key):
 def atomic_swap():
     """
     articles_ready/ → articles/ OPTİMİZE swap
-    - Backup YOK (üzerine yaz)
-    - Parallel copy (10 thread)
     """
     print("\n" + "=" * 40)
-    print("🔄 ATOMIC SWAP: articles_ready/ → articles/ (Üzerine Yaz + Parallel)")
+    print("🔄 ATOMIC SWAP: articles_ready/ → articles/")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
@@ -167,14 +165,11 @@ def atomic_swap():
         for future in as_completed(futures):
             if future.result():
                 success_count += 1
-            if success_count % 50 == 0:
-                print(f"   📊 {success_count}/{len(source_files)} dosya yazıldı...")
     
     print(f"   ✅ {success_count}/{len(source_files)} dosya başarıyla yazıldı")
     
     if success_count < len(source_files) * 0.9:
         print(f"❌ Çok fazla hata ({success_count}/{len(source_files)} başarılı)")
-        print("   SEIÇARIZ! Manuel müdahale gerekli.")
         return False
     
     print("🗑️ articles_ready/ siliniyor...")
@@ -195,7 +190,7 @@ def get_articles_from_r2():
         return []
 
 def generate_explorer_json(articles):
-    """Sadece JSON verisi üretir, HTML yok (Publisher üretiyor artık)"""
+    """Sadece JSON verisi üretir"""
     explorer_data = {
         "version": "1.0",
         "generated": datetime.now().isoformat(),
@@ -250,27 +245,22 @@ def update_hero_ticker():
     print("🔄 HERO TICKER GÜNCELLENİYOR...")
     print("=" * 40)
     
-    # 1. articles.json'u oku
     articles = get_articles_from_r2()
     if not articles:
         print("   ⚠️ articles.json okunamadı, ticker güncellenemedi.")
         return False
     
-    # 2. Her dil için en son makaleleri al (tarihe göre sırala)
     new_ticker_items = {}
     
     for lang in LANGUAGES:
         lang_articles = [a for a in articles if a.get('lang') == lang]
         
-        # Tarihe göre sırala (en yeni önce) - datetime yoksa date kullan
         def get_sort_key(article):
-            # Önce datetime dene, yoksa date, yoksa boş string
             return article.get('datetime', article.get('date', ''))
         
         sorted_articles = sorted(lang_articles, key=get_sort_key, reverse=True)
-        latest = sorted_articles[:6]  # Son 6 makale
+        latest = sorted_articles[:6]
         
-        # "title → url" formatında items oluştur
         items = []
         for a in latest:
             title = a.get('title', 'Untitled')
@@ -281,7 +271,6 @@ def update_hero_ticker():
         new_ticker_items[lang] = items
         print(f"   📝 {lang.upper()}: {len(items)} makale eklendi")
     
-    # 3. hero.json'u oku
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='templates/hero.json')
         hero_data = json.loads(response['Body'].read().decode('utf-8'))
@@ -289,29 +278,20 @@ def update_hero_ticker():
         print(f"   ❌ hero.json okunamadı: {e}")
         return False
     
-    # 4. Her dil için news_ticker bloğunu güncelle
     for lang in LANGUAGES:
         try:
-            # Mevcut blocks'u al
             blocks = hero_data['pages']['home'][lang].get('blocks', [])
-            
-            # Eski news_ticker bloklarını kaldır
             blocks = [block for block in blocks if block.get('type') != 'news_ticker']
-            
-            # Yeni news_ticker ekle (en alta)
             blocks.append({
                 "type": "news_ticker",
                 "items": new_ticker_items.get(lang, []),
                 "grid": "full"
             })
-            
             hero_data['pages']['home'][lang]['blocks'] = blocks
-            
         except KeyError:
             print(f"   ⚠️ {lang.upper()} için home bloğu bulunamadı, atlanıyor.")
             continue
     
-    # 5. Güncellenmiş hero.json'u kaydet
     hero_data['last_updated'] = datetime.now().isoformat()
     
     try:
@@ -327,6 +307,72 @@ def update_hero_ticker():
         print(f"   ❌ hero.json kaydedilemedi: {e}")
         return False
 
+# ================= YENİ: HERO STATS GÜNCELLEME =================
+
+def update_hero_stats():
+    """
+    articles.json'dan toplam makale sayısını al,
+    hero.json'daki description içindeki makale sayısını günceller
+    """
+    print("\n" + "=" * 40)
+    print("🔄 HERO STATS GÜNCELLENİYOR...")
+    print("=" * 40)
+    
+    articles = get_articles_from_r2()
+    if not articles:
+        print("   ⚠️ articles.json okunamadı, stats güncellenemedi.")
+        return False
+    
+    # Her dil için toplam makale sayısını hesapla
+    lang_counts = {}
+    for lang in LANGUAGES:
+        count = len([a for a in articles if a.get('lang') == lang])
+        lang_counts[lang] = count
+    
+    try:
+        response = s3.get_object(Bucket=R2_BUCKET, Key='templates/hero.json')
+        hero_data = json.loads(response['Body'].read().decode('utf-8'))
+    except Exception as e:
+        print(f"   ❌ hero.json okunamadı: {e}")
+        return False
+    
+    # Her dil için description'ı güncelle
+    for lang in LANGUAGES:
+        try:
+            blocks = hero_data['pages']['home'][lang].get('blocks', [])
+            total_articles = lang_counts.get(lang, 0)
+            
+            # Yeni description metni
+            new_description = f"Tech & AI · Future Economy\nWellness · Eco & Sustainable\nE-Learning\n📚 {total_articles}+ Articles in 5 languages"
+            
+            # Description bloğunu bul ve güncelle
+            for block in blocks:
+                if block.get('type') == 'description':
+                    block['content'] = new_description
+                    break
+            
+            hero_data['pages']['home'][lang]['blocks'] = blocks
+            print(f"   📝 {lang.upper()}: {total_articles} makale")
+            
+        except KeyError:
+            print(f"   ⚠️ {lang.upper()} için home bloğu bulunamadı, atlanıyor.")
+            continue
+    
+    hero_data['last_updated'] = datetime.now().isoformat()
+    
+    try:
+        s3.put_object(
+            Bucket=R2_BUCKET,
+            Key='templates/hero.json',
+            Body=json.dumps(hero_data, indent=2, ensure_ascii=False).encode('utf-8'),
+            ContentType='application/json'
+        )
+        print("   ✅ hero.json güncellendi (stats yenilendi)")
+        return True
+    except Exception as e:
+        print(f"   ❌ hero.json kaydedilemedi: {e}")
+        return False
+
 # ================= ANA LİBRARIAN =================
 
 def librarian():
@@ -334,6 +380,7 @@ def librarian():
     print("📚 KÜTÜPHANECİ BOT (Librarian)")
     print("   ✅ explore/explorer.json oluşturuluyor")
     print("   ✅ hero.json ticker güncelleniyor")
+    print("   ✅ hero.json stats güncelleniyor")
     print("   ✅ Atomic swap: articles_ready/ → articles/")
     print("=" * 60)
     
@@ -345,27 +392,29 @@ def librarian():
     else:
         print("\n⚠️ articles.json okunamadı, explorer.json atlanıyor.")
     
-    # 2. YENİ: hero.json'daki ticker items'larını güncelle
+    # 2. hero.json'daki ticker items'larını güncelle
     update_hero_ticker()
     
-    # 3. Atomic swap yap (articles_ready/ → articles/)
+    # 3. hero.json'daki stats (makale sayısı) güncelle
+    update_hero_stats()
+    
+    # 4. Atomic swap yap
     try:
         swap_success = atomic_swap()
         if swap_success:
             print("\n✅ SWAP BAŞARILI! Site yeni içerikle yayında.")
         else:
             print("\n❌ SWAP BAŞARISIZ! Site eski içerikle devam ediyor.")
-            print("   Lütfen manuel müdahale gerekebilir.")
             sys.exit(1)
     except Exception as e:
         print(f"\n❌ KRİTİK HATA: {e}")
-        print("   SEIÇARIZ! Manuel müdahale gerekli.")
         sys.exit(1)
     
     print("\n" + "=" * 60)
     print("🏁 KÜTÜPHANECİ BOT TAMAMLANDI!")
     print("   ✅ explore/explorer.json güncellendi")
     print("   ✅ hero.json ticker güncellendi")
+    print("   ✅ hero.json stats güncellendi")
     print("   ✅ Atomic swap tamamlandı")
     print("=" * 60)
 
