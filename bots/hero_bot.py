@@ -24,7 +24,6 @@ s3 = boto3.client(
 # ================= YARDIMCI FONKSİYONLAR =================
 
 def extract_youtube_id(url):
-    """YouTube URL'sinden video ID'sini çıkarır"""
     patterns = [
         r'(?:youtube\.com\/watch\?v=)([\w-]+)',
         r'(?:youtu\.be\/)([\w-]+)',
@@ -42,7 +41,6 @@ def render_title_block(block):
     return f'<h1 class="hero-title">{block["content"]}</h1>'
 
 def render_description_block(block):
-    # description içindeki \n'leri <br> yap
     content = block["content"].replace('\n', '<br>')
     return f'<p class="hero-description">{content}</p>'
 
@@ -51,7 +49,6 @@ def render_cta_block(block):
     return f'<a href="{block["url"]}" class="hero-cta hero-cta-{style}">{block["text"]}</a>'
 
 def render_news_ticker_block(block):
-    """Sadece hero.json'daki items'ları render eder (Librarian günceller)"""
     items = block.get('items', [])
     if not items:
         return ''
@@ -88,17 +85,10 @@ def render_youtube_block(block):
     video_id = extract_youtube_id(block['url'])
     if not video_id:
         return ''
-    
     title = block.get('title', 'Video')
     return f'''
     <div class="hero-youtube">
-        <iframe 
-            src="https://www.youtube.com/embed/{video_id}" 
-            title="{title}" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
+        <iframe src="https://www.youtube.com/embed/{video_id}" title="{title}" frameborder="0" allowfullscreen></iframe>
         {f'<p class="hero-youtube-caption">{title}</p>' if title else ''}
     </div>'''
 
@@ -112,16 +102,11 @@ def render_carousel_block(block):
     items = block.get('items', [])
     if not items:
         return ''
-    
     html = '<div class="hero-carousel"><div class="carousel-container">'
     for i, item in enumerate(items):
         active_class = 'active' if i == 0 else ''
         html += f'<div class="carousel-slide {active_class}"><img src="{item}" loading="lazy"></div>'
-    html += '''
-    </div>
-    <button class="carousel-prev">❮</button>
-    <button class="carousel-next">❯</button>
-    <div class="carousel-dots">'''
+    html += '</div><button class="carousel-prev">❮</button><button class="carousel-next">❯</button><div class="carousel-dots">'
     for i in range(len(items)):
         html += f'<span class="dot" data-index="{i}"></span>'
     html += '</div></div>'
@@ -131,18 +116,10 @@ def render_countdown_block(block):
     target_date = block.get('target_date', '')
     if not target_date:
         return ''
-    return f'''
-    <div class="hero-countdown" data-target="{target_date}">
-        <div class="countdown-timer"></div>
-        <div class="countdown-label">{block.get('label', '')}</div>
-    </div>'''
+    return f'<div class="hero-countdown" data-target="{target_date}"><div class="countdown-timer"></div><div class="countdown-label">{block.get("label", "")}</div></div>'
 
 def render_quote_block(block):
-    return f'''
-    <div class="hero-quote">
-        <blockquote>"{block['content']}"</blockquote>
-        <cite>— {block.get('author', '')}</cite>
-    </div>'''
+    return f'<div class="hero-quote"><blockquote>"{block["content"]}"</blockquote><cite>— {block.get("author", "")}</cite></div>'
 
 # ================= BLOK TİPİ RENDER MAP =================
 BLOCK_RENDERERS = {
@@ -159,21 +136,17 @@ BLOCK_RENDERERS = {
     'quote': render_quote_block
 }
 
-# ================= HERO VERİSİNİ YÜKLE =================
+# ================= HERO VERİSİNİ YÜKLE (assets/ klasöründen) =================
 
 def load_hero_data():
-    """R2'den hero.json dosyasını yükler"""
     try:
-        response = s3.get_object(Bucket=R2_BUCKET, Key='templates/hero.json')
+        response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
         return json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
-        print(f"⚠️ templates/hero.json yüklenemedi: {e}")
+        print(f"⚠️ assets/hero.json yüklenemedi: {e}")
         return None
 
 def get_hero_blocks(page_type, lang, category=None):
-    """
-    Sayfa tipine ve dile göre hero bloklarını döndürür
-    """
     hero_data = load_hero_data()
     
     if not hero_data:
@@ -204,7 +177,6 @@ def get_hero_blocks(page_type, lang, category=None):
     return blocks
 
 def render_block(block, lang=None):
-    """Tek bir bloğu render eder"""
     block_type = block.get('type')
     renderer = BLOCK_RENDERERS.get(block_type)
     
@@ -216,9 +188,6 @@ def render_block(block, lang=None):
     return ''
 
 def render_hero(page_type, lang, category=None):
-    """
-    Hero HTML'ini oluşturur - mevcut CSS ile uyumlu (hero-grid-full kullanır)
-    """
     blocks = get_hero_blocks(page_type, lang, category)
     
     if not blocks:
@@ -232,20 +201,15 @@ def render_hero(page_type, lang, category=None):
     html += '</div>'
     return html
 
-# ================= PUBLISHER İÇİN HAZIR FONKSİYON =================
-
 def get_hero_data(page_type, lang, category=None):
     return {
         'html': render_hero(page_type, lang, category),
         'has_hero': True
     }
 
-# ================= TEST =================
 if __name__ == "__main__":
-    print("🧪 Hero Bot Testi")
+    print("🧪 Hero Bot Testi (assets/hero.json okuyor)")
     print("-" * 50)
-    
     print("\n🏠 HOME (EN):")
     print(render_hero('home', 'en'))
-    
     print("\n✅ Hero Bot çalışıyor!")
