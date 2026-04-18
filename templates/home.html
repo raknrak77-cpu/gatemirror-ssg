@@ -308,7 +308,64 @@
         content: "☀️";
         left: 26px;
     }
-    
+
+        /* ===================== */
+/* MANIFESTO GÖRSELLERİ - DİNAMİK BOYUT */
+/* ===================== */
+
+.manifesto-image {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.manifesto-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+}
+
+/* PC (1200px ve üzeri) */
+@media (min-width: 1200px) {
+    .manifesto-image img {
+        max-width: 500px;
+        max-height: 300px;
+    }
+}
+
+/* Laptop (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .manifesto-image img {
+        max-width: 450px;
+        max-height: 270px;
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .manifesto-image img {
+        max-width: 350px;
+        max-height: 210px;
+    }
+}
+
+/* Büyük Telefon (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .manifesto-image img {
+        max-width: 280px;
+        max-height: 170px;
+    }
+}
+
+/* Küçük Telefon (max-width: 575px) */
+@media (max-width: 575px) {
+    .manifesto-image img {
+        max-width: 200px;
+        max-height: 120px;
+    }
+}
     /* ===================== */
     /* HERO - KATMANLI SİSTEM (ŞEFFAF) */
     /* ===================== */
