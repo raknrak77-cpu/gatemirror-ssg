@@ -7,7 +7,7 @@ R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
-R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL').rstrip('/')
+R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
 
 s3 = boto3.client(
     's3',
@@ -30,20 +30,19 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
     return False
 
 def upload_templates():
-    """templates/ klasöründeki dosyaları R2'ye yedekler"""
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
         print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
         return
     
     for file in os.listdir(templates_dir):
-        local_path = os.path.join(templates_dir, file)
-        if os.path.isfile(local_path):
-            r2_key = f"templates/{file}"
-            upload_file_to_r2(local_path, r2_key)
+        if file.endswith('.html'):
+            local_path = os.path.join(templates_dir, file)
+            if os.path.isfile(local_path):
+                r2_key = f"templates/{file}"
+                upload_file_to_r2(local_path, r2_key)
 
 def upload_css_to_assets():
-    """templates/css/style.css dosyasını R2'de assets/css/style.css olarak yükler"""
     local_path = "templates/css/style.css"
     r2_key = "assets/css/style.css"
     
@@ -54,20 +53,7 @@ def upload_css_to_assets():
         print(f"\n⚠️ templates/css/style.css dosyası bulunamadı, atlanıyor.")
         return False
 
-def upload_hero_json():
-    """Github templates/ klasöründen hero.json'u alıp R2 templates/ klasörüne yükler"""
-    local_path = "templates/hero.json"
-    r2_key = "templates/hero.json"
-    
-    if os.path.exists(local_path):
-        print(f"\n🎨 Hero JSON yükleniyor...")
-        return upload_file_to_r2(local_path, r2_key, content_type='application/json')
-    else:
-        print(f"\n⚠️ templates/hero.json dosyası bulunamadı, atlanıyor.")
-        return False
-
 def upload_svg_patterns():
-    """SADECE 2 SVG pattern'ini R2'ye assets/ klasörüne yükler (isim değiştirerek)"""
     print("\n🎨 ÖZEL SVG PATTERN YÜKLEME (SADECE 2 DOSYA)")
     print("-" * 40)
     
@@ -83,23 +69,16 @@ def upload_svg_patterns():
             print(f"⚠️ Dosya bulunamadı: {local_path}")
 
 def uploader():
-    """content/ altındaki HTML'leri R2'ye (raw-articles/) yükler"""
-    
-    # 1. Template'leri yedekle
     print("\n📁 TEMPLATE YEDEKLEME")
     print("-" * 40)
     upload_templates()
     
-    # 2. CSS dosyasını assets/ altına yükle
     upload_css_to_assets()
     
-    # 3. Hero JSON'u yedekle
-    upload_hero_json()
+    # HERO.JSON YÜKLEME KALDIRILDI - Librarian assets/hero.json yazacak
     
-    # 4. SADECE 2 ÖZEL SVG PATTERN YÜKLE (assets/ klasörünü tarama YOK!)
     upload_svg_patterns()
     
-    # 5. content/ altındaki ham HTML'leri raw-articles/ altına yükle
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
@@ -120,7 +99,6 @@ def uploader():
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # 6. Local dosyaları temizle
     print("\n🗑️ LOCAL TEMİZLİK")
     print("-" * 40)
     for file_path in uploaded_files:
@@ -130,7 +108,6 @@ def uploader():
         except Exception as e:
             print(f"   ⚠️ Silinemedi: {file_path} - {e}")
     
-    # 7. Boş klasörleri temizle
     for root, dirs, files in os.walk(content_base, topdown=False):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
@@ -145,7 +122,6 @@ def uploader():
     print("🏁 UPLOADER TAMAMLANDI!")
     print("   ✅ Template'ler → R2/templates/")
     print("   ✅ style.css → R2/assets/css/style.css")
-    print("   ✅ hero.json → R2/templates/hero.json")
     print("   ✅ svg1.svg → R2/assets/svg1.svg")
     print("   ✅ svg2.svg → R2/assets/svg2.svg")
     print("   ✅ content/ → R2/raw-articles/")
