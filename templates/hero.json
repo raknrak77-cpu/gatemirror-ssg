@@ -7,47 +7,15 @@
         "blocks": [
           {
             "type": "title",
-            "content": "Global Insights",
-            "grid": "col-left"
+            "content": "Global Insights"
           },
           {
             "type": "description",
-            "content": "Tech & AI · Future Economy\nWellness · Eco & Sustainable\nE-Learning",
-            "grid": "col-left"
-          },
-          {
-            "type": "cta",
-            "url": "/explore/all-articles/en.html",
-            "text": "📚 Browse All Articles",
-            "style": "primary",
-            "grid": "col-left"
-          },
-          {
-            "type": "stats",
-            "items": [
-              { "value": "500+", "label": "Articles" },
-              { "value": "50k+", "label": "Readers" },
-              { "value": "5", "label": "Languages" }
-            ],
-            "grid": "col-right"
-          },
-          {
-            "type": "featured_articles",
-            "source": "popular",
-            "limit": 3,
-            "title": "📄 Most Popular This Week",
-            "show_images": false,
-            "grid": "full"
+            "content": "Tech & AI · Future Economy\nWellness · Eco & Sustainable\nE-Learning\n📚 500+ Articles in 5 languages"
           },
           {
             "type": "news_ticker",
-            "items": [
-              "🔥 AI Revolution 2026: What's Coming → /en/tech/ai-revolution-2026",
-              "📈 Red Light Therapy: Science Update → /en/wellness/red-light-therapy",
-              "🌍 Carbon Capture Breakthrough → /en/eco/carbon-capture",
-              "💡 Crypto Market Cap Hits $4.2T → /en/future-economy/crypto"
-            ],
-            "grid": "full"
+            "items": []
           }
         ]
       },
@@ -55,47 +23,15 @@
         "blocks": [
           {
             "type": "title",
-            "content": "Perspectivas Globales",
-            "grid": "col-left"
+            "content": "Perspectivas Globales"
           },
           {
             "type": "description",
-            "content": "Tecnología e IA · Economía Futura\nBienestar · Eco y Sostenible\nE-Learning",
-            "grid": "col-left"
-          },
-          {
-            "type": "cta",
-            "url": "/explore/all-articles/es.html",
-            "text": "📚 Ver Todos los Artículos",
-            "style": "primary",
-            "grid": "col-left"
-          },
-          {
-            "type": "stats",
-            "items": [
-              { "value": "500+", "label": "Artículos" },
-              { "value": "50k+", "label": "Lectores" },
-              { "value": "5", "label": "Idiomas" }
-            ],
-            "grid": "col-right"
-          },
-          {
-            "type": "featured_articles",
-            "source": "popular",
-            "limit": 3,
-            "title": "📄 Más Populares Esta Semana",
-            "show_images": false,
-            "grid": "full"
+            "content": "Tecnología e IA · Economía Futura\nBienestar · Eco y Sostenible\nE-Learning\n📚 500+ Artículos en 5 idiomas"
           },
           {
             "type": "news_ticker",
-            "items": [
-              "🔥 Revolución IA 2026: Lo Que Viene → /es/tech/revolucion-ia-2026",
-              "📈 Terapia de Luz Roja: Actualización → /es/wellness/terapia-luz-roja",
-              "🌍 Avance en Captura de Carbono → /es/eco/captura-carbono",
-              "💡 Capitalización Crypto Alcanza $4.2B → /es/future-economy/cripto"
-            ],
-            "grid": "full"
+            "items": []
           }
         ]
       },
@@ -103,47 +39,15 @@
         "blocks": [
           {
             "type": "title",
-            "content": "Globale Einblicke",
-            "grid": "col-left"
+            "content": "Globale Einblicke"
           },
           {
             "type": "description",
-            "content": "Technologie & KI · Zukunftswirtschaft\nWohlbefinden · Öko & Nachhaltig\nE-Learning",
-            "grid": "col-left"
-          },
-          {
-            "type": "cta",
-            "url": "/explore/all-articles/de.html",
-            "text": "📚 Alle Artikel Durchsuchen",
-            "style": "primary",
-            "grid": "col-left"
-          },
-          {
-            "type": "stats",
-            "items": [
-              { "value": "500+", "label": "Artikel" },
-              { "value": "50k+", "label": "Leser" },
-              { "value": "5", "label": "Sprachen" }
-            ],
-            "grid": "col-right"
-          },
-          {
-            "type": "featured_articles",
-            "source": "popular",
-            "limit": 3,
-            "title": "📄 Am Beliebtesten Diese Woche",
-            "show_images": false,
-            "grid": "full"
+            "content": "Technologie & KI · Zukunftswirtschaft\nWohlbefinden · Öko & Nachhaltig\nE-Learning\n📚 500+ Artikel in 5 Sprachen"
           },
           {
             "type": "news_ticker",
-            "items": [
-              "🔥 KI-Revolution 2026: Was Kommt → /de/tech/ki-revolution-2026",
-              "📈 Rotlichttherapie: Wissenschaft → /de/wellness/rotlicht-therapie",
-              "🌍 Durchbruch bei CO2-Abscheidung → /de/eco/kohlenstoffabscheidung",
-              "💡 Krypto-Marktkapitalisierung Erreicht $4,2B → /de/future-economy/krypto"
-            ],
-            "grid": "full"
+            "items": []
           }
         ]
       },
@@ -151,47 +55,15 @@
         "blocks": [
           {
             "type": "title",
-            "content": "Perspectives Mondiales",
-            "grid": "col-left"
+            "content": "Perspectives Mondiales"
           },
           {
             "type": "description",
-            "content": "Tech & IA · Économie Future\nBien-être · Éco & Durable\nE-Learning",
-            "grid": "col-left"
-          },
-          {
-            "type": "cta",
-            "url": "/explore/all-articles/fr.html",
-            "text": "📚 Parcourir Tous les Articles",
-            "style": "primary",
-            "grid": "col-left"
-          },
-          {
-            "type": "stats",
-            "items": [
-              { "value": "500+", "label": "Articles" },
-              { "value": "50k+", "label": "Lecteurs" },
-              { "value": "5", "label": "Langues" }
-            ],
-            "grid": "col-right"
-          },
-          {
-            "type": "featured_articles",
-            "source": "popular",
-            "limit": 3,
-            "title": "📄 Les Plus Populaires Cette Semaine",
-            "show_images": false,
-            "grid": "full"
+            "content": "Tech & IA · Économie Future\nBien-être · Éco & Durable\nE-Learning\n📚 500+ Articles en 5 langues"
           },
           {
             "type": "news_ticker",
-            "items": [
-              "🔥 Révolution IA 2026: Ce Qui Vient → /fr/tech/revolution-ia-2026",
-              "📈 Thérapie par Lumière Rouge: Mise à Jour → /fr/wellness/therapie-lumiere-rouge",
-              "🌍 Percée dans le Captage du Carbone → /fr/eco/captage-carbone",
-              "💡 Capitalisation Crypto Atteint 4,2B$ → /fr/future-economie/crypto"
-            ],
-            "grid": "full"
+            "items": []
           }
         ]
       }
@@ -200,60 +72,26 @@
       "tech": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "Technology & AI", "grid": "full" },
-            { "type": "description", "content": "Latest developments in AI, software, and digital transformation.", "grid": "full" },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Watch: 2026 AI Trends", "grid": "full" },
+            { "type": "title", "content": "Technology & AI" },
+            { "type": "description", "content": "Latest developments in AI, software, and digital transformation." },
             { "type": "stats", "items": [
               { "value": "156", "label": "Articles" },
               { "value": "45k", "label": "Readers" },
               { "value": "12", "label": "Experts" }
-            ], "grid": "full" }
-          ]
-        },
-        "es": {
-          "blocks": [
-            { "type": "title", "content": "Tecnología & IA", "grid": "full" },
-            { "type": "description", "content": "Últimos avances en IA, software y transformación digital.", "grid": "full" },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ver: Tendencias IA 2026", "grid": "full" },
-            { "type": "stats", "items": [
-              { "value": "156", "label": "Artículos" },
-              { "value": "45k", "label": "Lectores" },
-              { "value": "12", "label": "Expertos" }
-            ], "grid": "full" }
-          ]
-        },
-        "de": {
-          "blocks": [
-            { "type": "title", "content": "Technologie & KI", "grid": "full" },
-            { "type": "description", "content": "Neueste Entwicklungen in KI, Software und digitaler Transformation.", "grid": "full" },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Ansehen: KI-Trends 2026", "grid": "full" },
-            { "type": "stats", "items": [
-              { "value": "156", "label": "Artikel" },
-              { "value": "45k", "label": "Leser" },
-              { "value": "12", "label": "Experten" }
-            ], "grid": "full" }
-          ]
-        },
-        "fr": {
-          "blocks": [
-            { "type": "title", "content": "Technologie & IA", "grid": "full" },
-            { "type": "description", "content": "Derniers développements en IA, logiciels et transformation numérique.", "grid": "full" },
-            { "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "title": "Regarder: Tendances IA 2026", "grid": "full" },
-            { "type": "stats", "items": [
-              { "value": "156", "label": "Articles" },
-              { "value": "45k", "label": "Lecteurs" },
-              { "value": "12", "label": "Experts" }
-            ], "grid": "full" }
+            ]}
           ]
         }
       },
       "wellness": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "Wellness", "grid": "full" },
-            { "type": "description", "content": "Deep insights on physical, mental, and emotional well-being.", "grid": "full" },
-            { "type": "gif", "url": "/assets/wellness-hero.gif", "alt": "Wellness animation", "grid": "full" },
-            { "type": "featured_articles", "source": "popular", "limit": 2, "title": "Popular Wellness", "show_images": false, "grid": "full" }
+            { "type": "title", "content": "Wellness" },
+            { "type": "description", "content": "Deep insights on physical, mental, and emotional well-being." },
+            { "type": "stats", "items": [
+              { "value": "120+", "label": "Articles" },
+              { "value": "35k", "label": "Readers" },
+              { "value": "8", "label": "Experts" }
+            ]}
           ]
         }
       }
@@ -262,22 +100,8 @@
       "all-articles": {
         "en": {
           "blocks": [
-            { "type": "title", "content": "All Articles", "grid": "full" },
-            { "type": "description", "content": "Browse all our content in one place. Filter by category or language.", "grid": "full" },
-            { "type": "carousel", "items": [
-              "/assets/carousel-1.jpg",
-              "/assets/carousel-2.jpg",
-              "/assets/carousel-3.jpg"
-            ], "grid": "full" }
-          ]
-        }
-      },
-      "categories": {
-        "en": {
-          "blocks": [
-            { "type": "title", "content": "Categories", "grid": "full" },
-            { "type": "description", "content": "Browse articles by category. Find the content that matters to you.", "grid": "full" },
-            { "type": "image", "url": "/assets/categories-hero.jpg", "alt": "Categories", "grid": "full" }
+            { "type": "title", "content": "All Articles" },
+            { "type": "description", "content": "Browse all our content in one place." }
           ]
         }
       }
@@ -286,8 +110,8 @@
   "defaults": {
     "en": {
       "blocks": [
-        { "type": "title", "content": "Gatemirror", "grid": "full" },
-        { "type": "description", "content": "Global insights on technology, wellness, and future economy.", "grid": "full" }
+        { "type": "title", "content": "Gatemirror" },
+        { "type": "description", "content": "Global insights on technology, wellness, and future economy." }
       ]
     }
   }
