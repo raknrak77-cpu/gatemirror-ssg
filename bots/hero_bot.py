@@ -217,18 +217,18 @@ def render_block(block, lang=None):
 
 def render_hero(page_type, lang, category=None):
     """
-    Hero HTML'ini oluşturur - TEK SÜTUN (grid yok)
+    Hero HTML'ini oluşturur - mevcut CSS ile uyumlu (hero-grid-full kullanır)
     """
     blocks = get_hero_blocks(page_type, lang, category)
     
     if not blocks:
         return ''
     
-    html = '<div class="hero-container">\n'
+    html = '<div class="hero-grid">\n'
     for block in blocks:
         block_html = render_block(block, lang)
         if block_html:
-            html += f'    <div class="hero-block">{block_html}</div>\n'
+            html += f'    <div class="hero-grid-full">{block_html}</div>\n'
     html += '</div>'
     return html
 
@@ -242,7 +242,7 @@ def get_hero_data(page_type, lang, category=None):
 
 # ================= TEST =================
 if __name__ == "__main__":
-    print("🧪 Hero Bot Testi (Sade Render)")
+    print("🧪 Hero Bot Testi")
     print("-" * 50)
     
     print("\n🏠 HOME (EN):")
