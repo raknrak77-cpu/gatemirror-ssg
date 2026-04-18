@@ -496,7 +496,7 @@
 */
 .hero-title {
     /* clamp(MİN, TERCH, MAKS) - EKRANA GÖRE OTOMATİK BOYUTLANIR */
-    font-size: clamp(2.5rem, 5vw, 3.7rem);
+    font-size: clamp(3.0rem, 6vw, 4.5rem);
     /* MİN: 2.5rem (40px) - en küçük telefonda bile bu kadar */
     /* TERCH: 5vw (ekran genişliğinin %5'i) - normalde bu kadar olur */
     /* MAKS: 3.7rem (59px) - büyük ekranda bile bu kadar büyür */
@@ -520,11 +520,11 @@
    ===================== HERO DESCRIPTION (AÇIKLAMA) =====================
 */
 .hero-description {
-    font-size: 2.0rem;           /* YAZI BOYUTU: 32px (BÜYÜK!) */
+    font-size: clamp(2.0rem, 4vw, 3.0rem);           /* YAZI BOYUTU: 32px (BÜYÜK!) */
     opacity: 0.9;                /* Saydamlık: %90 (biraz hafif) */
     max-width: 600px;            /* EN FAZLA GENİŞLİK: 600px (orta ekran) */
     margin: 0 auto 1.5rem;       /* Üst:0, sağ/sol:auto(ortalar), alt:1.5rem */
-    line-height: 1.5;            /* Satır yüksekliği: yazı boyutunun 1.5 katı */
+    line-height: 0.5;            /* Satır yüksekliği: yazı boyutunun 1.5 katı */
     color: var(--tech-3);        /* Yazı rengi: tech palet 3.mor */
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
 }
@@ -580,7 +580,7 @@
 .ticker-item {
     display: inline-block;        /* Yan yana dizilim */
     margin-right: 2rem;           /* SAĞ BOŞLUK: 32px (öğeler arası mesafe) */
-    font-size: 0.85rem;           /* YAZI BOYUTU: 13.6px (küçük) */
+    font-size: 1.85rem;           /* YAZI BOYUTU: 13.6px (küçük) */
     text-decoration: none;        /* Alt çizgi yok */
     color: inherit;               /* Renk: aynı (üst elementten alır) */
 }
