@@ -448,10 +448,25 @@ nav {
                colorCycleFront 6s ease-in-out infinite reverse;
 }
 
+
 /* ===================== */
-/* KATMAN 4: HERO GRADIENT OVERLAY */
+/* KATMAN 4: HERO GRADIENT OVERLAY (ÜST + ALT) */
 /* ===================== */
-.hero-wrapper::after {
+
+/* ÜST geçiş (Header'dan Hero'ya) */
+.hero-wrapper::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 4;
+    background: linear-gradient(to top, transparent 0%, var(--white) 100%);
+    pointer-events: none;
+}           
+    /* ALT geçiş (Hero'dan içeriğe) */
+    .hero-wrapper::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -865,7 +880,16 @@ nav {
     /* ===================== */
     /* DARK MODE (AÇIK LACİVERT) */
     /* ===================== */
-    body.dark {
+    /* Dark mode için */
+body.dark .hero-wrapper::before {
+    background: linear-gradient(to top, transparent 0%, #121826 100%);
+}
+
+body.dark .hero-wrapper::after {
+    background: linear-gradient(to bottom, transparent 0%, #121826 100%);
+}
+              
+        body.dark {
         background-color: #121826;
         color: #E8EDF5;
     }
@@ -906,10 +930,6 @@ nav {
     body.dark .color-overlay {
         opacity: 0.35;
         mix-blend-mode: soft-light;
-    }
-    
-    body.dark .hero-wrapper::after {
-        background: linear-gradient(to bottom, transparent 0%, transparent 55%, #121826 100%);
     }
     
     body.dark .hero-title {
