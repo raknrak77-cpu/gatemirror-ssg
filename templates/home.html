@@ -1174,17 +1174,27 @@
     <!-- HERO BÖLÜMÜ (KATMANLI SVG + SADE İÇERİK) -->
     <!-- ===================== -->
     <div class="hero-wrapper">
-    <!-- KATMAN 1: ARKA SVG -->
+    <!-- KATMAN 1: ARKA SVG (object ile) -->
     <div class="pattern-layer layer-back">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="" aria-hidden="true">
+        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
+            <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
+        </object>
     </div>
     
-    <!-- KATMAN 2: RENK OVERLAY (z-index:2) - layer-back ile layer-front ARASINDA -->
+    <!-- KATMAN 2: RENK OVERLAY (gradient + renk döngüsü) -->
     <div class="color-overlay"></div>
     
-    <!-- KATMAN 3: ÖN SVG -->
+    <!-- KATMAN 3: ÖN SVG (object ile) -->
     <div class="pattern-layer layer-front">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="" aria-hidden="true">
+        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
+            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
+        </object>
+    </div>
+    
+    <!-- KATMAN 4: HERO İÇERİK -->
+    <div class="hero-container">
+        {{ hero.html | safe }}
+    </div>
     </div>
     
     <!-- KATMAN 4: HERO İÇERİK -->
