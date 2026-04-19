@@ -1487,27 +1487,6 @@ body.dark ::-webkit-scrollbar-thumb {
     <!-- MANIFESTO -->
     <!-- ===================== -->
     {{ manifesto | safe }}
-
-    <!-- ===================== -->
-    <!-- FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) -->
-    <!-- ===================== -->
-    {% if featured_article %}
-    <div class="featured">
-        <a href="{{ featured_article.url }}" class="featured-card">
-            <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" onerror="this.style.display='none'">
-            <div class="featured-content">
-                <div class="featured-meta">
-                    <span>📅 {{ featured_article.date }}</span>
-                    <span>⏱️ {{ featured_article.reading_time }} min read</span>
-                    <span>👁️ {{ featured_article.views }} views</span>
-                </div>
-                <h2>{{ featured_article.title }}</h2>
-                <p class="featured-excerpt">{{ featured_article.excerpt }}</p>
-            </div>
-        </a>
-    </div>
-    {% endif %}
-
     <!-- ===================== -->
     <!-- LATEST STORIES (MAKALE GRID) -->
     <!-- ===================== -->
