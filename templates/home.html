@@ -635,7 +635,21 @@
         66%  { filter: hue-rotate(160deg) saturate(1.8) brightness(0.6); }
         100% { filter: hue-rotate(300deg) saturate(1.8) brightness(0.6); }
     }
-    
+    @keyframes driftRight {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(150px) translateY(20px) rotate(2deg); }
+    50% { transform: translateX(300px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(150px) translateY(-20px) rotate(-2deg); }
+    100% { transform: translateX(0) translateY(0) rotate(0deg); }
+}
+
+@keyframes driftLeft {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(-150px) translateY(-20px) rotate(-2deg); }
+    50% { transform: translateX(-300px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(-150px) translateY(20px) rotate(2deg); }
+    100% { transform: translateX(0) translateY(0) rotate(0deg); }
+}
     
     /* ===================== */
     /* FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) */
