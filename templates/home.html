@@ -999,65 +999,96 @@ body.dark .manifesto-card:hover {
     }
     
     /* ===================== */
-    /* ARTICLE GRID (MAKALE LİSTESİ) */
     /* ===================== */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 3rem 1.5rem;
+/* ARTICLE GRID (MAKALE LİSTESİ) */
+/* ===================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+/* İLK MAKALE (FEATURED) - 2 KOLON GENİŞLİĞİNDE */
+.article-grid .article-card:first-child {
+    grid-column: span 2;
+}
+
+.article-grid .article-card:first-child img {
+    height: 300px;  /* Normalden daha büyük */
+}
+
+.article-grid .article-card:first-child h3 {
+    font-size: 1.4rem;  /* Başlık daha büyük */
+}
+
+/* DİĞER MAKALELER */
+.article-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    display: block;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.article-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.article-card h3 {
+    padding: 1rem 1rem 0.5rem;
+    font-size: 1.2rem;
+}
+
+.article-meta {
+    padding: 0 1rem;
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.article-card p {
+    padding: 0.5rem 1rem 1rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* ===================== */
+/* RESPONSIVE - MOBİLDE İLK MAKALE NORMAL BOYUTTA */
+/* ===================== */
+@media (max-width: 768px) {
+    .article-grid .article-card:first-child {
+        grid-column: span 1;
     }
     
-    .section-title {
-        font-size: 1.8rem;
-        margin-bottom: 2rem;
-        font-weight: 700;
-    }
-    
-    .article-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2rem;
-    }
-    
-    .article-card {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: var(--transition);
-        display: block;
-    }
-    
-    .article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-hover);
-    }
-    
-    .article-card img {
-        width: 100%;
+    .article-grid .article-card:first-child img {
         height: 200px;
-        object-fit: cover;
     }
     
-    .article-card h3 {
-        padding: 1rem 1rem 0.5rem;
+    .article-grid .article-card:first-child h3 {
         font-size: 1.2rem;
     }
-    
-    .article-meta {
-        padding: 0 1rem;
-        display: flex;
-        gap: 1rem;
-        font-size: 0.8rem;
-        color: var(--text-light);
-    }
-    
-    .article-card p {
-        padding: 0.5rem 1rem 1rem;
-        color: var(--text-light);
-        font-size: 0.9rem;
-    }
-    
+}
     /* ===================== */
     /* KATEGORİ BÖLÜMÜ - BOTTOM BAR (FOOTER ÜZERİ) */
     /* ===================== */
