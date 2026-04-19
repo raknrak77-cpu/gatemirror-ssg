@@ -224,7 +224,7 @@ def generate_explorer_json(articles):
     )
     print(f"   ✅ explore/explorer.json oluşturuldu ({len(articles)} articles)")
 
-# ================= YENİ: HERO TICKER GÜNCELLEME =================
+# ================= HERO TICKER GÜNCELLEME =================
 
 def shorten_title(title, max_length=55):
     """Başlığı kısalt, son kelimeyi bozma"""
@@ -307,7 +307,7 @@ def update_hero_ticker():
         print(f"   ❌ hero.json kaydedilemedi: {e}")
         return False
 
-# ================= YENİ: HERO STATS GÜNCELLEME =================
+# ================= HERO STATS GÜNCELLEME =================
 
 def update_hero_stats():
     """
@@ -323,7 +323,6 @@ def update_hero_stats():
         print("   ⚠️ articles.json okunamadı, stats güncellenemedi.")
         return False
     
-    # Her dil için toplam makale sayısını hesapla
     lang_counts = {}
     for lang in LANGUAGES:
         count = len([a for a in articles if a.get('lang') == lang])
@@ -336,16 +335,13 @@ def update_hero_stats():
         print(f"   ❌ hero.json okunamadı: {e}")
         return False
     
-    # Her dil için description'ı güncelle
     for lang in LANGUAGES:
         try:
             blocks = hero_data['pages']['home'][lang].get('blocks', [])
             total_articles = lang_counts.get(lang, 0)
             
-            # Yeni description metni
             new_description = f"Tech & AI · Future Economy\nWellness · Eco & Sustainable\nE-Learning\n📚 {total_articles}+ Articles in 5 languages"
             
-            # Description bloğunu bul ve güncelle
             for block in blocks:
                 if block.get('type') == 'description':
                     block['content'] = new_description
@@ -373,7 +369,7 @@ def update_hero_stats():
         print(f"   ❌ hero.json kaydedilemedi: {e}")
         return False
 
-# ================= YENİ: R2 BUCKET ANALİZİ =================
+# ================= R2 BUCKET ANALİZİ =================
 
 def analyze_r2_storage():
     """R2 bucket'ındaki dosya türlerini ve boyutlarını analiz eder"""
@@ -381,7 +377,6 @@ def analyze_r2_storage():
     print("📊 R2 BUCKET ANALİZİ")
     print("=" * 40)
     
-    # Dosya türleri ve toplam boyutları
     stats = {
         'html': {'count': 0, 'size': 0},
         'svg': {'count': 0, 'size': 0},
@@ -417,7 +412,6 @@ def analyze_r2_storage():
                 total_files += 1
                 total_size += size
                 
-                # Dosya uzantısına göre sınıflandır
                 ext = key.split('.')[-1].lower() if '.' in key else 'other'
                 
                 if ext in ['html', 'htm']:
@@ -457,14 +451,12 @@ def analyze_r2_storage():
         print(f"❌ Analiz hatası: {e}")
         return False
     
-    # Sonuçları göster
     print(f"\n📁 TOPLAM DOSYA: {total_files}")
     print(f"💾 TOPLAM BOYUT: {total_size / (1024*1024):.2f} MB")
     print("\n" + "-" * 45)
     print("📄 DOSYA TÜRLERİNE GÖRE DAĞILIM:")
     print("-" * 45)
     
-    # Boyuta göre sırala (büyükten küçüğe)
     sorted_stats = sorted(stats.items(), key=lambda x: x[1]['size'], reverse=True)
     
     for type_name, data in sorted_stats:
@@ -477,7 +469,7 @@ def analyze_r2_storage():
     
     return True
 
-# ================= ANA LİBRARIAN =================
+# ================= ANA LİBRARIAN (HER SEFERİNDE ANALİZ YAPAR) =================
 
 def librarian():
     print("\n" + "=" * 60)
@@ -486,10 +478,11 @@ def librarian():
     print("   ✅ hero.json ticker güncelleniyor")
     print("   ✅ hero.json stats güncelleniyor")
     print("   ✅ Atomic swap: articles_ready/ → articles/")
+    print("   ✅ R2 Bucket Analizi")
     print("=" * 60)
     
-    # R2 ANALİZİ (isteğe bağlı, aktif etmek için yorum satırını kaldır)
-    # analyze_r2_storage()
+    # ========== R2 ANALİZİ - HER ZAMAN ÇALIŞIR ==========
+    analyze_r2_storage()
     
     # 1. explore/explorer.json oluştur
     articles = get_articles_from_r2()
@@ -523,6 +516,7 @@ def librarian():
     print("   ✅ hero.json ticker güncellendi")
     print("   ✅ hero.json stats güncellendi")
     print("   ✅ Atomic swap tamamlandı")
+    print("   ✅ R2 Bucket Analizi tamamlandı")
     print("=" * 60)
 
 if __name__ == "__main__":
