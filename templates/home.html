@@ -627,7 +627,7 @@ body.dark .manifesto-card:hover {
     object-position: center;  /* Ortada hizala */
     opacity: 0.8;
     filter: grayscale(80%) brightness(0.7) contrast(1.2);
-    animation: driftRight 40s cubic-bezier(0.25, 1.5, 0.75, -0.5) infinite,
+    animation: driftRight 40s ease-in-out infinite;
                colorCycleBack 4s ease-in-out infinite;
 }
         
@@ -676,7 +676,7 @@ body.dark .manifesto-card:hover {
     object-position: center;  /* Ortada hizala */
     opacity: 0.8;
     filter: grayscale(80%) brightness(0.7) contrast(1.2);
-    animation: driftUpDown 40s cubic-bezier(0.25, 1.5, 0.75, -0.5) infinite,
+    animation: driftUpDown 40s ease-in-out infinite;
                colorCycleFront 5s ease-in-out infinite reverse;
 }
         
@@ -785,15 +785,15 @@ body.dark .manifesto-card:hover {
     }
 @keyframes driftRight {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
-    25% { transform: translateX(150px) translateY(15px) rotate(15deg); }
-    50% { transform: translateX(800px) translateY(0) rotate(35deg); }
-    75% { transform: translateX(150px) translateY(-15px) rotate(15deg); }
+    25% { transform: translateX(50px) translateY(15px) rotate(15deg); }
+    50% { transform: translateX(500px) translateY(0) rotate(35deg); }
+    75% { transform: translateX(50px) translateY(-15px) rotate(15deg); }
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
 @keyframes driftUpDown {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
     25% { transform: translateX(15px) translateY(-50px) rotate(-15deg); }
-    50% { transform: translateX(50) translateY(-500px) rotate(-35deg); }
+    50% { transform: translateX(0) translateY(-500px) rotate(-35deg); }
     75% { transform: translateX(-15px) translateY(-50px) rotate(-15deg); }
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
