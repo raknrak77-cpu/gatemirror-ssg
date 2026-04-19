@@ -503,7 +503,49 @@ body.dark .manifesto-card:hover {
     color: var(--text);
     margin-bottom: 1rem;
 }
+/* ===================== */
+/* PREMIUM MANIFESTO EKSTRA STILLER */
+/* ===================== */
 
+/* Kart ikonları */
+.manifesto-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.manifesto-card-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+/* Kart geçişleri */
+.manifesto-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.manifesto-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px -15px rgba(0, 0, 0, 0.15);
+}
+
+/* Buton hover efekti */
+.manifesto-button span {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.manifesto-button:hover span {
+    transform: translateX(5px);
+}
+
+/* Dark mode kart hover */
+body.dark .manifesto-card:hover {
+    box-shadow: 0 20px 30px -15px rgba(0, 0, 0, 0.4);
+}
+
+        
 /* ===================== */
 /* RESPONSIVE */
 /* ===================== */
