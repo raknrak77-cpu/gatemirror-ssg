@@ -716,18 +716,6 @@ body.dark .manifesto-card:hover {
     padding: 2rem 1.5rem;
     text-align: center;
 }
-        /* ===================== */
-/* FIREFOX İÇİN SVG ÇİZGİ İNCELTME (GÜÇLENDİRİLMİŞ) */
-/* ===================== */
-/* Firefox için SVG çizgilerine doğrudan müdahale */
-@-moz-document url-prefix() {
-    .svg-object svg {
-        stroke-width: 0.05px !important;
-        stroke: rgba(255,255,255,0.8) !important;
-    }
-}
-
-
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
@@ -981,17 +969,17 @@ body.dark .manifesto-card:hover {
     @keyframes driftRight {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
     25% { transform: translateX(150px) translateY(20px) rotate(2deg); }
-    50% { transform: translateX(700px) translateY(0) rotate(0deg); }
+    50% { transform: translateX(500px) translateY(0) rotate(2deg); }
     75% { transform: translateX(150px) translateY(-20px) rotate(-5deg); }
-    100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    100% { transform: translateX(0) translateY(0) rotate(1deg); }
 }
 
 @keyframes driftLeft {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
     25% { transform: translateX(-150px) translateY(-20px) rotate(-5deg); }
-    50% { transform: translateX(-700px) translateY(0) rotate(0deg); }
+    50% { transform: translateX(-500px) translateY(0) rotate(1deg); }
     75% { transform: translateX(-150px) translateY(20px) rotate(5deg); }
-    100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    100% { transform: translateX(0) translateY(0) rotate(2deg); }
 }
     
     /* ===================== */
@@ -1114,6 +1102,11 @@ body.dark .manifesto-card:hover {
     color: var(--text-light);
     font-size: 0.9rem;
 }
+        .article-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+        }
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE İLK MAKALE NORMAL BOYUTTA */
@@ -1270,6 +1263,27 @@ body.dark .manifesto-card:hover {
     /* ===================== */
 /* DARK MODE (AÇIK LACİVERT - TAM) */
 /* ===================== */
+
+    .dark-mode-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 2rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--dark);
+    font-size: 1.2rem;
+}
+
+.dark-mode-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+        
 body.dark {
     background-color: #121826;
     color: #E8EDF5;
@@ -1498,20 +1512,7 @@ body.dark ::-webkit-scrollbar-thumb {
 body.dark ::-webkit-scrollbar-thumb:hover {
     background: #3A4050;
 }  
-    /* ===================== */
-    /* SCROLLBAR */
-    /* ===================== */
-    body.dark ::-webkit-scrollbar {
-        width: 10px;
-    }
-    body.dark ::-webkit-scrollbar-track {
-        background: #121826;
-    }
-    body.dark ::-webkit-scrollbar-thumb {
-        background: #2A3040;
-        border-radius: 5px;
-    }
-    
+
     /* ===================== */
     /* RESPONSIVE (MOBİL + TABLET) */
     /* ===================== */
