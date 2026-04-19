@@ -871,10 +871,15 @@ nav {
     }
     
     body.dark nav {
-        background: rgba(26, 31, 46, 0.95);
-        border-bottom: 1px solid #2A3040;
-        backdrop-filter: blur(12px);
-    }
+    background: linear-gradient(
+        to bottom,
+        rgba(26, 31, 46, 0.95) 0%,
+        rgba(26, 31, 46, 0.6) 40%,
+        rgba(26, 31, 46, 0.15) 100%
+    );
+    border-bottom: 1px solid #2A3040;
+    backdrop-filter: blur(8px);
+}
     
     body.dark .logo,
     body.dark .nav-links a {
