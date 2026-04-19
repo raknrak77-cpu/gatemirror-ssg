@@ -1411,12 +1411,25 @@ body.dark ::-webkit-scrollbar-thumb {
     "inLanguage": ["en", "es", "de", "fr"]
 }
 </script>
+</script>  
+// ===================== */
+// MENU TOGGLE (MOBİL)
+// ===================== */
+function toggleMenu() { 
+    document.getElementById('sideMenu').classList.toggle('active'); 
+}
+
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('sideMenu');
+    const btn = document.querySelector('.menu-btn');
+    if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('active');
+    }
+});
 
 // ===================== */
 // DARK MODE TOGGLE (DESKTOP BUTON + SIDE MENU)
 // ===================== */
-<script>
-// Dark mode'u aç/kapa
 function setDarkMode(enabled) {
     if (enabled) {
         document.body.classList.add('dark');
@@ -1427,7 +1440,6 @@ function setDarkMode(enabled) {
     }
 }
 
-// Mevcut durumu localStorage'dan oku ve uygula
 function initDarkMode() {
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode === 'enabled') {
@@ -1435,14 +1447,12 @@ function initDarkMode() {
     } else if (savedMode === 'disabled') {
         document.body.classList.remove('dark');
     } else {
-        // Varsayılan: sistem tercihine bak
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.body.classList.add('dark');
         }
     }
 }
 
-// Desktop butonu
 const darkModeBtn = document.getElementById('darkModeBtn');
 if (darkModeBtn) {
     darkModeBtn.addEventListener('click', () => {
@@ -1450,7 +1460,6 @@ if (darkModeBtn) {
     });
 }
 
-// Side menu'deki toggle (mevcut)
 const toggle = document.getElementById('darkModeToggle');
 if (toggle) {
     toggle.addEventListener('click', () => {
@@ -1458,10 +1467,8 @@ if (toggle) {
     });
 }
 
-// Sayfa yüklendiğinde dark mode'u başlat
 initDarkMode();
 
-// Sistem teması değişirse dinle (opsiyonel)
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (localStorage.getItem('darkMode') === null) {
         setDarkMode(e.matches);
