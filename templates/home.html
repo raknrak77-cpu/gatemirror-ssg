@@ -346,7 +346,6 @@
     @media (max-width: 575px) {
         .manifesto-image img { max-width: 200px; max-height: 120px; }
     }
-    
     /* ===================== */
 /* HERO - KATMANLI SİSTEM (object + overlay) */
 /* ===================== */
@@ -354,7 +353,7 @@
 .hero-wrapper {
     position: relative;
     min-height: auto;
-    overflow: hidden;
+    overflow: visible;  /* hidden → visible (taşan kısımlar gizlenmesin) */
     background: transparent;
 }
 
@@ -365,44 +364,38 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    overflow: visible;  /* taşan kısımlar görünsün */
 }
 
 /* ===================== */
-/* SVG OBJECT - TARAYICI UYUMLU (TEMEL AYARLAR) */
+/* SVG OBJECT - KESİLMESİN */
 /* ===================== */
 .svg-object {
     position: absolute;
     pointer-events: none;
-    object-fit: cover;  /* SVG'yi alana sığdır, taşanı kes */
+    object-fit: contain;  /* cover → contain (tamamen görünsün, kesilmesin) */
 }
 
 /* ===================== */
-/* KATMAN 1: ARKA SVG (svg1) - UZAKTAN, BÜYÜK, YAVAŞ */
+/* KATMAN 1: ARKA SVG (svg1) */
 /* ===================== */
 .layer-back {
     z-index: 1;
 }
 
 .layer-back .svg-object {
-    /* BOYUT: Geniş ve uzak görünüm (ekranın 2 katı büyüklükte, taşar) */
-    width: 100%;
-    height: 100%;
+    width: 200%;
+    height: 200%;
     top: -50%;
     left: -50%;
-    
-    /* GÖRÜNEN ALAN: Merkezden biraz yukarı odaklı */
-    object-position: center 30%;
-    
-    /* GÖRÜNÜRLÜK */
+    object-position: center;
     opacity: 0.5;
-    
-    /* ANİMASYONLAR */
     animation: slowDriftBack 30s ease-in-out infinite,
                colorCycleBack 6s ease-in-out infinite;
 }
 
 /* ===================== */
-/* KATMAN 2: RENK OVERLAY (gradient + renk döngüsü) */
+/* KATMAN 2: RENK OVERLAY */
 /* ===================== */
 .color-overlay {
     position: absolute;
@@ -431,32 +424,25 @@
 }
 
 /* ===================== */
-/* KATMAN 3: ÖN SVG (svg2) - YAKINDAN, KÜÇÜK, HIZLI */
+/* KATMAN 3: ÖN SVG (svg2) */
 /* ===================== */
 .layer-front {
     z-index: 3;
 }
 
 .layer-front .svg-object {
-    /* BOYUT: Daha küçük, yakın görünüm (ekranın 1.5 katı) */
-    width: 100%;
-    height: 100%;
+    width: 150%;
+    height: 150%;
     top: -25%;
     left: -25%;
-    
-    /* GÖRÜNEN ALAN: Merkezden biraz aşağı odaklı */
-    object-position: center 70%;
-    
-    /* GÖRÜNÜRLÜK */
+    object-position: center;
     opacity: 0.4;
-    
-    /* ANİMASYONLAR */
     animation: slowDriftFront 20s ease-in-out infinite reverse,
                colorCycleFront 8s ease-in-out infinite reverse;
 }
 
 /* ===================== */
-/* KATMAN 4: HERO GRADIENT OVERLAY (içerik geçişi) */
+/* KATMAN 4: HERO GRADIENT OVERLAY */
 /* ===================== */
 .hero-wrapper::after {
     content: "";
@@ -478,6 +464,7 @@
     padding: 2rem 1.5rem;
     text-align: center;
 }
+
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
