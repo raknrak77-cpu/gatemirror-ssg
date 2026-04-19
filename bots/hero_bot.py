@@ -195,8 +195,9 @@ def render_hero(page_type, lang, category=None):
     
     html = '<div class="hero-grid">\n'
     for block in blocks:
-        # YENİ: Eğer sayfa 'home' ise ve block 'active: false' içeriyorsa atla
-        if page_type == 'home' and block.get('active') is False:
+        # hide_on kontrolü: eğer page_type hide_on listesindeyse atla
+        hide_on = block.get('hide_on', [])
+        if page_type in hide_on:
             continue
         
         block_html = render_block(block, lang)
