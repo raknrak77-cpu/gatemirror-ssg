@@ -466,6 +466,49 @@
     padding: 2rem 1.5rem;
     text-align: center;
 }
+        /* ===================== */
+/* FIREFOX İÇİN SVG ÇİZGİ İNCELTME (GÜÇLENDİRİLMİŞ) */
+/* ===================== */
+
+@-moz-document url-prefix() {
+    .layer-back .svg-object,
+    .layer-front .svg-object {
+        filter: brightness(1.05) contrast(1.3) saturate(1.4) !important;
+        transform: scale(0.9) !important;
+    }
+    
+    .color-overlay {
+        mix-blend-mode: soft-light !important;
+        opacity: 0.5 !important;
+    }
+    
+    /* Animasyonları da hafiflet */
+    .layer-back .svg-object {
+        animation: slowDriftBack 25s ease-in-out infinite !important;
+    }
+    
+    .layer-front .svg-object {
+        animation: slowDriftFront 20s ease-in-out infinite reverse !important;
+    }
+}
+
+/* ===================== */
+/* iOS SAFARI İÇİN SVG ÇİZGİ İNCELTME (GÜÇLENDİRİLMİŞ) */
+/* ===================== */
+
+@supports (-webkit-touch-callout: none) {
+    .layer-back .svg-object,
+    .layer-front .svg-object {
+        -webkit-filter: brightness(1.05) contrast(1.25) saturate(1.35) !important;
+        filter: brightness(1.05) contrast(1.25) saturate(1.35) !important;
+        transform: scale(0.9) !important;
+    }
+    
+    .color-overlay {
+        mix-blend-mode: soft-light !important;
+        opacity: 0.5 !important;
+    }
+}
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
