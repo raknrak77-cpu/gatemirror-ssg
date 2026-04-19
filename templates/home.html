@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Ö<!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
@@ -391,8 +391,7 @@
     object-fit: cover;  /* Alanı tamamen kaplasın */
     object-position: center;  /* Ortada hizala */
     opacity: 0.6;
-    animation: slowDriftBack 25s ease-in-out infinite,
-               slideRight 20s ease-in-out infinite,      /* YENİ EKLENDİ */
+    animation: driftRight 25s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
 }
 
@@ -440,8 +439,7 @@
     object-fit: cover;  /* Alanı tamamen kaplasın */
     object-position: center;  /* Ortada hizala */
     opacity: 0.6;
-    animation: slowDriftFront 20s ease-in-out infinite reverse,
-               slideLeft 20s ease-in-out infinite,       /* YENİ EKLENDİ */
+    animation: driftLeft 20s ease-in-out infinite,
                colorCycleFront 6s ease-in-out infinite reverse;
 }
 
@@ -638,21 +636,6 @@
         100% { filter: hue-rotate(300deg) saturate(1.8) brightness(0.6); }
     }
     
-    @keyframes driftRight {
-    0% { transform: translateX(0) translateY(0) rotate(0deg); }
-    25% { transform: translateX(150px) translateY(20px) rotate(2deg); }
-    50% { transform: translateX(300px) translateY(0) rotate(0deg); }
-    75% { transform: translateX(150px) translateY(-20px) rotate(-2deg); }
-    100% { transform: translateX(0) translateY(0) rotate(0deg); }
-}
-
-@keyframes driftLeft {
-    0% { transform: translateX(0) translateY(0) rotate(0deg); }
-    25% { transform: translateX(-150px) translateY(-20px) rotate(-2deg); }
-    50% { transform: translateX(-300px) translateY(0) rotate(0deg); }
-    75% { transform: translateX(-150px) translateY(20px) rotate(2deg); }
-    100% { transform: translateX(0) translateY(0) rotate(0deg); }
-}
     
     /* ===================== */
     /* FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) */
