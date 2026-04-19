@@ -469,7 +469,13 @@
         /* ===================== */
 /* FIREFOX İÇİN SVG ÇİZGİ İNCELTME (GÜÇLENDİRİLMİŞ) */
 /* ===================== */
-
+/* Firefox için SVG çizgilerine doğrudan müdahale */
+@-moz-document url-prefix() {
+    .svg-object svg {
+        stroke-width: 0.2px !important;
+        stroke: rgba(255,255,255,0.8) !important;
+    }
+}
 @-moz-document url-prefix() {
     .layer-back .svg-object,
     .layer-front .svg-object {
