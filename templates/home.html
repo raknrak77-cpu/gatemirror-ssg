@@ -361,8 +361,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 250%;
+    height: 250%;
     pointer-events: none;
     overflow: visible;  /* taşan kısımlar görünsün */
 }
@@ -476,45 +476,8 @@
         stroke: rgba(255,255,255,0.8) !important;
     }
 }
-@-moz-document url-prefix() {
-    .layer-back .svg-object,
-    .layer-front .svg-object {
-        filter: brightness(1.05) contrast(1.3) saturate(1.4) !important;
-        transform: scale(0.9) !important;
-    }
-    
-    .color-overlay {
-        mix-blend-mode: soft-light !important;
-        opacity: 0.5 !important;
-    }
-    
-    /* Animasyonları da hafiflet */
-    .layer-back .svg-object {
-        animation: slowDriftBack 25s ease-in-out infinite !important;
-    }
-    
-    .layer-front .svg-object {
-        animation: slowDriftFront 20s ease-in-out infinite reverse !important;
-    }
-}
 
-/* ===================== */
-/* iOS SAFARI İÇİN SVG ÇİZGİ İNCELTME (GÜÇLENDİRİLMİŞ) */
-/* ===================== */
 
-@supports (-webkit-touch-callout: none) {
-    .layer-back .svg-object,
-    .layer-front .svg-object {
-        -webkit-filter: brightness(1.05) contrast(1.25) saturate(1.35) !important;
-        filter: brightness(1.05) contrast(1.25) saturate(1.35) !important;
-        transform: scale(0.9) !important;
-    }
-    
-    .color-overlay {
-        mix-blend-mode: soft-light !important;
-        opacity: 0.5 !important;
-    }
-}
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
@@ -638,16 +601,16 @@
     @keyframes driftRight {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
     25% { transform: translateX(150px) translateY(20px) rotate(2deg); }
-    50% { transform: translateX(300px) translateY(0) rotate(0deg); }
-    75% { transform: translateX(150px) translateY(-20px) rotate(-2deg); }
+    50% { transform: translateX(700px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(150px) translateY(-20px) rotate(-5deg); }
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
 
 @keyframes driftLeft {
     0% { transform: translateX(0) translateY(0) rotate(0deg); }
-    25% { transform: translateX(-150px) translateY(-20px) rotate(-2deg); }
-    50% { transform: translateX(-300px) translateY(0) rotate(0deg); }
-    75% { transform: translateX(-150px) translateY(20px) rotate(2deg); }
+    25% { transform: translateX(-150px) translateY(-20px) rotate(-5deg); }
+    50% { transform: translateX(-700px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(-150px) translateY(20px) rotate(5deg); }
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
     
