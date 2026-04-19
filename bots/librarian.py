@@ -330,7 +330,7 @@ def update_hero_stats():
         lang_counts[lang] = count
     
     try:
-        response = s3.get_object(Bucket=R2_BUCKET, Key='templates/hero.json')
+        response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
         hero_data = json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
         print(f"   ❌ hero.json okunamadı: {e}")
@@ -363,7 +363,7 @@ def update_hero_stats():
     try:
         s3.put_object(
             Bucket=R2_BUCKET,
-            Key='templates/hero.json',
+            Key='assets/hero.json',
             Body=json.dumps(hero_data, indent=2, ensure_ascii=False).encode('utf-8'),
             ContentType='application/json'
         )
