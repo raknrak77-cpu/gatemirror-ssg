@@ -464,61 +464,7 @@
     padding: 2rem 1.5rem;
     text-align: center;
 }
-    /* ===================== */
-/* FIREFOX + iOS SAFARI (WebKit) İÇİN DÜZELTMELER */
-/* ===================== */
 
-/* Firefox için */
-@-moz-document url-prefix() {
-    .layer-back .svg-object {
-        width: 120% !important;
-        height: 120% !important;
-        top: -10% !important;
-        left: -10% !important;
-        object-fit: cover !important;
-        object-position: center !important;
-    }
-    
-    .layer-front .svg-object {
-        width: 100% !important;
-        height: 100% !important;
-        top: 0 !important;
-        left: 0 !important;
-        object-fit: cover !important;
-        object-position: center !important;
-    }
-    
-    .color-overlay {
-        opacity: 0.65 !important;
-        mix-blend-mode: soft-light !important;
-    }
-}
-
-/* iOS Safari (WebKit) için */
-@supports (-webkit-touch-callout: none) {
-    .layer-back .svg-object {
-        width: 120% !important;
-        height: 120% !important;
-        top: -10% !important;
-        left: -10% !important;
-        object-fit: cover !important;
-        object-position: center !important;
-    }
-    
-    .layer-front .svg-object {
-        width: 100% !important;
-        height: 100% !important;
-        top: 0 !important;
-        left: 0 !important;
-        object-fit: cover !important;
-        object-position: center !important;
-    }
-    
-    .color-overlay {
-        opacity: 0.65 !important;
-        mix-blend-mode: soft-light !important;
-    }
-}
 
 /* ===================== */
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
