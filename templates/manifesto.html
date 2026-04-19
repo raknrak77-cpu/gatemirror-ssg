@@ -4,15 +4,15 @@
 <!-- ===================== -->
 
 <div class="manifesto">
-    <div class="manifesto-container">
-        
-        <!-- ===================== -->
-        <!-- BÖLÜM 1: GİRİŞ -->
-        <!-- ===================== -->
-        <div class="manifesto-section">
-            <div class="manifesto-image">
-                <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-hero.webp" alt="Gatemirror - Sovereign Lens of Tomorrow" loading="lazy">
-            </div>
+    
+    <!-- ===================== -->
+    <!-- BÖLÜM 1: GİRİŞ (Görsel üstte, metin altta) -->
+    <!-- ===================== -->
+    <div class="manifesto-hero">
+        <div class="manifesto-hero-image">
+            <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-hero.webp" alt="Gatemirror" loading="lazy">
+        </div>
+        <div class="manifesto-hero-content">
             <h2 class="manifesto-title">Gatemirror</h2>
             <h3 class="manifesto-subtitle">The Sovereign Lens of Tomorrow</h3>
             <p class="manifesto-text">
@@ -22,117 +22,93 @@
                 to information — you do. The question is whether you have access to the right lens.
             </p>
             <p class="manifesto-text">
-                That is why Gatemirror exists.
-            </p>
-            <p class="manifesto-text">
-                We are a premium multilingual analysis platform built for people who refuse to be 
-                passengers in their own era. Not news aggregators. Not opinion factories. 
-                We deliver deep, culturally adapted insight across five strategic frontiers in 
-                four languages because the way the world looks depends entirely on where you stand 
-                when you look at it.
+                That is why Gatemirror exists. We are a premium multilingual analysis platform built 
+                for people who refuse to be passengers in their own era. Not news aggregators. 
+                Not opinion factories. We deliver deep, culturally adapted insight across five 
+                strategic frontiers in four languages.
             </p>
         </div>
-        
-        <!-- ===================== -->
-        <!-- BÖLÜM 2: TECH & AI + FUTURE ECONOMY -->
-        <!-- ===================== -->
-        <div class="manifesto-section">
-            <div class="manifesto-two-col">
-                <div class="manifesto-col">
-                    <h4 class="manifesto-category">🔸 Tech & AI</h4>
-                    <p class="manifesto-text">
-                        Artificial intelligence is no longer a feature. It is the new operating system 
-                        of civilization. We decode what it means for your work, your wealth, and your 
-                        world — before the headlines catch up.
-                    </p>
-                </div>
-                <div class="manifesto-col">
-                    <h4 class="manifesto-category">🔸 Future Economy</h4>
-                    <p class="manifesto-text">
-                        Wealth is migrating. From physical vaults to decentralized networks, from 
-                        institutions to algorithms. We map where value is flowing and why — so you 
-                        can position yourself ahead of the current, not behind it.
-                    </p>
-                </div>
+    </div>
+
+    <!-- ===================== -->
+    <!-- BÖLÜM 2: TECH & AI + FUTURE ECONOMY (2 kolon + arada görsel) -->
+    <!-- ===================== -->
+    <div class="manifesto-section">
+        <div class="manifesto-two-col">
+            <div class="manifesto-col">
+                <h4 class="manifesto-category">🔸 Tech & AI</h4>
+                <p class="manifesto-text-small">
+                    Artificial intelligence is no longer a feature. It is the new operating system 
+                    of civilization. We decode what it means for your work, your wealth, and your 
+                    world — before the headlines catch up.
+                </p>
             </div>
-            <div class="manifesto-image">
-                <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-categories.webp" alt="Tech & Future Economy" loading="lazy">
+            <div class="manifesto-col">
+                <h4 class="manifesto-category">🔸 Future Economy</h4>
+                <p class="manifesto-text-small">
+                    Wealth is migrating. From physical vaults to decentralized networks, from 
+                    institutions to algorithms. We map where value is flowing and why — so you 
+                    can position yourself ahead of the current, not behind it.
+                </p>
             </div>
         </div>
-        
-        <!-- ===================== -->
-        <!-- BÖLÜM 3: WELLNESS + ECO & SUSTAINABLE -->
-        <!-- ===================== -->
-        <div class="manifesto-section">
-            <div class="manifesto-two-col">
-                <div class="manifesto-col">
-                    <h4 class="manifesto-category">🔸 Wellness</h4>
-                    <p class="manifesto-text">
-                        Performance, longevity, and mental clarity are no longer soft topics. 
-                        They are strategic assets. We bring you the science — from biomarker tracking 
-                        to behavioral architecture — translated into decisions you can make today.
-                    </p>
-                </div>
-                <div class="manifesto-col">
-                    <h4 class="manifesto-category">🔸 Eco & Sustainable</h4>
-                    <p class="manifesto-text">
-                        Sustainability is the defining business strategy of our generation. We analyze 
-                        the circular economy, clean technology, and climate finance not as ideology, 
-                        but as the most important economic shift of the century.
-                    </p>
-                </div>
-            </div>
+        <div class="manifesto-image-full">
+            <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-categories.webp" alt="Tech & Future Economy" loading="lazy">
         </div>
-        
-        <!-- ===================== -->
-        <!-- BÖLÜM 4: E-LEARNING -->
-        <!-- ===================== -->
-        <div class="manifesto-section">
+    </div>
+
+    <!-- ===================== -->
+    <!-- BÖLÜM 3: WELLNESS + ECO + E-LEARNING (3 kart) -->
+    <!-- ===================== -->
+    <div class="manifesto-three-col">
+        <div class="manifesto-card">
+            <h4 class="manifesto-category">🔸 Wellness</h4>
+            <p class="manifesto-text-small">
+                Performance, longevity, and mental clarity are no longer soft topics. 
+                They are strategic assets. We bring you the science — from biomarker tracking 
+                to behavioral architecture — translated into decisions you can make today.
+            </p>
+        </div>
+        <div class="manifesto-card">
+            <h4 class="manifesto-category">🔸 Eco & Sustainable</h4>
+            <p class="manifesto-text-small">
+                Sustainability is the defining business strategy of our generation. We analyze 
+                the circular economy, clean technology, and climate finance not as ideology, 
+                but as the most important economic shift of the century.
+            </p>
+        </div>
+        <div class="manifesto-card">
             <h4 class="manifesto-category">🔸 E-Learning</h4>
-            <p class="manifesto-text">
+            <p class="manifesto-text-small">
                 In a world of constant disruption, the compounding power of the right knowledge 
                 is the only reliable edge. We curate what is worth learning, and more importantly, 
                 why it matters now.
             </p>
         </div>
-        
-        <!-- ===================== -->
-        <!-- BÖLÜM 5: KAPANIŞ VE CTA -->
-        <!-- ===================== -->
-        <div class="manifesto-section manifesto-closing">
-            <div class="manifesto-image">
-                <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-cta.webp" alt="Reflect the Future" loading="lazy">
-            </div>
-            <p class="manifesto-text-center">
+    </div>
+
+    <!-- ===================== -->
+    <!-- BÖLÜM 4: KAPANIŞ (Görsel üstte, metin + buton ortada) -->
+    <!-- ===================== -->
+    <div class="manifesto-closing">
+        <div class="manifesto-closing-image">
+            <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-cta.webp" alt="Reflect the Future" loading="lazy">
+        </div>
+        <div class="manifesto-closing-content">
+            <p class="manifesto-quote">
                 Five frontiers. Four languages. <strong>One Mirror.</strong>
-            </p>
-            <p class="manifesto-text-center">
-                One commitment: to give you the clarity that raw information never could.
             </p>
             <p class="manifesto-text-center">
                 The future is not a destination you reach. It is a territory you govern with the 
                 right vision, at the right time, through the right lens.
             </p>
-            <p class="manifesto-quote">
+            <p class="manifesto-quote-large">
                 Don't just read the future. Reflect it.
             </p>
             <div class="manifesto-cta">
                 <a href="/explore/all-articles/{{ lang }}.html" class="manifesto-button">Get A Mirror →</a>
             </div>
         </div>
-        
-        <!-- ===================== -->
-        <!-- YEDEK ALANLAR (İLERİDE KULLANILMAK ÜZERE) -->
-        <!-- ===================== -->
-        <!-- ADSENSE ALANI -->
-        <div class="manifesto-adsense" style="display: none;">
-            <!-- Google AdSense buraya gelecek -->
-        </div>
-        
-        <!-- YEDEK GÖRSEL ALANI -->
-        <div class="manifesto-placeholder" style="display: none;">
-            <!-- İleride eklenecek görseller için -->
-        </div>
-        
     </div>
+
 </div>
