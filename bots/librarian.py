@@ -373,6 +373,110 @@ def update_hero_stats():
         print(f"   ❌ hero.json kaydedilemedi: {e}")
         return False
 
+# ================= YENİ: R2 BUCKET ANALİZİ =================
+
+def analyze_r2_storage():
+    """R2 bucket'ındaki dosya türlerini ve boyutlarını analiz eder"""
+    print("\n" + "=" * 40)
+    print("📊 R2 BUCKET ANALİZİ")
+    print("=" * 40)
+    
+    # Dosya türleri ve toplam boyutları
+    stats = {
+        'html': {'count': 0, 'size': 0},
+        'svg': {'count': 0, 'size': 0},
+        'webp': {'count': 0, 'size': 0},
+        'jpg': {'count': 0, 'size': 0},
+        'png': {'count': 0, 'size': 0},
+        'json': {'count': 0, 'size': 0},
+        'css': {'count': 0, 'size': 0},
+        'js': {'count': 0, 'size': 0},
+        'other': {'count': 0, 'size': 0}
+    }
+    
+    total_files = 0
+    total_size = 0
+    continuation_token = None
+    
+    try:
+        while True:
+            if continuation_token:
+                response = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    ContinuationToken=continuation_token
+                )
+            else:
+                response = s3.list_objects_v2(Bucket=R2_BUCKET)
+            
+            if 'Contents' not in response:
+                break
+            
+            for obj in response['Contents']:
+                key = obj['Key']
+                size = obj['Size']
+                total_files += 1
+                total_size += size
+                
+                # Dosya uzantısına göre sınıflandır
+                ext = key.split('.')[-1].lower() if '.' in key else 'other'
+                
+                if ext in ['html', 'htm']:
+                    stats['html']['count'] += 1
+                    stats['html']['size'] += size
+                elif ext == 'svg':
+                    stats['svg']['count'] += 1
+                    stats['svg']['size'] += size
+                elif ext == 'webp':
+                    stats['webp']['count'] += 1
+                    stats['webp']['size'] += size
+                elif ext in ['jpg', 'jpeg']:
+                    stats['jpg']['count'] += 1
+                    stats['jpg']['size'] += size
+                elif ext == 'png':
+                    stats['png']['count'] += 1
+                    stats['png']['size'] += size
+                elif ext == 'json':
+                    stats['json']['count'] += 1
+                    stats['json']['size'] += size
+                elif ext == 'css':
+                    stats['css']['count'] += 1
+                    stats['css']['size'] += size
+                elif ext == 'js':
+                    stats['js']['count'] += 1
+                    stats['js']['size'] += size
+                else:
+                    stats['other']['count'] += 1
+                    stats['other']['size'] += size
+            
+            if response.get('IsTruncated'):
+                continuation_token = response.get('NextContinuationToken')
+            else:
+                break
+                
+    except Exception as e:
+        print(f"❌ Analiz hatası: {e}")
+        return False
+    
+    # Sonuçları göster
+    print(f"\n📁 TOPLAM DOSYA: {total_files}")
+    print(f"💾 TOPLAM BOYUT: {total_size / (1024*1024):.2f} MB")
+    print("\n" + "-" * 45)
+    print("📄 DOSYA TÜRLERİNE GÖRE DAĞILIM:")
+    print("-" * 45)
+    
+    # Boyuta göre sırala (büyükten küçüğe)
+    sorted_stats = sorted(stats.items(), key=lambda x: x[1]['size'], reverse=True)
+    
+    for type_name, data in sorted_stats:
+        if data['count'] > 0:
+            mb = data['size'] / (1024*1024)
+            percent = (data['size'] / total_size * 100) if total_size > 0 else 0
+            print(f"   {type_name.upper():8} | {data['count']:6} dosya | {mb:8.2f} MB | %{percent:5.1f}")
+    
+    print("-" * 45)
+    
+    return True
+
 # ================= ANA LİBRARIAN =================
 
 def librarian():
@@ -383,6 +487,9 @@ def librarian():
     print("   ✅ hero.json stats güncelleniyor")
     print("   ✅ Atomic swap: articles_ready/ → articles/")
     print("=" * 60)
+    
+    # R2 ANALİZİ (isteğe bağlı, aktif etmek için yorum satırını kaldır)
+    # analyze_r2_storage()
     
     # 1. explore/explorer.json oluştur
     articles = get_articles_from_r2()
