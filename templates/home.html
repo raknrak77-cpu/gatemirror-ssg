@@ -1174,22 +1174,25 @@
     <!-- HERO BÖLÜMÜ (KATMANLI SVG + SADE İÇERİK) -->
     <!-- ===================== -->
     <div class="hero-wrapper">
-        <!-- KATMAN 1: ARKA SVG -->
-        <div class="pattern-layer layer-back">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="" aria-hidden="true">
-       <!-- KATMAN 2: RENK OVERLAY -->
-            <div class="color-overlay"></div>
-         </div> 
-        <!-- KATMAN 3: ÖN SVG -->
-        <div class="pattern-layer layer-front">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="" aria-hidden="true">
-        </div>
-        
-        <!-- KATMAN 4: HERO İÇERİK (hero.json'dan dinamik) -->
-        <div class="hero-container">
-            {{ hero.html | safe }}
-        </div>
+    <!-- KATMAN 1: ARKA SVG -->
+    <div class="pattern-layer layer-back">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="" aria-hidden="true">
     </div>
+    
+    <!-- KATMAN 2: RENK OVERLAY (z-index:2) - layer-back ile layer-front ARASINDA -->
+    <div class="color-overlay"></div>
+    
+    <!-- KATMAN 3: ÖN SVG -->
+    <div class="pattern-layer layer-front">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="" aria-hidden="true">
+    </div>
+    
+    <!-- KATMAN 4: HERO İÇERİK -->
+    <div class="hero-container">
+        {{ hero.html | safe }}
+    </div>
+    </div>
+    
             {{ manifesto | safe }}
     <!-- ===================== -->
     <!-- FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) -->
