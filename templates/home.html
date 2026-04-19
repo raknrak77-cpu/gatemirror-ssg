@@ -547,58 +547,188 @@ nav {
     }
     
     /* ===================== */
-    /* NEWS TICKER (KAYAN YAZI) */
-    /* ===================== */
+/* NEWS TICKER (KAYAN YAZI) - RESPONSIVE */
+/* ===================== */
+
+.hero-news-ticker {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 2rem;
+    padding: 0.75rem 1rem;
+    overflow: hidden;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.ticker-wrapper {
+    overflow: hidden;
+}
+
+.ticker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker-scroll 25s linear infinite;
+}
+
+.ticker-label {
+    display: inline-block;
+    margin-right: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(0,0,0,0.05);
+    padding: 0.2rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 1.1rem;
+}
+
+.ticker-item {
+    display: inline-block;
+    margin-right: 2rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.ticker-item:hover {
+    color: var(--primary);
+}
+
+.ticker-item::before {
+    content: "🪩";
+    margin-right: 0.5rem;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ===================== */
+/* TICKER RESPONSIVE AYARLAR */
+/* ===================== */
+
+/* PC (1200px ve üzeri) */
+@media (min-width: 1200px) {
     .hero-news-ticker {
-        background: rgba(0, 0, 0, 0.03);
-        border-radius: 2rem;
-        padding: 0.75rem 1rem;
-        overflow: hidden;
-        margin-top: 1rem;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
     }
-    
-    .ticker-wrapper {
-        overflow: hidden;
+    .ticker-item {
+        margin-right: 3rem;
+        font-size: 1.1rem;
     }
-    
+    .ticker-label {
+        font-size: 1.2rem;
+    }
+}
+
+/* Laptop (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .ticker-item {
+        margin-right: 2.5rem;
+        font-size: 1rem;
+    }
+    .ticker-label {
+        font-size: 1.1rem;
+    }
+}
+
+/* Tablet Yatay (768px - 991px) ve landscape */
+@media (min-width: 768px) and (max-width: 991px) and (orientation: landscape) {
+    .hero-news-ticker {
+        max-width: 90%;
+    }
+    .ticker-item {
+        margin-right: 2rem;
+        font-size: 0.9rem;
+    }
+    .ticker-label {
+        font-size: 1rem;
+    }
+}
+
+/* Tablet Dikey (768px - 991px) ve portrait */
+@media (min-width: 768px) and (max-width: 991px) and (orientation: portrait) {
+    .hero-news-ticker {
+        max-width: 95%;
+    }
+    .ticker-item {
+        margin-right: 1.5rem;
+        font-size: 0.85rem;
+    }
+    .ticker-label {
+        font-size: 0.9rem;
+    }
+}
+
+/* Büyük Telefon Yatay (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) and (orientation: landscape) {
+    .hero-news-ticker {
+        max-width: 100%;
+    }
+    .ticker-item {
+        margin-right: 1.5rem;
+        font-size: 0.8rem;
+    }
+    .ticker-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* Büyük Telefon Dikey (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) and (orientation: portrait) {
+    .hero-news-ticker {
+        max-width: 100%;
+    }
+    .ticker-item {
+        margin-right: 1.2rem;
+        font-size: 0.75rem;
+    }
+    .ticker-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Küçük Telefon (max-width: 575px) */
+@media (max-width: 575px) {
+    .hero-news-ticker {
+        max-width: 100%;
+        padding: 0.5rem 0.8rem;
+    }
+    .ticker-item {
+        margin-right: 1rem;
+        font-size: 0.7rem;
+    }
+    .ticker-label {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.6rem;
+    }
+}
+
+/* ===================== */
+/* YÖNLENDİRMEYE GÖRE HIZ AYARI */
+/* ===================== */
+
+/* Yatay ekranlarda normal hız */
+@media (orientation: landscape) {
     .ticker {
-        display: inline-block;
-        white-space: nowrap;
         animation: ticker-scroll 25s linear infinite;
     }
-    
-    .ticker-label {
-        display: inline-block;
-        margin-right: 1rem;
-        font-weight: 700;
-        color: var(--primary);
-        background: rgba(0,0,0,0.05);
-        padding: 0.2rem 0.8rem;
-        border-radius: 2rem;
-        font-size: 2.0rem !important;
+}
+
+/* Dikey ekranlarda daha hızlı (dar alanda) */
+@media (orientation: portrait) {
+    .ticker {
+        animation: ticker-scroll 18s linear infinite;
     }
-    
-    .ticker-item {
-        display: inline-block;
-        margin-right: 2rem;
-        font-size: 1.25rem !important;
-        text-decoration: none;
-        color: inherit;
+}
+
+/* Telefon dikeyde daha da hızlı */
+@media (max-width: 767px) and (orientation: portrait) {
+    .ticker {
+        animation: ticker-scroll 14s linear infinite;
     }
-    
-    .ticker-item:hover {
-        color: var(--primary);
-    }
-    
-    .ticker-item::before {
-        content: "🪩";
-        margin-right: 0.5rem;
-    }
-    
-    @keyframes ticker-scroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
+}
     
     /* ===================== */
     /* ANİMASYONLAR (SVG DRIFT + RENK DÖNGÜSÜ) */
@@ -877,9 +1007,6 @@ nav {
         color: #aaa;
     }
     
-    /* ===================== */
-    /* DARK MODE (AÇIK LACİVERT) */
-    /* ===================== */
 /* ===================== */
 /* DARK MODE BUTONU (DESKTOP) */
 /* ===================== */
