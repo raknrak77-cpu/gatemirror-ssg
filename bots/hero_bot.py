@@ -195,6 +195,10 @@ def render_hero(page_type, lang, category=None):
     
     html = '<div class="hero-grid">\n'
     for block in blocks:
+        # YENİ: Eğer sayfa 'home' ise ve block 'active: false' içeriyorsa atla
+        if page_type == 'home' and block.get('active') is False:
+            continue
+        
         block_html = render_block(block, lang)
         if block_html:
             html += f'    <div class="hero-grid-full">{block_html}</div>\n'
