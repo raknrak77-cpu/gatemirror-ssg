@@ -69,12 +69,13 @@ def upload_css_to_assets():
         return False
 
 def upload_svg_patterns():
-    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME (SADECE 2 DOSYA)")
+    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME (3 DOSYA)")
     print("-" * 40)
     
     svg_files = [
         ("assets/all-patterns/spiral_out/spiral_circular_basic_10.svg", "assets/svg1.svg"),
         ("assets/all-patterns/spiral_out/spiral_circular_medium_09.svg", "assets/svg2.svg"),
+        ("assets/all-patterns/breath_wave/breath_wave_basic_02.svg", "assets/svg3.svg"),  # YENİ
     ]
     
     for local_path, r2_key in svg_files:
@@ -117,7 +118,7 @@ def uploader():
     # HERO.JSON YÜKLEME KALDIRILDI - Librarian assets/hero.json yazacak
     
     upload_svg_patterns()
-    upload_manifesto_images()  # YENİ
+    upload_manifesto_images()
     
     content_base = "content"
     if not os.path.exists(content_base):
@@ -164,6 +165,7 @@ def uploader():
     print("   ✅ style.css → R2/assets/css/style.css")
     print("   ✅ svg1.svg → R2/assets/svg1.svg")
     print("   ✅ svg2.svg → R2/assets/svg2.svg")
+    print("   ✅ svg3.svg → R2/assets/svg3.svg (YENİ - breath_wave)")
     print("   ✅ Manifesto görselleri → R2/assets/manifesto/")
     print("   ✅ content/ → R2/raw-articles/")
     print("=" * 60)
