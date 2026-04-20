@@ -375,17 +375,12 @@
         var(--el-4) 80%,
         var(--tech-4) 100%);
     background-size: 200% 200%;
-    opacity: 0.4;
-    animation: gradientShiftBack 10s ease-in-out infinite;
+    opacity: 0.3;
+    animation: gradientShiftBack 5s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
 
-@keyframes gradientShiftBack {
-    0%   { background-position: 0% 0%; opacity: 0.35; }
-    50%  { background-position: 100% 100%; opacity: 0.5; }
-    100% { background-position: 0% 0%; opacity: 0.35; }
-}
 
 /* ===================== */
 /* KATMAN 2: ARKA SPİRAL (svg1) - OVERLAY-2 İLE RENKLENECEK */
@@ -397,10 +392,10 @@
 .layer-back .svg-object {
     width: 100%;
     height: 100%;
-    top: 20%;
+    top: 0%;
     left: 0%;
     object-position: center;
-    opacity: 0.8;
+    opacity: 1;
     filter: brightness(0.7) contrast(1.3) saturate(2);
     animation: driftRight 30s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
@@ -414,23 +409,17 @@
     inset: 0;
     z-index: 3;
     background: linear-gradient(135deg,
-        var(--tech-4) 0%,
-        var(--wellness-4) 20%,
-        var(--fe-4) 40%,
-        var(--eco-4) 60%,
-        var(--el-4) 80%,
-        var(--tech-4) 100%);
+        var(--tech-4) 100%,
+        var(--wellness-4) 80%,
+        var(--fe-4) 60%,
+        var(--eco-4) 40%,
+        var(--el-4) 20%,
+        var(--tech-4) 0%);
     background-size: 200% 200%;
-    opacity: 0.35;
-    animation: gradientShift 8s ease-in-out infinite;
+    opacity: 0.3;
+    animation: gradientShift 5s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
-}
-
-@keyframes gradientShift {
-    0%   { background-position: 0% 0%; opacity: 0.3; }
-    50%  { background-position: 100% 50%; opacity: 0.5; }
-    100% { background-position: 0% 0%; opacity: 0.3; }
 }
 
 /* ===================== */
@@ -443,21 +432,14 @@
 .layer-front .svg-object {
     width: 100%;
     height: 100%;
-    top: 20%;
+    top: 0%;
     left: 0;
     object-position: center;
-    opacity: 0.8;
+    opacity: 1;
     filter: brightness(0.8) contrast(1.2) saturate(1.8);
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
         }
-
-
-
-
-
-
-
 
 /* ===================== */
 /* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
@@ -567,6 +549,14 @@
     100% { background-position: 0% 0%; opacity: 0.3; }
 }
 
+@keyframes gradientShiftback {
+    0%   { background-position: 0% 0%; opacity: 0.3; }
+    25%  { background-position: 100% 50%; opacity: 0.5; }
+    50%  { background-position: 50% 100%; opacity: 0.4; }
+    75%  { background-position: 0% 50%; opacity: 0.5; }
+    100% { background-position: 0% 0%; opacity: 0.3; }
+}
+        
 /* ===================== */
 /* RESPONSIVE - MOBİL */
 /* ===================== */
