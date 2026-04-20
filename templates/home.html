@@ -343,7 +343,7 @@
 }
 
 /* ===================== */
-/* KATMAN 0: ARKA KALKAN (svg3) - SADECE DOKU */
+/* KATMAN 0: ARKA KALKAN (svg3) - IŞIK ALMASIN, KALKAN OLSUN */
 /* ===================== */
 .layer-back-shield {
     z-index: 0;
@@ -355,13 +355,13 @@
     top: 0;
     left: 0;
     object-position: center;
-    opacity: 0.25;
+    opacity: 0.2;
     filter: none;
     animation: none;
 }
 
 /* ===================== */
-/* KATMAN 1: OVERLAY 1 (SADECE ARKA KALKANI RENKLENDİRİR) */
+/* KATMAN 1: OVERLAY-2 (YENİ) - ARKA SPİRALİ (svg1) RENKLENDİRECEK */
 /* ===================== */
 .color-overlay-back {
     position: absolute;
@@ -369,25 +369,26 @@
     z-index: 1;
     background: linear-gradient(135deg,
         var(--tech-4) 0%,
-        var(--wellness-4) 25%,
-        var(--fe-4) 50%,
-        var(--eco-4) 75%,
-        var(--el-4) 100%);
+        var(--wellness-4) 20%,
+        var(--fe-4) 40%,
+        var(--eco-4) 60%,
+        var(--el-4) 80%,
+        var(--tech-4) 100%);
     background-size: 200% 200%;
-    opacity: 0.2;
-    animation: gradientShiftBack 15s ease-in-out infinite;
+    opacity: 0.4;
+    animation: gradientShiftBack 10s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
 
 @keyframes gradientShiftBack {
-    0%   { background-position: 0% 0%; opacity: 0.15; }
-    50%  { background-position: 100% 100%; opacity: 0.25; }
-    100% { background-position: 0% 0%; opacity: 0.15; }
+    0%   { background-position: 0% 0%; opacity: 0.35; }
+    50%  { background-position: 100% 100%; opacity: 0.5; }
+    100% { background-position: 0% 0%; opacity: 0.35; }
 }
 
 /* ===================== */
-/* KATMAN 2: ARKA SPİRAL (svg1) */
+/* KATMAN 2: ARKA SPİRAL (svg1) - OVERLAY-2 İLE RENKLENECEK */
 /* ===================== */
 .layer-back {
     z-index: 2;
@@ -406,7 +407,7 @@
 }
 
 /* ===================== */
-/* KATMAN 3: OVERLAY 2 (MEVCUT - SPİRALLERİ RENKLENDİRİR) */
+/* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg2) RENKLENDİRECEK */
 /* ===================== */
 .color-overlay {
     position: absolute;
@@ -426,8 +427,14 @@
     mix-blend-mode: overlay;
 }
 
+@keyframes gradientShift {
+    0%   { background-position: 0% 0%; opacity: 0.3; }
+    50%  { background-position: 100% 50%; opacity: 0.5; }
+    100% { background-position: 0% 0%; opacity: 0.3; }
+}
+
 /* ===================== */
-/* KATMAN 4: ÖN SPİRAL (svg2) */
+/* KATMAN 4: ÖN SPİRAL (svg2) - OVERLAY-1 İLE RENKLENECEK */
 /* ===================== */
 .layer-front {
     z-index: 4;
@@ -443,7 +450,14 @@
     filter: brightness(0.8) contrast(1.2) saturate(1.8);
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
-}
+        }
+
+
+
+
+
+
+
 
 /* ===================== */
 /* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
