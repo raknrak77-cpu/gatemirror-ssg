@@ -353,8 +353,8 @@
         left: -100%;
         object-position: left center;
         opacity: 0.5;
-        animation: driftRight 30s ease-in-out infinite,
-                   colorCycleBack 6s ease-in-out infinite;
+        animation: driftRight 20s ease-in-out infinite,
+                   colorCycleBack 4s ease-in-out infinite;
     }
     
     .color-overlay {
@@ -369,10 +369,10 @@
             var(--el-4) 80%,
             var(--tech-4) 100%);
         background-size: 200% 200%;
-        opacity: 0.45;
-        animation: gradientShift 10s ease-in-out infinite;
+        opacity: 0.35;
+        animation: gradientShift 15s ease-in-out infinite;
         pointer-events: none;
-        mix-blend-mode: soft-light;
+        mix-blend-mode: overlay;
     }
     
     .layer-front {
@@ -386,8 +386,8 @@
         left: 0;
         object-position: right center;
         opacity: 0.4;
-        animation: driftLeft 25s ease-in-out infinite,
-                   colorCycleFront 8s ease-in-out infinite reverse;
+        animation: driftLeft 15s ease-in-out infinite,
+                   colorCycleFront 4s ease-in-out infinite reverse;
     }
     
     .hero-wrapper::before {
@@ -474,9 +474,11 @@
     }
     
     @keyframes gradientShift {
-        0% { opacity: 0.4; background-position: 0% 50%; }
-        50% { opacity: 0.6; background-position: 100% 50%; }
-        100% { opacity: 0.4; background-position: 0% 50%; }
+        0%   { opacity: 0.2; background-position: 0% 25%; }
+        25%  { opacity: 0.4; background-position: 100% 50%; }
+        50%  { opacity: 0.5; background-position: 100% 75%; }
+        75%  { opacity: 0.3; background-position: 100% 25%; }
+        100% { opacity: 0.2; background-position: 0% 25%; }
     }
     
     /* =====================================================
