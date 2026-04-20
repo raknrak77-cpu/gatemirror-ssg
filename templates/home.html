@@ -393,11 +393,14 @@
     .hero-wrapper::before {
         content: "";
         position: absolute;
-        inset: 0;
+        top: -60px;
+        left: 0;
+        right: 0;
+        height: 60px;
         z-index: 4;
-        background: linear-gradient(to top, transparent 0%, var(--white) 100%);
+        background: linear-gradient(to top, transparent 75%, var(--white) 100%);
         pointer-events: none;
-    }
+        }
     
     .hero-wrapper::after {
         content: "";
