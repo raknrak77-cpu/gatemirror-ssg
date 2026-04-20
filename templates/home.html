@@ -663,9 +663,11 @@ body.dark .manifesto-card:hover {
 
 .hero-wrapper {
     position: relative;
-    min-height: auto;
+    margin-top: -40px;      /* Header ile 40px bindirme */
+    padding-top: 60px;      /* İçerik yukarı kaymasın */
     overflow: hidden;
     background: transparent;
+    z-index: 1;
 }
 
 .pattern-layer {
@@ -757,26 +759,19 @@ body.dark .manifesto-card:hover {
 .hero-wrapper::before {
     content: "";
     position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    height: 60px;
+    inset: 0;  /* tüm hero-wrapper alanı */
     z-index: 4;
     background: linear-gradient(to top, transparent 0%, var(--white) 100%);
     pointer-events: none;
 }
-
-.hero-wrapper::after {
+    .hero-wrapper::after {
     content: "";
     position: absolute;
-    bottom: -60px;
-    left: 0;
-    right: 0;
-    height: 60px;
+    inset: 0;
     z-index: 4;
-    background: linear-gradient(to bottom, transparent 0%, var(--white) 100%);
+    background: linear-gradient(to bottom, transparent 0%, transparent 55%, var(--white) 100%);
     pointer-events: none;
-}
+        }
 
 /* ===================== */
 /* KATMAN 5: HERO İÇERİK */
