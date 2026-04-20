@@ -328,10 +328,10 @@
 
 .pattern-layer {
     position: absolute;
-    top: -75%;
-    left: -75%;
-    width: 250%;
-    height: 250%;
+    top: -55%;
+    left: -55%;
+    width: 450%;
+    height: 450%;
     pointer-events: none;
     overflow: visible;
 }
@@ -358,23 +358,17 @@
     opacity: 1;
     
     /* RENKLENDİRME: Önce sepia ile renk tonu hazırla, sonra mask ile gradyan ver */
-     filter: sepia(100%) saturate(1000%) brightness(0.7) contrast(1.2);
-    -webkit-mask-image: linear-gradient(
-        125deg,
-        #7c66d6 0%,
-        #b8849a 25%,
-        #c9960a 50%,
-        #5fa878 75%,
-        #2a98b8 100%
-    );
-    mask-image: linear-gradient(
-        125deg,
-        #7c66d6 0%,
-        #b8849a 25%,
-        #c9960a 50%,
-        #5fa878 75%,
-        #2a98b8 100%
-    );
+     .layer-back .svg-object {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-position: center;
+    opacity: 1;
+    
+    /* TEK RENK - EN CANLI */
+    filter: sepia(100%) saturate(1000%) hue-rotate(180deg) brightness(0.9) contrast(1.3);
+}
     
     /* HAREKET ANİMASYONU */
     animation: driftRight 40s ease-in-out infinite;
