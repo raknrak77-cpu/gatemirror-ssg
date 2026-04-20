@@ -314,9 +314,9 @@
         font-size: 12px;
         transition: 0.2s;
     }
-/* =====================================================
-   BLOK 4: HERO BÖLÜMÜ (img ile - ÇALIŞAN)
-   ===================================================== */
+/* ===================== */
+/* HERO - STABIL KATMANLI SISTEM (RENKLI) */
+/* ===================== */
 
 .hero-wrapper {
     position: relative;
@@ -334,120 +334,159 @@
     pointer-events: none;
 }
 
-.pattern-layer img {
+/* ===================== */
+/* SVG OBJECT - TEMEL AYARLAR */
+/* ===================== */
+.svg-object {
     position: absolute;
-    width: 300%;
-    height: 400%;
+    pointer-events: none;
     object-fit: cover;
-    object-position: center;
 }
 
+/* ===================== */
+/* KATMAN 1: ARKA SVG (svg1) */
+/* ===================== */
 .layer-back {
     z-index: 1;
 }
 
-.layer-back img {
-    opacity: 0.7;
-    animation: slowDriftBack 40s ease-in-out infinite,
-               colorCycleBack 10s ease-in-out infinite;
-}
-
-.layer-front {
-    z-index: 2;
-}
-
-.layer-front img {
+.layer-back .svg-object {
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -100%;
+    object-position: left center;
     opacity: 0.5;
-    animation: slowDriftFront 20s ease-in-out infinite reverse,
+    animation: driftRight 30s ease-in-out infinite,
+               colorCycleBack 6s ease-in-out infinite;
+}
+
+/* ===================== */
+/* KATMAN 2: RENK OVERLAY */
+/* ===================== */
+.color-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        135deg,
+        var(--tech-4) 0%,
+        var(--wellness-4) 20%,
+        var(--fe-4) 40%,
+        var(--eco-4) 60%,
+        var(--el-4) 80%,
+        var(--tech-4) 100%
+    );
+    background-size: 200% 200%;
+    opacity: 0.45;
+    animation: gradientShift 10s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+}
+
+@keyframes gradientShift {
+    0% { opacity: 0.4; background-position: 0% 50%; }
+    50% { opacity: 0.6; background-position: 100% 50%; }
+    100% { opacity: 0.4; background-position: 0% 50%; }
+}
+
+/* ===================== */
+/* KATMAN 3: ÖN SVG (svg2) */
+/* ===================== */
+.layer-front {
+    z-index: 3;
+}
+
+.layer-front .svg-object {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-position: right center;
+    opacity: 0.4;
+    animation: driftLeft 25s ease-in-out infinite,
                colorCycleFront 8s ease-in-out infinite reverse;
 }
 
-.hero-content {
+/* ===================== */
+/* KATMAN 4: HERO GRADIENT OVERLAY (ÜST + ALT GEÇİŞ) */
+/* ===================== */
+.hero-wrapper::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 4;
+    background: linear-gradient(to top, transparent 0%, var(--white) 100%);
+    pointer-events: none;
+}
+
+.hero-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: -80px;
+    left: 0;
+    right: 0;
+    height: 120px;
+    z-index: 4;
+    background: linear-gradient(to bottom, transparent 0%, var(--white) 100%);
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* ===================== */
+/* KATMAN 5: HERO İÇERİK */
+/* ===================== */
+.hero-container {
     position: relative;
-    z-index: 3;
-    background: transparent;
-    text-align: center;
-    padding: 3rem 1.5rem;
+    z-index: 5;
     max-width: 800px;
     margin: 0 auto;
-}
-
-.hero-title {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hero-description {
-    font-size: 1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto 1.5rem;
-    line-height: 1.6;
-    color: var(--tech-3);
-}
-
-.hero-cta-primary {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
-    color: var(--tech-5);
-    padding: 0.75rem 1.5rem;
-    border-radius: 2rem;
-    text-decoration: none;
-    font-weight: 600;
-    transition: var(--transition);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.hero-cta-primary:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
-    color: #ffffff;
+    padding: 2rem 1.5rem;
+    text-align: center;
 }
 
 /* ===================== */
-/* ANİMASYONLAR */
+/* DRIFT ANİMASYONLARI */
 /* ===================== */
-
-@keyframes slowDriftBack {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(2%, 1%) scale(1.05) rotate(1deg); }
-    66% { transform: translate(-1%, 2%) scale(0.98) rotate(-1deg); }
-    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+@keyframes driftRight {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(60px) translateY(8px) rotate(1deg); }
+    50% { transform: translateX(120px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(60px) translateY(-8px) rotate(-1deg); }
+    100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
 
-@keyframes slowDriftFront {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(-2%, -1%) scale(1.08) rotate(-2deg); }
-    66% { transform: translate(1%, -2%) scale(0.95) rotate(1deg); }
-    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+@keyframes driftLeft {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(-60px) translateY(-8px) rotate(-1deg); }
+    50% { transform: translateX(-120px) translateY(0) rotate(0deg); }
+    75% { transform: translateX(-60px) translateY(8px) rotate(1deg); }
+    100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
 
+/* ===================== */
+/* RENK DÖNGÜSÜ ANİMASYONLARI */
+/* ===================== */
 @keyframes colorCycleBack {
-    0%   { filter: hue-rotate(0deg) saturate(1.6) brightness(0.7); }
-    25%  { filter: hue-rotate(90deg) saturate(1.6) brightness(0.7); }
-    50%  { filter: hue-rotate(180deg) saturate(1.6) brightness(0.7); }
-    75%  { filter: hue-rotate(270deg) saturate(1.6) brightness(0.7); }
-    100% { filter: hue-rotate(360deg) saturate(1.6) brightness(0.7); }
+    0%   { filter: hue-rotate(0deg) saturate(1.8) brightness(0.6); }
+    25%  { filter: hue-rotate(90deg) saturate(1.8) brightness(0.6); }
+    50%  { filter: hue-rotate(180deg) saturate(1.8) brightness(0.6); }
+    75%  { filter: hue-rotate(270deg) saturate(1.8) brightness(0.6); }
+    100% { filter: hue-rotate(360deg) saturate(1.8) brightness(0.6); }
 }
 
 @keyframes colorCycleFront {
-    0%   { filter: hue-rotate(300deg) saturate(1.5) brightness(0.75); }
-    33%  { filter: hue-rotate(40deg) saturate(1.5) brightness(0.75); }
-    66%  { filter: hue-rotate(160deg) saturate(1.5) brightness(0.75); }
-    100% { filter: hue-rotate(300deg) saturate(1.5) brightness(0.75); }
+    0%   { filter: hue-rotate(300deg) saturate(1.6) brightness(0.7); }
+    25%  { filter: hue-rotate(30deg) saturate(1.6) brightness(0.7); }
+    50%  { filter: hue-rotate(120deg) saturate(1.6) brightness(0.7); }
+    75%  { filter: hue-rotate(210deg) saturate(1.6) brightness(0.7); }
+    100% { filter: hue-rotate(300deg) saturate(1.6) brightness(0.7); }
 }
 
-
-
-
-
-        
     /* =====================================================
        BLOK 5: MANIFESTO BÖLÜMÜ
     ===================================================== */
@@ -1246,21 +1285,26 @@
 <!-- HERO BÖLÜMÜ -->
 <!-- ===================== -->
 <div class="hero-wrapper">
-    <!-- Arka katman (svg1) - img ile -->
+    <!-- KATMAN 1: ARKA SVG -->
     <div class="pattern-layer layer-back">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
+        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
+            <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
+        </object>
     </div>
     
-    <!-- Ön katman (svg2) - img ile -->
+    <!-- KATMAN 2: RENK OVERLAY -->
+    <div class="color-overlay"></div>
+    
+    <!-- KATMAN 3: ÖN SVG -->
     <div class="pattern-layer layer-front">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object" alt="">
+        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
+            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
+        </object>
     </div>
     
-    <!-- Hero içerik -->
-    <div class="hero-content">
-        <h1 class="hero-title">Global Insights<br>for a Changing World</h1>
-        <p class="hero-description">Deep analysis on technology, wellness, future economy, and sustainable living.</p>
-        <a href="/{{ lang }}/tech/" class="hero-cta hero-cta-primary">Explore →</a>
+    <!-- KATMAN 4: HERO İÇERİK -->
+    <div class="hero-container">
+        {{ hero.html | safe }}
     </div>
 </div>
     
