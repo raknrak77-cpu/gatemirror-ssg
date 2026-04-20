@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import re
 import boto3
 from datetime import datetime
 from botocore.client import Config
@@ -22,27 +23,26 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# Dil konfigürasyonu
+# Dil konfigurasyonu
 LANGUAGES = ['en', 'es', 'de', 'fr']
 LANG_NAMES = {
-    'en': 'English', 'es': 'Español', 'de': 'Deutsch', 'fr': 'Français'
+    'en': 'English', 'es': 'Espanol', 'de': 'Deutsch', 'fr': 'Francais'
 }
 LANG_FLAGS = {
-    'en': '🇺🇸', 'es': '🇪🇸', 'de': '🇩🇪', 'fr': '🇫🇷'
+    'en': 'US', 'es': 'ES', 'de': 'DE', 'fr': 'FR'
 }
 
 CATEGORIES = {
-    'tech': {'en': 'Technology & AI', 'es': 'Tecnología & IA', 'de': 'Technologie & KI', 'fr': 'Technologie & IA'},
-    'wellness': {'en': 'Wellness', 'es': 'Bienestar', 'de': 'Wohlbefinden', 'fr': 'Bien-être'},
-    'future-economy': {'en': 'Future Economy', 'es': 'Economía Futura', 'de': 'ZukunftsWirtschaft', 'fr': 'Économie Future'},
-    'eco': {'en': 'Eco & Sustainable', 'es': 'Eco & Sostenible', 'de': 'Öko & Nachhaltig', 'fr': 'Éco & Durable'},
+    'tech': {'en': 'Technology and AI', 'es': 'Tecnologia y IA', 'de': 'Technologie und KI', 'fr': 'Technologie et IA'},
+    'wellness': {'en': 'Wellness', 'es': 'Bienestar', 'de': 'Wohlbefinden', 'fr': 'Bien-etre'},
+    'future-economy': {'en': 'Future Economy', 'es': 'Economia Futura', 'de': 'ZukunftsWirtschaft', 'fr': 'Economie Future'},
+    'eco': {'en': 'Eco and Sustainable', 'es': 'Eco y Sostenible', 'de': 'Oko und Nachhaltig', 'fr': 'Eco et Durable'},
     'elearning': {'en': 'E-Learning', 'es': 'E-Aprendizaje', 'de': 'E-Learning', 'fr': 'E-Apprentissage'}
 }
 
-# ================= R2 YARDIMCI FONKSİYONLAR =================
+# ================= R2 YARDIMCI FONKSIYONLAR =================
 
 def list_all_files(prefix):
-    """R2'deki tüm dosyaları listeler"""
     files = []
     continuation_token = None
     
@@ -57,7 +57,7 @@ def list_all_files(prefix):
             else:
                 response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
         except Exception as e:
-            print(f"   ❌ Listeleme hatası: {e}")
+            print(f"   Listeleme hatasi: {e}")
             return []
         
         if 'Contents' not in response:
@@ -74,7 +74,6 @@ def list_all_files(prefix):
     return files
 
 def folder_exists(prefix):
-    """R2'de klasör var mı (içinde en az 1 dosya var mı)"""
     try:
         response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, MaxKeys=1)
         return 'Contents' in response
@@ -82,7 +81,6 @@ def folder_exists(prefix):
         return False
 
 def delete_folder(prefix):
-    """R2'de bir klasörün içindeki tüm dosyaları sil"""
     continuation_token = None
     deleted_count = 0
     
@@ -97,7 +95,7 @@ def delete_folder(prefix):
             else:
                 response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
         except Exception as e:
-            print(f"   ❌ Listeleme hatası: {e}")
+            print(f"   Listeleme hatasi: {e}")
             raise
         
         if 'Contents' not in response:
@@ -108,7 +106,7 @@ def delete_folder(prefix):
             s3.delete_objects(Bucket=R2_BUCKET, Delete={'Objects': objects_to_delete})
             deleted_count += len(objects_to_delete)
         except Exception as e:
-            print(f"   ❌ Silme hatası: {e}")
+            print(f"   Silme hatasi: {e}")
             raise
         
         if response.get('IsTruncated'):
@@ -117,42 +115,38 @@ def delete_folder(prefix):
             break
     
     if deleted_count > 0:
-        print(f"   🗑️ {deleted_count} dosya silindi: {prefix}")
+        print(f"   {deleted_count} dosya silindi: {prefix}")
 
 def copy_and_overwrite(source_key, dest_key):
-    """Tek bir dosyayı üzerine yazar (parallel için)"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key=source_key)
         content = response['Body'].read()
         s3.put_object(Bucket=R2_BUCKET, Key=dest_key, Body=content, ContentType='text/html')
         return True
     except Exception as e:
-        print(f"   ⚠️ {source_key} -> {dest_key} yazılamadı: {e}")
+        print(f"   {source_key} -> {dest_key} yazilamadi: {e}")
         return False
 
 # ================= ATOMIC SWAP =================
 
 def atomic_swap():
-    """
-    articles_ready/ → articles/ OPTİMİZE swap
-    """
     print("\n" + "=" * 40)
-    print("🔄 ATOMIC SWAP: articles_ready/ → articles/")
+    print("ATOMIC SWAP: articles_ready/ -> articles/")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
-        print("❌ articles_ready/ bulunamadı! Swap iptal.")
+        print("articles_ready/ bulunamadi! Swap iptal.")
         return False
     
-    print("📁 articles_ready/ içindeki dosyalar listeleniyor...")
+    print("articles_ready/ icindeki dosyalar listeleniyor...")
     source_files = list_all_files('articles_ready/')
     
     if not source_files:
-        print("⚠️ articles_ready/ boş, swap iptal.")
+        print("articles_ready/ bos, swap iptal.")
         return False
     
-    print(f"   📄 {len(source_files)} dosya bulundu.")
-    print(f"🚀 {len(source_files)} dosya parallel yazılıyor (10 thread)...")
+    print(f"   {len(source_files)} dosya bulundu.")
+    print(f"{len(source_files)} dosya parallel yaziliyor (10 thread)...")
     
     success_count = 0
     with ThreadPoolExecutor(max_workers=10) as executor:
@@ -166,31 +160,29 @@ def atomic_swap():
             if future.result():
                 success_count += 1
     
-    print(f"   ✅ {success_count}/{len(source_files)} dosya başarıyla yazıldı")
+    print(f"   {success_count}/{len(source_files)} dosya basariyla yazildi")
     
     if success_count < len(source_files) * 0.9:
-        print(f"❌ Çok fazla hata ({success_count}/{len(source_files)} başarılı)")
+        print(f"Cok fazla hata ({success_count}/{len(source_files)} basarili)")
         return False
     
-    print("🗑️ articles_ready/ siliniyor...")
+    print("articles_ready/ siliniyor...")
     delete_folder('articles_ready/')
     
-    print("✅ Swap tamamlandı!")
+    print("Swap tamamlandi!")
     return True
 
-# ================= JSON ÜRETİMİ =================
+# ================= JSON URETIMI =================
 
 def get_articles_from_r2():
-    """articles.json'u okur"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
         return json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
-        print(f"⚠️ articles.json okunamadı: {e}")
+        print(f"articles.json okunamadi: {e}")
         return []
 
 def generate_explorer_json(articles):
-    """Sadece JSON verisi üretir"""
     explorer_data = {
         "version": "1.0",
         "generated": datetime.now().isoformat(),
@@ -222,12 +214,11 @@ def generate_explorer_json(articles):
         Body=explorer_json.encode('utf-8'),
         ContentType='application/json'
     )
-    print(f"   ✅ explore/explorer.json oluşturuldu ({len(articles)} articles)")
+    print(f"   explore/explorer.json olusturuldu ({len(articles)} articles)")
 
-# ================= HERO TICKER GÜNCELLEME =================
+# ================= YARDIMCI FONKSIYONLAR =================
 
 def shorten_title(title, max_length=55):
-    """Başlığı kısalt, son kelimeyi bozma"""
     if len(title) <= max_length:
         return title
     shortened = title[:max_length]
@@ -236,60 +227,83 @@ def shorten_title(title, max_length=55):
         shortened = shortened[:last_space]
     return shortened + "..."
 
+def sanitize_text(text):
+    text = text.replace('ı', 'i')
+    text = text.replace('ğ', 'g')
+    text = text.replace('ü', 'u')
+    text = text.replace('ş', 's')
+    text = text.replace('ö', 'o')
+    text = text.replace('ç', 'c')
+    text = text.replace('İ', 'I')
+    text = text.replace('Ğ', 'G')
+    text = text.replace('Ü', 'U')
+    text = text.replace('Ş', 'S')
+    text = text.replace('Ö', 'O')
+    text = text.replace('Ç', 'C')
+    return text
+
+# ================= HERO TICKER GUNCELLEME (MERGE MANTIGI) =================
+
 def update_hero_ticker():
-    """
-    articles.json'dan son 6 makaleyi al,
-    hero.json'daki news_ticker items'larını günceller
-    """
     print("\n" + "=" * 40)
-    print("🔄 HERO TICKER GÜNCELLENİYOR...")
+    print("HERO TICKER GUNCELLENIYOR (MERGE)...")
     print("=" * 40)
     
     articles = get_articles_from_r2()
     if not articles:
-        print("   ⚠️ articles.json okunamadı, ticker güncellenemedi.")
+        print("   articles.json okunamadi, ticker guncellenemedi.")
         return False
     
     new_ticker_items = {}
-    
     for lang in LANGUAGES:
         lang_articles = [a for a in articles if a.get('lang') == lang]
-        
-        def get_sort_key(article):
-            return article.get('datetime', article.get('date', ''))
-        
-        sorted_articles = sorted(lang_articles, key=get_sort_key, reverse=True)
+        sorted_articles = sorted(lang_articles, key=lambda x: x.get('datetime', x.get('date', '')), reverse=True)
         latest = sorted_articles[:6]
         
         items = []
         for a in latest:
             title = a.get('title', 'Untitled')
             short_title = shorten_title(title, 55)
+            short_title = sanitize_text(short_title)
             url = a.get('url', '#')
-            items.append(f"{short_title} → {url}")
+            items.append(f"{short_title} -> {url}")
         
         new_ticker_items[lang] = items
-        print(f"   📝 {lang.upper()}: {len(items)} makale eklendi")
+        print(f"   {lang.upper()}: {len(items)} makale hazirlandi")
     
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
         hero_data = json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
-        print(f"   ❌ hero.json okunamadı: {e}")
+        print(f"   hero.json okunamadi: {e}")
         return False
     
     for lang in LANGUAGES:
         try:
             blocks = hero_data['pages']['home'][lang].get('blocks', [])
-            blocks = [block for block in blocks if block.get('type') != 'news_ticker']
-            blocks.append({
+            mevcut_hide_on = None
+            
+            for i, block in enumerate(blocks):
+                if block.get('type') == 'news_ticker':
+                    mevcut_hide_on = block.get('hide_on')
+                    blocks.pop(i)
+                    break
+            
+            new_ticker = {
                 "type": "news_ticker",
                 "items": new_ticker_items.get(lang, []),
                 "grid": "full"
-            })
+            }
+            
+            if mevcut_hide_on:
+                new_ticker["hide_on"] = mevcut_hide_on
+                print(f"   {lang.upper()}: hide_on korundu: {mevcut_hide_on}")
+            
+            blocks.append(new_ticker)
             hero_data['pages']['home'][lang]['blocks'] = blocks
+            
         except KeyError:
-            print(f"   ⚠️ {lang.upper()} için home bloğu bulunamadı, atlanıyor.")
+            print(f"   {lang.upper()} icin home blogu bulunamadi.")
             continue
     
     hero_data['last_updated'] = datetime.now().isoformat()
@@ -301,38 +315,35 @@ def update_hero_ticker():
             Body=json.dumps(hero_data, indent=2, ensure_ascii=False).encode('utf-8'),
             ContentType='application/json'
         )
-        print("   ✅ hero.json güncellendi (ticker items yenilendi)")
+        print("   hero.json guncellendi (ticker items yenilendi, hide_on korundu)")
         return True
     except Exception as e:
-        print(f"   ❌ hero.json kaydedilemedi: {e}")
+        print(f"   hero.json kaydedilemedi: {e}")
         return False
 
-# ================= HERO STATS GÜNCELLEME =================
+# ================= HERO STATS GUNCELLEME (MERGE MANTIGI) =================
 
 def update_hero_stats():
-    """
-    articles.json'dan toplam makale sayısını al,
-    hero.json'daki description içindeki makale sayısını günceller
-    """
     print("\n" + "=" * 40)
-    print("🔄 HERO STATS GÜNCELLENİYOR...")
+    print("HERO STATS GUNCELLENIYOR (MERGE)...")
     print("=" * 40)
     
     articles = get_articles_from_r2()
     if not articles:
-        print("   ⚠️ articles.json okunamadı, stats güncellenemedi.")
+        print("   articles.json okunamadi, stats guncellenemedi.")
         return False
     
     lang_counts = {}
     for lang in LANGUAGES:
         count = len([a for a in articles if a.get('lang') == lang])
         lang_counts[lang] = count
+        print(f"   {lang.upper()}: {count} makale")
     
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
         hero_data = json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
-        print(f"   ❌ hero.json okunamadı: {e}")
+        print(f"   hero.json okunamadi: {e}")
         return False
     
     for lang in LANGUAGES:
@@ -340,18 +351,22 @@ def update_hero_stats():
             blocks = hero_data['pages']['home'][lang].get('blocks', [])
             total_articles = lang_counts.get(lang, 0)
             
-            new_description = f"Tech & AI · Future Economy\nWellness · Eco & Sustainable\nE-Learning\n📚 {total_articles}+ Articles in 5 languages"
-            
             for block in blocks:
                 if block.get('type') == 'description':
-                    block['content'] = new_description
+                    mevcut_content = block.get('content', '')
+                    
+                    if '[' in mevcut_content and 'Articles' in mevcut_content:
+                        yeni_content = re.sub(r'\[[0-9]+ Articles', f'[{total_articles} Articles', mevcut_content)
+                        block['content'] = yeni_content
+                        print(f"   {lang.upper()}: makale sayisi guncellendi ({total_articles})")
+                    else:
+                        print(f"   {lang.upper()}: manuel description korundu")
                     break
             
             hero_data['pages']['home'][lang]['blocks'] = blocks
-            print(f"   📝 {lang.upper()}: {total_articles} makale")
             
         except KeyError:
-            print(f"   ⚠️ {lang.upper()} için home bloğu bulunamadı, atlanıyor.")
+            print(f"   {lang.upper()} icin home blogu bulunamadi.")
             continue
     
     hero_data['last_updated'] = datetime.now().isoformat()
@@ -363,18 +378,17 @@ def update_hero_stats():
             Body=json.dumps(hero_data, indent=2, ensure_ascii=False).encode('utf-8'),
             ContentType='application/json'
         )
-        print("   ✅ hero.json güncellendi (stats yenilendi)")
+        print("   hero.json guncellendi (stats yenilendi, manuel description korundu)")
         return True
     except Exception as e:
-        print(f"   ❌ hero.json kaydedilemedi: {e}")
+        print(f"   hero.json kaydedilemedi: {e}")
         return False
 
-# ================= R2 BUCKET ANALİZİ =================
+# ================= R2 BUCKET ANALIZI =================
 
 def analyze_r2_storage():
-    """R2 bucket'ındaki dosya türlerini ve boyutlarını analiz eder"""
     print("\n" + "=" * 40)
-    print("📊 R2 BUCKET ANALİZİ")
+    print("R2 BUCKET ANALIZI")
     print("=" * 40)
     
     stats = {
@@ -448,13 +462,13 @@ def analyze_r2_storage():
                 break
                 
     except Exception as e:
-        print(f"❌ Analiz hatası: {e}")
+        print(f"Analiz hatasi: {e}")
         return False
     
-    print(f"\n📁 TOPLAM DOSYA: {total_files}")
-    print(f"💾 TOPLAM BOYUT: {total_size / (1024*1024):.2f} MB")
+    print(f"\nToplam dosya: {total_files}")
+    print(f"Toplam boyut: {total_size / (1024*1024):.2f} MB")
     print("\n" + "-" * 45)
-    print("📄 DOSYA TÜRLERİNE GÖRE DAĞILIM:")
+    print("Dosya turlerine gore dagilim:")
     print("-" * 45)
     
     sorted_stats = sorted(stats.items(), key=lambda x: x[1]['size'], reverse=True)
@@ -469,54 +483,46 @@ def analyze_r2_storage():
     
     return True
 
-# ================= ANA LİBRARIAN (HER SEFERİNDE ANALİZ YAPAR) =================
+# ================= ANA LIBRARIAN =================
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KÜTÜPHANECİ BOT (Librarian)")
-    print("   ✅ explore/explorer.json oluşturuluyor")
-    print("   ✅ hero.json ticker güncelleniyor")
-    print("   ✅ hero.json stats güncelleniyor")
-    print("   ✅ Atomic swap: articles_ready/ → articles/")
-    print("   ✅ R2 Bucket Analizi")
+    print("KUTUPHANECI BOT (Librarian) - MERGE MANTIGI")
+    print("   explore/explorer.json olusturuluyor")
+    print("   hero.json ticker guncelleniyor (hide_on korunuyor)")
+    print("   hero.json stats guncelleniyor (manuel description korunuyor)")
+    print("   Atomic swap: articles_ready/ -> articles/")
     print("=" * 60)
     
-    # ========== R2 ANALİZİ - HER ZAMAN ÇALIŞIR ==========
     analyze_r2_storage()
     
-    # 1. explore/explorer.json oluştur
     articles = get_articles_from_r2()
     if articles:
-        print(f"\n📊 Toplam {len(articles)} makale bulundu.")
+        print(f"\nToplam {len(articles)} makale bulundu.")
         generate_explorer_json(articles)
     else:
-        print("\n⚠️ articles.json okunamadı, explorer.json atlanıyor.")
+        print("\narticles.json okunamadi, explorer.json atlaniyor.")
     
-    # 2. hero.json'daki ticker items'larını güncelle
     update_hero_ticker()
-    
-    # 3. hero.json'daki stats (makale sayısı) güncelle
     update_hero_stats()
     
-    # 4. Atomic swap yap
     try:
         swap_success = atomic_swap()
         if swap_success:
-            print("\n✅ SWAP BAŞARILI! Site yeni içerikle yayında.")
+            print("\nSWAP BASARILI! Site yeni icerikle yayinda.")
         else:
-            print("\n❌ SWAP BAŞARISIZ! Site eski içerikle devam ediyor.")
+            print("\nSWAP BASARISIZ! Site eski icerikle devam ediyor.")
             sys.exit(1)
     except Exception as e:
-        print(f"\n❌ KRİTİK HATA: {e}")
+        print(f"\nKRITIK HATA: {e}")
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KÜTÜPHANECİ BOT TAMAMLANDI!")
-    print("   ✅ explore/explorer.json güncellendi")
-    print("   ✅ hero.json ticker güncellendi")
-    print("   ✅ hero.json stats güncellendi")
-    print("   ✅ Atomic swap tamamlandı")
-    print("   ✅ R2 Bucket Analizi tamamlandı")
+    print("KUTUPHANECI BOT TAMAMLANDI!")
+    print("   explore/explorer.json guncellendi")
+    print("   hero.json ticker guncellendi (hide_on korundu)")
+    print("   hero.json stats guncellendi (manuel description korundu)")
+    print("   Atomic swap tamamlandi")
     print("=" * 60)
 
 if __name__ == "__main__":
