@@ -1391,39 +1391,43 @@
 <!-- ===================== -->
 <!-- HERO BÖLÜMÜ (5 KATMANLI) -->
 <!-- ===================== -->
-<div class="hero-wrapper">
-    <!-- Z-0: KATMAN 0 - ARKA KALKAN (svg3) - SADECE ARKA PLAN -->
+
+    <div class="hero-wrapper">
+    <!-- Z-0: ARKA KALKAN (svg3) -->
     <div class="pattern-layer layer-back-shield">
         <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg3.svg" class="svg-object">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" alt="">
         </object>
     </div>
     
-    <!-- Z-1: KATMAN 1 - OVERLAY 1 (arka kalkanı renklendirir) -->
-    <div class="color-overlay color-overlay-back"></div>
+    <!-- Z-1: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
+    <div class="color-overlay-back"></div>
     
-    <!-- Z-2: KATMAN 2 - ARKA SPİRAL (svg1) -->
+    <!-- Z-2: ARKA SPİRAL (svg1) -->
     <div class="pattern-layer layer-back">
         <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
         </object>
     </div>
     
-    <!-- Z-3: KATMAN 3 - OVERLAY 2 (MEVCUT - iki spirali renklendirir) -->
+    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
     <div class="color-overlay"></div>
     
-    <!-- Z-4: KATMAN 4 - ÖN SPİRAL (svg2) -->
+    <!-- Z-4: ÖN SPİRAL (svg2) -->
     <div class="pattern-layer layer-front">
         <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
             <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
         </object>
     </div>
     
-    <!-- Z-5: KATMAN 5 - HERO İÇERİK -->
+    <!-- Z-5: GRADIENT GEÇİŞLER (::before/::after) -->
+    <!-- Z-6: HERO İÇERİK -->
     <div class="hero-container">
         {{ hero.html | safe }}
     </div>
-</div>
+    </div>
+    
+    
 
     <!-- ===================== -->
     <!-- MANIFESTO -->
