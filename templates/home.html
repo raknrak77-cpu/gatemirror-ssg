@@ -1304,24 +1304,29 @@
 
 <main>
     <!-- ===================== -->
-    <!-- HERO BÖLÜMÜ -->
-    <!-- ===================== -->
-    <div class="hero-wrapper">
-        <div class="pattern-layer layer-back">
-            <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
-                <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
-            </object>
-        </div>
-        <div class="color-overlay"></div>
-        <div class="pattern-layer layer-front">
-            <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
-                <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
-            </object>
-        </div>
-        <div class="hero-container">
-            {{ hero.html | safe }}
-        </div>
+<!-- HERO BÖLÜMÜ -->
+<!-- ===================== -->
+<div class="hero-wrapper">
+    <!-- KATMAN 1: ARKA SVG (ALT) - img olarak -->
+    <div class="pattern-layer layer-back">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
     </div>
+    
+    <!-- KATMAN 2: RENK OVERLAY -->
+    <div class="color-overlay"></div>
+    
+    <!-- KATMAN 3: ÖN SVG (ÜST) - object olarak -->
+    <div class="pattern-layer layer-front">
+        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
+            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
+        </object>
+    </div>
+    
+    <!-- KATMAN 4: HERO İÇERİK -->
+    <div class="hero-container">
+        {{ hero.html | safe }}
+    </div>
+</div>
 
     <!-- ===================== -->
     <!-- MANIFESTO -->
