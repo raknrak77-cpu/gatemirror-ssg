@@ -9,8 +9,8 @@ H = 1080
 
 # ================= SEVİYE TANIMLARI =================
 LEVELS = {
-    'basic': {'lines': 3, 'sw_min': 1.8, 'sw_max': 2.5, 'op_min': 0.4, 'op_max': 0.6},
-    'medium': {'lines': 5, 'sw_min': 1.8, 'sw_max': 2.5, 'op_min': 0.5, 'op_max': 0.7},
+    'basic': {'lines': 2, 'sw_min': 2, 'sw_max': 2.2, 'op_min': 0.6, 'op_max': 0.8},
+    'medium': {'lines': 3, 'sw_min': 2, 'sw_max': 2.2, 'op_min': 0.6, 'op_max': 0.8},
 }
 
 # ================= SVG YARDIMCI =================
@@ -29,8 +29,8 @@ def polyline_el(points, sw, op):
 def draw_circular_spiral(sw, op):
     cx = random.uniform(W * 0.2, W * 0.8)
     cy = random.uniform(H * 0.2, H * 0.8)
-    start_r = random.uniform(10, 50)
-    grow = random.uniform(8, 22)
+    start_r = random.uniform(20, 50)
+    grow = random.uniform(14, 22)
     theta = 0
     pts = []
     while True:
