@@ -582,62 +582,34 @@ body.dark .manifesto-card:hover {
 }
         
 /* ===================== */
-/* HERO - KATMANLI SİSTEM (object + overlay) */
+/* HERO - background-image yontemi (iOS/Firefox/Chrome hepsi calisir) */
 /* ===================== */
 
 .hero-wrapper {
     position: relative;
     min-height: auto;
-    overflow: hidden;  /* hidden → visible (taşan kısımlar gizlenmesin) */
+    overflow: hidden;
     background: transparent;
 }
 
-.pattern-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 250%;
-    height: 250%;
-    pointer-events: none;
-    overflow: visible;  /* taşan kısımlar görünsün */
-}
+/* pattern-layer ve svg-object artik kullanilmiyor */
+.pattern-layer { display: none; }
+.svg-object { display: none; }
 
 /* ===================== */
-/* SVG OBJECT - KESİLMESİN */
-/* ===================== */
-.svg-object {
-    position: absolute;
-    pointer-events: none;
-    /* object tag tum tarayicilarda CSS dinlemiyor */
-    /* display:none yapip img fallback'i kullaniyoruz */
-    display: none !important;
-}
-
-/* img fallback - tum tarayicilarda calisir */
-.svg-object img,
-.layer-back img,
-.layer-front img {
-    display: block;
-    position: absolute;
-    top: -25%;
-    left: -25%;
-    width: 400%;
-    height: 400%;
-    pointer-events: none;
-}
-
-/* ===================== */
-/* KATMAN 1: ARKA SVG (svg1) */
+/* KATMAN 1: ARKA SVG - background-image */
 /* ===================== */
 .layer-back {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 1;
-}
-
-.layer-back .svg-object { display: none !important; }
-
-.layer-back img {
-    opacity: 0.8;
-    filter: grayscale(80%) brightness(0.7) contrast(1.2);
+    pointer-events: none;
+    background-image: url('{{ R2_PUBLIC_URL }}/assets/svg1.svg');
+    background-size: 120% auto;
+    background-position: top left;
+    background-repeat: no-repeat;
+    opacity: 0.7;
     animation: driftRight 40s ease-in-out infinite;
 }
         
@@ -671,17 +643,19 @@ body.dark .manifesto-card:hover {
 }
 
 /* ===================== */
-/* KATMAN 3: ÖN SVG (svg2) */
+/* KATMAN 3: ÖN SVG - background-image */
 /* ===================== */
 .layer-front {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 3;
-}
-
-.layer-front .svg-object { display: none !important; }
-
-.layer-front img {
-    opacity: 0.5;
-    filter: grayscale(80%) brightness(0.7) contrast(1.2);
+    pointer-events: none;
+    background-image: url('{{ R2_PUBLIC_URL }}/assets/svg2.svg');
+    background-size: 100% auto;
+    background-position: top left;
+    background-repeat: no-repeat;
+    opacity: 0.45;
     animation: driftUpDown 40s ease-in-out infinite reverse;
 }
         
@@ -727,18 +701,13 @@ body.dark .manifesto-card:hover {
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
 /* ===================== */
 @media (max-width: 768px) {
-    .layer-back img {
-        width: 250%;
-        height: 250%;
-        top: -75%;
-        left: -75%;
+    .layer-back {
+        background-size: 200% auto;
+        background-position: top left;
     }
-    
-    .layer-front img {
-        width: 180%;
-        height: 180%;
-        top: -40%;
-        left: -40%;
+    .layer-front {
+        background-size: 160% auto;
+        background-position: top left;
     }
 }
     
@@ -801,7 +770,7 @@ body.dark .manifesto-card:hover {
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
     
-/* ===================== */
+    /* ===================== */
     /* FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) */
     /* ===================== */
     .featured {
@@ -1179,12 +1148,12 @@ body.dark .category-label {
 }
 
 /* Dark Mode SVG Katmanları */
-body.dark .layer-back img {
+body.dark .layer-back .svg-object {
     opacity: 0.7 !important;
     filter: brightness(1.1) contrast(1.2) saturate(1.3);
 }
 
-body.dark .layer-front img {
+body.dark .layer-front .svg-object {
     opacity: 0.8 !important;
     filter: brightness(1.1) contrast(1.2) saturate(1.3);
 }
