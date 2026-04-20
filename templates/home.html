@@ -582,35 +582,53 @@ body.dark .manifesto-card:hover {
 }
         
 /* ===================== */
-/* HERO - background-image yontemi (iOS/Firefox/Chrome hepsi calisir) */
+/* HERO - KATMANLI SİSTEM (object + overlay) */
 /* ===================== */
 
 .hero-wrapper {
     position: relative;
     min-height: auto;
-    overflow: hidden;
+    overflow: hidden;  /* hidden → visible (taşan kısımlar gizlenmesin) */
     background: transparent;
 }
 
-/* pattern-layer ve svg-object artik kullanilmiyor */
-.pattern-layer { display: none; }
-.svg-object { display: none; }
+.pattern-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250%;
+    height: 250%;
+    pointer-events: none;
+    overflow: visible;  /* taşan kısımlar görünsün */
+}
 
 /* ===================== */
-/* KATMAN 1: ARKA SVG - background-image */
+/* SVG OBJECT - KESİLMESİN */
+/* ===================== */
+.svg-object {
+    position: absolute;
+    pointer-events: none;
+    object-fit: contain;  /* cover → contain (tamamen görünsün, kesilmesin) */
+}
+
+/* ===================== */
+/* KATMAN 1: ARKA SVG (svg1) */
 /* ===================== */
 .layer-back {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
     z-index: 1;
-    pointer-events: none;
-    background-image: url('{{ R2_PUBLIC_URL }}/assets/svg1.svg');
-    background-size: 300% auto;
-    background-position: top left;
-    background-repeat: no-repeat;
-    opacity: 0.7;
+}
+
+.layer-back .svg-object {
+    width: 60%;
+    height: 60%;
+    top: 0;
+    left: 0;
+    object-fit: cover;  /* Alanı tamamen kaplasın */
+    object-position: center;  /* Ortada hizala */
+    opacity: 0.8;
+    filter: grayscale(80%) brightness(0.7) contrast(1.2);
     animation: driftRight 40s ease-in-out infinite;
+               colorCycleBack 4s ease-in-out infinite;
 }
         
 /* ===================== */
@@ -620,8 +638,7 @@ body.dark .manifesto-card:hover {
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: linear-gradient(
-        135deg,
+    background: linear-gradient(135deg,
         var(--tech-4) 0%,
         var(--wellness-4) 20%,
         var(--fe-4) 40%,
@@ -630,8 +647,8 @@ body.dark .manifesto-card:hover {
         var(--tech-4) 100%
     );
     background-size: 200% 200%;
-    opacity: 0.2;
-    animation: gradientShift 8s ease-in-out infinite;
+    opacity: 0.5;
+    animation: gradientShift 5s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
@@ -643,20 +660,23 @@ body.dark .manifesto-card:hover {
 }
 
 /* ===================== */
-/* KATMAN 3: ÖN SVG - background-image */
+/* KATMAN 3: ÖN SVG (svg2) */
 /* ===================== */
 .layer-front {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
     z-index: 3;
-    pointer-events: none;
-    background-image: url('{{ R2_PUBLIC_URL }}/assets/svg2.svg');
-    background-size: 300% auto;
-    background-position: top left;
-    background-repeat: no-repeat;
-    opacity: 0.45;
-    animation: driftUpDown 40s ease-in-out infinite reverse;
+}
+
+.layer-front .svg-object {
+    width: 60%;
+    height: 60%;
+    top: 0;
+    left: 0;
+    object-fit: cover;  /* Alanı tamamen kaplasın */
+    object-position: center;  /* Ortada hizala */
+    opacity: 0.8;
+    filter: grayscale(80%) brightness(0.7) contrast(1.2);
+    animation: driftUpDown 40s ease-in-out infinite;
+               colorCycleFront 5s ease-in-out infinite reverse;
 }
         
 /* ===================== */
@@ -701,13 +721,20 @@ body.dark .manifesto-card:hover {
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
 /* ===================== */
 @media (max-width: 768px) {
-    .layer-back {
-        background-size: 200% auto;
-        background-position: top left;
+    .layer-back .svg-object {
+        width: 250%;
+        height: 250%;
+        top: -75%;
+        left: -75%;
+        object-position: center 40%;
     }
-    .layer-front {
-        background-size: 160% auto;
-        background-position: top left;
+    
+    .layer-front .svg-object {
+        width: 180%;
+        height: 180%;
+        top: -40%;
+        left: -40%;
+        object-position: center 60%;
     }
 }
     
