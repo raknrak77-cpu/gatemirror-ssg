@@ -1104,166 +1104,125 @@
         background: #3A4050;
     }
     
-    /* =====================================================
-       BLOK 9: RESPONSIVE (TEK BLOK)
+/* ===================== */
+/* RESPONSIVE (MOBİL + TABLET) */
+/* ===================== */
+/* 
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .menu-btn { display: block; }
+    
+    .hero-container { padding: 1.5rem 1rem; }
+    .hero-title { font-size: clamp(1.5rem, 5vw, 2rem) !important; }
+    .hero-description { font-size: 0.95rem !important; }
+    .ticker-item { font-size: 0.75rem !important; }
+    .ticker-label { font-size: 0.7rem !important; }
+    
+    .article-grid { grid-template-columns: 1fr; }
+    .featured-card { flex-direction: column; }
+    .featured-card img { width: 100%; height: 200px; }
+    .featured-content { padding: 1.5rem; }
+    .footer-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-wrapper { padding: 1rem 0; }
+    .category-bottom-bar { margin: 2rem 1rem; }
+    .category-segment { min-height: 48px; }
+}
 
-    /* TABLET & MOBİL (max-width: 900px) */
-    @media (max-width: 900px) and (min-width: 481px) {
-        .category-bottom-bar {
-            margin: 2rem 1rem;
-            border-radius: 12px;
-        }
-        .category-segment {
-            min-height: 80px;
-        }
-        .category-label {
-            opacity: 1;
-            font-size: 9px;
-            letter-spacing: 0.08em;
-        }
-        .category-icon {
-            font-size: 18px;
-        }
+@media (max-width: 768px) {
+    .layer-back .svg-object {
+        width: 250%;
+        height: 250%;
+        top: -75%;
+        left: -75%;
+        object-position: center 40%;
     }
     
-    /* MOBİL (max-width: 768px) */
-    @media (max-width: 768px) {
-        .nav-links {
-            display: none;
-        }
-        .menu-btn {
-            display: block;
-        }
-        
-        .hero-container {
-            padding: 1.5rem 1rem;
-        }
-        .hero-title {
-            font-size: clamp(1.5rem, 5vw, 2rem) !important;
-        }
-        .hero-description {
-            font-size: 0.95rem !important;
-        }
-        
-        /* Mobilde drift mesafesini azalt */
-        @keyframes driftRight {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(40px); }
-            100% { transform: translateX(0); }
-        }
-        @keyframes driftLeft {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(-40px); }
-            100% { transform: translateX(0); }
-        }
-        
-        /* Mobilde SVG konumları */
-        .layer-back .svg-object {
-            width: 250%;
-            height: 250%;
-            top: -75%;
-            left: -150%;
-        }
-        .layer-front .svg-object {
-            width: 120%;
-            height: 120%;
-            top: -10%;
-            left: -10%;
-        }
-        
-        /* Manifesto responsive */
-        .manifesto {
-            padding: 0 1rem;
-        }
-        .manifesto-two-col {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-        .manifesto-three-col {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        .manifesto-title {
-            font-size: 1.8rem;
-        }
-        .manifesto-quote-large {
-            font-size: 1.3rem;
-        }
-        .manifesto-hero-image img {
-            max-height: 250px;
-        }
-        .manifesto-image-full img {
-            max-height: 200px;
-        }
-        
-        /* Article Grid responsive */
-        .article-grid {
-            grid-template-columns: 1fr;
-        }
-        .article-grid .article-card:first-child {
-            grid-column: span 1;
-        }
-        .article-grid .article-card:first-child img {
-            height: 200px;
-        }
-        .article-grid .article-card:first-child h3 {
-            font-size: 1.2rem;
-        }
-        
-        /* Featured Card responsive */
-        .featured-card {
-            flex-direction: column;
-        }
-        .featured-card img {
-            width: 100%;
-            height: 200px;
-        }
-        .featured-content {
-            padding: 1.5rem;
-        }
-        
-        /* Footer responsive */
-        .footer-content {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-        
-        .hero-wrapper {
-            padding: 1rem 0;
-        }
-        
-        /* Category Bar responsive */
-        .category-bottom-bar {
-            margin: 2rem 1rem;
-        }
-        .category-segment {
-            min-height: 48px;
-        }
+    .layer-front .svg-object {
+        width: 180%;
+        height: 180%;
+        top: -40%;
+        left: -40%;
+        object-position: center 60%;
     }
     
-    /* KÜÇÜK MOBİL (max-width: 480px) */
-    @media (max-width: 480px) {
-        .category-bottom-bar {
-            margin: 1.5rem 0.5rem;
-            border-radius: 10px;
-        }
-        .category-segment {
-            min-height: 70px;
-        }
-        .category-label {
-            opacity: 1;
-            font-size: 8px;
-            letter-spacing: 0.05em;
-        }
-        .category-icon {
-            font-size: 16px;
-        }
+    @keyframes driftRight {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(60px); }
+        100% { transform: translateX(0); }
     }
+    
+    @keyframes driftLeft {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(-60px); }
+        100% { transform: translateX(0); }
+    }
+}
+
+@media (max-width: 768px) {
+    .article-grid .article-card:first-child {
+        grid-column: span 1;
+    }
+    .article-grid .article-card:first-child img {
+        height: 200px;
+    }
+    .article-grid .article-card:first-child h3 {
+        font-size: 1.2rem;
+    }
+    
+    .featured-card {
+        flex-direction: column;
+    }
+    .featured-card img {
+        width: 100%;
+        height: 200px;
+    }
+    .featured-content {
+        padding: 1.5rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .hero-wrapper {
+        padding: 1rem 0;
+    }
+    
+    .category-bottom-bar {
+        margin: 2rem 1rem;
+    }
+    .category-segment {
+        min-height: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-bottom-bar {
+        margin: 1.5rem 0.5rem;
+        border-radius: 10px;
+    }
+    .category-segment {
+        min-height: 70px;
+    }
+    .category-label {
+        opacity: 1;
+        font-size: 8px;
+        letter-spacing: 0.05em;
+    }
+    .category-icon {
+        font-size: 16px;
+    }
+}
+*/
+
+
+
+
+        
     </style>
 </head>
-<body>
-    ===================================================== */
-    
+<body>    
 <!-- ===================== -->
 <!-- SIDE MENU (MOBİL) -->
 <!-- ===================== -->
