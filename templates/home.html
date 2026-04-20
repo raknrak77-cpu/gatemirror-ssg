@@ -349,8 +349,8 @@
     .layer-back .svg-object {
         width: 200%;
         height: 200%;
-        top: -50%;
-        left: -100%;
+        top: -20%;
+        left: -30%;
         object-position: left center;
         opacity: 0.5;
         animation: driftRight 20s ease-in-out infinite,
@@ -382,27 +382,27 @@
     }
     
     .layer-front .svg-object {
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
+        width: 200%;
+        height: 200%;
+        top: 20%;
+        left: 30%;
         object-position: right center;
         opacity: 0.4;
-        animation: driftLeft 15s ease-in-out infinite,
+        animation: driftLeft 30s ease-in-out infinite,
                    colorCycleFront 4s ease-in-out infinite reverse;
     }
     
     .hero-wrapper::before {
-    content: "";
-    position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    height: 60px;
-    z-index: 4;
-    background: linear-gradient(to top, transparent 0%, var(--white) 100%);
-    pointer-events: none;
-}           
+        content: "";
+        position: absolute;
+        top: -60px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        z-index: 4;
+        background: linear-gradient(to bottom, transparent 0%, transparent 55%, var(--white) 100%);
+        pointer-events: none;
+    }
     
     .hero-wrapper::after {
         content: "";
