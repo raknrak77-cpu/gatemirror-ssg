@@ -674,7 +674,7 @@ body.dark .manifesto-card:hover {
     object-position: center;  /* Ortada hizala */
     opacity: 0.8;
     filter: grayscale(80%) brightness(0.7) contrast(1.2);
-    animation: driftright 40s ease-in-out infinite;
+    animation: driftRight 40s ease-in-out infinite;
                colorCycleFront 5s ease-in-out infinite reverse;
 }
         
@@ -781,8 +781,8 @@ body.dark .manifesto-card:hover {
         66%  { filter: hue-rotate(160deg) saturate(1.8) brightness(0.6); }
         100% { filter: hue-rotate(300deg) saturate(1.8) brightness(0.6); }
     }
-@/* ARKA KATMAN: Sağ-sol + hafif çapraz, yavaş */
-@keyframes driftleft {
+@/* ARKA KATMAN: Sağ-sol */
+@keyframes driftLeft {
     0%   { transform: translate(0px, 0px); }
     25%  { transform: translate(80px, 30px); }
     50%  { transform: translate(420px, -20px); }
@@ -790,8 +790,8 @@ body.dark .manifesto-card:hover {
     100% { transform: translate(0px, 0px); }
 }
 
-/* ÖN KATMAN: Zıt yön, farklı hız, çapraz */
-@keyframes driftright {
+/* ÖN KATMAN: Zıt yön,  */
+@keyframes driftRight {
     0%   { transform: translate(0px, 0px); }
     25%  { transform: translate(-60px, -80px); }
     50%  { transform: translate(-400px, 40px); }
