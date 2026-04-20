@@ -608,7 +608,22 @@ body.dark .manifesto-card:hover {
 .svg-object {
     position: absolute;
     pointer-events: none;
-    object-fit: contain;  /* cover → contain (tamamen görünsün, kesilmesin) */
+    /* object tag tum tarayicilarda CSS dinlemiyor */
+    /* display:none yapip img fallback'i kullaniyoruz */
+    display: none !important;
+}
+
+/* img fallback - tum tarayicilarda calisir */
+.svg-object img,
+.layer-back img,
+.layer-front img {
+    display: block;
+    position: absolute;
+    top: -25%;
+    left: -25%;
+    width: 150%;
+    height: 150%;
+    pointer-events: none;
 }
 
 /* ===================== */
@@ -618,17 +633,12 @@ body.dark .manifesto-card:hover {
     z-index: 1;
 }
 
-.layer-back .svg-object {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    object-fit: cover;  /* Alanı tamamen kaplasın */
-    object-position: center;  /* Ortada hizala */
+.layer-back .svg-object { display: none !important; }
+
+.layer-back img {
     opacity: 0.8;
     filter: grayscale(80%) brightness(0.7) contrast(1.2);
     animation: driftRight 40s ease-in-out infinite;
-               colorCycleBack 4s ease-in-out infinite;
 }
         
 /* ===================== */
@@ -667,17 +677,12 @@ body.dark .manifesto-card:hover {
     z-index: 3;
 }
 
-.layer-front .svg-object {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    object-fit: cover;  /* Alanı tamamen kaplasın */
-    object-position: center;  /* Ortada hizala */
-    opacity: 0.8;
+.layer-front .svg-object { display: none !important; }
+
+.layer-front img {
+    opacity: 0.5;
     filter: grayscale(80%) brightness(0.7) contrast(1.2);
-    animation: driftUpDown 40s ease-in-out infinite;
-               colorCycleFront 5s ease-in-out infinite reverse;
+    animation: driftUpDown 40s ease-in-out infinite reverse;
 }
         
 /* ===================== */
@@ -722,20 +727,18 @@ body.dark .manifesto-card:hover {
 /* RESPONSIVE - MOBİLDE SVG BOYUTLARI */
 /* ===================== */
 @media (max-width: 768px) {
-    .layer-back .svg-object {
+    .layer-back img {
         width: 250%;
         height: 250%;
         top: -75%;
         left: -75%;
-        object-position: center 40%;
     }
     
-    .layer-front .svg-object {
+    .layer-front img {
         width: 180%;
         height: 180%;
         top: -40%;
         left: -40%;
-        object-position: center 60%;
     }
 }
     
@@ -798,7 +801,7 @@ body.dark .manifesto-card:hover {
     100% { transform: translateX(0) translateY(0) rotate(0deg); }
 }
     
-    /* ===================== */
+/* ===================== */
     /* FEATURED ARTICLE (ANA SAYFA ÖNE ÇIKAN) */
     /* ===================== */
     .featured {
@@ -1176,12 +1179,12 @@ body.dark .category-label {
 }
 
 /* Dark Mode SVG Katmanları */
-body.dark .layer-back .svg-object {
+body.dark .layer-back img {
     opacity: 0.7 !important;
     filter: brightness(1.1) contrast(1.2) saturate(1.3);
 }
 
-body.dark .layer-front .svg-object {
+body.dark .layer-front img {
     opacity: 0.8 !important;
     filter: brightness(1.1) contrast(1.2) saturate(1.3);
 }
