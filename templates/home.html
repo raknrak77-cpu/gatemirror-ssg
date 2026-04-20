@@ -314,10 +314,9 @@
         font-size: 12px;
         transition: 0.2s;
     }
-    
-/* ===================== */
-/* HERO - KATMANLI SVG SİSTEMİ (OVERLAY YOK) */
-/* ===================== */
+/* =====================================================
+   BLOK 4: HERO BÖLÜMÜ (img ile - ÇALIŞAN)
+   ===================================================== */
 
 .hero-wrapper {
     position: relative;
@@ -335,7 +334,8 @@
     pointer-events: none;
 }
 
-.pattern-layer svg {
+.pattern-layer img {
+    position: absolute;
     width: 300%;
     height: 400%;
     object-fit: cover;
@@ -346,8 +346,8 @@
     z-index: 1;
 }
 
-.layer-back svg {
-    opacity: 0.6;
+.layer-back img {
+    opacity: 0.7;
     animation: slowDriftBack 40s ease-in-out infinite,
                colorCycleBack 10s ease-in-out infinite;
 }
@@ -356,8 +356,8 @@
     z-index: 2;
 }
 
-.layer-front svg {
-    opacity: 0.4;
+.layer-front img {
+    opacity: 0.5;
     animation: slowDriftFront 20s ease-in-out infinite reverse,
                colorCycleFront 8s ease-in-out infinite reverse;
 }
@@ -429,19 +429,24 @@
 }
 
 @keyframes colorCycleBack {
-    0%   { filter: hue-rotate(0deg) saturate(1.4) brightness(0.7); }
-    25%  { filter: hue-rotate(90deg) saturate(1.4) brightness(0.7); }
-    50%  { filter: hue-rotate(180deg) saturate(1.4) brightness(0.7); }
-    75%  { filter: hue-rotate(270deg) saturate(1.4) brightness(0.7); }
-    100% { filter: hue-rotate(360deg) saturate(1.4) brightness(0.7); }
+    0%   { filter: hue-rotate(0deg) saturate(1.6) brightness(0.7); }
+    25%  { filter: hue-rotate(90deg) saturate(1.6) brightness(0.7); }
+    50%  { filter: hue-rotate(180deg) saturate(1.6) brightness(0.7); }
+    75%  { filter: hue-rotate(270deg) saturate(1.6) brightness(0.7); }
+    100% { filter: hue-rotate(360deg) saturate(1.6) brightness(0.7); }
 }
 
 @keyframes colorCycleFront {
-    0%   { filter: hue-rotate(300deg) saturate(1.3) brightness(0.75); }
-    33%  { filter: hue-rotate(40deg) saturate(1.3) brightness(0.75); }
-    66%  { filter: hue-rotate(160deg) saturate(1.3) brightness(0.75); }
-    100% { filter: hue-rotate(300deg) saturate(1.3) brightness(0.75); }
+    0%   { filter: hue-rotate(300deg) saturate(1.5) brightness(0.75); }
+    33%  { filter: hue-rotate(40deg) saturate(1.5) brightness(0.75); }
+    66%  { filter: hue-rotate(160deg) saturate(1.5) brightness(0.75); }
+    100% { filter: hue-rotate(300deg) saturate(1.5) brightness(0.75); }
 }
+
+
+
+
+
         
     /* =====================================================
        BLOK 5: MANIFESTO BÖLÜMÜ
@@ -1237,22 +1242,18 @@
 
 <main>
 
-  <!-- ===================== -->
+<!-- ===================== -->
 <!-- HERO BÖLÜMÜ -->
 <!-- ===================== -->
 <div class="hero-wrapper">
-    <!-- Arka katman (svg1) -->
+    <!-- Arka katman (svg1) - img ile -->
     <div class="pattern-layer layer-back">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
-            <use href="{{ R2_PUBLIC_URL }}/assets/svg1.svg"></use>
-        </svg>
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
     </div>
     
-    <!-- Ön katman (svg2) -->
+    <!-- Ön katman (svg2) - img ile -->
     <div class="pattern-layer layer-front">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
-            <use href="{{ R2_PUBLIC_URL }}/assets/svg2.svg"></use>
-        </svg>
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object" alt="">
     </div>
     
     <!-- Hero içerik -->
@@ -1262,6 +1263,7 @@
         <a href="/{{ lang }}/tech/" class="hero-cta hero-cta-primary">Explore →</a>
     </div>
 </div>
+    
     <!-- ===================== -->
     <!-- MANIFESTO -->
     <!-- ===================== -->
