@@ -316,7 +316,7 @@
     }
     
 /* =====================================================
-   BLOK 4: HERO BÖLÜMÜ (DÜZELTİLMİŞ)
+   BLOK 4: HERO BÖLÜMÜ (DÜZENLENMİŞ)
    ===================================================== */
 
 .hero-wrapper {
@@ -328,8 +328,8 @@
 
 .pattern-layer {
     position: absolute;
-    top: 0%;
-    left: 00%;
+    top: -75%;
+    left: -75%;
     width: 250%;
     height: 250%;
     pointer-events: none;
@@ -343,7 +343,7 @@
 }
 
 /* ===================== */
-/* KATMAN 1: ARKA SVG - TAM EKRAN */
+/* KATMAN 1: ARKA SVG (ALT KATMAN) - GRADYAN İLE RENKLENDİRME */
 /* ===================== */
 .layer-back {
     z-index: 1;
@@ -352,13 +352,32 @@
 .layer-back .svg-object {
     width: 100%;
     height: 100%;
-    top: 20%;
-    left: 0%;
+    top: 0;
+    left: 0;
     object-position: center;
-    opacity: 0.8;
-    filter: brightness(0.7) contrast(1.3) saturate(2);
-    animation: driftRight 30s ease-in-out infinite,
-               colorCycleBack 4s ease-in-out infinite;
+    opacity: 0.9;
+    
+    /* RENKLENDİRME: Önce sepia ile renk tonu hazırla, sonra mask ile gradyan ver */
+    filter: sepia(100%) saturate(500%) brightness(0.85);
+    -webkit-mask-image: linear-gradient(
+        125deg,
+        #7c66d6 0%,
+        #b8849a 25%,
+        #c9960a 50%,
+        #5fa878 75%,
+        #2a98b8 100%
+    );
+    mask-image: linear-gradient(
+        125deg,
+        #7c66d6 0%,
+        #b8849a 25%,
+        #c9960a 50%,
+        #5fa878 75%,
+        #2a98b8 100%
+    );
+    
+    /* HAREKET ANİMASYONU */
+    animation: driftRight 30s ease-in-out infinite;
 }
 
 /* ===================== */
