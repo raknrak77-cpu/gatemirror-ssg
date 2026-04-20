@@ -316,7 +316,7 @@
     }
     
 /* =====================================================
-   BLOK 4: HERO BÖLÜMÜ (DÜZELTİLMİŞ)
+   BLOK 4: HERO BÖLÜMÜ (3 SVG + 2 OVERLAY)
    ===================================================== */
 
 .hero-wrapper {
@@ -329,7 +329,7 @@
 .pattern-layer {
     position: absolute;
     top: 0%;
-    left: 00%;
+    left: 0%;
     width: 250%;
     height: 250%;
     pointer-events: none;
@@ -343,10 +343,54 @@
 }
 
 /* ===================== */
-/* KATMAN 1: ARKA SVG - TAM EKRAN */
+/* KATMAN 0: ARKA KALKAN (svg3) - SADECE DOKU */
+/* ===================== */
+.layer-back-shield {
+    z-index: 0;
+}
+
+.layer-back-shield .svg-object {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-position: center;
+    opacity: 0.25;
+    filter: none;
+    animation: none;
+}
+
+/* ===================== */
+/* KATMAN 1: OVERLAY 1 (SADECE ARKA KALKANI RENKLENDİRİR) */
+/* ===================== */
+.color-overlay-back {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(135deg,
+        var(--tech-4) 0%,
+        var(--wellness-4) 25%,
+        var(--fe-4) 50%,
+        var(--eco-4) 75%,
+        var(--el-4) 100%);
+    background-size: 200% 200%;
+    opacity: 0.2;
+    animation: gradientShiftBack 15s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+@keyframes gradientShiftBack {
+    0%   { background-position: 0% 0%; opacity: 0.15; }
+    50%  { background-position: 100% 100%; opacity: 0.25; }
+    100% { background-position: 0% 0%; opacity: 0.15; }
+}
+
+/* ===================== */
+/* KATMAN 2: ARKA SPİRAL (svg1) */
 /* ===================== */
 .layer-back {
-    z-index: 1;
+    z-index: 2;
 }
 
 .layer-back .svg-object {
@@ -362,12 +406,12 @@
 }
 
 /* ===================== */
-/* KATMAN 2: RENK OVERLAY */
+/* KATMAN 3: OVERLAY 2 (MEVCUT - SPİRALLERİ RENKLENDİRİR) */
 /* ===================== */
 .color-overlay {
     position: absolute;
     inset: 0;
-    z-index: 2;
+    z-index: 3;
     background: linear-gradient(135deg,
         var(--tech-4) 0%,
         var(--wellness-4) 20%,
@@ -383,16 +427,16 @@
 }
 
 /* ===================== */
-/* KATMAN 3: ÖN SVG - TAM EKRAN */
+/* KATMAN 4: ÖN SPİRAL (svg2) */
 /* ===================== */
 .layer-front {
-    z-index: 3;
+    z-index: 4;
 }
 
 .layer-front .svg-object {
     width: 100%;
     height: 100%;
-    top: 20;
+    top: 20%;
     left: 0;
     object-position: center;
     opacity: 0.8;
@@ -402,7 +446,7 @@
 }
 
 /* ===================== */
-/* KATMAN 4: GRADIENT GEÇİŞLER */
+/* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
 /* ===================== */
 .hero-wrapper::before {
     content: "";
@@ -411,7 +455,7 @@
     left: 0;
     right: 0;
     height: 60px;
-    z-index: 4;
+    z-index: 5;
     background: linear-gradient(to top, transparent 0%, var(--white) 100%);
     pointer-events: none;
 }
@@ -420,17 +464,17 @@
     content: "";
     position: absolute;
     inset: 0;
-    z-index: 4;
+    z-index: 5;
     background: linear-gradient(to bottom, transparent 0%, transparent 55%, var(--white) 100%);
     pointer-events: none;
 }
 
 /* ===================== */
-/* HERO İÇERİK */
+/* KATMAN 6: HERO İÇERİK */
 /* ===================== */
 .hero-container {
     position: relative;
-    z-index: 5;
+    z-index: 6;
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
@@ -464,21 +508,21 @@
 }
 
 /* ===================== */
-/* DRIFT ANİMASYONLARI (ÇAPRAZ) */
+/* DRIFT ANİMASYONLARI */
 /* ===================== */
 @keyframes driftRight {
     0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(200px) translateY(05px); }
+    25%  { transform: translateX(200px) translateY(5px); }
     50%  { transform: translateX(760px) translateY(0); }
-    75%  { transform: translateX(200px) translateY(-05px); }
+    75%  { transform: translateX(200px) translateY(-5px); }
     100% { transform: translateX(0) translateY(0); }
 }
 
 @keyframes driftLeft {
     0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(-200px) translateY(-05px); }
+    25%  { transform: translateX(-200px) translateY(-5px); }
     50%  { transform: translateX(-760px) translateY(0); }
-    75%  { transform: translateX(-200px) translateY(05px); }
+    75%  { transform: translateX(-200px) translateY(5px); }
     100% { transform: translateX(0) translateY(0); }
 }
 
@@ -507,7 +551,48 @@
     50%  { background-position: 50% 100%; opacity: 0.4; }
     75%  { background-position: 0% 50%; opacity: 0.5; }
     100% { background-position: 0% 0%; opacity: 0.3; }
-  } 
+}
+
+/* ===================== */
+/* RESPONSIVE - MOBİL */
+/* ===================== */
+@media (max-width: 768px) {
+    .layer-back-shield .svg-object {
+        width: 250%;
+        height: 250%;
+        top: -75%;
+        left: -75%;
+        object-position: center;
+    }
+    
+    .layer-back .svg-object {
+        width: 250%;
+        height: 250%;
+        top: -75%;
+        left: -75%;
+        object-position: center;
+    }
+    
+    .layer-front .svg-object {
+        width: 180%;
+        height: 180%;
+        top: -40%;
+        left: -40%;
+        object-position: center;
+    }
+    
+    @keyframes driftRight {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(60px); }
+        100% { transform: translateX(0); }
+    }
+    
+    @keyframes driftLeft {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(-60px); }
+        100% { transform: translateX(0); }
+    }
+}
         
         
     /* =====================================================
