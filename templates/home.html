@@ -328,10 +328,10 @@
 
 .pattern-layer {
     position: absolute;
-    top: -55%;
-    left: -55%;
-    width: 450%;
-    height: 450%;
+    top: 0%;
+    left: 00%;
+    width: 250%;
+    height: 250%;
     pointer-events: none;
     overflow: visible;
 }
@@ -343,7 +343,7 @@
 }
 
 /* ===================== */
-/* KATMAN 1: ARKA SVG (ALT KATMAN) - GRADYAN İLE RENKLENDİRME */
+/* KATMAN 1: ARKA SVG - TAM EKRAN */
 /* ===================== */
 .layer-back {
     z-index: 1;
@@ -352,26 +352,13 @@
 .layer-back .svg-object {
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 50;
+    top: 20%;
+    left: 0%;
     object-position: center;
-    opacity: 1;
-    
-    /* RENKLENDİRME: Önce sepia ile renk tonu hazırla, sonra mask ile gradyan ver */
-     .layer-back .svg-object {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    object-position: center;
-    opacity: 1;
-    
-    /* TEK RENK - EN CANLI */
-    filter: sepia(100%) saturate(1000%) hue-rotate(180deg) brightness(0.9) contrast(1.3);
-}
-    
-    /* HAREKET ANİMASYONU */
-    animation: driftRight 40s ease-in-out infinite;
+    opacity: 0.8;
+    filter: brightness(0.7) contrast(1.3) saturate(2);
+    animation: driftRight 30s ease-in-out infinite,
+               colorCycleBack 4s ease-in-out infinite;
 }
 
 /* ===================== */
@@ -1319,28 +1306,22 @@
     <!-- ===================== -->
 <!-- HERO BÖLÜMÜ -->
 <!-- ===================== -->
-<div class="hero-wrapper">
-    <!-- KATMAN 1: ARKA SVG (ALT) - img olarak -->
-    <div class="pattern-layer layer-back">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
-    </div>
-    
-    <!-- KATMAN 2: RENK OVERLAY -->
-    <div class="color-overlay"></div>
-    
-    <!-- KATMAN 3: ÖN SVG (ÜST) - object olarak -->
-    <div class="pattern-layer layer-front">
-        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
-        </object>
-    </div>
-    
-    <!-- KATMAN 4: HERO İÇERİK -->
-    <div class="hero-container">
-        {{ hero.html | safe }}
-    </div>
-</div>
-
+  <div class="hero-wrapper">
+        <div class="pattern-layer layer-back">
+            <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
+                <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
+            </object>
+        </div>
+        <div class="color-overlay"></div>
+        <div class="pattern-layer layer-front">
+            <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
+                <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
+            </object>
+        </div>
+        <div class="hero-container">
+            {{ hero.html | safe }}
+        </div>
+  </div>
     <!-- ===================== -->
     <!-- MANIFESTO -->
     <!-- ===================== -->
