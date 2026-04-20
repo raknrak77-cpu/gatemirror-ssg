@@ -318,14 +318,14 @@
     /* =====================================================
        BLOK 4: HERO BÖLÜMÜ
     ===================================================== */
+
     .hero-wrapper {
         position: relative;
-        margin-top: -40px;
-        padding-top: 60px;
-        overflow: hidden;
+        min-height: auto;
+        overflow: hidden;  /* hidden → visible (taşan kısımlar gizlenmesin) */
         background: transparent;
-        z-index: 1;
     }
+        
     
     .pattern-layer {
         position: absolute;
@@ -393,16 +393,16 @@
     }
     
     .hero-wrapper::before {
-        content: "";
-        position: absolute;
-        top: -60px;
-        left: 0;
-        right: 0;
-        height: 60px;
-        z-index: 4;
-        background: linear-gradient(to top, transparent 0%, var(--white) 100%);
-        pointer-events: none;
-    }           
+    content: "";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 4;
+    background: linear-gradient(to top, transparent 0%, var(--white) 100%);
+    pointer-events: none;
+}           
     
     .hero-wrapper::after {
         content: "";
