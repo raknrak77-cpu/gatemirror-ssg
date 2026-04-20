@@ -328,10 +328,10 @@
 
 .pattern-layer {
     position: absolute;
-    top: -100%;
-    left: -100%;
-    width: 400%;
-    height: 400%;
+    top: 00%;
+    left: 00%;
+    width: 250%;
+    height: 250%;
     pointer-events: none;
     overflow: visible;
 }
@@ -339,7 +339,7 @@
 .svg-object {
     position: absolute;
     pointer-events: none;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* ===================== */
@@ -357,7 +357,7 @@
     object-position: center;
     opacity: 0.6;
     filter: brightness(0.7) contrast(1.3) saturate(2);
-    animation: driftRight 8s ease-in-out infinite,
+    animation: driftRight 20s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
 }
 
@@ -397,7 +397,7 @@
     object-position: center;
     opacity: 0.7;
     filter: brightness(0.8) contrast(1.2) saturate(1.8);
-    animation: driftLeft 6s ease-in-out infinite reverse,
+    animation: driftLeft 10s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
 }
 
@@ -468,17 +468,17 @@
 /* ===================== */
 @keyframes driftRight {
     0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(80px) translateY(15px); }
-    50%  { transform: translateX(360px) translateY(0); }
-    75%  { transform: translateX(80px) translateY(-15px); }
+    25%  { transform: translateX(80px) translateY(05px); }
+    50%  { transform: translateX(460px) translateY(0); }
+    75%  { transform: translateX(80px) translateY(-05px); }
     100% { transform: translateX(0) translateY(0); }
 }
 
 @keyframes driftLeft {
     0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(-80px) translateY(-15px); }
-    50%  { transform: translateX(-360px) translateY(0); }
-    75%  { transform: translateX(-80px) translateY(15px); }
+    25%  { transform: translateX(-80px) translateY(-05px); }
+    50%  { transform: translateX(-460px) translateY(0); }
+    75%  { transform: translateX(-80px) translateY(05px); }
     100% { transform: translateX(0) translateY(0); }
 }
 
