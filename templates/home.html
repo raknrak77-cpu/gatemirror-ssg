@@ -341,13 +341,17 @@
     pointer-events: none;
     overflow: visible;
 }
+ .pattern-layer img {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+ }
 
-.svg-object {
-    position: absolute;
-    pointer-events: none;
-    object-fit: contain;
-}
-
+          
 /* ===================== */
 /* KATMAN 0: ARKA KALKAN (svg3) - IŞIK ALMASIN, KALKAN OLSUN */
 /* ===================== 
@@ -395,21 +399,20 @@
     z-index: 2;
 }
 
-.layer-back .svg-object {
+.layer-back .svg img {
     width: 100%;
     height: 100%;
     top: 0%;
     left: 0%;
     object-position: center;
     opacity: 1;
-    filter: brightness(0.7) contrast(1.3) saturate(2);
     animation: driftRight 30s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
 }
 
 /* ===================== */
 /* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg2) RENKLENDİRECEK */
-/* =====================
+/* ===================== */
 .color-overlay {
     position: absolute;
     inset: 0;
@@ -427,7 +430,7 @@
     pointer-events: none;
     mix-blend-mode: overlay;
 }
-== */
+
 /* ===================== */
 /* KATMAN 4: ÖN SPİRAL (svg2) - OVERLAY-1 İLE RENKLENECEK */
 /* ===================== */
@@ -442,7 +445,6 @@
     left: 0;
     object-position: center;
     opacity: 1;
-    filter: brightness(0.8) contrast(1.2) saturate(1.8);
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
         }
@@ -529,7 +531,7 @@
     75%  { filter: hue-rotate(270deg) saturate(2.5) brightness(0.6); }
     100% { filter: hue-rotate(360deg) saturate(2.5) brightness(0.6); }
 }
-*/
+
 
 @keyframes colorCycleFront {
     0%   { filter: hue-rotate(300deg) saturate(2.2) brightness(0.7); }
@@ -538,9 +540,9 @@
     75%  { filter: hue-rotate(210deg) saturate(2.2) brightness(0.7); }
     100% { filter: hue-rotate(300deg) saturate(2.2) brightness(0.7); }
 }
-
+*/
         
-/* ====================
+/* ====================*/
         
 @keyframes gradientShift {
     0%   { background-position: 0% 0%; opacity: 0.6; }
@@ -550,7 +552,9 @@
     100% { background-position: 0% 0%; opacity: 0.6; }
 }
         
-
+        
+/* ====================*/
+        
 @keyframes gradientShiftback {
     0%   { background-position: 0% 0%; opacity: 0.6; }
     25%  { background-position: 100% 50%; opacity: 0.7; }
@@ -558,7 +562,6 @@
     75%  { background-position: 0% 50%; opacity: 0.7; }
     100% { background-position: 0% 0%; opacity: 0.6; }
 }
-=============== */
         
         
     /* =====================================================
@@ -1361,15 +1364,14 @@
 <div class="hero-wrapper">
     <!-- Z-0: ARKA KALKAN (svg3) -->
     <div class="pattern-layer layer-back-shield">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" class="svg-object" alt="">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" alt="">
     </div>
-    
     <!-- Z-1: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
     <div class="color-overlay-back"></div>
     
     <!-- Z-2: ARKA SPİRAL (svg1) -->
     <div class="pattern-layer layer-back">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
     </div>
     
     <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
@@ -1377,12 +1379,14 @@
     
     <!-- Z-4: ÖN SPİRAL (svg2) -->
     <div class="pattern-layer layer-front">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object" alt="">
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
     </div>
     
     <!-- Z-5: HERO İÇERİK (doğrudan, konteynersız) -->
     {{ hero.html | safe }}
 </div>
+
+    
     <!-- ===================== -->
     <!-- MANIFESTO -->
     <!-- ===================== -->
