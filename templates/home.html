@@ -390,7 +390,7 @@
 
 /* ===================== */
 /* KATMAN 2: ARKA SPİRAL (svg1) - OVERLAY-2 İLE RENKLENECEK */
-/* ===================== 
+/* ===================== */
 .layer-back {
     z-index: 2;
 }
@@ -406,7 +406,7 @@
     animation: driftRight 30s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
 }
-*/
+
 /* ===================== */
 /* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg2) RENKLENDİRECEK */
 /* =====================
@@ -430,12 +430,12 @@
 == */
 /* ===================== */
 /* KATMAN 4: ÖN SPİRAL (svg2) - OVERLAY-1 İLE RENKLENECEK */
-/* ===================== *
+/* ===================== */
 .layer-front {
     z-index: 4;
 }
 
-.layer-front .svg-object {
+.layer-front .svg img {
     width: 100%;
     height: 100%;
     top: 0%;
@@ -446,7 +446,7 @@
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
         }
-*/
+
 /* ===================== */
 /* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
 /* ===================== 
@@ -502,7 +502,7 @@
 ======= */
 /* ===================== */
 /* DRIFT ANİMASYONLARI */
-/* ===================== *
+/* ===================== */
 @keyframes driftRight {
     0%   { transform: translateX(0) translateY(0); }
     25%  { transform: translateX(200px) translateY(5px); }
@@ -510,7 +510,7 @@
     75%  { transform: translateX(200px) translateY(-5px); }
     100% { transform: translateX(0) translateY(0); }
 }
-*/
+
 @keyframes driftLeft {
     0%   { transform: translateX(0) translateY(0); }
     25%  { transform: translateX(-200px) translateY(-5px); }
@@ -529,7 +529,7 @@
     75%  { filter: hue-rotate(270deg) saturate(2.5) brightness(0.6); }
     100% { filter: hue-rotate(360deg) saturate(2.5) brightness(0.6); }
 }
-    === */
+*/
 
 @keyframes colorCycleFront {
     0%   { filter: hue-rotate(300deg) saturate(2.2) brightness(0.7); }
