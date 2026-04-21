@@ -1348,15 +1348,13 @@
 
 <main>
 <!-- ===================== -->
-<!-- HERO BÖLÜMÜ (5 KATMANLI) -->
+<!-- HERO BÖLÜMÜ (5 KATMANLI - IMG) -->
 <!-- ===================== -->
 
-    <div class="hero-wrapper">
+<div class="hero-wrapper">
     <!-- Z-0: ARKA KALKAN (svg3) -->
     <div class="pattern-layer layer-back-shield">
-        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg3.svg" class="svg-object">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" alt="">
-        </object>
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" class="svg-object" alt="">
     </div>
     
     <!-- Z-1: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
@@ -1364,9 +1362,7 @@
     
     <!-- Z-2: ARKA SPİRAL (svg1) -->
     <div class="pattern-layer layer-back">
-        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
-        </object>
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" class="svg-object" alt="">
     </div>
     
     <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
@@ -1374,14 +1370,12 @@
     
     <!-- Z-4: ÖN SPİRAL (svg2) -->
     <div class="pattern-layer layer-front">
-        <object type="image/svg+xml" data="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object">
-            <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
-        </object>
+        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" class="svg-object" alt="">
     </div>
-        {{ hero.html | safe }}
-    </div>
-       
-
+    
+    <!-- Z-5: HERO İÇERİK (doğrudan, konteynersız) -->
+    {{ hero.html | safe }}
+</div>
     <!-- ===================== -->
     <!-- MANIFESTO -->
     <!-- ===================== -->
