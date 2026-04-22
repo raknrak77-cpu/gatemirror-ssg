@@ -1353,21 +1353,21 @@
     <div class="pattern-layer layer-back-shield">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" alt="">
     </div> -->
-    <!-- Z-1: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
-    <div class="color-overlay-backsvg2"></div>
     
-    <!-- Z-2: ARKA SPİRAL (svg1) -->
+    <!-- Z-1: ARKA SPİRAL (svg2) -->
     <div class="pattern-layer layer-back">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
     </div>
+    <!-- Z-2: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
+    <div class="color-overlay-backsvg2"></div>
+
     
-    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
-    <div class="color-overlay-frontsvg1"></div>
-    
-    <!-- Z-4: ÖN SPİRAL (svg2) -->
+    <!-- Z-3: ÖN SPİRAL (svg1) -->
     <div class="pattern-layer layer-front">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
     </div>
+    <!-- Z-4: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
+    <div class="color-overlay-frontsvg1"></div>
     
     <!-- Z-5: HERO İÇERİK (doğrudan, konteynersız)  -->
     {{ hero.html | safe }}
