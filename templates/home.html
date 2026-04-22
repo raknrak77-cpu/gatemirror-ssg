@@ -368,7 +368,7 @@
     filter: none;
     animation: none;
 }
-===== */
+
 /* ===================== */
 /* KATMAN 1: OVERLAY-2 (YENİ) - ARKA SPİRALİ (svg1) RENKLENDİRECEK */
 /* ================= */
@@ -410,7 +410,7 @@
 
 /* ===================== */
 /* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg1) RENKLENDİRECEK */
-/* ===================== 
+/* ===================== */
     
 .color-overlay-frontsvg1 {
     position: absolute;
@@ -424,7 +424,7 @@
     var(--el-4) 80%,
     var(--tech-4) 100%);
     background-size: 200% 200%;
-    opacity: 0.1;
+    opacity: 0.5;
     animation: gradientShift 5s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
@@ -432,7 +432,7 @@
 
 /* ===================== */
 /* KATMAN 4: ÖN SPİRAL (svg1) - OVERLAY-1 İLE RENKLENECEK */
-/* ===================== 
+/* ===================== */
 .layer-front {
     z-index: 4;
 }
@@ -442,11 +442,11 @@
     height: 100%;
     top: 0%;
     left: 0;
-    opacity: 0.4;
+    opacity: 0.5;
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
         }
-*/
+
 /* ===================== */
 /* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
 /* ===================== */
@@ -467,7 +467,7 @@
 /* HERO YAZILARI */
 /* ===================== */
 .hero-title {
-    opacity: 0 !important;
+    opacity: 1 !important;
     font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
     font-weight: 900;
     letter-spacing: -0.02em;
@@ -481,7 +481,7 @@
 
 .hero-description {
     font-size: 1.7rem !important;
-    opacity: 0 !important;
+    opacity: 1 !important;
     font-weight: 700;
     max-width: 600px;
     margin: 0 auto 1.5rem;
@@ -537,7 +537,7 @@
     100% { background-position: 0% 0%; opacity: 0.6; }
         }
         
-/* ====================
+/* ====================*/
         
 @keyframes gradientShift {
     0%   { background-position: 0% 0%; opacity: 0.6; }
@@ -547,7 +547,7 @@
     100% { background-position: 0% 0%; opacity: 0.6; }
 }
         
-*/
+
         
         
         
@@ -1361,14 +1361,14 @@
         <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
     </div>
     
-    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK --
+    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
     <div class="color-overlay-frontsvg1"></div>
     
-    <!-- Z-4: ÖN SPİRAL (svg2) --
+    <!-- Z-4: ÖN SPİRAL (svg2) -->
     <div class="pattern-layer layer-front">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
     </div>
-    >
+    
     <!-- Z-5: HERO İÇERİK (doğrudan, konteynersız)  -->
     {{ hero.html | safe }}
 </div>
