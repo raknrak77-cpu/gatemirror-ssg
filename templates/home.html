@@ -434,11 +434,11 @@
     inset: 0;
     z-index: 4;
     background: linear-gradient(135deg,
-    var(--el-4) 20%,
-    var(--eco-4) 40%,
+    var(--el-4) 100%,
+    var(--eco-4) 80%,
     var(--fe-4) 60%,
-    var(--wellness-4) 80%,
-    var(--tech-4) 100%,                           
+    var(--wellness-4) 40%,
+    var(--tech-4) 20%,                           
     var(--el-4) 0%); 
     background-size: 200% 200%;
     opacity: 0.5;
@@ -446,26 +446,25 @@
     pointer-events: none;
     mix-blend-mode: overlay;
 }
-        /* ===================== */
+/* ===================== */
 /* DRIFT ANİMASYONLARI */
 /* ===================== */
-
 @keyframes driftRight {
-    0%   { transform: translateX(0px) scale(0.9) rotate(0deg); }
-    25%  { transform: translateX(150px) scale(1) rotate(8deg); }
-    50%  { transform: translateX(350px) scale(1.1) rotate(12deg); }
-    75%  { transform: translateX(150px) scale(1) rotate(8deg); }
-    100% { transform: translateX(0px) scale(0.9) rotate(0deg); }
+    0%   { transform: translateX(50) translateY(0); }
+    25%  { transform: translateX(250px) translateY(5px); }
+    50%  { transform: translateX(550px) translateY(0); }
+    75%  { transform: translateX(200px) translateY(-5px); }
+    100% { transform: translateX(50) translateY(0); }
 }
-
-@keyframes driftLeft {
-    0%   { transform: translateX(0px) scale(1) rotate(0deg); }
-    25%  { transform: translateX(-150px) scale(1.05) rotate(-8deg); }
-    50%  { transform: translateX(-350px) scale(1.15) rotate(-12deg); }
-    75%  { transform: translateX(-150px) scale(1.05) rotate(-8deg); }
-    100% { transform: translateX(0px) scale(1) rotate(0deg); }
+        
+    @keyframes driftLeft {
+    0%   { transform: translateX(100) translateY(0); }
+    25%  { transform: translateX(250px) translateY(5px); }
+    50%  { transform: translateX(550px) translateY(0); }
+    75%  { transform: translateX(200px) translateY(-5px); }
+    100% { transform: translateX(50) translateY(0); }
 }
-
+        
 /* ===================== */
 /* RENK DÖNGÜSÜ ANİMASYONLARI 
 /* ======================== *
