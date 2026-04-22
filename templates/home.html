@@ -392,7 +392,7 @@
 }   
 
 /* ===================== */
-/* KATMAN 2: ARKA SPİRAL (svg1) - OVERLAY-2 İLE RENKLENECEK */
+/* KATMAN 2: ARKA SPİRAL (svg2) - OVERLAY-2 İLE RENKLENECEK */
 /* ===================== */
 .layer-back {
     z-index: 2;
@@ -409,8 +409,8 @@
 }
 
 /* ===================== */
-/* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg2) RENKLENDİRECEK */
-/* ===================== */
+/* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg1) RENKLENDİRECEK */
+/* ===================== 
     
 .color-overlay-frontsvg1 {
     position: absolute;
@@ -431,7 +431,7 @@
 }
 
 /* ===================== */
-/* KATMAN 4: ÖN SPİRAL (svg2) - OVERLAY-1 İLE RENKLENECEK */
+/* KATMAN 4: ÖN SPİRAL (svg1) - OVERLAY-1 İLE RENKLENECEK */
 /* ===================== */
 .layer-front {
     z-index: 4;
@@ -529,8 +529,15 @@
     100% { filter: hue-rotate(300deg) saturate(2.2) brightness(0.7); }
 }
 */
+ @keyframes gradientShiftback {
+    0%   { background-position: 0% 0%; opacity: 0.6; }
+    25%  { background-position: 100% 50%; opacity: 0.7; }
+    50%  { background-position: 50% 100%; opacity: 0.8; }
+    75%  { background-position: 0% 50%; opacity: 0.7; }
+    100% { background-position: 0% 0%; opacity: 0.6; }
+        }
         
-/* ====================*/
+/* ====================
         
 @keyframes gradientShift {
     0%   { background-position: 0% 0%; opacity: 0.6; }
@@ -540,16 +547,8 @@
     100% { background-position: 0% 0%; opacity: 0.6; }
 }
         
+*/
         
-/* ====================*/
-        
-@keyframes gradientShiftback {
-    0%   { background-position: 0% 0%; opacity: 0.6; }
-    25%  { background-position: 100% 50%; opacity: 0.7; }
-    50%  { background-position: 50% 100%; opacity: 0.8; }
-    75%  { background-position: 0% 50%; opacity: 0.7; }
-    100% { background-position: 0% 0%; opacity: 0.6; }
-}
         
         
     /* =====================================================
