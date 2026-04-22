@@ -399,7 +399,7 @@
     var(--fe-4) 60%,
     var(--eco-4) 40%,
     var(--el-4) 20%,
-    var(--tech-4) 100%);
+    var(--tech-4) 0%);
     background-size: 200% 200%;
     opacity: 0.5;
     animation: gradientShiftBack 8s ease-in-out infinite;
@@ -434,12 +434,12 @@
     inset: 0;
     z-index: 4;
     background: linear-gradient(135deg,
-    var(--el-4) 100%,
-    var(--eco-4) 80%,
+    var(--el-4) 20%,
+    var(--eco-4) 40%,
     var(--fe-4) 60%,
-    var(--wellness-4) 40%,
-    var(--tech-4) 20%,
-    var(--el-4) 0%);
+    var(--wellness-4) 80%,
+    var(--tech-4) 100%,                           
+    var(--el-4) 0%); 
     background-size: 200% 200%;
     opacity: 0.5;
     animation: gradientShift 3s ease-in-out infinite;
@@ -468,7 +468,7 @@
 
 /* ===================== */
 /* RENK DÖNGÜSÜ ANİMASYONLARI 
-/* ======================== */
+/* ======================== *
 @keyframes colorCycleBack {
     0%   { filter: hue-rotate(0deg) saturate(2.5) brightness(0.6); }
     25%  { filter: hue-rotate(90deg) saturate(2.5) brightness(0.6); }
@@ -485,7 +485,7 @@
     75%  { filter: hue-rotate(210deg) saturate(2.2) brightness(0.7); }
     100% { filter: hue-rotate(300deg) saturate(2.2) brightness(0.7); }
         }
-
+*/
  @keyframes gradientShiftback {
     0%     { background-position: 50% 0%; opacity: 0.6; }    /* Üst orta */
     12.5%  { background-position: 0% 25%; opacity: 0.65; }   /* Sol üst */
