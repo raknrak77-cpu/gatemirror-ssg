@@ -394,12 +394,12 @@
     inset: 0;
     z-index: 2;
     background: linear-gradient(135deg,
-    var(--tech-4) 100%,
-    var(--wellness-4) 80%,
-    var(--fe-4) 60%,
-    var(--eco-4) 40%,
-    var(--el-4) 20%,
-    var(--tech-4) 0%);
+    var(--tech-3) 100%,
+    var(--wellness-3) 80%,
+    var(--fe-3) 60%,
+    var(--eco-3) 40%,
+    var(--el-3) 20%,
+    var(--tech-3) 0%);
     background-size: 200% 200%;
     opacity: 0.5;
     animation: gradientShiftBack 8s ease-in-out infinite;
@@ -434,12 +434,12 @@
     inset: 0;
     z-index: 4;
     background: linear-gradient(135deg,
-    var(--el-2) 0%,
-    var(--eco-2) 20%,
-    var(--fe-2) 40%,
-    var(--wellness-2) 60%,
-    var(--tech-2) 80%,                           
-    var(--el-2) 100%); 
+    var(--tech-3) 0%,
+    var(--wellness-3) 20%,
+    var(--fe-3) 40%,
+    var(--eco-3) 60%,
+    var(--el-3) 80%,
+    var(--tech-3) 100%);
     background-size: 200% 200%;
     opacity: 0.5;
     animation: gradientShift 4s ease-in-out infinite;
@@ -449,20 +449,21 @@
 /* ===================== */
 /* DRIFT ANİMASYONLARI */
 /* ===================== */
+
 @keyframes driftRight {
-    0%   { transform: translateX(10) translateY(0); }
+    0%   { transform: translateX(100) translateY(0); }
     25%  { transform: translateX(250px) translateY(5px); }
     50%  { transform: translateX(550px) translateY(0); }
     75%  { transform: translateX(200px) translateY(-5px); }
-    100% { transform: translateX(10) translateY(0); }
+    100% { transform: translateX(50) translateY(0); }
 }
-        
-    @keyframes driftLeft {
-    0%   { transform: translateX(10) translateY(0); }
-    25%  { transform: translateX(250px) translateY(5px); }
-    50%  { transform: translateX(550px) translateY(0); }
-    75%  { transform: translateX(200px) translateY(-5px); }
-    100% { transform: translateX(10) translateY(0); }
+
+@keyframes driftLeft {
+    0%   { transform: translateX(100) translateY(0); }
+    25%  { transform: translateX(-250px) translateY(-5px); }
+    50%  { transform: translateX(-550px) translateY(0); }
+    75%  { transform: translateX(-200px) translateY(5px); }
+    100% { transform: translateX(-50) translateY(0); }
 }
         
 /* ===================== */
