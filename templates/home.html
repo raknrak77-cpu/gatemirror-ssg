@@ -372,7 +372,8 @@
 /* ===================== */
 /* KATMAN 1: OVERLAY-2 (YENİ) - ARKA SPİRALİ (svg1) RENKLENDİRECEK */
 /* ================= */
-.color-overlay-back {
+
+    .color-overlay-backsvg2 {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -409,8 +410,9 @@
 
 /* ===================== */
 /* KATMAN 3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ (svg2) RENKLENDİRECEK */
-/* ===================== 
-.color-overlay {
+/* ===================== */
+    
+.color-overlay-frontsvg1 {
     position: absolute;
     inset: 0;
     z-index: 3;
@@ -427,7 +429,7 @@
     pointer-events: none;
     mix-blend-mode: overlay;
 }
-*/
+
 /* ===================== */
 /* KATMAN 4: ÖN SPİRAL (svg2) - OVERLAY-1 İLE RENKLENECEK */
 /* ===================== */
@@ -1353,16 +1355,16 @@
         <img src="{{ R2_PUBLIC_URL }}/assets/svg3.svg" alt="">
     </div> -->
     <!-- Z-1: OVERLAY-2 (YENİ) - ARKA SPİRALİ RENKLENDİRECEK -->
-    <div class="color-overlay-back"></div>
+    <div class="color-overlay-backsvg2"></div>
     
     <!-- Z-2: ARKA SPİRAL (svg1) -->
     <div class="pattern-layer layer-back">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
     </div>
     
-    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK --
-    <div class="color-overlay"></div>
-    -->
+    <!-- Z-3: OVERLAY-1 (MEVCUT) - ÖN SPİRALİ RENKLENDİRECEK -->
+    <div class="color-overlay-frontsvg1"></div>
+    
     <!-- Z-4: ÖN SPİRAL (svg2) -->
     <div class="pattern-layer layer-front">
         <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
