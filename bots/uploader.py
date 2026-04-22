@@ -75,7 +75,7 @@ def upload_svg_patterns():
     svg_files = [
         ("assets/all-patterns/spiral_out/spiral_circular_basic_10.svg", "assets/svg1.svg"),
         ("assets/all-patterns/spiral_out/spiral_circular_medium_09.svg", "assets/svg2.svg"),
-        ("assets/all-patterns/breath_wave/breath_wave_basic_02.svg", "assets/svg3.svg"),  # YENİ
+        ("assets/all-patterns/breath_wave/breath_wave_basic_02.svgq", "assets/svg3.svg"),  # YENİ
     ]
     
     for local_path, r2_key in svg_files:
