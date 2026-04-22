@@ -459,8 +459,7 @@
     right: 0;
     height: 40px;
     z-index: 5;
-    background: linear-gradient(to bottom, transparent 0%, transparent 45%, var(--white) 100%);
-
+    background: linear-gradient(to top, transparent 0%, var(--white) 100%);
     pointer-events: none;
 }
 
@@ -509,22 +508,22 @@
 /* ===================== */
 
 @keyframes driftRight {
-    0%   { transform: translateX(100px) scale(1) rotate(0deg); }
-    25%  { transform: translateX(250px) scale(1.03) rotate(3deg); }
-    50% { transform: translateX(550px) scale(1.05) rotate(6deg); }
-    75% { transform: translateX(250px) scale(1.03) rotate(3deg); }
-    100% { transform: translateX(50px) scale(1) rotate(0deg); }
+    0%   { transform: translateX(25px) scale(1) rotate(0deg); }
+    25%  { transform: translateX(250px) scale(1.05) rotate(3deg); }
+    50% { transform: translateX(550px) scale(1.10) rotate(6deg); }
+    75% { transform: translateX(250px) scale(1.05) rotate(3deg); }
+    100% { transform: translateX(25px) scale(1) rotate(0deg); }
 }
 
 
 
         
 @keyframes driftLeft {
-    0%   { transform: translateX(-100px) scale(1) rotate(0deg); }
-    25%  { transform: translateX(-250px) scale(-1.03) rotate(-3deg); }
-    50% { transform: translateX(-550px) scale(-1.05) rotate(-6deg); }
-    75% { transform: translateX(-250px) scale(-1.03) rotate(-3deg); }
-    100% { transform: translateX(-50px) scale(1) rotate(0deg); }
+    0%   { transform: translateX(-25px) scale(1) rotate(0deg); }
+    25%  { transform: translateX(-250px) scale(0.95) rotate(-3deg); }
+    50% { transform: translateX(-550px) scale(-1.9) rotate(-6deg); }
+    75% { transform: translateX(-250px) scale(-1.05) rotate(-3deg); }
+    100% { transform: translateX(-25px) scale(1) rotate(0deg); }
 }
 
 
