@@ -382,7 +382,7 @@
     left: 0%;
     opacity: 0.8;
     animation: driftRight 30s ease-in-out infinite,
-               
+               colorCycleBack 4s ease-in-out infinite;
 }
         
 /* ===================== */
@@ -402,7 +402,7 @@
     var(--tech-4) 0%);
     background-size: 200% 200%;
     opacity: 0.5;
-    animation: gradientShiftBack 7s ease-in-out infinite;
+    animation: gradientShiftBack 8s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }   
@@ -422,7 +422,7 @@
     left: 0;
     opacity: 0.8;
     animation: driftLeft 30s ease-in-out infinite reverse,
-               
+               colorCycleBack 6s ease-in-out infinite;
         }
 
 /* ===================== */
@@ -451,7 +451,20 @@
 /* ===================== */
 /* KATMAN 5: GRADIENT GEÇİŞLER (ÜST + ALT) */
 /* ===================== */
+.hero-wrapper::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    z-index: 5;
+    background: linear-gradient(to bottom, transparent 0%, transparent 45%, var(--white) 100%);
 
+    pointer-events: none;
+}
+
+        
 .hero-wrapper::after {
     content: "";
     position: absolute;
