@@ -890,10 +890,124 @@
         color: inherit;
         display: block;
     }
+
+        /* =====================================================
+   BLOK 7: CATEGORY BOTTOM BAR (ARALIKSIZ + HOVER GENİŞLEME)
+   ===================================================== */
+
+.category-bottom-bar {
+    max-width: 1200px;
+    margin: 3rem auto 2rem auto;
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border: none;
+    gap: 0;  /* ARALIK YOK */
+}
+
+.category-segment {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
+    /* PARALEL KENAR (60°) */
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    
+    /* HOVER'DA GENİŞLEME */
+    flex: 1;
+}
+
+.category-segment:hover {
+    flex: 2.5;  /* GENİŞLEME */
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.category-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    gap: 8px;
+    padding: 0 4px;
+    text-align: center;
+    line-height: 1.2;
+    flex-direction: column;
+    opacity: 1;
+}
+
+.category-icon {
+    font-size: 18px;
+}
+
+/* HOVER'DA YAZI VURGUSU */
+.category-segment:hover .category-label {
+    letter-spacing: 0.15em;
+    font-size: 13px;
+}
+
+/* KATEGORİ SEGMENT RENKLERİ */
+.segment-tech { background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%); }
+.segment-tech:hover { background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-5) 100%); }
+.segment-wellness { background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%); }
+.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%); }
+.segment-eco { background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%); }
+.segment-eco:hover { background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%); }
+.segment-fe { background: linear-gradient(135deg, var(--fe-2) 0%, var(--fe-4) 100%); }
+.segment-fe:hover { background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%); }
+.segment-el { background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%); }
+.segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }
+
+/* RESPONSIVE - TABLET */
+@media (max-width: 768px) {
+    .category-segment {
+        min-height: 56px;
+    }
+    .category-label {
+        font-size: 9px;
+        gap: 4px;
+    }
+    .category-icon {
+        font-size: 14px;
+    }
+    .category-segment:hover {
+        flex: 2;
+    }
+}
+
+/* RESPONSIVE - MOBİL */
+@media (max-width: 480px) {
+    .category-segment {
+        min-height: 48px;
+    }
+    .category-label {
+        font-size: 8px;
+        gap: 3px;
+    }
+    .category-icon {
+        font-size: 12px;
+    }
+                   }
+        
     /* =====================================================
        BLOK 7: CATEGORY BOTTOM BAR & FOOTER
-    ===================================================== */
+    ===================================================== 
     
 .category-bottom-bar {
     max-width: 1200px;
@@ -975,7 +1089,7 @@
 .segment-el { background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%); }
 .segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }
 
-
+*/
         
         
     footer {
