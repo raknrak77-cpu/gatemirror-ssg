@@ -538,7 +538,7 @@
 }
 /* ===================== */
 /* HERO YAZILARI */
-/* ===================== */
+/* ===================== 
 .hero-title {
     opacity: 1 !important;
     font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
@@ -565,7 +565,62 @@
         
 /* HERO BUTON (CTA) */
 /* ===================== */
-/* PARALEL KENAR (60° EĞİM) */
+/* PARALEL KENAR (60° EĞİM) 
+.hero-cta-primary {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+    color: white;
+    padding: 0.9rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    
+    /* PARALEL KENAR (üst ve alt paralel, yanlar eğik) 
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero-cta-primary:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+/* ===================== */
+/* HERO YAZILARI */
+/* ===================== */
+.hero-title {
+    opacity: 1 !important;
+    font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hero-description {
+    opacity: 1 !important;
+    font-size: 1.4rem !important;        /* 1.7rem → 1.4rem (biraz küçülttüm) */
+    font-weight: 700;
+    max-width: 700px;                    /* 600px → 700px (biraz genişlettim) */
+    margin: 0 auto 1.5rem;
+    line-height: 1.5;
+    color: var(--tech-3);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================== */
+/* HERO BUTON (CTA) - PARALEL KENAR (60° EĞİM) */
+/* ===================== */
 .hero-cta-primary {
     display: inline-block;
     background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
@@ -591,7 +646,6 @@
     background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
-
     
         
     /* =====================================================
