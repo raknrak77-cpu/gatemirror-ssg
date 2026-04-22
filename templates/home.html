@@ -495,19 +495,19 @@
 /* DRIFT ANİMASYONLARI */
 /* ===================== */
 @keyframes driftRight {
-    0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(200px) translateY(5px); }
-    50%  { transform: translateX(760px) translateY(0); }
+    0%   { transform: translateX(100) translateY(0); }
+    25%  { transform: translateX(250px) translateY(5px); }
+    50%  { transform: translateX(550px) translateY(0); }
     75%  { transform: translateX(200px) translateY(-5px); }
-    100% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(50) translateY(0); }
 }
 
 @keyframes driftLeft {
-    0%   { transform: translateX(0) translateY(0); }
-    25%  { transform: translateX(-200px) translateY(-5px); }
-    50%  { transform: translateX(-760px) translateY(0); }
+    0%   { transform: translateX(100) translateY(0); }
+    25%  { transform: translateX(-250px) translateY(-5px); }
+    50%  { transform: translateX(-550px) translateY(0); }
     75%  { transform: translateX(-200px) translateY(5px); }
-    100% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(-50) translateY(0); }
 }
 
 /* ===================== */
@@ -531,21 +531,29 @@
 }
 */
  @keyframes gradientShiftback {
-    0%   { background-position: 0% 0%; opacity: 0.6; }
-    25%  { background-position: 100% 50%; opacity: 0.7; }
-    50%  { background-position: 50% 100%; opacity: 0.8; }
-    75%  { background-position: 0% 50%; opacity: 0.7; }
-    100% { background-position: 0% 0%; opacity: 0.6; }
-        }
+    0%     { background-position: 50% 0%; opacity: 0.6; }    /* Üst orta */
+    12.5%  { background-position: 0% 25%; opacity: 0.65; }   /* Sol üst */
+    25%    { background-position: 0% 50%; opacity: 0.7; }    /* Sol orta */
+    37.5%  { background-position: 0% 75%; opacity: 0.7; }    /* Sol alt */
+    50%    { background-position: 50% 100%; opacity: 0.8; }  /* Alt orta */
+    62.5%  { background-position: 100% 75%; opacity: 0.7; }  /* Sağ alt */
+    75%    { background-position: 100% 50%; opacity: 0.7; }   /* Sağ orta */
+    87.5%  { background-position: 100% 25%; opacity: 0.65; }  /* Sağ üst */
+    100%   { background-position: 50% 0%; opacity: 0.6; }    /* Üst orta (başa dön) */
+ }
+        
         
 /* ====================*/
-        
-@keyframes gradientShift {
-    0%   { background-position: 0% 0%; opacity: 0.6; }
-    25%  { background-position: 100% 50%; opacity: 0.7; }
-    50%  { background-position: 50% 100%; opacity: 0.8; }
-    75%  { background-position: 0% 50%; opacity: 0.7; }
-    100% { background-position: 0% 0%; opacity: 0.6; }
+ @keyframes gradientShift {
+    0%     { background-position: 50% 0%; opacity: 0.6; }    /* Üst orta */
+    12.5%  { background-position: 100% 25%; opacity: 0.65; } /* Sağ üst */
+    25%    { background-position: 100% 50%; opacity: 0.7; }  /* Sağ orta */
+    37.5%  { background-position: 100% 75%; opacity: 0.7; }  /* Sağ alt */
+    50%    { background-position: 50% 100%; opacity: 0.8; }  /* Alt orta */
+    62.5%  { background-position: 0% 75%; opacity: 0.7; }   /* Sol alt */
+    75%    { background-position: 0% 50%; opacity: 0.7; }    /* Sol orta */
+    87.5%  { background-position: 0% 25%; opacity: 0.65; }   /* Sol üst */
+    100%   { background-position: 50% 0%; opacity: 0.6; }    /* Üst orta (başa dön) */
 }
         
 
