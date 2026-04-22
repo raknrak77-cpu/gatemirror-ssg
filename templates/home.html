@@ -975,213 +975,239 @@
     }
 
 
-           /* =====================================================
-       BLOK 8: DARK MODE (TEK BLOK)
-    ===================================================== 
-    body.dark {
-        background-color: #121826;
-        color: #E8EDF5;
-    }
-    
-    /* Dark Mode - Toggle Switch 
-    body.dark .toggle-switch:after {
-        content: "☀️";
-        left: 26px;
-    }
-    
-    /* Dark Mode - Header & Nav 
-    body.dark nav {
-        background: linear-gradient(to bottom, rgba(26,31,46,0.98) 0%, rgba(26,31,46,0.7) 40%, rgba(26,31,46,0.2) 100%);
-        border-bottom: 1px solid #2A3040;
-        backdrop-filter: blur(8px);
-    }
-    
-    body.dark .logo,
-    body.dark .nav-links a {
-        color: #F0F6FC;
-    }
-    
-    body.dark .dark-mode-btn {
-        background: rgba(255,255,255,0.1);
-        color: #E8EDF5;
-    }
-    
-    body.dark .dark-mode-btn:hover {
-        background: rgba(255,255,255,0.2);
-    }
-    
-    /* Dark Mode - Side Menu 
-    body.dark .side-menu {
-        background: rgba(18,24,38,0.98);
-        backdrop-filter: blur(12px);
-    }
-    
-    /* Dark Mode - Hero 
-    body.dark .hero-wrapper::before {
-        background: linear-gradient(to top, transparent 0%, #121826 100%);
-    }
-    
-    body.dark .hero-wrapper::after {
-        background: linear-gradient(to bottom, transparent 0%, #121826 100%);
-    }
-    
-    body.dark .color-overlay {
-        opacity: 0.3;
-        mix-blend-mode: soft-light;
-    }
-    
-    body.dark .layer-back .svg-object {
-        opacity: 0.35;
-    }
-    
-    body.dark .layer-front .svg-object {
-        opacity: 0.3;
-    }
-    
-    body.dark .hero-title {
-        background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    body.dark .hero-description {
-        color: var(--tech-4);
-    }
-    
-    /* Dark Mode - Manifesto 
-    body.dark .manifesto-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    body.dark .manifesto-card:hover {
-        background: rgba(255,255,255,0.06);
-        border-color: rgba(255,255,255,0.1);
-        box-shadow: 0 20px 30px -15px rgba(0,0,0,0.4);
-    }
-    
-    body.dark .manifesto-title {
-        background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    body.dark .manifesto-subtitle {
-        color: #8A94A8;
-    }
-    
-    body.dark .manifesto-text {
-        color: #C9D1D9;
-    }
-    
-    body.dark .manifesto-text-small {
-        color: #8A94A8;
-    }
-    
-    body.dark .manifesto-category {
-        background: linear-gradient(135deg, #9B7ED6 0%, #D8A4B8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    body.dark .manifesto-closing {
-        border-top-color: rgba(255,255,255,0.08);
-    }
-    
-    body.dark .manifesto-quote-large {
-        color: var(--primary-light);
-    }
-    
-    /* Dark Mode - Article Cards 
-    body.dark .article-card {
-        background: #1E2538;
-        border: 1px solid #2A3040;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    body.dark .article-card h3,
-    body.dark .article-card p {
-        color: #E8EDF5;
-    }
-    
-    body.dark .article-meta {
-        color: #8A94A8;
-    }
-    
-    body.dark .article-card:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        border-color: #3A4050;
-    }
-    
-    /* Dark Mode - Featured Card 
-    body.dark .featured-card {
-        background: #1E2538;
-        border: 1px solid #2A3040;
-    }
-    
-    /* Dark Mode - Category Bar 
-    body.dark .category-bottom-bar {
-        border-color: #2A3040;
-        background: rgba(30,37,56,0.5);
-    }
-    
-    body.dark .category-label {
-        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-    
-    /* Dark Mode - Buttons 
-    body.dark .btn,
-    body.dark .archive-btn,
-    body.dark .random-btn,
-    body.dark .manifesto-button {
-        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
-    }
-    
-    body.dark .btn:hover,
-    body.dark .archive-btn:hover,
-    body.dark .random-btn:hover,
-    body.dark .manifesto-button:hover {
-        background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
-    }
-    
-    /* Dark Mode - Footer 
-    body.dark footer {
-        background: #0D1117;
-        border-top: 1px solid #1A1F2E;
-    }
-    
-    body.dark .footer-column a {
-        color: #8A94A8;
-    }
-    
-    body.dark .footer-column a:hover {
-        color: var(--primary-light);
-    }
-    
-    body.dark .footer-copyright {
-        border-top-color: #1A1F2E;
-        color: #6B7280;
-    }
-    
-    /* Dark Mode - Scrollbar 
-    body.dark ::-webkit-scrollbar {
-        width: 10px;
-    }
-    
-    body.dark ::-webkit-scrollbar-track {
-        background: #121826;
-    }
-    
-    body.dark ::-webkit-scrollbar-thumb {
-        background: #2A3040;
-        border-radius: 5px;
-    }
-    
-    body.dark ::-webkit-scrollbar-thumb:hover {
-        background: #3A4050;
-    }
+/* =====================================================
+   BLOK 8: DARK MODE (TEK BLOK)
+   ===================================================== */
 
-*/
+/* === ANA DARK MODE === */
+body.dark {
+    background-color: #0F141F;
+    color: #E8EDF5;
+}
+
+/* === DARK MODE - TOGGLE SWITCH === */
+body.dark .toggle-switch:after {
+    content: "☀️";
+    left: 26px;
+}
+
+/* === DARK MODE - HEADER & NAV === */
+body.dark nav {
+    background: linear-gradient(to bottom, rgba(18, 24, 34, 0.98) 0%, rgba(18, 24, 34, 0.7) 40%, rgba(18, 24, 34, 0.2) 100%);
+    border-bottom: 1px solid #2A3040;
+    backdrop-filter: blur(8px);
+}
+
+body.dark .logo,
+body.dark .nav-links a {
+    color: #F0F6FC;
+}
+
+/* === DARK MODE - BUTTON (LIGHT MOD'DA DA GÖRÜNSÜN) === */
+.dark-mode-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 2rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--dark);
+    font-size: 1.2rem;
+}
+
+.dark-mode-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+body.dark .dark-mode-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #E8EDF5;
+}
+
+body.dark .dark-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* === DARK MODE - SIDE MENU === */
+body.dark .side-menu {
+    background: rgba(18, 24, 34, 0.98);
+    backdrop-filter: blur(12px);
+}
+
+/* === DARK MODE - HERO (KRİTİK: IŞILTILI) === */
+body.dark .hero-wrapper::before {
+    background: linear-gradient(to top, transparent 0%, #0F141F 100%);
+}
+
+body.dark .hero-wrapper::after {
+    background: linear-gradient(to bottom, transparent 0%, #0F141F 100%);
+}
+
+/* Overlay'ler - dark modda screen ile parlat */
+body.dark .color-overlay-backsvg2,
+body.dark .color-overlay-frontsvg1 {
+    mix-blend-mode: screen !important;
+    opacity: 0.7 !important;
+}
+
+/* SVG'ler - dark modda daha parlak */
+body.dark .layer-back img,
+body.dark .layer-front img {
+    opacity: 0.9 !important;
+    filter: brightness(1.2) contrast(1.1) saturate(1.5);
+}
+
+/* Hero yazıları - dark modda */
+body.dark .hero-title {
+    background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.dark .hero-description {
+    color: var(--tech-4);
+}
+
+/* === DARK MODE - MANIFESTO === */
+body.dark .manifesto-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark .manifesto-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 30px -15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .manifesto-title {
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.dark .manifesto-subtitle {
+    color: #8A94A8;
+}
+
+body.dark .manifesto-text {
+    color: #C9D1D9;
+}
+
+body.dark .manifesto-text-small {
+    color: #8A94A8;
+}
+
+body.dark .manifesto-category {
+    background: linear-gradient(135deg, #9B7ED6 0%, #D8A4B8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.dark .manifesto-closing {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .manifesto-quote-large {
+    color: var(--primary-light);
+}
+
+/* === DARK MODE - ARTICLE CARDS === */
+body.dark .article-card {
+    background: #1A1F2E;
+    border: 1px solid #2A3040;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .article-card h3,
+body.dark .article-card p {
+    color: #E8EDF5;
+}
+
+body.dark .article-meta {
+    color: #8A94A8;
+}
+
+body.dark .article-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-color: #3A4050;
+}
+
+/* === DARK MODE - FEATURED CARD === */
+body.dark .featured-card {
+    background: #1A1F2E;
+    border: 1px solid #2A3040;
+}
+
+/* === DARK MODE - CATEGORY BAR === */
+body.dark .category-bottom-bar {
+    border-color: #2A3040;
+    background: rgba(26, 31, 46, 0.5);
+}
+
+body.dark .category-label {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* === DARK MODE - BUTTONS === */
+body.dark .btn,
+body.dark .archive-btn,
+body.dark .random-btn,
+body.dark .manifesto-button {
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+}
+
+body.dark .btn:hover,
+body.dark .archive-btn:hover,
+body.dark .random-btn:hover,
+body.dark .manifesto-button:hover {
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+}
+
+/* === DARK MODE - FOOTER === */
+body.dark footer {
+    background: #0A0E14;
+    border-top: 1px solid #1A1F2E;
+}
+
+body.dark .footer-column a {
+    color: #8A94A8;
+}
+
+body.dark .footer-column a:hover {
+    color: var(--primary-light);
+}
+
+body.dark .footer-copyright {
+    border-top-color: #1A1F2E;
+    color: #6B7280;
+}
+
+/* === DARK MODE - SCROLLBAR === */
+body.dark ::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark ::-webkit-scrollbar-track {
+    background: #0F141F;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+    background: #2A3040;
+    border-radius: 5px;
+}
+
+body.dark ::-webkit-scrollbar-thumb:hover {
+    background: #3A4050;
+}
+
+        
         
 /* =====================================================
    BLOK 9: RESPONSIVE (MOBİL + TABLET)
