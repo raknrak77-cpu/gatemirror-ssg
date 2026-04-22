@@ -371,25 +371,25 @@
 ===== */
 /* ===================== */
 /* KATMAN 1: OVERLAY-2 (YENİ) - ARKA SPİRALİ (svg1) RENKLENDİRECEK */
-/* =================
+/* ================= */
 .color-overlay-back {
     position: absolute;
     inset: 0;
     z-index: 1;
     background: linear-gradient(135deg,
-        var(--tech-4) 0%,
-        var(--wellness-4) 20%,
-        var(--fe-4) 40%,
-        var(--eco-4) 60%,
-        var(--el-4) 80%,
-        var(--tech-4) 100%);
+    var(--tech-4) 100%,
+    var(--wellness-4) 80%,
+    var(--fe-4) 60%,
+    var(--eco-4) 40%,
+    var(--el-4) 20%,
+    var(--tech-4) 0%);
     background-size: 200% 200%;
     opacity: 0.7;
     animation: gradientShiftBack 5s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
-==== */
+
 
 /* ===================== */
 /* KATMAN 2: ARKA SPİRAL (svg1) - OVERLAY-2 İLE RENKLENECEK */
@@ -403,7 +403,6 @@
     height: 100%;
     top: 0%;
     left: 0%;
-    object-position: center;
     opacity: 1;
     animation: driftRight 30s ease-in-out infinite,
                colorCycleBack 4s ease-in-out infinite;
@@ -417,12 +416,12 @@
     inset: 0;
     z-index: 3;
     background: linear-gradient(135deg,
-        var(--tech-4) 100%,
-        var(--wellness-4) 80%,
-        var(--fe-4) 60%,
-        var(--eco-4) 40%,
-        var(--el-4) 20%,
-        var(--tech-4) 0%);
+    var(--tech-4) 0%,
+    var(--wellness-4) 20%,
+    var(--fe-4) 40%,
+    var(--eco-4) 60%,
+    var(--el-4) 80%,
+    var(--tech-4) 100%);
     background-size: 200% 200%;
     opacity: 0.7;
     animation: gradientShift 5s ease-in-out infinite;
@@ -442,7 +441,6 @@
     height: 100%;
     top: 0%;
     left: 0;
-    object-position: center;
     opacity: 1;
     animation: driftLeft 30s ease-in-out infinite reverse,
                colorCycleFront 3s ease-in-out infinite;
