@@ -376,13 +376,13 @@
 }
 
 .layer-back img {
-    width: 100%;
-    height: 100%;
+    width: 140%;
+    height: 140%;
     top: 0%;
     left: 0%;
     opacity: 0.8;
-    animation: driftRight 40s ease-in-out infinite,
-               colorCycleBack 4s ease-in-out infinite;
+    animation: driftRight 30s ease-in-out infinite,
+               colorCycleBack 3s ease-in-out infinite;
 }
         
 /* ===================== */
@@ -421,7 +421,7 @@
     top: -50%;
     left: 50;
     opacity: 0.8;
-    animation: driftLeft 30s ease-in-out infinite reverse,
+    animation: driftLeft 40s ease-in-out infinite reverse,
                colorCycleBack 4s ease-in-out infinite;
         }
 
@@ -434,15 +434,15 @@
     inset: 0;
     z-index: 4;
     background: linear-gradient(135deg,
-    var(--el-4) 100%,
-    var(--eco-4) 80%,
-    var(--fe-4) 60%,
-    var(--wellness-4) 40%,
-    var(--tech-4) 20%,                           
-    var(--el-4) 0%); 
+    var(--el-2) 0%,
+    var(--eco-2) 20%,
+    var(--fe-2) 40%,
+    var(--wellness-2) 60%,
+    var(--tech-2) 80%,                           
+    var(--el-2) 100%); 
     background-size: 200% 200%;
     opacity: 0.5;
-    animation: gradientShift 3s ease-in-out infinite;
+    animation: gradientShift 4s ease-in-out infinite;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
@@ -450,19 +450,19 @@
 /* DRIFT ANİMASYONLARI */
 /* ===================== */
 @keyframes driftRight {
-    0%   { transform: translateX(50) translateY(0); }
+    0%   { transform: translateX(10) translateY(0); }
     25%  { transform: translateX(250px) translateY(5px); }
     50%  { transform: translateX(550px) translateY(0); }
     75%  { transform: translateX(200px) translateY(-5px); }
-    100% { transform: translateX(50) translateY(0); }
+    100% { transform: translateX(10) translateY(0); }
 }
         
     @keyframes driftLeft {
-    0%   { transform: translateX(100) translateY(0); }
+    0%   { transform: translateX(10) translateY(0); }
     25%  { transform: translateX(250px) translateY(5px); }
     50%  { transform: translateX(550px) translateY(0); }
     75%  { transform: translateX(200px) translateY(-5px); }
-    100% { transform: translateX(50) translateY(0); }
+    100% { transform: translateX(10) translateY(0); }
 }
         
 /* ===================== */
