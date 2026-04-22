@@ -454,10 +454,10 @@
 .hero-wrapper::before {
     content: "";
     position: absolute;
-    top: 20px;
+    top: -10px;
     left: 0;
     right: 0;
-    height: 30px;
+    height: 40px;
     z-index: 5;
     background: linear-gradient(to top, transparent 0%, var(--white) 100%);
     pointer-events: none;
@@ -510,23 +510,18 @@
 @keyframes driftRight {
     0%   { transform: translateX(0px) scale(1) rotate(0deg); }
     25%  { transform: translateX(150px) scale(1.05) rotate(8deg); }
-    50% { transform: translateX(550px) scale(1.10) rotate(12deg); }
-    75% { transform: translateX(150px) scale(1.05) rotate(8deg); }
-    100% { transform: translateX(px) scale(1) rotate(0deg); }
-}
-
-
-
-        
-@keyframes driftLeft {
-    0%   { transform: translateX(0px) scale(1) rotate(0deg); }
-    25%  { transform: translateX(-100px) scale(1.05) rotate(-5deg); }
-    50% { transform: translateX(-550px) scale(1.1) rotate(-8deg); }
-    75% { transform: translateX(-100px) scale(1.05) rotate(-5deg); }
+    50%  { transform: translateX(550px) scale(1.10) rotate(12deg); }
+    75%  { transform: translateX(150px) scale(1.05) rotate(8deg); }
     100% { transform: translateX(0px) scale(1) rotate(0deg); }
 }
 
-
+@keyframes driftLeft {
+    0%   { transform: translateX(0px) scale(1) rotate(0deg); }
+    25%  { transform: translateX(-150px) scale(1.05) rotate(-8deg); }
+    50%  { transform: translateX(-550px) scale(1.10) rotate(-12deg); }
+    75%  { transform: translateX(-150px) scale(1.05) rotate(-8deg); }
+    100% { transform: translateX(0px) scale(1) rotate(0deg); }
+}
 
 
         
