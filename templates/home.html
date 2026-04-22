@@ -565,6 +565,7 @@
         
 /* HERO BUTON (CTA) */
 /* ===================== */
+/* PARALEL KENAR (60° EĞİM) */
 .hero-cta-primary {
     display: inline-block;
     background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
@@ -578,9 +579,11 @@
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    border-radius: 2rem;
+    
+    /* PARALEL KENAR (üst ve alt paralel, yanlar eğik) */
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    margin-top: 0.5rem;
 }
 
 .hero-cta-primary:hover {
@@ -588,6 +591,8 @@
     background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
+
+    
         
     /* =====================================================
        BLOK 5: MANIFESTO BÖLÜMÜ
@@ -889,7 +894,8 @@
     /* =====================================================
        BLOK 7: CATEGORY BOTTOM BAR & FOOTER
     ===================================================== */
-    .category-bottom-bar {
+    
+.category-bottom-bar {
     max-width: 1200px;
     margin: 3rem auto 2rem auto;
     border-radius: 16px;
@@ -903,7 +909,6 @@
 .category-segment {
     flex: 1;
     min-width: 0;
-    transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     cursor: pointer;
     text-decoration: none;
@@ -912,15 +917,15 @@
     align-items: center;
     justify-content: center;
     
-    /* 60 DERECE YAMUK (TRAPEZ) */
-    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    /* 60° PARALEL KENAR */
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
     transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1), clip-path 0.3s ease;
 }
 
 @media (hover: hover) {
     .category-segment:hover { 
         flex: 2.5; 
-        clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+        clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
     }
     .category-label { opacity: 0; }
     .category-segment:hover .category-label { opacity: 1; }
@@ -929,7 +934,7 @@
 @media (hover: none) {
     .category-segment { 
         min-height: 64px; 
-        clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
     }
     .category-label { opacity: 1; }
 }
@@ -969,7 +974,9 @@
 .segment-fe:hover { background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%); }
 .segment-el { background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%); }
 .segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }
-    
+
+
+        
         
     footer {
         background: var(--dark);
@@ -1016,11 +1023,29 @@
    BLOK 8: DARK MODE (TEK BLOK)
    ===================================================== */
 
-/* === ANA DARK MODE === */
-body.dark {
-    background-color: #0F141F;
-    color: #E8EDF5;
-}
+/* === ANA DARK MODE === */   
+
+/* Seçenek 1 - Mevcut /
+body.dark { background-color: #121826; }
+
+/* Seçenek 2 - Biraz açık /
+body.dark { background-color: #161C2A; }
+
+/* Seçenek 3 - Daha açık /
+body.dark { background-color: #1A2035; }
+
+/* Seçenek 4 - İyice açık * 
+body.dark { background-color: #1E2540; }
+
+/* Seçenek 6 - Antrasit lacivert 
+body.dark { background-color: #1A1F2E; } /
+
+        /* Seçenek 5 - Premium lacivert (önerim) */      
+body.dark { background-color: #1C2238; }
+color: #E8EDF5;
+        }
+        
+        
 
 /* === DARK MODE - TOGGLE SWITCH === */
 body.dark .toggle-switch:after {
