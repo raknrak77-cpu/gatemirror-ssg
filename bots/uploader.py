@@ -73,7 +73,7 @@ def upload_svg_patterns():
     print("-" * 40)
     
     svg_files = [
-        ("assets/all-patterns/spiral_out/spiral_circular_basic_10.svg", "assets/svg1.svg"),
+        ("assets/all-patterns/spiral_out/spiral_circular_basic_18.svg", "assets/svg1.svg"),
         ("assets/all-patterns/spiral_out/spiral_circular_medium_09.svg", "assets/svg2.svg"),
         ("assets/all-patterns/breath_wave/breath_wave_basic_02.svgq", "assets/svg3.svg"),  # YENİ
     ]
