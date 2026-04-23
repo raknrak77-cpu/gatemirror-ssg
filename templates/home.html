@@ -1879,18 +1879,19 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
         <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
     </a>
+   <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
+        <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
+   </a>
+   <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
+        <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
+   </a>
     <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
         <span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span>
-    </a>
-    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
-        <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
     </a>
     <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
         <span class="category-label"><span class="category-icon">🔸</span> ECO</span>
     </a>
-    <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
-        <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
-    </a>
+    
 </div>
 
 <!-- ===================== -->
@@ -1924,9 +1925,7 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     </div>
 </footer>
 
-<!-- ===================== -->
-<!-- SCHEMA.ORG -->
-<!-- ===================== -->
+
 <!-- ===================== -->
 <!-- SCHEMA.ORG -->
 <!-- ===================== -->
@@ -1945,107 +1944,103 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 // =====================
 // 1. SIDE MENU (MOBİL)
 // =====================
-function toggleMenu() { 
+(function() {
     const menu = document.getElementById('sideMenu');
-    if (menu) menu.classList.toggle('active');
-}
-
-// Menu butonuna tıkla
-const menuBtn = document.querySelector('.menu-btn');
-if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-
-// Close butonuna tıkla
-const closeBtn = document.querySelector('.close-menu');
-if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-
-// Dışarı tıklayınca kapat
-document.addEventListener('click', function(e) {
-    const menu = document.getElementById('sideMenu');
-    const btn = document.querySelector('.menu-btn');
-    if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !btn?.contains(e.target)) {
-        menu.classList.remove('active');
+    const menuBtn = document.querySelector('.menu-btn');
+    const closeBtn = document.querySelector('.close-menu');
+    
+    function toggleMenu() {
+        if (menu) menu.classList.toggle('active');
     }
-});
+    
+    if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+    if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+    
+    document.addEventListener('click', function(e) {
+        if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !menuBtn?.contains(e.target)) {
+            menu.classList.remove('active');
+        }
+    });
+})();
 
 // =====================
 // 2. DARK MODE
 // =====================
-function setDarkMode(enabled) {
-    if (enabled) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'disabled');
+(function() {
+    function setDarkMode(enabled) {
+        if (enabled) {
+            document.body.classList.add('dark');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('darkMode', 'disabled');
+        }
     }
-}
-
-function initDarkMode() {
-    const savedMode = localStorage.getItem('darkMode');
-    if (savedMode === 'enabled') {
-        document.body.classList.add('dark');
-    } else if (savedMode === 'disabled') {
-        document.body.classList.remove('dark');
-    } else {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    
+    function initDarkMode() {
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'enabled') {
+            document.body.classList.add('dark');
+        } else if (savedMode === 'disabled') {
+            document.body.classList.remove('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.body.classList.add('dark');
         }
     }
-}
-
-const darkModeBtn = document.getElementById('darkModeBtn');
-if (darkModeBtn) {
-    darkModeBtn.addEventListener('click', () => {
-        setDarkMode(!document.body.classList.contains('dark'));
-    });
-}
-
-const toggleSwitch = document.getElementById('darkModeToggle');
-if (toggleSwitch) {
-    toggleSwitch.addEventListener('click', () => {
-        setDarkMode(!document.body.classList.contains('dark'));
-    });
-}
-
-initDarkMode();
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (localStorage.getItem('darkMode') === null) {
-        setDarkMode(e.matches);
+    
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', () => {
+            setDarkMode(!document.body.classList.contains('dark'));
+        });
     }
-});
+    
+    const toggleSwitch = document.getElementById('darkModeToggle');
+    if (toggleSwitch) {
+        toggleSwitch.addEventListener('click', () => {
+            setDarkMode(!document.body.classList.contains('dark'));
+        });
+    }
+    
+    initDarkMode();
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (localStorage.getItem('darkMode') === null) {
+            setDarkMode(e.matches);
+        }
+    });
+})();
 
 // =====================
-// 3. MANIFESTO FONT SIZE
+// 3. MANIFESTO FONT SIZE (DOMContentLoaded ile)
 // =====================
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
     let manifestoFontSize = 16;
     const manifestoMin = 13;
     const manifestoMax = 19;
-
+    
+    const manifesto = document.querySelector('.manifesto');
+    if (!manifesto) return;
+    
     function setManifestoFontSize(size) {
         if (size < manifestoMin) size = manifestoMin;
         if (size > manifestoMax) size = manifestoMax;
         manifestoFontSize = size;
-        
-        const manifesto = document.querySelector('.manifesto');
-        if (manifesto) {
-            manifesto.style.fontSize = size + 'px';
-        }
+        manifesto.style.fontSize = size + 'px';
         localStorage.setItem('manifestoFontSize', size);
     }
-
+    
     const savedSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
     setManifestoFontSize(savedSize);
-
+    
     const decBtn = document.getElementById('manifestoFontDec');
     const incBtn = document.getElementById('manifestoFontInc');
     const resetBtn = document.getElementById('manifestoFontReset');
-
+    
     if (decBtn) decBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize - 1));
     if (incBtn) incBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize + 1));
     if (resetBtn) resetBtn.addEventListener('click', () => setManifestoFontSize(16));
-})();
+});
 
 // =====================
 // 4. SCROLL TO TOP
@@ -2054,27 +2049,10 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     const btn = document.createElement('button');
     btn.innerHTML = '↑';
     btn.id = 'scrollTopBtn';
-    btn.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        cursor: pointer;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    `;
+    btn.style.cssText = 'position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:linear-gradient(135deg,var(--tech-3),var(--tech-4));color:white;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,0.2);';
     document.body.appendChild(btn);
     
-    window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', function() {
         if (window.scrollY > 300) {
             btn.style.opacity = '1';
             btn.style.visibility = 'visible';
@@ -2084,7 +2062,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
         }
     });
     
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 })();
