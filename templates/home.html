@@ -1917,7 +1917,9 @@ body.dark ::-webkit-scrollbar-thumb:hover {
         <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
     </div>
 </footer>
-
+    
+</body>
+</html>
 <!-- ===================== -->
 <!-- SCHEMA.ORG -->
 <!-- ===================== -->
@@ -1996,10 +1998,11 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
+
 // =====================
-// MANIFESTO FONT SIZE CONTROL (13-19px)
+// MANIFESTO FONT SIZE CONTROL (13-19px) - GECİKMELİ BAĞLAMA
 // =====================
-(function() {
+function initManifestoFontControl() {
     let manifestoFontSize = 16;
     const manifestoMin = 13;
     const manifestoMax = 19;
@@ -2031,10 +2034,32 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     const incBtn = document.getElementById('manifestoFontInc');
     const resetBtn = document.getElementById('manifestoFontReset');
 
-    if (decBtn) decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
-    if (incBtn) incBtn.addEventListener('click', () => changeManifestoFontSize(1));
-    if (resetBtn) resetBtn.addEventListener('click', () => resetManifestoFontSize());
-})();
+    if (decBtn) {
+        decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
+        console.log('✅ Manifesto font dec bağlandı');
+    }
+    if (incBtn) {
+        incBtn.addEventListener('click', () => changeManifestoFontSize(1));
+        console.log('✅ Manifesto font inc bağlandı');
+    }
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => resetManifestoFontSize());
+        console.log('✅ Manifesto font reset bağlandı');
+    }
+}
+
+// Manifesto butonları hemen yoksa, gözlemle
+if (document.getElementById('manifestoFontDec')) {
+    initManifestoFontControl();
+} else {
+    const observer = new MutationObserver(function(mutations) {
+        if (document.getElementById('manifestoFontDec')) {
+            initManifestoFontControl();
+            observer.disconnect();
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+}
 
 </script>
 </body>
