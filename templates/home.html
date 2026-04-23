@@ -1933,7 +1933,9 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 </script>
 
 <script>
+// =====================
 // MENU TOGGLE (MOBİL)
+// =====================
 function toggleMenu() { 
     document.getElementById('sideMenu').classList.toggle('active'); 
 }
@@ -1945,7 +1947,10 @@ document.addEventListener('click', function(e) {
         menu.classList.remove('active');
     }
 });
+
+// =====================
 // DARK MODE TOGGLE
+// =====================
 function setDarkMode(enabled) {
     if (enabled) {
         document.body.classList.add('dark');
@@ -1991,6 +1996,45 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
+// =====================
+// MANIFESTO FONT SIZE CONTROL (13-19px)
+// =====================
+(function() {
+    let manifestoFontSize = 16;
+    const manifestoMin = 13;
+    const manifestoMax = 19;
+
+    function setManifestoFontSize(size) {
+        if (size < manifestoMin) size = manifestoMin;
+        if (size > manifestoMax) size = manifestoMax;
+        manifestoFontSize = size;
+        
+        const manifesto = document.querySelector('.manifesto');
+        if (manifesto) {
+            manifesto.style.fontSize = size + 'px';
+        }
+        localStorage.setItem('manifestoFontSize', size);
+    }
+
+    function changeManifestoFontSize(delta) {
+        setManifestoFontSize(manifestoFontSize + delta);
+    }
+
+    function resetManifestoFontSize() {
+        setManifestoFontSize(16);
+    }
+
+    const savedSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
+    setManifestoFontSize(savedSize);
+
+    const decBtn = document.getElementById('manifestoFontDec');
+    const incBtn = document.getElementById('manifestoFontInc');
+    const resetBtn = document.getElementById('manifestoFontReset');
+
+    if (decBtn) decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
+    if (incBtn) incBtn.addEventListener('click', () => changeManifestoFontSize(1));
+    if (resetBtn) resetBtn.addEventListener('click', () => resetManifestoFontSize());
+})();
 
 </script>
 </body>
