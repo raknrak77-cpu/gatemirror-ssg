@@ -333,7 +333,118 @@
     font-size: 12px;
     transition: 0.2s;
         }
-         
+         /* ===================== */
+/* FONT SIZE CONTROL (AA) - SADECE İÇERİK BÜYÜSÜN */
+/* ===================== */
+
+/* Varsayılan */
+body {
+    font-size: 16px;
+}
+
+/* BÜYÜTÜLECEK ALANLAR */
+body.font-small .manifesto-text,
+body.font-small .manifesto-text-small,
+body.font-small .article-card p,
+body.font-small .article-card h3,
+body.font-small .section-title {
+    font-size: 0.85rem;
+}
+
+body.font-medium .manifesto-text,
+body.font-medium .manifesto-text-small,
+body.font-medium .article-card p,
+body.font-medium .article-card h3,
+body.font-medium .section-title {
+    font-size: 1rem;
+}
+
+body.font-large .manifesto-text,
+body.font-large .manifesto-text-small,
+body.font-large .article-card p,
+body.font-large .article-card h3,
+body.font-large .section-title {
+    font-size: 1.15rem;
+}
+
+/* SABİT KALACAK ALANLAR */
+.hero-title,
+.hero-description,
+.hero-cta-primary,
+footer,
+footer a,
+.side-menu,
+.side-menu a,
+.nav-links a,
+.logo,
+.category-label,
+.category-icon {
+    font-size: inherit !important;
+}
+
+/* HEADER FONT KONTROL */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.font-size-control {
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2rem;
+    padding: 0.25rem;
+}
+
+.font-size-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 1.5rem;
+    transition: all 0.2s;
+}
+
+.font-size-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.font-size-btn.active {
+    background: var(--tech-3);
+    color: white;
+}
+
+/* SIDE MENU FONT KONTROL */
+.side-menu .font-size-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.side-menu .font-size-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #aaa;
+}
+
+.side-menu .font-size-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.side-menu .font-size-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.side-menu .font-size-btn.active {
+    background: var(--tech-3);
+}
         
     
 /* =====================================================
