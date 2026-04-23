@@ -445,6 +445,62 @@ footer a,
 .side-menu .font-size-btn.active {
     background: var(--tech-3);
 }
+        /* ===================== */
+/* SCROLL TO TOP BUTTON */
+/* ===================== */
+.scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--tech-3);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-top:hover {
+    background: var(--tech-4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode */
+body.dark .scroll-top {
+    background: var(--tech-4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .scroll-top:hover {
+    background: var(--tech-5);
+}
+
+/* Mobilde küçült */
+@media (max-width: 768px) {
+    .scroll-top {
+        width: 40px;
+        height: 40px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 1rem;
+    }
+}
         
     
 /* =====================================================
@@ -1992,26 +2048,23 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     </div>
 </main>
 
+
 <!-- ===================== -->
 <!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
 <!-- ===================== -->
 <div class="category-bottom-bar">
-    <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
-        <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
+    {% for cat in categories %}
+    <a href="/explore/category-archive/{{ lang }}/{{ cat.slug }}/" class="category-segment segment-{{ cat.slug }}">
+        <span class="category-label"><span class="category-icon">{{ cat.icon }}</span> {{ cat.name }}</span>
     </a>
-    <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
-        <span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span>
-    </a>
-    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
-        <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
-    </a>
-    <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
-        <span class="category-label"><span class="category-icon">🔸</span> ECO</span>
-    </a>
-    <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
-        <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
-    </a>
+    {% endfor %}
 </div>
+<!-- ===================== -->
+<!-- SCROLL TO TOP BUTONU -->
+<!-- ===================== -->
+<button class="scroll-top" id="scrollTopBtn" aria-label="Yukarı Çık">
+    <i class="fas fa-arrow-up"></i>
+</button>
 
 <!-- ===================== -->
 <!-- FOOTER -->
@@ -2140,6 +2193,23 @@ setFontSize(savedFontSize);
 document.querySelectorAll('.font-size-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         setFontSize(btn.dataset.size);
+    });
+});
+    // SCROLL TO TOP BUTTON
+const scrollBtn = document.getElementById('scrollTopBtn');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        scrollBtn.classList.add('show');
+    } else {
+        scrollBtn.classList.remove('show');
+    }
+});
+
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
     });
 });
     
