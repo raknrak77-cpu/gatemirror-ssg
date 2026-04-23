@@ -1845,7 +1845,9 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     <!-- ===================== -->
     <!-- MANIFESTO -->
     <!-- ===================== -->
+    <div id="manifestoContainer">
     {{ manifesto | safe }}
+</div>
 
     <!-- ===================== -->
     <!-- LATEST STORIES -->
@@ -2012,36 +2014,46 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 })();
 
 // =====================
-// 3. MANIFESTO FONT SIZE (DOMContentLoaded ile)
+// MANIFESTO FONT SIZE
 // =====================
-document.addEventListener('DOMContentLoaded', function() {
-    let manifestoFontSize = 16;
-    const manifestoMin = 13;
-    const manifestoMax = 19;
+(function() {
+    let size = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
+    const min = 13, max = 19;
     
-    const manifesto = document.querySelector('.manifesto');
-    if (!manifesto) return;
-    
-    function setManifestoFontSize(size) {
-        if (size < manifestoMin) size = manifestoMin;
-        if (size > manifestoMax) size = manifestoMax;
-        manifestoFontSize = size;
-        manifesto.style.fontSize = size + 'px';
-        localStorage.setItem('manifestoFontSize', size);
+    function setSize(s) {
+        if (s < min) s = min;
+        if (s > max) s = max;
+        size = s;
+        const container = document.getElementById('manifestoContainer');
+        if (container) container.style.fontSize = s + 'px';
+        localStorage.setItem('manifestoFontSize', s);
     }
     
-    const savedSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
-    setManifestoFontSize(savedSize);
+    setSize(size);
     
-    const decBtn = document.getElementById('manifestoFontDec');
-    const incBtn = document.getElementById('manifestoFontInc');
-    const resetBtn = document.getElementById('manifestoFontReset');
+    // Butonları bekle (manifesto içinde oldukları için)
+    function bindButtons() {
+        const dec = document.getElementById('manifestoFontDec');
+        const inc = document.getElementById('manifestoFontInc');
+        const reset = document.getElementById('manifestoFontReset');
+        
+        if (dec && inc && reset) {
+            dec.onclick = () => setSize(size - 1);
+            inc.onclick = () => setSize(size + 1);
+            reset.onclick = () => setSize(16);
+            return true;
+        }
+        return false;
+    }
     
-    if (decBtn) decBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize - 1));
-    if (incBtn) incBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize + 1));
-    if (resetBtn) resetBtn.addEventListener('click', () => setManifestoFontSize(16));
-});
-
+    if (!bindButtons()) {
+        const observer = new MutationObserver(() => {
+            if (bindButtons()) observer.disconnect();
+        });
+        observer.observe(document.getElementById('manifestoContainer') || document.body, { childList: true, subtree: true });
+    }
+})();
+    
 // =====================
 // 4. SCROLL TO TOP
 // =====================
