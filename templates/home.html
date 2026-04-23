@@ -1155,16 +1155,22 @@
 /* KATEGORİ SEGMENT RENKLERİ */
 .segment-tech { background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%); }
 .segment-tech:hover { background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-5) 100%); }
-.segment-wellness { background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%); }
-.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%); }
-.segment-eco { background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%); }
-.segment-eco:hover { background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%); }
 .segment-fe { background: linear-gradient(135deg, var(--fe-2) 0%, var(--fe-4) 100%); }
 .segment-fe:hover { background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%); }
 .segment-el { background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%); }
-.segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }
+.segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }.segment-wellness { background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%); }
+.segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%); }
+.segment-eco { background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%); }
+.segment-eco:hover { background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%); }
 
 
+footer {
+    position: relative;
+    z-index: 10;
+    clear: both;
+}
+
+        
    footer {
     background: #1C2238;  /* Premium lacivert (eski: var(--dark) = #0a0a0a) */
     color: white;
@@ -1921,6 +1927,9 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 <!-- ===================== -->
 <!-- SCHEMA.ORG -->
 <!-- ===================== -->
+<!-- ===================== -->
+<!-- SCHEMA.ORG -->
+<!-- ===================== -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -1933,19 +1942,34 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 </script>
 
 <script>
-// MENU TOGGLE (MOBİL)
+// =====================
+// 1. SIDE MENU (MOBİL)
+// =====================
 function toggleMenu() { 
-    document.getElementById('sideMenu').classList.toggle('active'); 
+    const menu = document.getElementById('sideMenu');
+    if (menu) menu.classList.toggle('active');
 }
 
+// Menu butonuna tıkla
+const menuBtn = document.querySelector('.menu-btn');
+if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+
+// Close butonuna tıkla
+const closeBtn = document.querySelector('.close-menu');
+if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+
+// Dışarı tıklayınca kapat
 document.addEventListener('click', function(e) {
     const menu = document.getElementById('sideMenu');
     const btn = document.querySelector('.menu-btn');
-    if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !btn?.contains(e.target)) {
         menu.classList.remove('active');
     }
 });
-// DARK MODE TOGGLE
+
+// =====================
+// 2. DARK MODE
+// =====================
 function setDarkMode(enabled) {
     if (enabled) {
         document.body.classList.add('dark');
@@ -1976,9 +2000,9 @@ if (darkModeBtn) {
     });
 }
 
-const toggle = document.getElementById('darkModeToggle');
-if (toggle) {
-    toggle.addEventListener('click', () => {
+const toggleSwitch = document.getElementById('darkModeToggle');
+if (toggleSwitch) {
+    toggleSwitch.addEventListener('click', () => {
         setDarkMode(!document.body.classList.contains('dark'));
     });
 }
@@ -1991,7 +2015,80 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
+// =====================
+// 3. MANIFESTO FONT SIZE
+// =====================
+(function() {
+    let manifestoFontSize = 16;
+    const manifestoMin = 13;
+    const manifestoMax = 19;
 
+    function setManifestoFontSize(size) {
+        if (size < manifestoMin) size = manifestoMin;
+        if (size > manifestoMax) size = manifestoMax;
+        manifestoFontSize = size;
+        
+        const manifesto = document.querySelector('.manifesto');
+        if (manifesto) {
+            manifesto.style.fontSize = size + 'px';
+        }
+        localStorage.setItem('manifestoFontSize', size);
+    }
+
+    const savedSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
+    setManifestoFontSize(savedSize);
+
+    const decBtn = document.getElementById('manifestoFontDec');
+    const incBtn = document.getElementById('manifestoFontInc');
+    const resetBtn = document.getElementById('manifestoFontReset');
+
+    if (decBtn) decBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize - 1));
+    if (incBtn) incBtn.addEventListener('click', () => setManifestoFontSize(manifestoFontSize + 1));
+    if (resetBtn) resetBtn.addEventListener('click', () => setManifestoFontSize(16));
+})();
+
+// =====================
+// 4. SCROLL TO TOP
+// =====================
+(function() {
+    const btn = document.createElement('button');
+    btn.innerHTML = '↑';
+    btn.id = 'scrollTopBtn';
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(btn);
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            btn.style.opacity = '1';
+            btn.style.visibility = 'visible';
+        } else {
+            btn.style.opacity = '0';
+            btn.style.visibility = 'hidden';
+        }
+    });
+    
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
 </script>
+
 </body>
 </html>
