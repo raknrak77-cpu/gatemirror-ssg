@@ -1061,76 +1061,9 @@
         
     /* =====================================================
        BLOK 7: CATEGORY BOTTOM BAR & FOOTER
-    ===================================================== 
-    
-.category-bottom-bar {
-    max-width: 1200px;
-    margin: 3rem auto 2rem auto;
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    border: 1px solid rgba(0,0,0,0.08);
-}
+    ===================================================== */
 
-.category-segment {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-    cursor: pointer;
-    text-decoration: none;
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* 60° PARALEL KENAR *
-    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
-    transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1), clip-path 0.3s ease;
-}
 
-@media (hover: hover) {
-    .category-segment:hover { 
-        flex: 2.5; 
-        clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    }
-    .category-label { opacity: 0; }
-    .category-segment:hover .category-label { opacity: 1; }
-}
-
-@media (hover: none) {
-    .category-segment { 
-        min-height: 64px; 
-        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
-    }
-    .category-label { opacity: 1; }
-}
-
-.category-label {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    transition: opacity 0.3s;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    gap: 5px;
-    padding: 0 4px;
-    text-align: center;
-    line-height: 1.2;
-    flex-direction: column;
-}
-
-.category-icon {
-    font-size: 16px;
-}
-*/
 
 .category-bottom-bar {
     max-width: 1200px;
@@ -1284,7 +1217,7 @@ body.dark { background-color: #1E2540; }
 /* Seçenek 6 - Antrasit lacivert 
 body.dark { background-color: #1A1F2E; } /
 
-
+        
 /* === ANA ARKA PLAN === */
 body.dark {
     background-color: #1C2238;  /* Premium lacivert */
@@ -1339,10 +1272,11 @@ body.dark .dark-mode-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* === SIDE MENU === */
+/* === SIDE MENU (PREMIUM LACİVERT) === */
 body.dark .side-menu {
-    background: rgba(18, 24, 34, 0.98);
+    background: #1C2238;  /* Sabit premium lacivert */
     backdrop-filter: blur(12px);
+    border-right: 1px solid #2A3040;
 }
 
 /* ===================================================== */
@@ -1361,7 +1295,7 @@ body.dark .hero-wrapper::after {
 /* 2. OVERLAY'LER - YAZILAR OKUNSUN, SVG'LER PARLASIN */
 body.dark .color-overlay-backsvg2,
 body.dark .color-overlay-frontsvg1 {
-    mix-blend-mode: overlay !important;  /* screen çok parlaktı, overlay yeterli */
+    mix-blend-mode: overlay !important;
     opacity: 0.4 !important;
 }
 
@@ -1497,10 +1431,10 @@ body.dark .manifesto-button:hover {
     background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
 }
 
-/* FOOTER */
+/* FOOTER (PREMIUM LACİVERT) */
 body.dark footer {
-    background: #0A0E14;
-    border-top: 1px solid #1A1F2E;
+    background: #1C2238;  /* Premium lacivert */
+    border-top: 1px solid #2A3040;
 }
 
 body.dark .footer-column a {
@@ -1512,7 +1446,7 @@ body.dark .footer-column a:hover {
 }
 
 body.dark .footer-copyright {
-    border-top-color: #1A1F2E;
+    border-top-color: #2A3040;
     color: #6B7280;
 }
 
@@ -1534,8 +1468,10 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     background: #3A4050;
     }
 
-        
-        
+
+
+
+
         
 /* =====================================================
    BLOK 9: RESPONSIVE (MOBİL + TABLET)
