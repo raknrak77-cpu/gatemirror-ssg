@@ -108,7 +108,7 @@
                 Don't just read the future. Reflect it.
             </p>
             <div class="manifesto-cta">
-                <a href="/explore/all-articles/{{ lang }}.html" class="manifesto-button">
+                <a href="/explore/all-articles/en.html" class="manifesto-button">
                     GET A MIRROR <span>→</span>
                 </a>
             </div>
@@ -167,7 +167,7 @@ body.dark #manifestoFontReset {
 }
 
 /* ===================== */
-/* MANIFESTO - KARTLAR ÇERÇEVELİ */
+/* MANIFESTO - KARTLAR (TÜMÜ ÇERÇEVELİ) */
 /* ===================== */
 .manifesto-card {
     background: rgba(0, 0, 0, 0.02);
@@ -194,17 +194,21 @@ body.dark .manifesto-card:hover {
 }
 
 /* ===================== */
-/* MANIFESTO - İKONLAR */
+/* MANIFESTO - İKON (PREMIUM LACİVERT) */
 /* ===================== */
 .manifesto-icon {
     font-size: 1.8rem;
     margin-bottom: 0.75rem;
     display: inline-block;
-    color: var(--tech-3);
+    color: #1C2238;
+}
+
+body.dark .manifesto-icon {
+    color: var(--tech-4);
 }
 
 /* ===================== */
-/* MANIFESTO - BAŞLIK VE SLOGANLAR (PREMIUM LACİVERT) */
+/* MANIFESTO - BAŞLIK VE VURGULAR (PREMIUM LACİVERT) */
 /* ===================== */
 .manifesto-title {
     font-size: 2.5rem;
@@ -239,6 +243,14 @@ body.dark .manifesto-category {
     color: var(--tech-4);
 }
 
+.manifesto-quote strong {
+    color: #1C2238;
+}
+
+body.dark .manifesto-quote strong {
+    color: var(--tech-4);
+}
+
 .manifesto-quote-large {
     font-size: 1.8rem;
     font-weight: 700;
@@ -247,11 +259,11 @@ body.dark .manifesto-category {
 }
 
 body.dark .manifesto-quote-large {
-    color: var(--primary-light);
+    color: var(--tech-4);
 }
 
 /* ===================== */
-/* MANIFESTO BUTON (PARALEL KENAR - HOME.DEKİ GİBİ) */
+/* MANIFESTO BUTON (PARALEL KENAR) */
 /* ===================== */
 .manifesto-button {
     display: inline-block;
@@ -297,7 +309,7 @@ body.dark .manifesto-button:hover {
 }
 
 /* ===================== */
-/* DİĞER MANIFESTO STILLERİ (MEVCUT) */
+/* DİĞER MANIFESTO STILLERİ */
 /* ===================== */
 .manifesto {
     max-width: 1200px;
@@ -403,15 +415,20 @@ body.dark .manifesto-button:hover {
     margin-bottom: 1rem;
 }
 
+/* ===================== */
+/* RESPONSIVE */
+/* ===================== */
 @media (max-width: 768px) {
     .manifesto {
         padding: 0 1rem;
     }
     .manifesto-two-col {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
     .manifesto-three-col {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
     .manifesto-title {
         font-size: 1.8rem;
@@ -422,54 +439,51 @@ body.dark .manifesto-button:hover {
     .manifesto-hero-image img {
         max-height: 250px;
     }
-}
-
-/* MANIFESTO ICON BOYUT */
-.manifesto-icon {
-    font-size: 1.8rem;
-    margin-bottom: 0.75rem;
-    display: inline-block;
+    .manifesto-image-full img {
+        max-height: 200px;
+    }
+    .manifesto-font-control {
+        margin-bottom: 1rem;
+    }
 }
 </style>
 
 <script>
 // MANIFESTO FONT SIZE CONTROL (13-19)
-let manifestoFontSize = 16;
-const manifestoMin = 13;
-const manifestoMax = 19;
+document.addEventListener('DOMContentLoaded', function() {
+    let manifestoFontSize = 16;
+    const manifestoMin = 13;
+    const manifestoMax = 19;
 
-function setManifestoFontSize(size) {
-    if (size < manifestoMin) size = manifestoMin;
-    if (size > manifestoMax) size = manifestoMax;
-    manifestoFontSize = size;
-    
-    const manifesto = document.querySelector('.manifesto');
-    if (manifesto) {
-        manifesto.style.fontSize = size + 'px';
+    function setManifestoFontSize(size) {
+        if (size < manifestoMin) size = manifestoMin;
+        if (size > manifestoMax) size = manifestoMax;
+        manifestoFontSize = size;
+        
+        const manifesto = document.querySelector('.manifesto');
+        if (manifesto) {
+            manifesto.style.fontSize = size + 'px';
+        }
+        localStorage.setItem('manifestoFontSize', size);
     }
-    localStorage.setItem('manifestoFontSize', size);
-    
-    // Reset butonunun görünümünü güncelle (opsiyonel)
+
+    function changeManifestoFontSize(delta) {
+        setManifestoFontSize(manifestoFontSize + delta);
+    }
+
+    function resetManifestoFontSize() {
+        setManifestoFontSize(16);
+    }
+
+    const savedSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
+    setManifestoFontSize(savedSize);
+
+    const decBtn = document.getElementById('manifestoFontDec');
+    const incBtn = document.getElementById('manifestoFontInc');
     const resetBtn = document.getElementById('manifestoFontReset');
-    if (resetBtn && size === 16) {
-        // İsteğe bağlı
-    }
-}
 
-function changeManifestoFontSize(delta) {
-    setManifestoFontSize(manifestoFontSize + delta);
-}
-
-function resetManifestoFontSize() {
-    setManifestoFontSize(16);
-}
-
-// Sayfa yüklenince
-const savedManifestoSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
-setManifestoFontSize(savedManifestoSize);
-
-// Buton eventleri
-document.getElementById('manifestoFontDec')?.addEventListener('click', () => changeManifestoFontSize(-1));
-document.getElementById('manifestoFontInc')?.addEventListener('click', () => changeManifestoFontSize(1));
-document.getElementById('manifestoFontReset')?.addEventListener('click', () => resetManifestoFontSize());
+    if (decBtn) decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
+    if (incBtn) incBtn.addEventListener('click', () => changeManifestoFontSize(1));
+    if (resetBtn) resetBtn.addEventListener('click', () => resetManifestoFontSize());
+});
 </script>
