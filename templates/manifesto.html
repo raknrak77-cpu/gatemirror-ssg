@@ -4,6 +4,13 @@
 
 <div class="manifesto">
     
+    <!-- FONT SIZE CONTROL -->
+    <div class="manifesto-font-control">
+        <button class="manifesto-font-btn" id="manifestoFontDec">−</button>
+        <button class="manifesto-font-btn" id="manifestoFontReset">A</button>
+        <button class="manifesto-font-btn" id="manifestoFontInc">+</button>
+    </div>
+    
     <!-- BÖLÜM 1: HERO -->
     <div class="manifesto-hero">
         <div class="manifesto-hero-image">
@@ -29,8 +36,8 @@
     <!-- BÖLÜM 2: TECH & AI + FUTURE ECONOMY (2 KOLON + GÖRSEL) -->
     <div class="manifesto-section">
         <div class="manifesto-two-col">
-            <div class="manifesto-col">
-                <div class="manifesto-icon">🔸</div>
+            <div class="manifesto-card">
+                <div class="manifesto-icon">◆</div>
                 <h4 class="manifesto-category">Tech & AI</h4>
                 <p class="manifesto-text">
                     Artificial intelligence is no longer a feature. It is the new operating system 
@@ -38,8 +45,8 @@
                     world — before the headlines catch up.
                 </p>
             </div>
-            <div class="manifesto-col">
-                <div class="manifesto-icon">🔸</div>
+            <div class="manifesto-card">
+                <div class="manifesto-icon">◆</div>
                 <h4 class="manifesto-category">Future Economy</h4>
                 <p class="manifesto-text">
                     Wealth is migrating. From physical vaults to decentralized networks, from 
@@ -56,7 +63,7 @@
     <!-- BÖLÜM 3: 3 KART (WELLNESS, ECO, E-LEARNING) -->
     <div class="manifesto-three-col">
         <div class="manifesto-card">
-            <div class="manifesto-card-icon">🔸</div>
+            <div class="manifesto-icon">◆</div>
             <h4 class="manifesto-category">Wellness</h4>
             <p class="manifesto-text-small">
                 Performance, longevity, and mental clarity are no longer soft topics. 
@@ -65,7 +72,7 @@
             </p>
         </div>
         <div class="manifesto-card">
-            <div class="manifesto-card-icon">🔸</div>
+            <div class="manifesto-icon">◆</div>
             <h4 class="manifesto-category">Eco & Sustainable</h4>
             <p class="manifesto-text-small">
                 Sustainability is the defining business strategy of our generation. We analyze 
@@ -74,7 +81,7 @@
             </p>
         </div>
         <div class="manifesto-card">
-            <div class="manifesto-card-icon">🔸</div>
+            <div class="manifesto-icon">◆</div>
             <h4 class="manifesto-category">E-Learning</h4>
             <p class="manifesto-text-small">
                 In a world of constant disruption, the compounding power of the right knowledge 
@@ -102,10 +109,367 @@
             </p>
             <div class="manifesto-cta">
                 <a href="/explore/all-articles/{{ lang }}.html" class="manifesto-button">
-                    Get A Mirror <span>→</span>
+                    GET A MIRROR <span>→</span>
                 </a>
             </div>
         </div>
     </div>
 
 </div>
+
+<style>
+/* ===================== */
+/* MANIFESTO - FONT SIZE CONTROL */
+/* ===================== */
+.manifesto-font-control {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.manifesto-font-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: monospace;
+}
+
+.manifesto-font-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#manifestoFontReset {
+    background: var(--tech-3);
+    color: white;
+    width: auto;
+    border-radius: 2rem;
+    padding: 0 1rem;
+}
+
+#manifestoFontReset:hover {
+    background: var(--tech-4);
+}
+
+body.dark .manifesto-font-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.dark #manifestoFontReset {
+    background: var(--tech-3);
+}
+
+/* ===================== */
+/* MANIFESTO - KARTLAR ÇERÇEVELİ */
+/* ===================== */
+.manifesto-card {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: var(--transition);
+}
+
+.manifesto-card:hover {
+    transform: translateY(-5px);
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.dark .manifesto-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dark .manifesto-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===================== */
+/* MANIFESTO - İKONLAR */
+/* ===================== */
+.manifesto-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    color: var(--tech-3);
+}
+
+/* ===================== */
+/* MANIFESTO - BAŞLIK VE SLOGANLAR (PREMIUM LACİVERT) */
+/* ===================== */
+.manifesto-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--tech-2), var(--tech-4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.manifesto-subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #1C2238;
+    margin-bottom: 1.5rem;
+}
+
+body.dark .manifesto-subtitle {
+    color: #8A94A8;
+}
+
+.manifesto-category {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1C2238;
+    margin-bottom: 0.75rem;
+}
+
+body.dark .manifesto-category {
+    color: var(--tech-4);
+}
+
+.manifesto-quote-large {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1C2238;
+    margin: 1.5rem 0;
+}
+
+body.dark .manifesto-quote-large {
+    color: var(--primary-light);
+}
+
+/* ===================== */
+/* MANIFESTO BUTON (PARALEL KENAR - HOME.DEKİ GİBİ) */
+/* ===================== */
+.manifesto-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+    color: white;
+    padding: 0.9rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    
+    /* PARALEL KENAR (60° EĞİM) */
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.manifesto-button:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.manifesto-button span {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.manifesto-button:hover span {
+    transform: translateX(5px);
+}
+
+body.dark .manifesto-button {
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+}
+
+body.dark .manifesto-button:hover {
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+}
+
+/* ===================== */
+/* DİĞER MANIFESTO STILLERİ (MEVCUT) */
+/* ===================== */
+.manifesto {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+
+.manifesto-hero {
+    margin-bottom: 4rem;
+}
+
+.manifesto-hero-image {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.manifesto-hero-image img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 1.5rem;
+    object-fit: cover;
+}
+
+.manifesto-hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.manifesto-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.manifesto-image-full {
+    text-align: center;
+    margin: 2rem 0 3rem;
+}
+
+.manifesto-image-full img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.manifesto-three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.manifesto-closing {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+}
+
+.manifesto-closing-image {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.manifesto-closing-image img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.manifesto-closing-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.manifesto-quote {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.manifesto-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+.manifesto-text-small {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-light);
+}
+
+.manifesto-text-center {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .manifesto {
+        padding: 0 1rem;
+    }
+    .manifesto-two-col {
+        grid-template-columns: 1fr;
+    }
+    .manifesto-three-col {
+        grid-template-columns: 1fr;
+    }
+    .manifesto-title {
+        font-size: 1.8rem;
+    }
+    .manifesto-quote-large {
+        font-size: 1.3rem;
+    }
+    .manifesto-hero-image img {
+        max-height: 250px;
+    }
+}
+
+/* MANIFESTO ICON BOYUT */
+.manifesto-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+}
+</style>
+
+<script>
+// MANIFESTO FONT SIZE CONTROL (13-19)
+let manifestoFontSize = 16;
+const manifestoMin = 13;
+const manifestoMax = 19;
+
+function setManifestoFontSize(size) {
+    if (size < manifestoMin) size = manifestoMin;
+    if (size > manifestoMax) size = manifestoMax;
+    manifestoFontSize = size;
+    
+    const manifesto = document.querySelector('.manifesto');
+    if (manifesto) {
+        manifesto.style.fontSize = size + 'px';
+    }
+    localStorage.setItem('manifestoFontSize', size);
+    
+    // Reset butonunun görünümünü güncelle (opsiyonel)
+    const resetBtn = document.getElementById('manifestoFontReset');
+    if (resetBtn && size === 16) {
+        // İsteğe bağlı
+    }
+}
+
+function changeManifestoFontSize(delta) {
+    setManifestoFontSize(manifestoFontSize + delta);
+}
+
+function resetManifestoFontSize() {
+    setManifestoFontSize(16);
+}
+
+// Sayfa yüklenince
+const savedManifestoSize = parseInt(localStorage.getItem('manifestoFontSize')) || 16;
+setManifestoFontSize(savedManifestoSize);
+
+// Buton eventleri
+document.getElementById('manifestoFontDec')?.addEventListener('click', () => changeManifestoFontSize(-1));
+document.getElementById('manifestoFontInc')?.addEventListener('click', () => changeManifestoFontSize(1));
+document.getElementById('manifestoFontReset')?.addEventListener('click', () => resetManifestoFontSize());
+</script>
