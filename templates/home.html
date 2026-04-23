@@ -1261,8 +1261,10 @@
     }
 
 
+
+
 /* =====================================================
-   BLOK 8: DARK MODE (TEK BLOK)
+   BLOK 8: DARK MODE (PREMIUM LACİVERT - TOPARLANMIŞ)
    ===================================================== */
 
 /* === ANA DARK MODE === */   
@@ -1282,20 +1284,20 @@ body.dark { background-color: #1E2540; }
 /* Seçenek 6 - Antrasit lacivert 
 body.dark { background-color: #1A1F2E; } /
 
-        /* Seçenek 5 - Premium lacivert (önerim) */      
-body.dark { background-color: #1C2238; }
-color: #E8EDF5;
-        }
-        
-        
 
-/* === DARK MODE - TOGGLE SWITCH === */
+/* === ANA ARKA PLAN === */
+body.dark {
+    background-color: #1C2238;  /* Premium lacivert */
+    color: #E8EDF5;
+}
+
+/* === TOGGLE SWITCH === */
 body.dark .toggle-switch:after {
     content: "☀️";
     left: 26px;
 }
 
-/* === DARK MODE - HEADER & NAV === */
+/* === HEADER & NAVIGATION === */
 body.dark nav {
     background: linear-gradient(to bottom, rgba(18, 24, 34, 0.98) 0%, rgba(18, 24, 34, 0.7) 40%, rgba(18, 24, 34, 0.2) 100%);
     border-bottom: 1px solid #2A3040;
@@ -1307,7 +1309,7 @@ body.dark .nav-links a {
     color: #F0F6FC;
 }
 
-/* === DARK MODE - BUTTON (LIGHT MOD'DA DA GÖRÜNSÜN) === */
+/* === DARK MODE BUTONU (LIGHT MOD'DA DA GÖRÜNÜR) === */
 .dark-mode-btn {
     background: rgba(0, 0, 0, 0.05);
     border: none;
@@ -1337,48 +1339,69 @@ body.dark .dark-mode-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* === DARK MODE - SIDE MENU === */
+/* === SIDE MENU === */
 body.dark .side-menu {
     background: rgba(18, 24, 34, 0.98);
     backdrop-filter: blur(12px);
 }
 
-/* === DARK MODE - HERO (KRİTİK: IŞILTILI) === */
+/* ===================================================== */
+/* DARK MODE - HERO BÖLÜMÜ (CERRAHİ AYAR) */
+/* ===================================================== */
+
+/* 1. GRADIENT GEÇİŞLER (ÜST/ALT) - ARKA PLAN UYUMLU */
 body.dark .hero-wrapper::before {
-    background: linear-gradient(to top, transparent 0%, #0F141F 100%);
+    background: linear-gradient(to top, transparent 0%, #1C2238 100%);
 }
 
 body.dark .hero-wrapper::after {
-    background: linear-gradient(to bottom, transparent 0%, #0F141F 100%);
+    background: linear-gradient(to bottom, transparent 0%, #1C2238 100%);
 }
 
-/* Overlay'ler - dark modda screen ile parlat */
+/* 2. OVERLAY'LER - YAZILAR OKUNSUN, SVG'LER PARLASIN */
 body.dark .color-overlay-backsvg2,
 body.dark .color-overlay-frontsvg1 {
-    mix-blend-mode: screen !important;
-    opacity: 0.7 !important;
+    mix-blend-mode: overlay !important;  /* screen çok parlaktı, overlay yeterli */
+    opacity: 0.4 !important;
 }
 
-/* SVG'ler - dark modda daha parlak */
+/* 3. SVG'LER - HAFİF PARLAKLIK, FAZLA DEĞİL */
 body.dark .layer-back img,
 body.dark .layer-front img {
-    opacity: 0.9 !important;
-    filter: brightness(1.2) contrast(1.1) saturate(1.5);
+    opacity: 0.8 !important;
+    filter: brightness(1.1) contrast(1.05) saturate(1.2);
 }
 
-/* Hero yazıları - dark modda */
+/* 4. HERO YAZILARI - OKUNAKBİLİR, PARLAK DEĞİL */
 body.dark .hero-title {
     background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 body.dark .hero-description {
-    color: var(--tech-4);
+    color: #C9D1D9 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* === DARK MODE - MANIFESTO === */
+/* 5. BUTON - DARK MODDA DA BELİRGİN */
+body.dark .hero-cta-primary {
+    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .hero-cta-primary:hover {
+    background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+}
+
+/* ===================================================== */
+/* DARK MODE - DİĞER BÖLÜMLER (MANIFESTO, KARTLAR, FOOTER) */
+/* ===================================================== */
+
+/* MANIFESTO */
 body.dark .manifesto-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1422,7 +1445,7 @@ body.dark .manifesto-quote-large {
     color: var(--primary-light);
 }
 
-/* === DARK MODE - ARTICLE CARDS === */
+/* ARTICLE CARDS */
 body.dark .article-card {
     background: #1A1F2E;
     border: 1px solid #2A3040;
@@ -1443,13 +1466,13 @@ body.dark .article-card:hover {
     border-color: #3A4050;
 }
 
-/* === DARK MODE - FEATURED CARD === */
+/* FEATURED CARD */
 body.dark .featured-card {
     background: #1A1F2E;
     border: 1px solid #2A3040;
 }
 
-/* === DARK MODE - CATEGORY BAR === */
+/* CATEGORY BAR */
 body.dark .category-bottom-bar {
     border-color: #2A3040;
     background: rgba(26, 31, 46, 0.5);
@@ -1459,7 +1482,7 @@ body.dark .category-label {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* === DARK MODE - BUTTONS === */
+/* BUTTONS (GENEL) */
 body.dark .btn,
 body.dark .archive-btn,
 body.dark .random-btn,
@@ -1474,7 +1497,7 @@ body.dark .manifesto-button:hover {
     background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
 }
 
-/* === DARK MODE - FOOTER === */
+/* FOOTER */
 body.dark footer {
     background: #0A0E14;
     border-top: 1px solid #1A1F2E;
@@ -1493,13 +1516,13 @@ body.dark .footer-copyright {
     color: #6B7280;
 }
 
-/* === DARK MODE - SCROLLBAR === */
+/* SCROLLBAR */
 body.dark ::-webkit-scrollbar {
     width: 10px;
 }
 
 body.dark ::-webkit-scrollbar-track {
-    background: #0F141F;
+    background: #1C2238;
 }
 
 body.dark ::-webkit-scrollbar-thumb {
@@ -1509,8 +1532,9 @@ body.dark ::-webkit-scrollbar-thumb {
 
 body.dark ::-webkit-scrollbar-thumb:hover {
     background: #3A4050;
-}
+    }
 
+        
         
         
 /* =====================================================
