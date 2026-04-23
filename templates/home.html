@@ -14,7 +14,7 @@
     <meta property="og:site_name" content="Gatemirror">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Gatemirror | Global Insights & Analysis">
-    <meta name="twitter:description" content="Deep insights on tech, wellness, future economy, and sustainable living.">
+    <meta name="twitter:description" content="Global insights on TECH & AI,FUTURE ECONOMY, E-LEARNING, WELLNESS, ECO & SUSTAINABL living. Gatemirror delivers deep analysis in 4 languages.">
     <meta name="twitter:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
     {% for alt in alternate_langs %}
     <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.url }}">
@@ -22,13 +22,16 @@
     <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
+
     {% set categories = [
-        {"slug": "tech", "name": "TECH & AI", "icon": "ðŸ”¸"},
-        {"slug": "future-economy", "name": "FUTURE ECONOMY", "icon": "ðŸ”¸"},
-        {"slug": "elearning", "name": "E-LEARNING", "icon": "ðŸ”¸"},
-        {"slug": "wellness", "name": "WELLNESS", "icon": "ðŸ”¸"},
-        {"slug": "eco", "name": "ECO & SUSTAINABLE", "icon": "ðŸ”¸"}
-    ] %}
+    {"slug": "tech", "name": "TECH & AI", "icon": "🔸"},
+    {"slug": "future-economy", "name": "FUTURE ECONOMY", "icon": "🔸"},
+    {"slug": "elearning", "name": "E-LEARNING", "icon": "🔸"},
+    {"slug": "wellness", "name": "WELLNESS", "icon": "🔸"},
+    {"slug": "eco", "name": "ECO & SUSTAINABLE", "icon": "🔸"}
+] %}
+
+    
     
     <style>
     /* =====================================================
