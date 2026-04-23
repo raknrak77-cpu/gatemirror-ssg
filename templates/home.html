@@ -1742,10 +1742,24 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 <!-- ===================== -->
 <div class="side-menu" id="sideMenu">
     <div class="close-menu" onclick="toggleMenu()">&times;</div>
+    
+    <!-- DARK MODE TOGGLE -->
     <div class="dark-mode-toggle">
         <span>🌓 Dark Mode</span>
         <div class="toggle-switch" id="darkModeToggle"></div>
     </div>
+    
+    <!-- FONT SIZE CONTROL (AA) -->
+    <div class="font-size-control">
+        <span class="font-size-label">🔤 Text Size</span>
+        <div class="font-size-buttons">
+            <button class="font-size-btn" data-size="small">A-</button>
+            <button class="font-size-btn active" data-size="medium">A</button>
+            <button class="font-size-btn" data-size="large">A+</button>
+        </div>
+    </div>
+    
+    <!-- LANGUAGE SECTION -->
     <div class="lang-section">
         <div class="lang-title">READ IN</div>
         <div class="flags">
@@ -1755,12 +1769,16 @@ body.dark ::-webkit-scrollbar-thumb:hover {
             <a href="/fr/" class="flag-link">🇫🇷 FR</a>
         </div>
     </div>
+    
+    <!-- NAVIGATION LINKS -->
     <div class="nav-links">
-    <a href="/{{ lang }}/">HOME</a>
-    {% for cat in categories %}
-    <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
-    {% endfor %}
-</div>
+        <a href="/{{ lang }}/">HOME</a>
+        {% for cat in categories %}
+        <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
+        {% endfor %}
+    </div>
+    
+    <!-- FOOTER LINKS -->
     <div class="footer-links">
         <a href="/about-us.html">About Gatemirror</a>
         <a href="/privacy-policy.html">Privacy Policy</a>
@@ -1772,23 +1790,37 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 <!-- ===================== -->
 <!-- HEADER & NAVIGATION -->
 <!-- ===================== -->
+
+    
 <nav>
     <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
+    
     <a href="/" class="logo">GATE<span>MIRROR</span></a>
+    
     <div class="nav-links">
-    <a href="/{{ lang }}/">HOME</a>
-    {% for cat in categories %}
-    <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
-    {% endfor %}
-</div>
-    <button class="dark-mode-btn" id="darkModeBtn" aria-label="Dark Mode">
-        <i class="fas fa-moon"></i>
-    </button>
+        <a href="/{{ lang }}/">HOME</a>
+        {% for cat in categories %}
+        <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
+        {% endfor %}
+    </div>
+    
+    <div class="header-right">
+        <div class="font-size-control">
+            <button class="font-size-btn" data-size="small">A-</button>
+            <button class="font-size-btn active" data-size="medium">A</button>
+            <button class="font-size-btn" data-size="large">A+</button>
+        </div>
+        <button class="dark-mode-btn" id="darkModeBtn" aria-label="Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
 </nav>
 
 <main>
+
+    
  <!-- ====   ================ -->
 <!-- HERO BÖLÜMÜ (5 KATMANLI - IMG) -->
 <!-- ===================== -->
