@@ -333,7 +333,42 @@
     font-size: 12px;
     transition: 0.2s;
         }
-         
+         /* ===================== */
+/* SCROLL TO TOP BUTTON */
+/* ===================== */
+#scrollTopBtn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#scrollTopBtn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark #scrollTopBtn {
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark #scrollTopBtn:hover {
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+}
     
 /* =====================================================
    BLOK 4: HERO BÖLÜMÜ (3 SVG + 2 OVERLAY)
@@ -1917,9 +1952,7 @@ body.dark ::-webkit-scrollbar-thumb:hover {
         <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
     </div>
 </footer>
-    
-</body>
-</html>
+
 <!-- ===================== -->
 <!-- SCHEMA.ORG -->
 <!-- ===================== -->
@@ -1998,9 +2031,8 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
-
 // =====================
-// MANIFESTO FONT SIZE CONTROL (13-19px) - GECİKMELİ BAĞLAMA
+// MANIFESTO FONT SIZE CONTROL
 // =====================
 function initManifestoFontControl() {
     let manifestoFontSize = 16;
@@ -2034,25 +2066,15 @@ function initManifestoFontControl() {
     const incBtn = document.getElementById('manifestoFontInc');
     const resetBtn = document.getElementById('manifestoFontReset');
 
-    if (decBtn) {
-        decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
-        console.log('✅ Manifesto font dec bağlandı');
-    }
-    if (incBtn) {
-        incBtn.addEventListener('click', () => changeManifestoFontSize(1));
-        console.log('✅ Manifesto font inc bağlandı');
-    }
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => resetManifestoFontSize());
-        console.log('✅ Manifesto font reset bağlandı');
-    }
+    if (decBtn) decBtn.addEventListener('click', () => changeManifestoFontSize(-1));
+    if (incBtn) incBtn.addEventListener('click', () => changeManifestoFontSize(1));
+    if (resetBtn) resetBtn.addEventListener('click', () => resetManifestoFontSize());
 }
 
-// Manifesto butonları hemen yoksa, gözlemle
 if (document.getElementById('manifestoFontDec')) {
     initManifestoFontControl();
 } else {
-    const observer = new MutationObserver(function(mutations) {
+    const observer = new MutationObserver(function() {
         if (document.getElementById('manifestoFontDec')) {
             initManifestoFontControl();
             observer.disconnect();
@@ -2061,6 +2083,51 @@ if (document.getElementById('manifestoFontDec')) {
     observer.observe(document.body, { childList: true, subtree: true });
 }
 
+// =====================
+// SCROLL TO TOP BUTONU
+// =====================
+(function() {
+    const btn = document.createElement('button');
+    btn.innerHTML = '↑';
+    btn.id = 'scrollTopBtn';
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(btn);
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            btn.style.opacity = '1';
+            btn.style.visibility = 'visible';
+        } else {
+            btn.style.opacity = '0';
+            btn.style.visibility = 'hidden';
+        }
+    });
+    
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+
 </script>
+
 </body>
 </html>
+
+    
