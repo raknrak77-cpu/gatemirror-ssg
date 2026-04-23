@@ -333,169 +333,7 @@
     font-size: 12px;
     transition: 0.2s;
         }
-
-/* ===================== */
-/* FONT SIZE CONTROL ( - A + ) */
-/* ===================== */
-
-/* Varsayılan */
-body {
-    font-size: 16px;
-}
-
-/* FONT SIZE SEVİYELERİ (13-19) */
-body.font-13 { font-size: 13px; }
-body.font-14 { font-size: 14px; }
-body.font-15 { font-size: 15px; }
-body.font-16 { font-size: 16px; }
-body.font-17 { font-size: 17px; }
-body.font-18 { font-size: 18px; }
-body.font-19 { font-size: 19px; }
-
-/* BÜYÜTÜLECEK ALANLAR (SADECE MANIFESTO METİNLERİ) */
-body.font-13 .manifesto-text,
-body.font-13 .manifesto-text-small,
-body.font-13 .manifesto-text-center {
-    font-size: 0.85rem;
-}
-body.font-14 .manifesto-text,
-body.font-14 .manifesto-text-small,
-body.font-14 .manifesto-text-center {
-    font-size: 0.9rem;
-}
-body.font-15 .manifesto-text,
-body.font-15 .manifesto-text-small,
-body.font-15 .manifesto-text-center {
-    font-size: 0.95rem;
-}
-body.font-16 .manifesto-text,
-body.font-16 .manifesto-text-small,
-body.font-16 .manifesto-text-center {
-    font-size: 1rem;
-}
-body.font-17 .manifesto-text,
-body.font-17 .manifesto-text-small,
-body.font-17 .manifesto-text-center {
-    font-size: 1.05rem;
-}
-body.font-18 .manifesto-text,
-body.font-18 .manifesto-text-small,
-body.font-18 .manifesto-text-center {
-    font-size: 1.1rem;
-}
-body.font-19 .manifesto-text,
-body.font-19 .manifesto-text-small,
-body.font-19 .manifesto-text-center {
-    font-size: 1.15rem;
-}
-
-/* SABİT KALACAK ALANLAR */
-.hero-title,
-.hero-description,
-.hero-cta-primary,
-footer,
-footer a,
-.side-menu,
-.side-menu a,
-.nav-links a,
-.logo,
-.category-label,
-.category-icon,
-.article-card h3,
-.article-card p,
-.article-meta,
-.article-card a,
-.section-title,
-.featured-card h2,
-.featured-meta,
-.featured-content p,
-.manifesto-title,
-.manifesto-subtitle,
-.manifesto-category,
-.manifesto-quote,
-.manifesto-quote-large,
-.manifesto-button,
-.btn,
-.archive-btn,
-.random-btn,
-.category-bottom-bar .category-label,
-.category-bottom-bar .category-icon {
-    font-size: inherit !important;
-}
-
-/* HEADER FONT KONTROL */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.font-size-control {
-    display: flex;
-    gap: 0.25rem;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 2rem;
-    padding: 0.25rem;
-}
-
-.font-size-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.25rem 0.6rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: 1.5rem;
-    transition: all 0.2s;
-}
-
-.font-size-btn:hover {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-.font-size-dec,
-.font-size-inc {
-    min-width: 32px;
-}
-
-.font-size-reset {
-    background: var(--tech-3);
-    color: white;
-}
-
-.font-size-reset:hover {
-    background: var(--tech-4);
-}
-
-/* SIDE MENU FONT KONTROL */
-.side-menu .font-size-control {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.side-menu .font-size-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: #aaa;
-}
-
-.side-menu .font-size-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.side-menu .font-size-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-}
-
-.side-menu .font-size-reset {
-    background: var(--tech-3);
-    color: white;
-}
+   
    
 /* =====================================================
    BLOK 4: HERO BÖLÜMÜ (3 SVG + 2 OVERLAY)
@@ -1867,15 +1705,6 @@ body.dark ::-webkit-scrollbar-thumb:hover {
         <div class="toggle-switch" id="darkModeToggle"></div>
     </div>
     
-    <!-- FONT SIZE CONTROL (AA) -->   
-        <div class="font-size-control">
-    <span class="font-size-label">🔤 Text Size</span>
-    <div class="font-size-buttons">
-        <button class="font-size-btn font-size-dec" id="fontSizeDecSide">-</button>
-        <button class="font-size-btn font-size-reset" id="fontSizeResetSide">A</button>
-        <button class="font-size-btn font-size-inc" id="fontSizeIncSide">+</button>
-    </div>
-        </div>
         
     <!-- LANGUAGE SECTION -->
     <div class="lang-section">
@@ -1908,8 +1737,7 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 <!-- HEADER & NAVIGATION -->
 <!-- ===================== -->
 
-    
-<nav>
+    <nav>
     <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
@@ -1924,19 +1752,13 @@ body.dark ::-webkit-scrollbar-thumb:hover {
     </div>
     
     <div class="header-right">
-
-        <div class="font-size-control">
-    <button class="font-size-btn font-size-dec" id="fontSizeDec">-</button>
-    <button class="font-size-btn font-size-reset" id="fontSizeReset">A</button>
-    <button class="font-size-btn font-size-inc" id="fontSizeInc">+</button>
-        </div>
         <button class="dark-mode-btn" id="darkModeBtn" aria-label="Dark Mode">
             <i class="fas fa-moon"></i>
         </button>
     </div>
-</nav>
+    </nav>
 
-<main>
+    
 
     
  <!-- ====   ================ -->
@@ -2123,43 +1945,6 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
 
 
 
-// FONT SIZE CONTROL (- A +)
-let currentFontSize = 16;
-const minFontSize = 13;
-const maxFontSize = 19;
-
-function setFontSize(size) {
-    if (size < minFontSize) size = minFontSize;
-    if (size > maxFontSize) size = maxFontSize;
-    currentFontSize = size;
-    
-    const body = document.body;
-    body.classList.remove('font-13', 'font-14', 'font-15', 'font-16', 'font-17', 'font-18', 'font-19');
-    body.classList.add(`font-${size}`);
-    localStorage.setItem('fontSize', size);
-}
-
-function changeFontSize(delta) {
-    setFontSize(currentFontSize + delta);
-}
-
-function resetFontSize() {
-    setFontSize(16);
-}
-
-// Sayfa yüklenince kayıtlı boyutu yükle
-const savedSize = parseInt(localStorage.getItem('fontSize')) || 16;
-setFontSize(savedSize);
-
-// Buton eventleri
-document.getElementById('fontSizeDec')?.addEventListener('click', () => changeFontSize(-1));
-document.getElementById('fontSizeInc')?.addEventListener('click', () => changeFontSize(1));
-document.getElementById('fontSizeReset')?.addEventListener('click', () => resetFontSize());
-
-document.getElementById('fontSizeDecSide')?.addEventListener('click', () => changeFontSize(-1));
-document.getElementById('fontSizeIncSide')?.addEventListener('click', () => changeFontSize(1));
-document.getElementById('fontSizeResetSide')?.addEventListener('click', () => resetFontSize());
-    
     // SCROLL TO TOP BUTTON
 const scrollBtn = document.getElementById('scrollTopBtn');
 
