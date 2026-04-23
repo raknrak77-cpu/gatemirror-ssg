@@ -367,5 +367,401 @@
                 </div>
                 <div class="manifesto-card">
                     <div class="manifesto-icon">◆</div>
-                    <h4 class="m
+                    <h4 class="manifesto-category">Économie du Futur</h4>
+                    <p class="manifesto-text">
+                        La valeur migre. Des coffres-forts physiques vers les réseaux décentralisés, 
+                        des institutions vers les algorithmes. Nous cartographions où le flux de valeur se dirige 
+                        et pourquoi — afin que vous puissiez vous positionner en amont du courant, pas en aval.
+                    </p>
+                </div>
+            </div>
+            <div class="manifesto-image-full">
+                <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-categories.webp" alt="Tech & Économie du Futur" loading="lazy">
+            </div>
+        </div>
 
+        <div class="manifesto-three-col">
+            <div class="manifesto-card">
+                <div class="manifesto-icon">◆</div>
+                <h4 class="manifesto-category">Bien-être</h4>
+                <p class="manifesto-text-small">
+                    La performance, la longévité et la clarté mentale ne sont plus des sujets secondaires. 
+                    Ce sont des actifs stratégiques. Nous vous apportons la science — du suivi des biomarqueurs 
+                    à l'architecture comportementale — traduite en décisions que vous pouvez prendre aujourd'hui.
+                </p>
+            </div>
+            <div class="manifesto-card">
+                <div class="manifesto-icon">◆</div>
+                <h4 class="manifesto-category">Éco & Durable</h4>
+                <p class="manifesto-text-small">
+                    La durabilité est la stratégie commerciale déterminante de notre génération. 
+                    Nous analysons l'économie circulaire, les technologies propres et la finance climatique 
+                    comme le changement économique le plus important du siècle.
+                </p>
+            </div>
+            <div class="manifesto-card">
+                <div class="manifesto-icon">◆</div>
+                <h4 class="manifesto-category">E-Learning</h4>
+                <p class="manifesto-text-small">
+                    Dans un monde de perturbations constantes, le pouvoir cumulé de la bonne connaissance 
+                    est le seul avantage fiable. Nous organisons ce qui mérite d'être appris, et plus important, 
+                    pourquoi cela importe maintenant.
+                </p>
+            </div>
+        </div>
+
+        <div class="manifesto-closing">
+            <div class="manifesto-closing-image">
+                <img src="{{ R2_PUBLIC_URL }}/assets/manifesto/manifesto-cta.webp" alt="Réfléchis le Futur" loading="lazy">
+            </div>
+            <div class="manifesto-closing-content">
+                <p class="manifesto-quote">
+                    Cinq frontières. Quatre langues. <strong>Un seul Miroir.</strong>
+                </p>
+                <p class="manifesto-text-center">
+                    L'avenir n'est pas une destination que vous atteignez. C'est un territoire que vous gouvernez 
+                    avec la bonne vision, au bon moment, à travers le bon prisme.
+                </p>
+                <p class="manifesto-quote-large">
+                    Ne vous contentez pas de lire le futur. Réfléchissez-le.
+                </p>
+                <div class="manifesto-cta">
+                    <a href="/explore/all-articles/fr.html" class="manifesto-button">
+                        OBTENIR UN MIROIR <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+/* ===================== */
+/* MANIFESTO - FONT SIZE CONTROL */
+/* ===================== */
+.manifesto-font-control {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.manifesto-font-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: monospace;
+}
+
+.manifesto-font-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#manifestoFontReset {
+    background: var(--tech-3);
+    color: white;
+    width: auto;
+    border-radius: 2rem;
+    padding: 0 1rem;
+}
+
+#manifestoFontReset:hover {
+    background: var(--tech-4);
+}
+
+body.dark .manifesto-font-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.dark #manifestoFontReset {
+    background: var(--tech-3);
+}
+
+/* ===================== */
+/* MANIFESTO - KARTLAR (TÜMÜ ÇERÇEVELİ) */
+/* ===================== */
+.manifesto-card {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: var(--transition);
+}
+
+.manifesto-card:hover {
+    transform: translateY(-5px);
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.dark .manifesto-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dark .manifesto-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===================== */
+/* MANIFESTO - İKON (PREMIUM LACİVERT) */
+/* ===================== */
+.manifesto-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    color: #1C2238;
+}
+
+body.dark .manifesto-icon {
+    color: var(--tech-4);
+}
+
+/* ===================== */
+/* MANIFESTO - BAŞLIK VE VURGULAR (PREMIUM LACİVERT) */
+/* ===================== */
+.manifesto-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--tech-2), var(--tech-4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.manifesto-subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #1C2238;
+    margin-bottom: 1.5rem;
+}
+
+body.dark .manifesto-subtitle {
+    color: #8A94A8;
+}
+
+.manifesto-category {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1C2238;
+    margin-bottom: 0.75rem;
+}
+
+body.dark .manifesto-category {
+    color: var(--tech-4);
+}
+
+.manifesto-quote strong {
+    color: #1C2238;
+}
+
+body.dark .manifesto-quote strong {
+    color: var(--tech-4);
+}
+
+.manifesto-quote-large {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1C2238;
+    margin: 1.5rem 0;
+}
+
+body.dark .manifesto-quote-large {
+    color: var(--tech-4);
+}
+
+/* ===================== */
+/* MANIFESTO BUTON (PARALEL KENAR) */
+/* ===================== */
+
+.manifesto-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%);
+    color: white;
+    padding: 0.9rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.manifesto-button:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.manifesto-button span {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.manifesto-button:hover span {
+    transform: translateX(5px);
+}
+
+body.dark .manifesto-button {
+    background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+}
+
+body.dark .manifesto-button:hover {
+    background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+}
+
+/* ===================== */
+/* DİĞER MANIFESTO STILLERİ */
+/* ===================== */
+.manifesto {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+
+.manifesto-hero {
+    margin-bottom: 4rem;
+}
+
+.manifesto-hero-image {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.manifesto-hero-image img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 1.5rem;
+    object-fit: cover;
+}
+
+.manifesto-hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.manifesto-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.manifesto-image-full {
+    text-align: center;
+    margin: 2rem 0 3rem;
+}
+
+.manifesto-image-full img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.manifesto-three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.manifesto-closing {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+}
+
+.manifesto-closing-image {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.manifesto-closing-image img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.manifesto-closing-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.manifesto-quote {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.manifesto-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+.manifesto-text-small {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-light);
+}
+
+.manifesto-text-center {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+/* ===================== */
+/* RESPONSIVE */
+/* ===================== */
+@media (max-width: 768px) {
+    .manifesto {
+        padding: 0 1rem;
+    }
+    .manifesto-two-col {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .manifesto-three-col {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .manifesto-title {
+        font-size: 1.8rem;
+    }
+    .manifesto-quote-large {
+        font-size: 1.3rem;
+    }
+    .manifesto-hero-image img {
+        max-height: 250px;
+    }
+    .manifesto-image-full img {
+        max-height: 200px;
+    }
+    .manifesto-font-control {
+        margin-bottom: 1rem;
+    }
+}
