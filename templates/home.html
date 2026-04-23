@@ -2005,6 +2005,33 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
         setDarkMode(e.matches);
     }
 });
+
+    // FONT SIZE CONTROL (AA)
+function setFontSize(size) {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-medium', 'font-large');
+    body.classList.add(`font-${size}`);
+    localStorage.setItem('fontSize', size);
+    
+    document.querySelectorAll('.font-size-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.size === size) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Sayfa yüklenince kayıtlı boyutu yükle
+const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+setFontSize(savedFontSize);
+
+// Butonlara event ekle
+document.querySelectorAll('.font-size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        setFontSize(btn.dataset.size);
+    });
+});
+    
 </script>
 </body>
 </html>
