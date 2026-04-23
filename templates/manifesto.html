@@ -493,6 +493,26 @@ body.dark #manifestoFontReset {
     background: var(--tech-3);
 }
 
+    /* Tüm iç metin elementleri ana boyutu takip etsin */
+.manifesto p,
+.manifesto .manifesto-text,
+.manifesto .manifesto-text-small,
+.manifesto .manifesto-quote,
+.manifesto .manifesto-quote-large,
+.manifesto .manifesto-button,
+.manifesto li,
+.manifesto .manifesto-card {
+    font-size: inherit;
+}
+
+/* Başlıklar kendi orantılı boyutlarını korusun */
+.manifesto h1, .manifesto h2, .manifesto h3, .manifesto h4,
+.manifesto .manifesto-title,
+.manifesto .manifesto-subtitle,
+.manifesto .manifesto-category {
+    font-size: revert;
+}
+    
 /* ===================== */
 /* MANIFESTO - KARTLAR (TÜMÜ ÇERÇEVELİ) */
 /* ===================== */
