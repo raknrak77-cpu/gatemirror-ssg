@@ -1,15 +1,13 @@
-Böyle nasıl
-
 <!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Gatemirror | Global Insights on Tech, Wellness & Future Economy</title>
-    <meta name="description" content="Global insights on technology, wellness, future economy, and sustainable living. Gatemirror delivers deep analysis in 5 languages.">
+    <title>Gatemirror | Global Insights on TECH & AI,FUTURE ECONOM, E-LEARNING, WELLNESS, ECO & SUSTAINABL </title>
+    <meta name="description" content="Global insights on TECH & AI,FUTURE ECONOM, E-LEARNING, WELLNESS, ECO & SUSTAINABL living. Gatemirror delivers deep analysis in 4 languages.">
     <link rel="canonical" href="{{ canonical_url }}">
     <meta property="og:title" content="Gatemirror | Global Insights & Analysis">
-    <meta property="og:description" content="Deep insights on tech, wellness, future economy, and sustainable living. Read in 5 languages.">
+    <meta property="og:description" content="Deep insights on TECH & AI,FUTURE ECONOM, E-LEARNING, WELLNESS, ECO & SUSTAINABL living. Read in 4 languages.">
     <meta property="og:image" content="{{ og_image | default('/assets/og-cover.jpg') }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="website">
@@ -24,12 +22,90 @@ Böyle nasıl
     <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <style>
-    /* =====================================================
-       GATEMIRROR - MASTER CSS (DÜZENLENMİŞ)
-       BLOK 1-9
-    ===================================================== */
+    {% set categories = [
+        {"slug": "tech", "name": "TECH & AI", "icon": "🔸"},
+        {"slug": "future-economy", "name": "FUTURE ECONOMY", "icon": "🔸"},
+        {"slug": "elearning", "name": "E-LEARNING", "icon": "🔸"},
+        {"slug": "wellness", "name": "WELLNESS", "icon": "🔸"},
+        {"slug": "eco", "name": "ECO & SUSTAINABLE", "icon": "🔸"}
+    ] %}
     
+    <style>
+        /* =====================================================
+           GATEMIRROR - MASTER CSS
+        ===================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #1a8c3f;
+            --primary-light: #5ee0a0;
+            --dark: #0a0a0a;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --gray: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --border-radius: 1rem;
+            --transition: all 0.3s ease;
+            
+            /* RENK PALETLERİ - 5 KATEGORİ (MAX PARLAKLIK) */
+            --tech-1: #050510;
+            --tech-2: #0a0a3a;
+            --tech-3: #2a0aff;
+            --tech-4: #5c3dff;
+            --tech-5: #aa88ff;
+            
+            --wellness-1: #14050a;
+            --wellness-2: #2a0a18;
+            --wellness-3: #ff0a5a;
+            --wellness-4: #ff4080;
+            --wellness-5: #ff88b8;
+            
+            --eco-1: #051405;
+            --eco-2: #0a2a0a;
+            --eco-3: #00ff30;
+            --eco-4: #40ff70;
+            --eco-5: #88ffb0;
+            
+            --fe-1: #140a00;
+            --fe-2: #2a1800;
+            --fe-3: #ff5a00;
+            --fe-4: #ff8833;
+            --fe-5: #ffbb77;
+            
+            --el-1: #000d14;
+            --el-2: #001a2a;
+            --el-3: #00ccff;
+            --el-4: #44ddff;
+            --el-5: #88eeff;
+            
+            --category-color: var(--tech-3);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* REST OF YOUR CSS... */
+        
+    </style>
+</head>
+<body>
+    <!-- BODY İÇERİĞİ -->
+</body>
+</html>
+        
     /* =====================================================
        GATEMIRROR - MASTER CSS (DÜZENLENMİŞ)
        BLOK 1-9
