@@ -4,19 +4,11 @@
 
 <div class="manifesto" id="manifestoContainer">
     
-    <!-- FONT SIZE CONTROL + DİL SEÇİCİ -->
-    <div class="manifesto-controls">
-        <div class="manifesto-lang-switcher">
-            <button class="manifesto-lang-btn active" data-target="en">🇺🇸 EN</button>
-            <button class="manifesto-lang-btn" data-target="es">🇪🇸 ES</button>
-            <button class="manifesto-lang-btn" data-target="de">🇩🇪 DE</button>
-            <button class="manifesto-lang-btn" data-target="fr">🇫🇷 FR</button>
-        </div>
-        <div class="manifesto-font-control">
-            <button class="manifesto-font-btn" id="manifestoFontDec">−</button>
-            <button class="manifesto-font-btn" id="manifestoFontReset">A</button>
-            <button class="manifesto-font-btn" id="manifestoFontInc">+</button>
-        </div>
+    <!-- FONT SIZE CONTROL -->
+    <div class="manifesto-font-control">
+        <button class="manifesto-font-btn" id="manifestoFontDec">−</button>
+        <button class="manifesto-font-btn" id="manifestoFontReset">A</button>
+        <button class="manifesto-font-btn" id="manifestoFontInc">+</button>
     </div>
     
     <!-- ===================== -->
@@ -362,8 +354,7 @@
                 </p>
             </div>
         </div>
-
-        <div class="manifesto-section">
+<div class="manifesto-section">
             <div class="manifesto-two-col">
                 <div class="manifesto-card">
                     <div class="manifesto-icon">◆</div>
@@ -446,8 +437,7 @@
 </div>
 
 <style>
-
-    /* ===================== */
+/* ===================== */
 /* MANIFESTO - FONT SIZE CONTROL */
 /* ===================== */
 
@@ -754,62 +744,6 @@ body.dark .manifesto-button:hover {
 
 /* ===================== */
 /* DİL SEÇİCİ + CONTROLS */
-/* ===================== */
-.manifesto-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    padding: 1rem 1.5rem;
-    background: rgba(0,0,0,0.03);
-    border-radius: 1rem;
-    border: 1px solid rgba(0,0,0,0.06);
-}
-
-.manifesto-lang-switcher {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.manifesto-lang-btn {
-    background: none;
-    border: 1px solid rgba(0,0,0,0.12);
-    border-radius: 2rem;
-    padding: 0.4rem 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--text);
-    transition: all 0.2s ease;
-}
-
-.manifesto-lang-btn:hover {
-    background: rgba(0,0,0,0.06);
-    border-color: var(--primary);
-}
-
-.manifesto-lang-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-body.dark .manifesto-controls {
-    background: rgba(255,255,255,0.04);
-    border-color: rgba(255,255,255,0.08);
-}
-
-body.dark .manifesto-lang-btn {
-    color: #c9d1d9;
-    border-color: rgba(255,255,255,0.15);
-}
-
-body.dark .manifesto-lang-btn:hover {
-    background: rgba(255,255,255,0.08);
-}
-
 /* ===================== */
 /* RESPONSIVE */
 /* ===================== */
