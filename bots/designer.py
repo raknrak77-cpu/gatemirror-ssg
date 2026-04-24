@@ -4,7 +4,6 @@ import time
 import random
 import boto3
 import requests
-import fnmatch
 from datetime import datetime
 from botocore.client import Config
 from jinja2 import Template
@@ -15,8 +14,6 @@ from makeup import (
     get_menu_texts,
     get_category_name,
     get_category_description,
-    generate_sitemap,
-    generate_robots_txt
 )
 from hero_bot import render_hero
 
@@ -34,22 +31,6 @@ s3 = boto3.client('s3',
     config=Config(signature_version='s3v4'),
     region_name='auto'
 )
-
-# ================= ZAMANLAMA =================
-timings = {}
-
-def timing(name):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            start = time.time()
-            print(f"⏱️ [{name}] BAŞLADI...")
-            result = func(*args, **kwargs)
-            elapsed = time.time() - start
-            timings[name] = elapsed
-            print(f"✅ [{name}] TAMAMLANDI: {elapsed:.2f} saniye")
-            return result
-        return wrapper
-    return decorator
 
 # ================= CACHE =================
 hero_cache = {}
@@ -108,22 +89,17 @@ def get_template_from_r2(template_name):
             return content
     return None
 
-# ================= RAW ARTICLES OKU (SADECE FİLTRELENENLER) =================
-
 def get_raw_article_by_hash(hash_id, lang, category):
-    """Sadece belirli bir hash'teki raw article'ı bulur ve parse eder"""
     prefixes = [
         f"raw-articles/{lang}/{category}/",
         f"raw-articles/{lang}/{category}/2026/04/",
         f"raw-articles/{lang}/{category}/2026/",
     ]
-    
     for prefix in prefixes:
         try:
             response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
             if 'Contents' not in response:
                 continue
-            
             for obj in response['Contents']:
                 key = obj['Key']
                 filename = key.split('/')[-1]
@@ -135,11 +111,8 @@ def get_raw_article_by_hash(hash_id, lang, category):
                     return parsed
         except:
             continue
-    
     print(f"   ⚠️ {hash_id} için raw article bulunamadı")
     return None
-
-# ================= RENDER =================
 
 def render_single_page(article, alt_langs, template_str, menu_texts, related_articles):
     start = time.time()
@@ -202,8 +175,6 @@ def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for
     return None
 
 # ================= ANA DESIGNER =================
-
-@timing("DESIGNER TOPLAM")
 def designer():
     print("=" * 60)
     print("🎨 DESIGNER BOT - TASARIM MODU (SADECE EN + TECH/WELLNESS)")
@@ -216,8 +187,7 @@ def designer():
     home_tpl = get_template_from_r2("home.html")
     list_tpl = get_template_from_r2("list.html")
     all_articles_tpl = get_template_from_r2("all-articles.html")
-    timings["TEMPLATE_YUKLEME"] = time.time() - t_start
-    print(f"   ✅ Template yükleme: {timings['TEMPLATE_YUKLEME']:.2f}s")
+    print(f"   ✅ Template yükleme: {time.time() - t_start:.2f}s")
     
     if not single_tpl:
         print("❌ Template alınamadı")
@@ -227,8 +197,7 @@ def designer():
     print("\n📖 2. JSON'DAN MAKALE LİSTESİ OKUMA")
     t_start = time.time()
     articles_meta = get_articles_from_r2_cached()
-    timings["JSON_OKUMA"] = time.time() - t_start
-    print(f"   ✅ {len(articles_meta)} makale meta okundu: {timings['JSON_OKUMA']:.2f}s")
+    print(f"   ✅ {len(articles_meta)} makale meta okundu: {time.time() - t_start:.2f}s")
     
     if not articles_meta:
         print("❌ articles.json yok veya boş")
@@ -238,14 +207,13 @@ def designer():
     print("\n🔍 3. FİLTRELEME (EN + tech/wellness)")
     t_start = time.time()
     filtered_meta = [m for m in articles_meta if m.get('lang') == 'en' and m.get('category') in ['tech', 'wellness']]
-    timings["FILTRELEME"] = time.time() - t_start
-    print(f"   ✅ {len(filtered_meta)} makale filtrelendi: {timings['FILTRELEME']:.2f}s")
+    print(f"   ✅ {len(filtered_meta)} makale filtrelendi: {time.time() - t_start:.2f}s")
     
     if not filtered_meta:
         print("❌ Filtreleme sonucu makale kalmadı")
         return
     
-    # 4. HER MAKALE İÇİN RAW ARTICLES OKU (SADECE FİLTRELENENLER)
+    # 4. RAW ARTICLES OKU
     print(f"\n📥 4. RAW ARTICLES OKUMA ({len(filtered_meta)} makale)")
     t_start = time.time()
     
@@ -277,19 +245,17 @@ def designer():
         else:
             print(f"      ⚠️ {hash_id} için raw article bulunamadı, atlanıyor")
     
-    timings["RAW_ARTICLES_OKUMA"] = time.time() - t_start
-    print(f"   ✅ {len(all_articles)} makale başarıyla okundu: {timings['RAW_ARTICLES_OKUMA']:.2f}s")
+    print(f"   ✅ {len(all_articles)} makale başarıyla okundu: {time.time() - t_start:.2f}s")
     
     if not all_articles:
         print("❌ Hiç makale okunamadı")
         return
     
-    # 5. Alternate langs oluştur
+    # 5. Alternate langs
     print("\n🌐 5. ALTERNATE LANGS")
     t_start = time.time()
     alt_dict = build_alternate_langs_dict(all_articles)
-    timings["ALTERNATE_LANGS"] = time.time() - t_start
-    print(f"   ✅ Alternate langs: {timings['ALTERNATE_LANGS']:.2f}s")
+    print(f"   ✅ Alternate langs: {time.time() - t_start:.2f}s")
     
     lang_articles = all_articles
     lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
@@ -297,7 +263,6 @@ def designer():
     
     # 6. MAKALELERİ PARALEL YAZ
     print(f"\n📝 6. MAKALELERİ PARALEL YAZMA ({len(lang_articles)} makale)")
-    t_start = time.time()
     
     articles_to_write = []
     for article in lang_articles:
@@ -314,40 +279,28 @@ def designer():
         for article, alt_langs, related_for_template in articles_to_write:
             future = executor.submit(write_single_article, article, alt_langs, single_tpl, menu_texts, related_for_template)
             futures.append(future)
-        
         for future in as_completed(futures):
             future.result()
+    print(f"   ✅ Makale yazma: {time.time() - write_start:.2f}s")
     
-    timings["MAKALE_YAZMA"] = time.time() - write_start
-    print(f"   ✅ Makale yazma: {timings['MAKALE_YAZMA']:.2f}s")
-    
-    # ================= 7. HOME PAGE (DÜZELTİLMİŞ + MANIFESTO) =================
+    # 7. HOME PAGE
     print("\n🏠 7. HOME PAGE")
     t_start = time.time()
-
-    # R2_PUBLIC_URL kontrolü
+    
     if not R2_PUBLIC_URL:
-        print("   ⚠️ R2_PUBLIC_URL boş! Varsayılan değer kullanılıyor.")
         r2_url = "https://gatemirror-ssg-assets.d71a.r2.cloudflarestorage.com"
     else:
         r2_url = R2_PUBLIC_URL
-    print(f"   🔍 Kullanılacak R2_URL: {r2_url}")
-
-    # SVG URL'lerini logla
-    print(f"   🔍 SVG1: {r2_url}/assets/svg1.svg")
-    print(f"   🔍 SVG2: {r2_url}/assets/svg2.svg")
-
-    # Manifesto içeriğini oku
+    
     manifesto_html = ""
     try:
         with open("templates/manifesto.html", "r", encoding="utf-8") as f:
             manifesto_html = f.read()
-            # R2_PUBLIC_URL değişkenini manifesto içinde kullanmak için
             manifesto_html = manifesto_html.replace("{{ R2_PUBLIC_URL }}", r2_url)
         print("   ✅ manifesto.html okundu")
     except Exception as e:
         print(f"   ⚠️ manifesto.html okunamadı: {e}")
-
+    
     featured = lang_articles[0] if lang_articles else None
     featured_for_home = None
     if featured:
@@ -360,7 +313,7 @@ def designer():
             'views': featured['parsed']['views'],
             'excerpt': featured['parsed']['description']
         }
-
+    
     articles_for_home = []
     for a in lang_articles[:12]:
         articles_for_home.append({
@@ -371,7 +324,7 @@ def designer():
             'views': a['parsed']['views'],
             'excerpt': a['parsed']['description']
         })
-
+    
     try:
         tmpl = get_cached_template(home_tpl, 'home')
         hero_html = get_cached_hero('home', 'en')
@@ -385,17 +338,14 @@ def designer():
             og_image=articles_for_home[0]['image'] if articles_for_home else "",
             alternate_langs=[],
             hero={'html': hero_html, 'show': True},
-            manifesto=manifesto_html  # YENİ
+            manifesto=manifesto_html
         )
         s3.put_object(Bucket=R2_BUCKET, Key="articles_ready/en/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-        timings["HOME_PAGE"] = time.time() - t_start
-        print(f"   ✅ Home page: {timings['HOME_PAGE']:.2f}s")
+        print(f"   ✅ Home page: {time.time() - t_start:.2f}s")
     except Exception as e:
         print(f"   ❌ HOME PAGE RENDER HATASI: {e}")
-        timings["HOME_PAGE"] = time.time() - t_start
-        print(f"   ⚠️ Home page başarısız: {timings['HOME_PAGE']:.2f}s")
     
-    # 8. KATEGORİ SAYFALARI
+    # 8. KATEGORİ SAYFALARI (LIST)
     print("\n📂 8. KATEGORİ SAYFALARI")
     t_start = time.time()
     categories = ['tech', 'wellness']
@@ -432,7 +382,8 @@ def designer():
             })
         
         tmpl = get_cached_template(list_tpl, 'list')
-        hero_html = get_cached_hero('category', 'en', category)        
+        hero_html = get_cached_hero('category', 'en', category)
+        
         list_html = tmpl.render(
             lang='en',
             R2_PUBLIC_URL=R2_PUBLIC_URL,
@@ -440,7 +391,7 @@ def designer():
             category_name=get_category_name('en', category),
             category_description=get_category_description('en', category),
             category_url=f"{R2_PUBLIC_URL}/en/{category}/",
-            category=category,  # ✅ Bu satırı eklediniz
+            category=category,
             og_image=articles_for_list[0]['image'] if articles_for_list else "",
             articles=articles_for_list,
             featured_article=featured_for_cat,
@@ -452,8 +403,8 @@ def designer():
         )
         s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/en/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
         print(f"   ✅ {category} sayfası: {len(cat_articles)} makale")
-        timings["KATEGORI_SAYFALARI"] = time.time() - t_start
-        print(f"   ✅ Kategori sayfaları: {timings['KATEGORI_SAYFALARI']:.2f}s")
+    
+    print(f"   ✅ Kategori sayfaları: {time.time() - t_start:.2f}s")
     
     # 9. ALL ARTICLES SAYFASI
     if all_articles_tpl:
@@ -499,19 +450,7 @@ def designer():
             hero={'html': hero_html, 'show': True}
         )
         s3.put_object(Bucket=R2_BUCKET, Key="articles_ready/explore/all-articles/en.html", Body=all_html.encode('utf-8'), ContentType='text/html')
-        timings["ALL_ARTICLES"] = time.time() - t_start
-        print(f"   ✅ All articles: {timings['ALL_ARTICLES']:.2f}s")
-    
-    # 10. ZAMAN RAPORU
-    print("\n" + "=" * 60)
-    print("📊 ZAMAN RAPORU")
-    print("=" * 60)
-    total = 0
-    for name, duration in sorted(timings.items(), key=lambda x: x[1], reverse=True):
-        print(f"   {name:25}: {duration:8.2f} saniye")
-        total += duration
-    print(f"   {'TOPLAM (ölçülen)':25}: {total:8.2f} saniye")
-    print("=" * 60)
+        print(f"   ✅ All articles: {time.time() - t_start:.2f}s")
     
     print("\n🏁 DESIGNER TAMAMLANDI!")
 
