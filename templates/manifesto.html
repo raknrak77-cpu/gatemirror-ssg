@@ -362,7 +362,8 @@
                 </p>
             </div>
         </div>
-<div class="manifesto-section">
+
+        <div class="manifesto-section">
             <div class="manifesto-two-col">
                 <div class="manifesto-card">
                     <div class="manifesto-icon">◆</div>
@@ -513,13 +514,11 @@ body.dark #manifestoFontReset {
     font-size: inherit;
 }
 
-/* Başlıklar kendi orantılı boyutlarını korusun */
-.manifesto h1, .manifesto h2, .manifesto h3, .manifesto h4,
-.manifesto .manifesto-title,
-.manifesto .manifesto-subtitle,
-.manifesto .manifesto-category {
-    font-size: revert;
-}
+/* Başlıklar parent font-size'a göre scale etsin */
+.manifesto h1, .manifesto .manifesto-title { font-size: 2.2em; }
+.manifesto h2 { font-size: 1.6em; }
+.manifesto h3, .manifesto .manifesto-subtitle { font-size: 1.25em; }
+.manifesto h4, .manifesto .manifesto-category { font-size: 1.1em; }
     
 /* ===================== */
 /* MANIFESTO - KARTLAR (TÜMÜ ÇERÇEVELİ) */
@@ -552,7 +551,7 @@ body.dark .manifesto-card:hover {
 /* MANIFESTO - İKON (PREMIUM LACİVERT) */
 /* ===================== */
 .manifesto-icon {
-    font-size: 1.8rem;
+    font-size: 1.8em;
     margin-bottom: 0.75rem;
     display: inline-block;
     color: #1C2238;
@@ -566,7 +565,7 @@ body.dark .manifesto-icon {
 /* MANIFESTO - BAŞLIK VE VURGULAR (PREMIUM LACİVERT) */
 /* ===================== */
 .manifesto-title {
-    font-size: 2.5rem;
+    font-size: 2.2em;
     font-weight: 800;
     letter-spacing: -0.02em;
     background: linear-gradient(135deg, var(--tech-2), var(--tech-4));
@@ -577,7 +576,7 @@ body.dark .manifesto-icon {
 }
 
 .manifesto-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.2em;
     font-weight: 400;
     color: #1C2238;
     margin-bottom: 1.5rem;
@@ -588,7 +587,7 @@ body.dark .manifesto-subtitle {
 }
 
 .manifesto-category {
-    font-size: 1.1rem;
+    font-size: 1.1em;
     font-weight: 700;
     color: #1C2238;
     margin-bottom: 0.75rem;
@@ -607,7 +606,7 @@ body.dark .manifesto-quote strong {
 }
 
 .manifesto-quote-large {
-    font-size: 1.8rem;
+    font-size: 1.6em;
     font-weight: 700;
     color: #1C2238;
     margin: 1.5rem 0;
@@ -744,7 +743,7 @@ body.dark .manifesto-button:hover {
 }
 
 .manifesto-quote {
-    font-size: 1.2rem;
+    font-size: 1.2em;
     color: var(--text-light);
     margin-bottom: 1rem;
 }
@@ -845,10 +844,10 @@ body.dark .manifesto-lang-btn:hover {
         gap: 1rem;
     }
     .manifesto-title {
-        font-size: 1.8rem;
+        font-size: 1.6em;
     }
     .manifesto-quote-large {
-        font-size: 1.3rem;
+        font-size: 1.3em;
     }
     .manifesto-hero-image img {
         max-height: 250px;
@@ -862,4 +861,6 @@ body.dark .manifesto-lang-btn:hover {
 }
 
 </style>
-</div>
+    </div>
+    
+                        
