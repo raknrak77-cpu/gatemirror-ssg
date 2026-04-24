@@ -33,10 +33,9 @@
     <style>
     /* =====================================================
        GATEMIRROR - MASTER CSS (HOME.HTML'DEN BİREBİR)
-       Tüm stiller home(93).html'den alınmıştır
+       Tüm stiller home(94).html'den alınmıştır
     ===================================================== */
     
-    /* RESET & VARIABLES */
     * {
         margin: 0;
         padding: 0;
@@ -98,7 +97,7 @@
         overflow-x: hidden;
     }
     
-    /* Kategori bazlı renk değişkenleri - JS ile set edilecek */
+    /* Kategori bazlı renk değişkenleri */
     body.category-tech { --category-color: var(--tech-3); --category-grad-start: var(--tech-2); --category-grad-end: var(--tech-4); }
     body.category-wellness { --category-color: var(--wellness-3); --category-grad-start: var(--wellness-2); --category-grad-end: var(--wellness-4); }
     body.category-eco { --category-color: var(--eco-3); --category-grad-start: var(--eco-2); --category-grad-end: var(--eco-4); }
@@ -388,38 +387,23 @@
         border-color: rgba(255, 255, 255, 0.08);
     }
     
-    /* FEATURED ARTICLE */
-    .featured {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1.5rem;
-    }
-    
-    .featured-card {
-        display: flex;
-        gap: 2rem;
-        background: var(--white);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: var(--transition);
-    }
-    
-    .featured-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-hover);
-    }
-    
-    .featured-card img { width: 50%; object-fit: cover; }
-    .featured-content { padding: 2rem; flex: 1; }
-    .featured-content h2 { font-size: 1.8rem; }
-    .featured-meta { color: var(--text-light); font-size: 0.9rem; margin: 0.5rem 0; display: flex; gap: 1rem; }
-    
-    /* ARTICLE GRID */
+    /* ARTICLE GRID - İLK MAKALE BÜYÜK */
     .article-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 2rem;
+    }
+    
+    .article-grid .article-card:first-child {
+        grid-column: span 2;
+    }
+    
+    .article-grid .article-card:first-child img {
+        height: 300px;
+    }
+    
+    .article-grid .article-card:first-child h3 {
+        font-size: 1.4rem;
     }
     
     .article-card {
@@ -442,68 +426,27 @@
     .article-card p { padding: 0.5rem 1rem 1rem; color: var(--text-light); font-size: 0.9rem; }
     .article-card a { text-decoration: none; color: inherit; display: block; }
     
-    /* CATEGORY BOTTOM BAR */
+    /* CATEGORY BOTTOM BAR - SADECE BULUNDUĞU KATEGORİ */
     .category-bottom-bar {
         max-width: 1200px;
         margin: 3rem auto 2rem auto;
-        border-radius: 0;
-        overflow: hidden;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        gap: 0;
-    }
-    
-    .category-segment {
-        flex: 1;
-        min-width: 0;
-        position: relative;
-        cursor: pointer;
-        text-decoration: none;
-        min-height: 72px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
-        transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1), clip-path 0.3s ease;
-    }
-    
-    .category-segment:hover { flex: 2.5; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); }
-    @media (hover: hover) { .category-label { opacity: 0; } .category-segment:hover .category-label { opacity: 1; } }
-    @media (hover: none) { .category-label { opacity: 1; } }
-    
-    .category-label {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: rgba(255,255,255,0.95);
-        transition: opacity 0.3s;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        gap: 8px;
-        padding: 0 4px;
         text-align: center;
-        flex-direction: column;
     }
     
-    .category-icon { font-size: 18px; }
-    .category-segment:hover .category-label { letter-spacing: 0.15em; font-size: 13px; }
+    .single-category-segment {
+        display: inline-block;
+        text-decoration: none;
+        min-width: 200px;
+        padding: 1rem 2rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
     
-    .segment-tech { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
-    .segment-tech:hover { background: linear-gradient(135deg, var(--tech-3), var(--tech-5)); }
-    .segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
-    .segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-5)); }
-    .segment-eco { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
-    .segment-eco:hover { background: linear-gradient(135deg, var(--eco-3), var(--eco-5)); }
-    .segment-fe { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
-    .segment-fe:hover { background: linear-gradient(135deg, var(--fe-3), var(--fe-5)); }
-    .segment-el { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
-    .segment-el:hover { background: linear-gradient(135deg, var(--el-3), var(--el-5)); }
+    .single-category-segment:hover {
+        transform: translateY(-3px);
+    }
     
     /* FOOTER */
     footer { background: #1C2238; color: white; padding: 3rem 5%; margin-top: 2rem; position: relative; z-index: 10; clear: both; }
@@ -532,7 +475,7 @@
     body.dark .footer-column a { color: #8A94A8; }
     body.dark .footer-column a:hover { color: var(--primary-light); }
     
-/* SCROLL TOP BUTON */
+    /* SCROLL TOP BUTON */
     #scrollTopBtn {
         position: fixed;
         bottom: 2rem;
@@ -566,21 +509,19 @@
         .nav-links { display: none; }
         .menu-btn { display: block; }
         .article-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-        .featured-card { flex-direction: column; }
-        .featured-card img { width: 100%; height: 200px; }
+        .article-grid .article-card:first-child { grid-column: span 1; }
+        .article-grid .article-card:first-child img { height: 200px; }
         .footer-content { grid-template-columns: 1fr; text-align: center; }
         .hero-title { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
         .hero-description { font-size: 1rem !important; }
-        .category-bottom-bar { margin: 2rem 1rem; }
-        .category-segment { min-height: 48px; }
         .sub-manifesto-text { font-size: 1rem; }
+        .single-category-segment { min-width: 160px; padding: 0.75rem 1.5rem; font-size: 0.9rem; }
     }
     
     @media (max-width: 480px) {
         .hero-title { font-size: 1.5rem !important; }
         .hero-description { font-size: 0.9rem !important; }
-        .category-label { font-size: 8px; }
-        .category-icon { font-size: 14px; }
+        .single-category-segment { min-width: 140px; padding: 0.6rem 1rem; font-size: 0.8rem; }
     }
     
     @keyframes driftRight {
@@ -686,39 +627,19 @@
 
         <!-- SUB-MANIFESTO (KATEGORİ VİZYON METNİ) -->
         <div class="sub-manifesto">
-            <div class="sub-manifesto-text" id="subManifestoText">
-                <!-- Sub-manifesto içeriği hero_bot'dan veya doğrudan gelecek -->
-            </div>
+            <div class="sub-manifesto-text" id="subManifestoText"></div>
             <div class="sub-manifesto-quote">✦ GATEMIRROR PERSPECTIVE ✦</div>
         </div>
 
-        <!-- KATEGORİ BUTONLARI -->
-        <div class="category-buttons" style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0;">
+        <!-- TÜM MAKALELER LİNKİ -->
+        <div class="category-buttons" style="display: flex; justify-content: center; margin: 2rem 0;">
             <a href="/explore/all-articles/{{ lang }}.html" class="cat-btn">📚 ALL ARTICLES</a>
         </div>
 
-        <!-- FEATURED ARTICLE -->
-        {% if featured_article %}
-        <div class="featured">
-            <a href="{{ featured_article.url }}" class="featured-card">
-                <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" onerror="this.style.display='none'">
-                <div class="featured-content">
-                    <div class="featured-meta">
-                        <span>📅 {{ featured_article.date }}</span>
-                        <span>⏱️ {{ featured_article.reading_time }} min read</span>
-                        <span>👁️ {{ featured_article.views }} views</span>
-                    </div>
-                    <h2>{{ featured_article.title }}</h2>
-                    <p>{{ featured_article.excerpt }}</p>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-
-        <!-- MAKALE LİSTESİ -->
+        <!-- MAKALE LİSTESİ (İLK MAKALE BÜYÜK) -->
         <div class="container">
             <h2 class="section-title">
-                {% if lang == 'en' %}Latest in {{ category_name }}{% elif lang == 'es' %}Último en {{ category_name }}{% elif lang == 'de' %}Neueste in {{ category_name }}{% elif lang == 'fr' %}Dernier en {{ category_name }}{% endif %}
+                {% if lang == 'en' %}All {{ category_name }} Articles{% elif lang == 'es' %}Todos los Artículos de {{ category_name }}{% elif lang == 'de' %}Alle {{ category_name }} Artikel{% elif lang == 'fr' %}Tous les Articles {{ category_name }}{% endif %}
             </h2>
             <div class="article-grid">
                 {% for article in articles %}
@@ -738,23 +659,19 @@
         </div>
     </main>
 
-    <!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
+    <!-- KATEGORİ BÖLÜMÜ - SADECE BULUNDUĞU KATEGORİ -->
     <div class="category-bottom-bar">
-        <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
-            <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
-            <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
-            <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
-            <span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span>
-        </a>
-        <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
-            <span class="category-label"><span class="category-icon">🔸</span> ECO</span>
-        </a>
+        {% if category == 'tech' %}
+        <a href="/{{ lang }}/tech/" class="single-category-segment segment-tech" style="background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); color: white;">🔸 TECH & AI</a>
+        {% elif category == 'future-economy' %}
+        <a href="/{{ lang }}/future-economy/" class="single-category-segment segment-fe" style="background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); color: white;">🔸 FUTURE ECONOMY</a>
+        {% elif category == 'elearning' %}
+        <a href="/{{ lang }}/elearning/" class="single-category-segment segment-el" style="background: linear-gradient(135deg, var(--el-2), var(--el-4)); color: white;">🔸 E-LEARNING</a>
+        {% elif category == 'wellness' %}
+        <a href="/{{ lang }}/wellness/" class="single-category-segment segment-wellness" style="background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); color: white;">🔸 WELLNESS</a>
+        {% elif category == 'eco' %}
+        <a href="/{{ lang }}/eco/" class="single-category-segment segment-eco" style="background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); color: white;">🔸 ECO & SUSTAINABLE</a>
+        {% endif %}
     </div>
 
     <!-- FOOTER -->
@@ -786,7 +703,6 @@
         </div>
     </footer>
 
-    <!-- SCHEMA.ORG -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -843,7 +759,8 @@
         document.getElementById('darkModeToggle')?.addEventListener('click', () => setDarkMode(!document.body.classList.contains('dark')));
         initDarkMode();
     })();
-          // =====================
+
+    // =====================
     // 3. KATEGORİ BAZLI SUB-MANIFESTO (4 DİL)
     // =====================
     (function() {
