@@ -690,10 +690,16 @@
             <div class="sub-manifesto-quote">✦ GATEMIRROR PERSPECTIVE ✦</div>
         </div>
 
-        <!-- TÜM KATEGORİ MAKALELERİ BUTONU -->
-<a href="/explore/category-archive/{{ lang }}/{{ category }}/" class="category-archive-btn">
-    📚 ALL {{ category_name | upper }} ARTICLES
-</a>
+        
+<!-- TÜM KATEGORİ MAKALELERİ BUTONU - PARALEL KENAR STİLİ -->
+<div class="single-category-wrapper">
+    <a href="/explore/category-archive/{{ lang }}/{{ category }}/" class="single-category-segment">
+        <span class="single-category-label">
+            <span class="category-icon">🔸</span> ALL {{ category_name | upper }} ARTICLES
+        </span>
+    </a>
+</div>
+        
 
         <!-- MAKALE LİSTESİ (İLK MAKALE BÜYÜK) -->
         <div class="container">
