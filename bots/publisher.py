@@ -268,33 +268,70 @@ def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for
         print(f"   ⚠️ {article.get('url', 'unknown')} yazılamadı: {e}")
     return None
 
-# ================= ARTICLES.JSON ÜRETİMİ =================
+# ================= ARTICLES.JSON ÜRETİMİ (YENİ - ZENGİNLEŞTİRİLMİŞ) =================
 
 def generate_articles_json(all_articles):
+    """Zenginleştirilmiş articles.json üretir - word_count, summary_text, author, alternate_langs ile"""
+    
+    # Önce tüm makalelerin listesini oluştur
     articles_list = []
     for article in all_articles:
+        parsed = article['parsed']
+        
         articles_list.append({
+            'hash': article.get('hash', ''),
+            'slug': article.get('slug', ''),
             'url': article['url'],
+            'canonical': f"{R2_PUBLIC_URL}{article['url']}",
             'lang': article['lang'],
             'category': article['category'],
-            'title': article['parsed']['title'],
-            'date': article['parsed']['date'],
-            'reading_time': article['parsed']['reading_time'],
-            'views': article['parsed']['views'],
-            'cover_image': article['parsed']['cover_image'],
-            'description': article['parsed']['description'],
-            'slug': article.get('slug', ''),
-            'hash': article.get('hash', '')
+            'category_name': get_category_name(article['lang'], article['category']),
+            'title': parsed['title'],
+            'description': parsed['description'],
+            'summary': parsed.get('summary_text', ''),
+            'author': {
+                'name': parsed.get('author', 'Gatemirror Expert'),
+                'title': parsed.get('author_title', ''),
+                'bio': parsed.get('author_bio', ''),
+                'avatar': parsed.get('author_avatar', '')
+            },
+            'date': parsed['date'],
+            'datetime': parsed.get('datetime_iso', ''),
+            'reading_time': parsed['reading_time'],
+            'word_count': parsed.get('word_count', 0),
+            'views': parsed['views'],
+            'cover_image': parsed['cover_image'],
+            'content_image_1': parsed.get('content_image_1', ''),
+            'content_image_2': parsed.get('content_image_2', ''),
+            'tags': []  # Şimdilik boş, ileride doldurulabilir
         })
     
-    articles_json = json.dumps(articles_list, indent=2, ensure_ascii=False)
+    # Alternatif dilleri ekle (tüm makaleler bittikten sonra, aynı hash'e göre eşle)
+    for article in articles_list:
+        alt_langs = {}
+        for other in articles_list:
+            if (other['category'] == article['category'] and 
+                other['hash'] == article['hash'] and 
+                other['lang'] != article['lang']):
+                alt_langs[other['lang']] = other['url']
+        article['alternate_langs'] = alt_langs
+    
+    # Meta bilgileri ekle
+    final_json = {
+        "version": "1.1",
+        "generated": datetime.now().isoformat(),
+        "total_articles": len(articles_list),
+        "articles": articles_list
+    }
+    
+    articles_json = json.dumps(final_json, indent=2, ensure_ascii=False)
     s3.put_object(
         Bucket=R2_BUCKET,
         Key='articles.json',
         Body=articles_json.encode('utf-8'),
         ContentType='application/json'
     )
-    print("   ✅ articles.json oluşturuldu")
+    print(f"   ✅ articles.json oluşturuldu ({len(articles_list)} makale)")
 
 # ================= ANA PUBLISHER =================
 
