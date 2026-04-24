@@ -32,486 +32,883 @@
 
     <style>
     /* =====================================================
-       GATEMIRROR - MASTER CSS (home 93 tabanlı)
-       Tüm stiller home.html'den birebir alınmıştır.
-       ===================================================== */
+       GATEMIRROR - MASTER CSS (HOME.HTML'DEN BİREBİR)
+       Tüm stiller home(93).html'den alınmıştır
+    ===================================================== */
     
-    /* BLOK 1: RESET & VARIABLES */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* RESET & VARIABLES */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
     :root {
-        --primary: #2ecc71; --primary-dark: #1a8c3f; --primary-light: #5ee0a0;
-        --dark: #0a0a0a; --text: #1a1a1a; --text-light: #666; --gray: #f5f5f5;
-        --white: #ffffff; --shadow: 0 10px 30px rgba(0,0,0,0.05);
-        --shadow-hover: 0 20px 40px rgba(0,0,0,0.1); --border-radius: 1rem;
+        --primary: #2ecc71;
+        --primary-dark: #1a8c3f;
+        --primary-light: #5ee0a0;
+        --dark: #0a0a0a;
+        --text: #1a1a1a;
+        --text-light: #666;
+        --gray: #f5f5f5;
+        --white: #ffffff;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.1);
+        --border-radius: 1rem;
         --transition: all 0.3s ease;
-        --tech-1: #050510; --tech-2: #0a0a3a; --tech-3: #2a0aff; --tech-4: #5c3dff; --tech-5: #aa88ff;
-        --wellness-1: #14050a; --wellness-2: #2a0a18; --wellness-3: #ff0a5a; --wellness-4: #ff4080; --wellness-5: #ff88b8;
-        --eco-1: #051405; --eco-2: #0a2a0a; --eco-3: #00ff30; --eco-4: #40ff70; --eco-5: #88ffb0;
-        --fe-1: #140a00; --fe-2: #2a1800; --fe-3: #ff5a00; --fe-4: #ff8833; --fe-5: #ffbb77;
-        --el-1: #000d14; --el-2: #001a2a; --el-3: #00ccff; --el-4: #44ddff; --el-5: #88eeff;
+        
+        --tech-1: #050510;
+        --tech-2: #0a0a3a;
+        --tech-3: #2a0aff;
+        --tech-4: #5c3dff;
+        --tech-5: #aa88ff;
+        
+        --wellness-1: #14050a;
+        --wellness-2: #2a0a18;
+        --wellness-3: #ff0a5a;
+        --wellness-4: #ff4080;
+        --wellness-5: #ff88b8;
+        
+        --eco-1: #051405;
+        --eco-2: #0a2a0a;
+        --eco-3: #00ff30;
+        --eco-4: #40ff70;
+        --eco-5: #88ffb0;
+        
+        --fe-1: #140a00;
+        --fe-2: #2a1800;
+        --fe-3: #ff5a00;
+        --fe-4: #ff8833;
+        --fe-5: #ffbb77;
+        
+        --el-1: #000d14;
+        --el-2: #001a2a;
+        --el-3: #00ccff;
+        --el-4: #44ddff;
+        --el-5: #88eeff;
+        
         --category-color: var(--tech-3);
     }
+    
     body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: var(--text); background: var(--white); line-height: 1.6; overflow-x: hidden;
+        color: var(--text);
+        background: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
     }
+    
+    /* Kategori bazlı renk değişkenleri - JS ile set edilecek */
+    body.category-tech { --category-color: var(--tech-3); --category-grad-start: var(--tech-2); --category-grad-end: var(--tech-4); }
+    body.category-wellness { --category-color: var(--wellness-3); --category-grad-start: var(--wellness-2); --category-grad-end: var(--wellness-4); }
+    body.category-eco { --category-color: var(--eco-3); --category-grad-start: var(--eco-2); --category-grad-end: var(--eco-4); }
+    body.category-future-economy { --category-color: var(--fe-3); --category-grad-start: var(--fe-2); --category-grad-end: var(--fe-4); }
+    body.category-elearning { --category-color: var(--el-3); --category-grad-start: var(--el-2); --category-grad-end: var(--el-4); }
+    
+    /* BUTTONS */
     .btn, .archive-btn, .random-btn {
-        display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none;
-        font-weight: 600; font-size: 0.9rem; transition: var(--transition); border: none; cursor: pointer;
-        box-shadow: 0 4px 12px rgba(46,204,113,0.3);
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
     }
+    
     .btn:hover, .archive-btn:hover, .random-btn:hover {
-        transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46,204,113,0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
     }
+    
     .container {
-        max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
     }
+    
     .section-title {
-        font-size: 1.8rem; margin-bottom: 2rem; font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
     }
     
     /* HEADER & NAVIGATION */
     nav {
         background: linear-gradient(to bottom, rgba(255,255,255,0.2) 100%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.98) 0%);
-        backdrop-filter: blur(8px); padding: 1rem 5%; display: flex; align-items: center;
-        justify-content: space-between; position: sticky; top: 0; z-index: 1000;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+        backdrop-filter: blur(8px);
+        padding: 1rem 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
-    .logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--dark); letter-spacing: -0.5px; }
+    
+    .logo {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--dark);
+        letter-spacing: -0.5px;
+    }
+    
     .logo span { color: var(--primary-dark); }
+    
     .nav-links { display: flex; gap: 2rem; }
     .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: var(--transition); }
     .nav-links a:hover { color: var(--primary); }
-    .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
     
-    /* SIDE MENU (MOBİL) - PREMIUM LACİVERT */
-    .side-menu {
-        position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100%;
-        background: #1C2238; backdrop-filter: blur(12px); color: white; transition: left 0.3s ease-in-out;
-        z-index: 2000; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem;
+    .menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark);
     }
+    
+    /* SIDE MENU */
+    .side-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100%;
+        background: #1C2238;
+        backdrop-filter: blur(12px);
+        color: white;
+        transition: left 0.3s ease-in-out;
+        z-index: 2000;
+        padding: 2rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
     .side-menu.active { left: 0; }
     .close-menu { text-align: right; font-size: 1.5rem; cursor: pointer; color: #aaa; }
     .close-menu:hover { color: white; }
+    
     .side-menu .nav-links { display: flex; flex-direction: column; gap: 0; }
     .side-menu .nav-links a { display: block; padding: 0.8rem 0; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; }
     .side-menu .nav-links a:hover { color: var(--primary); }
+    
     .lang-section { border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1rem; }
     .lang-title { font-size: 0.8rem; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
     .flags { display: flex; gap: 1rem; margin-top: 0.5rem; }
     .flag-link { font-size: 1.2rem; opacity: 0.7; color: white; }
     .flag-link:hover { opacity: 1; }
+    
     .footer-links { margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); font-size: 0.8rem; }
     .footer-links a { display: block; color: white !important; padding: 0.3rem 0; text-decoration: none; }
     .footer-links a:hover { color: var(--primary) !important; }
+    
     .dark-mode-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
     .toggle-switch { width: 50px; height: 24px; background: #333; border-radius: 30px; position: relative; cursor: pointer; }
     .toggle-switch:after { content: "🌙"; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s; }
     
-    /* HERO BÖLÜMÜ (3 SVG + 2 OVERLAY) */
-    .hero-wrapper { position: relative; min-height: auto; overflow: hidden; background: transparent; }
-    .pattern-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .pattern-layer img { position: absolute; top: 0%; left: 0%; width: 400%; height: 400%; object-fit: contain; object-position: center; }
-    .layer-back { z-index: 1; }
-    .layer-back img { width: 140%; height: 140%; top: -50%; left: 0%; opacity: 0.8; animation: driftRight 30s ease-in-out infinite, colorCycleBack 3s ease-in-out infinite; }
-    .color-overlay-backsvg2 { position: absolute; inset: 0; z-index: 2; background: linear-gradient(135deg, var(--tech-3) 100%, var(--wellness-3) 80%, var(--fe-3) 60%, var(--eco-3) 40%, var(--el-3) 20%, var(--tech-3) 0%); background-size: 200% 200%; opacity: 0.5; animation: gradientShiftBack 8s ease-in-out infinite; pointer-events: none; mix-blend-mode: overlay; }
-    .layer-front { z-index: 3; }
-    .layer-front img { width: 175%; height: 175%; top: -40%; left: 50; opacity: 0.8; animation: driftLeft 40s ease-in-out infinite reverse, colorCycleBack 4s ease-in-out infinite; }
-    .color-overlay-frontsvg1 { position: absolute; inset: 0; z-index: 4; background: linear-gradient(135deg, var(--tech-3) 0%, var(--wellness-3) 20%, var(--fe-3) 40%, var(--eco-3) 60%, var(--el-3) 80%, var(--tech-3) 100%); background-size: 200% 200%; opacity: 0.5; animation: gradientShift 4s ease-in-out infinite; pointer-events: none; mix-blend-mode: overlay; }
-    @keyframes driftRight { 0% { transform: translateX(50) translateY(0); } 25% { transform: translateX(200px) translateY(5px); } 50% { transform: translateX(450px) translateY(0); } 75% { transform: translateX(200px) translateY(-5px); } 100% { transform: translateX(50) translateY(0); } }
-    @keyframes driftLeft { 0% { transform: translateX(-50) translateY(0); } 25% { transform: translateX(-200px) translateY(-5px); } 50% { transform: translateX(-450px) translateY(0); } 75% { transform: translateX(-200px) translateY(5px); } 100% { transform: translateX(-50) translateY(0); } }
-    @keyframes gradientShiftback { 0% { background-position: 50% 0%; opacity: 0.6; } 12.5% { background-position: 0% 25%; opacity: 0.65; } 25% { background-position: 0% 50%; opacity: 0.7; } 37.5% { background-position: 0% 75%; opacity: 0.7; } 50% { background-position: 50% 100%; opacity: 0.8; } 62.5% { background-position: 100% 75%; opacity: 0.7; } 75% { background-position: 100% 50%; opacity: 0.7; } 87.5% { background-position: 100% 25%; opacity: 0.65; } 100% { background-position: 50% 0%; opacity: 0.6; } }
-    @keyframes gradientShift { 0% { background-position: 50% 0%; opacity: 0.6; } 12.5% { background-position: 100% 25%; opacity: 0.65; } 25% { background-position: 100% 50%; opacity: 0.7; } 37.5% { background-position: 100% 75%; opacity: 0.7; } 50% { background-position: 50% 100%; opacity: 0.8; } 62.5% { background-position: 0% 75%; opacity: 0.7; } 75% { background-position: 0% 50%; opacity: 0.7; } 87.5% { background-position: 0% 25%; opacity: 0.65; } 100% { background-position: 50% 0%; opacity: 0.6; } }
-    .hero-wrapper::before { content: ""; position: absolute; top: -10px; left: 0; right: 0; height: 50px; z-index: 5; background: linear-gradient(to top, transparent 0%, var(--white) 100%); pointer-events: none; }
-    .hero-wrapper::after { content: ""; position: absolute; inset: 0; z-index: 5; background: linear-gradient(to bottom, transparent 0%, transparent 45%, var(--white) 100%); pointer-events: none; }
-    .hero-title { opacity: 1 !important; font-size: clamp(2.5rem, 5vw, 3.5rem) !important; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 1rem; background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-    .hero-description { opacity: 1 !important; font-size: 1.4rem !important; font-weight: 700; max-width: 700px; margin: 0 auto 1.5rem; line-height: 1.5; color: var(--tech-3); text-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-    .hero-cta-primary { display: inline-block; background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%); color: white; padding: 0.9rem 2rem; font-weight: 700; font-size: 1rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; border: none; cursor: pointer; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .hero-cta-primary:hover { transform: translateY(-3px); background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    /* HERO WRAPPER (5 KATMAN) */
+    .hero-wrapper {
+        position: relative;
+        min-height: auto;
+        overflow: hidden;
+        background: transparent;
+    }
     
-    /* ARTICLE GRID & FEATURED */
-    .featured { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
-    .featured-card { display: flex; gap: 2rem; background: var(--white); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
-    .featured-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    .pattern-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    
+    .pattern-layer img {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 400%;
+        height: 400%;
+        object-fit: contain;
+        object-position: center;
+    }
+    
+    .layer-back { z-index: 1; }
+    .layer-back img {
+        width: 140%;
+        height: 140%;
+        top: -50%;
+        left: 0%;
+        opacity: 0.8;
+        animation: driftRight 30s ease-in-out infinite;
+    }
+    
+    .color-overlay-backsvg2 {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: linear-gradient(135deg, var(--category-color) 100%, var(--wellness-3) 80%, var(--fe-3) 60%, var(--eco-3) 40%, var(--el-3) 20%, var(--category-color) 0%);
+        background-size: 200% 200%;
+        opacity: 0.5;
+        animation: gradientShiftBack 8s ease-in-out infinite;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+    }
+    
+    .layer-front { z-index: 3; }
+    .layer-front img {
+        width: 175%;
+        height: 175%;
+        top: -40%;
+        left: 50%;
+        opacity: 0.8;
+        animation: driftLeft 40s ease-in-out infinite reverse;
+    }
+    
+    .color-overlay-frontsvg1 {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        background: linear-gradient(135deg, var(--category-color) 0%, var(--wellness-3) 20%, var(--fe-3) 40%, var(--eco-3) 60%, var(--el-3) 80%, var(--category-color) 100%);
+        background-size: 200% 200%;
+        opacity: 0.5;
+        animation: gradientShift 4s ease-in-out infinite;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+    }
+    
+    .hero-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 0;
+        right: 0;
+        height: 50px;
+        z-index: 5;
+        background: linear-gradient(to top, transparent 0%, var(--white) 100%);
+        pointer-events: none;
+    }
+    
+    .hero-wrapper::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        background: linear-gradient(to bottom, transparent 0%, transparent 45%, var(--white) 100%);
+        pointer-events: none;
+    }
+    
+    /* HERO YAZILARI */
+    .hero-title {
+        opacity: 1 !important;
+        font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--category-grad-start, var(--tech-2)) 0%, var(--category-grad-end, var(--tech-3)) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hero-description {
+        opacity: 1 !important;
+        font-size: 1.4rem !important;
+        font-weight: 700;
+        max-width: 700px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.5;
+        color: var(--category-color);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .hero-cta-primary {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--category-color) 0%, var(--category-grad-end, var(--tech-4)) 100%);
+        color: white;
+        padding: 0.9rem 2rem;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero-cta-primary:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, var(--category-grad-end, var(--tech-4)) 0%, var(--tech-5) 100%);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* SUB-MANIFESTO BÖLÜMÜ */
+    .sub-manifesto {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        text-align: center;
+        border-radius: 1rem;
+        background: rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .sub-manifesto-text {
+        font-size: 1.2rem;
+        line-height: 1.7;
+        color: var(--text);
+        font-weight: 400;
+    }
+    
+    .sub-manifesto-quote {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--category-color);
+        margin-top: 1rem;
+    }
+    
+    body.dark .sub-manifesto {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    
+    /* FEATURED ARTICLE */
+    .featured {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+    
+    .featured-card {
+        display: flex;
+        gap: 2rem;
+        background: var(--white);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+    
+    .featured-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+    
     .featured-card img { width: 50%; object-fit: cover; }
     .featured-content { padding: 2rem; flex: 1; }
     .featured-content h2 { font-size: 1.8rem; }
     .featured-meta { color: var(--text-light); font-size: 0.9rem; margin: 0.5rem 0; display: flex; gap: 1rem; }
-    .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-    .article-grid .article-card:first-child { grid-column: span 2; }
-    .article-grid .article-card:first-child img { height: 300px; }
-    .article-grid .article-card:first-child h3 { font-size: 1.4rem; }
-    .article-card { background: var(--white); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); display: block; }
-    .article-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    
+    /* ARTICLE GRID */
+    .article-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+    
+    .article-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        display: block;
+    }
+    
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+    
     .article-card img { width: 100%; height: 200px; object-fit: cover; }
     .article-card h3 { padding: 1rem 1rem 0.5rem; font-size: 1.2rem; }
     .article-meta { padding: 0 1rem; display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-light); }
     .article-card p { padding: 0.5rem 1rem 1rem; color: var(--text-light); font-size: 0.9rem; }
     .article-card a { text-decoration: none; color: inherit; display: block; }
     
-    /* CATEGORY BOTTOM BAR (ARALIKSIZ + HOVER) */
-    .category-bottom-bar { max-width: 1200px; margin: 3rem auto 2rem auto; border-radius: 0; overflow: hidden; display: flex; flex-direction: row; flex-wrap: nowrap; border: none; gap: 0; background: transparent; }
-    .category-segment { flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: flex 0.4s cubic-bezier(0.23,1,0.32,1), clip-path 0.3s ease; }
-    @media (hover: hover) { .category-segment:hover { flex: 2.5; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); } .category-label { opacity: 0; } .category-segment:hover .category-label { opacity: 1; } }
-    @media (hover: none) { .category-segment { min-height: 64px; } .category-label { opacity: 1; } }
-    .category-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); transition: opacity 0.3s; text-shadow: 0 1px 3px rgba(0,0,0,0.5); gap: 5px; padding: 0 4px; text-align: center; line-height: 1.2; flex-direction: column; }
-    .category-icon { font-size: 16px; }
-    .segment-tech { background: linear-gradient(135deg, var(--tech-2) 0%, var(--tech-4) 100%); }
-    .segment-tech:hover { background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-5) 100%); }
-    .segment-fe { background: linear-gradient(135deg, var(--fe-2) 0%, var(--fe-4) 100%); }
-    .segment-fe:hover { background: linear-gradient(135deg, var(--fe-3) 0%, var(--fe-5) 100%); }
-    .segment-el { background: linear-gradient(135deg, var(--el-2) 0%, var(--el-4) 100%); }
-    .segment-el:hover { background: linear-gradient(135deg, var(--el-3) 0%, var(--el-5) 100%); }
-    .segment-wellness { background: linear-gradient(135deg, var(--wellness-2) 0%, var(--wellness-4) 100%); }
-    .segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3) 0%, var(--wellness-5) 100%); }
-    .segment-eco { background: linear-gradient(135deg, var(--eco-2) 0%, var(--eco-4) 100%); }
-    .segment-eco:hover { background: linear-gradient(135deg, var(--eco-3) 0%, var(--eco-5) 100%); }
+    /* CATEGORY BOTTOM BAR */
+    .category-bottom-bar {
+        max-width: 1200px;
+        margin: 3rem auto 2rem auto;
+        border-radius: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0;
+    }
     
-    /* SUB-MANIFESTO (Kategori Vizyon Metni) */
-    .sub-manifesto {
-        max-width: 900px; margin: 2rem auto; padding: 2rem 1.5rem;
-        background: rgba(0,0,0,0.02); border-left: 4px solid var(--tech-3);
-        border-radius: 0 1rem 1rem 0;
+    .category-segment {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        cursor: pointer;
+        text-decoration: none;
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+        transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1), clip-path 0.3s ease;
     }
-    .sub-manifesto-title {
-        font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem;
-        background: linear-gradient(135deg, var(--tech-2), var(--tech-4));
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .sub-manifesto-text {
-        font-size: 1rem; line-height: 1.6; color: var(--text-light);
-    }
-    body.dark .sub-manifesto {
-        background: rgba(255,255,255,0.03); border-left-color: var(--tech-4);
-    }
-    body.dark .sub-manifesto-text { color: #C9D1D9; }
     
-    /* FEATURED TRIPLE (Öne Çıkan 3 Makale) */
-    .featured-triple {
-        max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;
-        display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    .category-segment:hover { flex: 2.5; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); }
+    @media (hover: hover) { .category-label { opacity: 0; } .category-segment:hover .category-label { opacity: 1; } }
+    @media (hover: none) { .category-label { opacity: 1; } }
+    
+    .category-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: rgba(255,255,255,0.95);
+        transition: opacity 0.3s;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        gap: 8px;
+        padding: 0 4px;
+        text-align: center;
+        flex-direction: column;
     }
-    .featured-triple-card {
-        background: var(--white); border-radius: var(--border-radius); overflow: hidden;
-        box-shadow: var(--shadow); transition: var(--transition);
-    }
-    .featured-triple-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
-    .featured-triple-card img { width: 100%; height: 180px; object-fit: cover; }
-    .featured-triple-content { padding: 1.5rem; }
-    .featured-triple-title { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700; }
-    .featured-triple-meta { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem; }
-    body.dark .featured-triple-card { background: #1A1F2E; border: 1px solid #2A3040; }
+    
+    .category-icon { font-size: 18px; }
+    .category-segment:hover .category-label { letter-spacing: 0.15em; font-size: 13px; }
+    
+    .segment-tech { background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); }
+    .segment-tech:hover { background: linear-gradient(135deg, var(--tech-3), var(--tech-5)); }
+    .segment-wellness { background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); }
+    .segment-wellness:hover { background: linear-gradient(135deg, var(--wellness-3), var(--wellness-5)); }
+    .segment-eco { background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); }
+    .segment-eco:hover { background: linear-gradient(135deg, var(--eco-3), var(--eco-5)); }
+    .segment-fe { background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); }
+    .segment-fe:hover { background: linear-gradient(135deg, var(--fe-3), var(--fe-5)); }
+    .segment-el { background: linear-gradient(135deg, var(--el-2), var(--el-4)); }
+    .segment-el:hover { background: linear-gradient(135deg, var(--el-3), var(--el-5)); }
     
     /* FOOTER */
-    footer { position: relative; z-index: 10; clear: both; background: #1C2238; color: white; padding: 3rem 5%; margin-top: 2rem; }
-    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2rem; }
+    footer { background: #1C2238; color: white; padding: 3rem 5%; margin-top: 2rem; position: relative; z-index: 10; clear: both; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
     .footer-column h4 { margin-bottom: 1rem; font-size: 1rem; }
-    .footer-column a { display: block; color: #aaa; margin-bottom: 0.5rem; font-size: 0.9rem; text-decoration: none; }
+    .footer-column a { display: block; color: #aaa; margin-bottom: 0.5rem; font-size: 0.9rem; }
     .footer-column a:hover { color: var(--primary); }
     .footer-copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #2A3040; font-size: 0.8rem; color: #aaa; }
     
-    /* DARK MODE (PREMIUM LACİVERT) */
+    /* DARK MODE */
     body.dark { background-color: #1C2238; color: #E8EDF5; }
     body.dark .toggle-switch:after { content: "☀️"; left: 26px; }
     body.dark nav { background: linear-gradient(to bottom, rgba(18,24,34,0.98) 0%, rgba(18,24,34,0.7) 40%, rgba(18,24,34,0.2) 100%); border-bottom: 1px solid #2A3040; backdrop-filter: blur(8px); }
     body.dark .logo, body.dark .nav-links a { color: #F0F6FC; }
     body.dark .dark-mode-btn { background: rgba(255,255,255,0.1); color: #E8EDF5; }
-    body.dark .dark-mode-btn:hover { background: rgba(255,255,255,0.2); }
-    body.dark .side-menu { background: #1C2238; backdrop-filter: blur(12px); border-right: 1px solid #2A3040; }
+    body.dark .side-menu { background: #1C2238; border-right: 1px solid #2A3040; }
     body.dark .hero-wrapper::before { background: linear-gradient(to top, transparent 0%, #1C2238 100%); }
     body.dark .hero-wrapper::after { background: linear-gradient(to bottom, transparent 0%, #1C2238 100%); }
     body.dark .color-overlay-backsvg2, body.dark .color-overlay-frontsvg1 { mix-blend-mode: overlay !important; opacity: 0.4 !important; }
     body.dark .layer-back img, body.dark .layer-front img { opacity: 0.8 !important; filter: brightness(1.1) contrast(1.05) saturate(1.2); }
-    body.dark .hero-title { background: linear-gradient(135deg, var(--tech-4) 0%, var(--tech-5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    body.dark .hero-description { color: #C9D1D9 !important; }
-    body.dark .hero-cta-primary { background: linear-gradient(135deg, var(--tech-3) 0%, var(--tech-4) 100%); }
-    body.dark .article-card, body.dark .featured-card { background: #1A1F2E; border: 1px solid #2A3040; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    body.dark .hero-title { background: linear-gradient(135deg, var(--tech-4), var(--tech-5)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    body.dark .hero-description { color: #C9D1D9 !important; text-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    body.dark .hero-cta-primary { background: linear-gradient(135deg, var(--tech-3), var(--tech-4)); }
+    body.dark .article-card { background: #1A1F2E; border: 1px solid #2A3040; }
     body.dark .article-card h3, body.dark .article-card p { color: #E8EDF5; }
-    body.dark .category-bottom-bar { border-color: #2A3040; background: rgba(26,31,46,0.5); }
-    body.dark footer { background: #1C2238; border-top: 1px solid #2A3040; }
     body.dark .footer-column a { color: #8A94A8; }
     body.dark .footer-column a:hover { color: var(--primary-light); }
+    
+/* SCROLL TOP BUTON */
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--tech-3), var(--tech-4));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    #scrollTopBtn:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, var(--tech-4), var(--tech-5));
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    body.dark #scrollTopBtn { background: linear-gradient(135deg, var(--tech-3), var(--tech-4)); }
+    body.dark #scrollTopBtn:hover { background: linear-gradient(135deg, var(--tech-4), var(--tech-5)); }
     
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .nav-links { display: none; }
         .menu-btn { display: block; }
-        .article-grid { grid-template-columns: 1fr; }
-        .article-grid .article-card:first-child { grid-column: span 1; }
-        .article-grid .article-card:first-child img { height: 200px; }
+        .article-grid { grid-template-columns: 1fr; gap: 1.5rem; }
         .featured-card { flex-direction: column; }
         .featured-card img { width: 100%; height: 200px; }
-        .featured-content { padding: 1.5rem; }
         .footer-content { grid-template-columns: 1fr; text-align: center; }
-        .hero { padding: 2rem 1rem; margin: 0.5rem; }
-        .hero-title { font-size: clamp(1.6rem,5vw,2.2rem) !important; }
+        .hero-title { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
         .hero-description { font-size: 1rem !important; }
         .category-bottom-bar { margin: 2rem 1rem; }
         .category-segment { min-height: 48px; }
-        .featured-triple { grid-template-columns: 1fr; gap: 1rem; }
-        .sub-manifesto { margin: 1rem; padding: 1.5rem; }
-        .layer-back img { width: 140%; height: 140%; top: -50%; left: 20%; }
-        .layer-front img { width: 175%; height: 175%; top: -40%; left: -40%; }
+        .sub-manifesto-text { font-size: 1rem; }
     }
+    
     @media (max-width: 480px) {
-        .category-segment { min-height: 56px; }
+        .hero-title { font-size: 1.5rem !important; }
+        .hero-description { font-size: 0.9rem !important; }
         .category-label { font-size: 8px; }
+        .category-icon { font-size: 14px; }
     }
+    
+    @keyframes driftRight {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(200px); }
+        50% { transform: translateX(450px); }
+        75% { transform: translateX(200px); }
+        100% { transform: translateX(0); }
+    }
+    
+    @keyframes driftLeft {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-200px); }
+        50% { transform: translateX(-450px); }
+        75% { transform: translateX(-200px); }
+        100% { transform: translateX(0); }
+    }
+    
+    @keyframes gradientShiftBack {
+        0% { background-position: 50% 0%; opacity: 0.6; }
+        25% { background-position: 0% 50%; opacity: 0.7; }
+        50% { background-position: 50% 100%; opacity: 0.8; }
+        75% { background-position: 100% 50%; opacity: 0.7; }
+        100% { background-position: 50% 0%; opacity: 0.6; }
+    }
+    
+    @keyframes gradientShift {
+        0% { background-position: 50% 0%; opacity: 0.6; }
+        25% { background-position: 100% 50%; opacity: 0.7; }
+        50% { background-position: 50% 100%; opacity: 0.8; }
+        75% { background-position: 0% 50%; opacity: 0.7; }
+        100% { background-position: 50% 0%; opacity: 0.6; }
+    }
+    
     @media (prefers-reduced-motion: reduce) {
-        .layer-back img, .layer-front img { animation: none !important; transform: translate3d(0,0,0) !important; }
-                                      }
-
-
-        </style>
+        .layer-back img, .layer-front img { animation: none !important; }
+        @keyframes driftRight { 0%,100% { transform: translateX(0); } }
+        @keyframes driftLeft { 0%,100% { transform: translateX(0); } }
+    }
+    </style>
 </head>
-<body>
-
-<!-- SIDE MENU (MOBİL) -->
-<div class="side-menu" id="sideMenu">
-    <div class="close-menu" onclick="toggleMenu()">&times;</div>
-    <div class="dark-mode-toggle">
-        <span>🌓 Dark Mode</span>
-        <div class="toggle-switch" id="darkModeToggle"></div>
-    </div>
-    <div class="lang-section">
-        <div class="lang-title">READ IN</div>
-        <div class="flags">
-            <a href="/" class="flag-link">🇺🇸 EN</a>
-            <a href="/es/" class="flag-link">🇪🇸 ES</a>
-            <a href="/de/" class="flag-link">🇩🇪 DE</a>
-            <a href="/fr/" class="flag-link">🇫🇷 FR</a>
+<body class="category-{{ category }}">    
+    <!-- SIDE MENU (MOBİL) -->
+    <div class="side-menu" id="sideMenu">
+        <div class="close-menu" onclick="toggleMenu()">&times;</div>
+        <div class="dark-mode-toggle">
+            <span>🌓 Dark Mode</span>
+            <div class="toggle-switch" id="darkModeToggle"></div>
         </div>
-    </div>
-    <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        {% for cat in categories %}
-        <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
-        {% endfor %}
-    </div>
-    <div class="footer-links">
-        <a href="/about-us.html">About Gatemirror</a>
-        <a href="/privacy-policy.html">Privacy Policy</a>
-        <a href="/contact.html">Contact Us</a>
-        <p>&copy; 2026 Gatemirror Media</p>
-    </div>
-</div>
-
-<!-- HEADER & NAVIGATION -->
-<nav>
-    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu"><i class="fas fa-bars"></i></button>
-    <a href="/" class="logo">GATE<span>MIRROR</span></a>
-    <div class="nav-links">
-        <a href="/{{ lang }}/">HOME</a>
-        {% for cat in categories %}
-        <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
-        {% endfor %}
-    </div>
-    <button class="dark-mode-btn" id="darkModeBtn" aria-label="Dark Mode"><i class="fas fa-moon"></i></button>
-</nav>
-
-<main>
-
-<!-- HERO BÖLÜMÜ (5 KATMANLI - home.html ile aynı) -->
-<div class="hero-wrapper">
-    <div class="pattern-layer layer-back">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
-    </div>
-    <div class="color-overlay-backsvg2"></div>
-    <div class="pattern-layer layer-front">
-        <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
-    </div>
-    <div class="color-overlay-frontsvg1"></div>
-    {{ hero.html | safe }}
-</div>
-
-<!-- KATEGORİ SUB-MANIFESTO (Vizyon Metni) -->
-<div class="sub-manifesto">
-    <div class="sub-manifesto-title">{{ category_name }} — {{ category_vision_title | default('The Frontier') }}</div>
-    <div class="sub-manifesto-text">{{ category_vision_text | default('We decode the forces that shape our world. From disruptive technologies to human resilience, this is your lens into the future.') }}</div>
-</div>
-
-<!-- KATEGORİ BAĞLANTILARI (ALL CATEGORIES / ALL ARTICLES) -->
-<div class="category-buttons" style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;">
-    <a href="/explore/categories/{{ lang }}.html" class="cat-btn">📚 ALL CATEGORIES</a>
-    <a href="/explore/all-articles/{{ lang }}.html" class="cat-btn">📚 ALL ARTICLES</a>
-</div>
-
-<!-- FEATURED TRIPLE (Öne Çıkan 3 Makale) - opsiyonel, gelen veri varsa göster -->
-{% if featured_triple %}
-<div class="featured-triple">
-    {% for article in featured_triple %}
-    <a href="{{ article.url }}" class="featured-triple-card">
-        <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
-        <div class="featured-triple-content">
-            <div class="featured-triple-meta">📅 {{ article.date }} · ⏱️ {{ article.reading_time }} min read</div>
-            <div class="featured-triple-title">{{ article.title }}</div>
-            <p style="font-size: 0.85rem; color: var(--text-light);">{{ article.excerpt | default(article.title) }}</p>
-        </div>
-    </a>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- FEATURED ARTICLE (ilk makale büyük kart) - eğer varsa -->
-{% if featured_article %}
-<div class="featured">
-    <a href="{{ featured_article.url }}" class="featured-card">
-        <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" onerror="this.style.display='none'">
-        <div class="featured-content">
-            <div class="featured-meta">
-                <span>📅 {{ featured_article.date }}</span>
-                <span>⏱️ {{ featured_article.reading_time }} min read</span>
-                <span>👁️ {{ featured_article.views }} views</span>
+        <div class="lang-section">
+            <div class="lang-title">READ IN</div>
+            <div class="flags">
+                <a href="/" class="flag-link">🇺🇸 EN</a>
+                <a href="/es/" class="flag-link">🇪🇸 ES</a>
+                <a href="/de/" class="flag-link">🇩🇪 DE</a>
+                <a href="/fr/" class="flag-link">🇫🇷 FR</a>
             </div>
-            <h2>{{ featured_article.title }}</h2>
-            <p class="featured-excerpt">{{ featured_article.excerpt }}</p>
         </div>
-    </a>
-</div>
-{% endif %}
-
-<!-- TÜM MAKALELER (ARTICLE GRID) -->
-<div class="container">
-    <h2 class="section-title">
-        {% if lang == 'en' %}Latest in {{ category_name }}{% elif lang == 'es' %}Último en {{ category_name }}{% elif lang == 'de' %}Neueste in {{ category_name }}{% elif lang == 'fr' %}Dernier en {{ category_name }}{% endif %}
-    </h2>
-    <div class="article-grid">
-        {% for article in articles %}
-        <article class="article-card">
-            <a href="{{ article.url }}">
-                <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
-                <div class="article-meta">
-                    {% if article.reading_time %}<span>⏱️ {{ article.reading_time }} min read</span>{% endif %}
-                    {% if article.views %}<span>👁️ {{ article.views }} views</span>{% endif %}
-                </div>
-                <h3>{{ article.title }}</h3>
-                <p>{{ article.excerpt | default(article.title) }}</p>
-            </a>
-        </article>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
-<div class="category-bottom-bar">
-    <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech"><span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span></a>
-    <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe"><span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span></a>
-    <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el"><span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span></a>
-    <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness"><span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span></a>
-    <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco"><span class="category-label"><span class="category-icon">🔸</span> ECO</span></a>
-</div>
-
-</main>
-
-<!-- FOOTER -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-column">
-            <h4>Gatemirror</h4>
-            <a href="/about-us.html">About Us</a>
-            <a href="/contact.html">Contact</a>
-            <a href="/privacy-policy.html">Privacy Policy</a>
-        </div>
-        <div class="footer-column">
-            <h4>Categories</h4>
+        <div class="nav-links">
             <a href="/{{ lang }}/">HOME</a>
             {% for cat in categories %}
             <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
             {% endfor %}
         </div>
-        <div class="footer-column">
-            <h4>Read in</h4>
-            <a href="/">🇺🇸 English</a>
-            <a href="/es/">🇪🇸 Español</a>
-            <a href="/de/">🇩🇪 Deutsch</a>
-            <a href="/fr/">🇫🇷 Français</a>
+        <div class="footer-links">
+            <a href="/about-us.html">About Gatemirror</a>
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <a href="/contact.html">Contact Us</a>
+            <p>&copy; 2026 Gatemirror Media</p>
         </div>
     </div>
-    <div class="footer-copyright">
-        <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+
+    <!-- HEADER & NAVIGATION -->
+    <nav>
+        <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="/" class="logo">GATE<span>MIRROR</span></a>
+        <div class="nav-links">
+            <a href="/{{ lang }}/">HOME</a>
+            {% for cat in categories %}
+            <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        <button class="dark-mode-btn" id="darkModeBtn" aria-label="Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
+
+    <main>
+        <!-- HERO BÖLÜMÜ (5 KATMANLI) -->
+        <div class="hero-wrapper">
+            <div class="pattern-layer layer-back">
+                <img src="{{ R2_PUBLIC_URL }}/assets/svg2.svg" alt="">
+            </div>
+            <div class="color-overlay-backsvg2"></div>
+            <div class="pattern-layer layer-front">
+                <img src="{{ R2_PUBLIC_URL }}/assets/svg1.svg" alt="">
+            </div>
+            <div class="color-overlay-frontsvg1"></div>
+            {{ hero.html | safe }}
+        </div>
+
+        <!-- SUB-MANIFESTO (KATEGORİ VİZYON METNİ) -->
+        <div class="sub-manifesto">
+            <div class="sub-manifesto-text" id="subManifestoText">
+                <!-- Sub-manifesto içeriği hero_bot'dan veya doğrudan gelecek -->
+            </div>
+            <div class="sub-manifesto-quote">✦ GATEMIRROR PERSPECTIVE ✦</div>
+        </div>
+
+        <!-- KATEGORİ BUTONLARI -->
+        <div class="category-buttons" style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0;">
+            <a href="/explore/all-articles/{{ lang }}.html" class="cat-btn">📚 ALL ARTICLES</a>
+        </div>
+
+        <!-- FEATURED ARTICLE -->
+        {% if featured_article %}
+        <div class="featured">
+            <a href="{{ featured_article.url }}" class="featured-card">
+                <img src="{{ featured_article.image }}" alt="{{ featured_article.title }}" loading="lazy" onerror="this.style.display='none'">
+                <div class="featured-content">
+                    <div class="featured-meta">
+                        <span>📅 {{ featured_article.date }}</span>
+                        <span>⏱️ {{ featured_article.reading_time }} min read</span>
+                        <span>👁️ {{ featured_article.views }} views</span>
+                    </div>
+                    <h2>{{ featured_article.title }}</h2>
+                    <p>{{ featured_article.excerpt }}</p>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- MAKALE LİSTESİ -->
+        <div class="container">
+            <h2 class="section-title">
+                {% if lang == 'en' %}Latest in {{ category_name }}{% elif lang == 'es' %}Último en {{ category_name }}{% elif lang == 'de' %}Neueste in {{ category_name }}{% elif lang == 'fr' %}Dernier en {{ category_name }}{% endif %}
+            </h2>
+            <div class="article-grid">
+                {% for article in articles %}
+                <article class="article-card">
+                    <a href="{{ article.url }}">
+                        <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
+                        <div class="article-meta">
+                            {% if article.reading_time %}<span>⏱️ {{ article.reading_time }} min read</span>{% endif %}
+                            {% if article.views %}<span>👁️ {{ article.views }} views</span>{% endif %}
+                        </div>
+                        <h3>{{ article.title }}</h3>
+                        <p>{{ article.excerpt | default(article.title) }}</p>
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
+    <div class="category-bottom-bar">
+        <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
+            <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
+        </a>
+        <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
+            <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
+        </a>
+        <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
+            <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
+        </a>
+        <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
+            <span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span>
+        </a>
+        <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
+            <span class="category-label"><span class="category-icon">🔸</span> ECO</span>
+        </a>
     </div>
-</footer>
 
-<!-- SCHEMA.ORG -->
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "{{ category_name }}",
-    "description": "{{ category_description }}",
-    "url": "{{ category_url }}",
-    "inLanguage": ["en", "es", "de", "fr"]
-}
-</script>
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Gatemirror</h4>
+                <a href="/about-us.html">About Us</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/privacy-policy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Categories</h4>
+                <a href="/{{ lang }}/">HOME</a>
+                {% for cat in categories %}
+                <a href="/{{ lang }}/{{ cat.slug }}/">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="footer-column">
+                <h4>Read in</h4>
+                <a href="/">🇺🇸 English</a>
+                <a href="/es/">🇪🇸 Español</a>
+                <a href="/de/">🇩🇪 Deutsch</a>
+                <a href="/fr/">🇫🇷 Français</a>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2026 Gatemirror Media Group. All rights reserved.</p>
+        </div>
+    </footer>
 
-<script>
-// =====================
-// 1. SIDE MENU (MOBİL)
-// =====================
-(function() {
-    const menu = document.getElementById('sideMenu');
-    const menuBtn = document.querySelector('.menu-btn');
-    const closeBtn = document.querySelector('.close-menu');
-    function toggleMenu() { if (menu) menu.classList.toggle('active'); }
-    if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-    if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
-    document.addEventListener('click', function(e) {
-        if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !menuBtn?.contains(e.target)) {
-            menu.classList.remove('active');
-        }
-    });
-})();
-
-// =====================
-// 2. DARK MODE
-// =====================
-(function() {
-    function setDarkMode(enabled) {
-        if (enabled) {
-            document.body.classList.add('dark');
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            document.body.classList.remove('dark');
-            localStorage.setItem('darkMode', 'disabled');
-        }
+    <!-- SCHEMA.ORG -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "{{ category_name }}",
+        "description": "{{ category_description }}",
+        "url": "{{ category_url }}",
+        "inLanguage": ["en", "es", "de", "fr"]
     }
-    function initDarkMode() {
-        const saved = localStorage.getItem('darkMode');
-        if (saved === 'enabled') document.body.classList.add('dark');
-        else if (saved === 'disabled') document.body.classList.remove('dark');
-        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark');
-    }
-    const darkBtn = document.getElementById('darkModeBtn');
-    if (darkBtn) darkBtn.addEventListener('click', () => setDarkMode(!document.body.classList.contains('dark')));
-    const toggleSwitch = document.getElementById('darkModeToggle');
-    if (toggleSwitch) toggleSwitch.addEventListener('click', () => setDarkMode(!document.body.classList.contains('dark')));
-    initDarkMode();
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('darkMode')) setDarkMode(e.matches);
-    });
-})();
+    </script>
 
-// =====================
-// 3. SCROLL TO TOP
-// =====================
-(function() {
-    const btn = document.createElement('button');
-    btn.innerHTML = '↑';
-    btn.id = 'scrollTopBtn';
-    btn.style.cssText = 'position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:linear-gradient(135deg,var(--tech-3),var(--tech-4));color:white;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,0.2);';
-    document.body.appendChild(btn);
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            btn.style.opacity = '1';
-            btn.style.visibility = 'visible';
-        } else {
-            btn.style.opacity = '0';
-            btn.style.visibility = 'hidden';
+    <script>
+    // =====================
+    // 1. SIDE MENU (MOBİL)
+    // =====================
+    (function() {
+        const menu = document.getElementById('sideMenu');
+        const menuBtn = document.querySelector('.menu-btn');
+        
+        function toggleMenu() { if (menu) menu.classList.toggle('active'); }
+        
+        if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+        document.querySelector('.close-menu')?.addEventListener('click', toggleMenu);
+        
+        document.addEventListener('click', function(e) {
+            if (menu && menu.classList.contains('active') && !menu.contains(e.target) && !menuBtn?.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    })();
+
+    // =====================
+    // 2. DARK MODE
+    // =====================
+    (function() {
+        function setDarkMode(enabled) {
+            if (enabled) {
+                document.body.classList.add('dark');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('darkMode', 'disabled');
+            }
         }
-    });
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-})();
-</script>
+        
+        function initDarkMode() {
+            const saved = localStorage.getItem('darkMode');
+            if (saved === 'enabled') document.body.classList.add('dark');
+            else if (saved === 'disabled') document.body.classList.remove('dark');
+            else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark');
+        }
+        
+        document.getElementById('darkModeBtn')?.addEventListener('click', () => setDarkMode(!document.body.classList.contains('dark')));
+        document.getElementById('darkModeToggle')?.addEventListener('click', () => setDarkMode(!document.body.classList.contains('dark')));
+        initDarkMode();
+    })();
+          // =====================
+    // 3. KATEGORİ BAZLI SUB-MANIFESTO (4 DİL)
+    // =====================
+    (function() {
+        const category = '{{ category }}';
+        const lang = '{{ lang }}';
+        
+        const subManifestoContent = {
+            'tech': {
+                'en': 'AI is no longer a "tool"; it is the new operating system of civilization. Here, we don\'t just track code and algorithms; we dissect how this power redefines human agency, creativity, and sovereignty. We don\'t look from Silicon Valley; we look from the core of the future.',
+                'es': 'La IA ya no es una "herramienta"; es el nuevo sistema operativo de la civilización. Aquí no solo analizamos códigos; diseccionamos cómo este poder redefine la voluntad humana y la soberanía. No miramos desde Silicon Valley; miramos desde el corazón del mañana.',
+                'de': 'KI ist kein "Werkzeug" mehr; sie ist das neue Betriebssystem der Zivilisation. Hier analysieren wir nicht nur Code; wir untersuchen, wie diese Macht die menschliche Handlungsfreiheit und Souveränität neu definiert. Wir blicken nicht aus dem Silicon Valley; wir blicken aus dem Zentrum der Zukunft.',
+                'fr': 'L\'IA n\'est plus un "outil" ; c\'est le nouveau système d\'exploitation de la civilisation. Ici, nous ne nous contentons pas de suivre le code ; nous analysons comment ce pouvoir redéfinit l\'autonomie humaine et la souveraineté. Nous ne regardons pas depuis la Silicon Valley ; nous regardons depuis le centre du futur.'
+            },
+            'future-economy': {
+                'en': 'Wealth is migrating from physical vaults to decentralized networks. In this new order, you don\'t need to protect your capital; you need to protect your financial intelligence. The economy of the future is not a gamble, but a grand chessboard.',
+                'es': 'La riqueza está migrando de las bóvedas físicas a las redes descentralizadas. En este nuevo orden, no protejas tu capital; protege tu inteligencia financiera. La economía del futuro no es una apuesta, sino un gran tablero de ajedrez.',
+                'de': 'Wohlstand wandert von physischen Tresoren in dezentrale Netzwerke ab. In dieser neuen Ordnung müssen Sie nicht Ihr Kapital schützen, sondern Ihre finanzielle Intelligenz. Die Wirtschaft der Zukunft ist kein Glücksspiel, sondern ein großes Schachbrett.',
+                'fr': 'La richesse migre des coffres physiques vers les réseaux décentralisés. Dans ce nouvel ordre, ne protégez pas votre capital ; protégez votre intelligence financière. L\'économie du futur n\'est pas un pari, mais un grand échiquier.'
+            },
+            'elearning': {
+                'en': 'In an era where information is free, the real luxury is "filtering" it. Leave academic inertia behind. We don\'t just learn; we build the muscle of "learning how to learn" that makes you indispensable in a shifting world.',
+                'es': 'En una era donde la información es gratuita, el verdadero lujo es "filtrarla". Deja atrás la inercia académica. No solo aprendemos; construimos el músculo de "aprender a aprender" que te hace indispensable.',
+                'de': 'In einer Ära, in der Informationen kostenlos sind, ist der wahre Luxus das "Filtern". Lassen Sie die akademische Trägheit hinter sich. Wir lernen nicht nur; wir trainieren die Fähigkeit des "Lernen lernens", die Sie unersetzlich macht.',
+                'fr': 'À une époque où l\'information est gratuite, le vrai luxe est de la "filtrer". Laissez l\'inertie académique derrière vous. Nous ne nous contentons pas d\'apprendre ; nous forgeons la capacité d\'apprendre à apprendre.'
+            },
+            'wellness': {
+                'en': 'Amidst digital noise and toxic speed, your greatest strategic asset is your own mind. Wellness is not a hobby; it is a "survival protocol". Discover how to harmonize your biological system with this new age.',
+                'es': 'En medio del ruido digital y la velocidad tóxica, tu mayor activo estratégico es tu propia mente. El bienestar no es un hobby; es un "protocolo de supervivencia". Sincroniza tu sistema biológico con esta nueva era.',
+                'de': 'Inmitten von digitalem Lärm und toxischer Geschwindigkeit ist Ihr wichtigstes strategisches Gut Ihr eigener Geist. Wellness ist kein Hobby; es ist ein "Überlebensprotokoll".',
+                'fr': 'Au milieu du bruit numérique et de la vitesse toxique, votre plus grand atout stratégique est votre propre esprit. Le bien-être n\'est pas un passe-temps ; c\'est un "protocole de survie".'
+            },
+            'eco': {
+                'en': 'Sustainability is not a matter of conscience, but a necessity of existence. We are moving towards an order where resources are reborn, not consumed. We don\'t just talk about "saving the planet"; we talk about the architecture of a circular future.',
+                'es': 'La sostenibilidad no es una cuestión de conciencia, sino una necesidad de existencia. Caminamos hacia un orden donde los recursos renacen, no se consumen. Diseñamos la arquitectura de un futuro circular.',
+                'de': 'Nachhaltigkeit ist keine Gewissensfrage, sondern eine Existenznotwendigkeit. Wir bewegen uns auf eine Ordnung zu, in der Ressourcen wiedergeboren werden, statt zu verbrauchen.',
+                'fr': 'La durabilité n\'est pas une question de conscience, mais une nécessité d\'existence. Nous tendons vers un ordre où les ressources renaissent au lieu d\'être consommées.'
+            }
+        };
+        
+        const textElement = document.getElementById('subManifestoText');
+        if (textElement && subManifestoContent[category] && subManifestoContent[category][lang]) {
+            textElement.textContent = subManifestoContent[category][lang];
+        } else if (textElement) {
+            textElement.textContent = subManifestoContent['tech']['en'];
+        }
+    })();
+
+    // =====================
+    // 4. SCROLL TO TOP
+    // =====================
+    (function() {
+        const btn = document.createElement('button');
+        btn.innerHTML = '↑';
+        btn.id = 'scrollTopBtn';
+        document.body.appendChild(btn);
+        
+        window.addEventListener('scroll', function() {
+            btn.style.opacity = window.scrollY > 300 ? '1' : '0';
+            btn.style.visibility = window.scrollY > 300 ? 'visible' : 'hidden';
+        });
+        
+        btn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    </script>
 </body>
 </html>
