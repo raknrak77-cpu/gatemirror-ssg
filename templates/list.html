@@ -386,7 +386,53 @@
         background: rgba(255, 255, 255, 0.03);
         border-color: rgba(255, 255, 255, 0.08);
     }
-    
+
+/* ===================== */
+/* KATEGORİ ARŞİV BUTONU */
+/* ===================== */
+.category-archive-wrapper {
+    text-align: center;
+    margin: 1rem auto 2rem auto;
+}
+
+.category-archive-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--category-color, var(--tech-3)), var(--category-grad-end, var(--tech-4)));
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-archive-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode uyumu */
+body.dark .category-archive-btn {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .category-archive-btn:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .category-archive-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+        
     /* ARTICLE GRID - İLK MAKALE BÜYÜK */
     .article-grid {
         display: grid;
@@ -426,52 +472,8 @@
     .article-card p { padding: 0.5rem 1rem 1rem; color: var(--text-light); font-size: 0.9rem; }
     .article-card a { text-decoration: none; color: inherit; display: block; }
     
-    .category-segment {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-    cursor: pointer;
-    text-decoration: none;
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
-    transition: flex 0.4s cubic-bezier(0.23, 1, 0.32, 1), clip-path 0.3s ease;
-}
-
-.category-segment:hover {
-    flex: 2.5;
-    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-}
-
-.category-label {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    transition: opacity 0.3s;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    gap: 5px;
-    flex-direction: column;
-}
-
-@media (hover: hover) {
-    .category-label { opacity: 0; }
-    .category-segment:hover .category-label { opacity: 1; }
-}
-
-@media (hover: none) {
-    .category-segment { min-height: 64px; }
-    .category-label { opacity: 1; }
-}
     
+
     /* FOOTER */
     footer { background: #1C2238; color: white; padding: 3rem 5%; margin-top: 2rem; position: relative; z-index: 10; clear: both; }
     .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
@@ -655,6 +657,13 @@
             <div class="sub-manifesto-quote">✦ GATEMIRROR PERSPECTIVE ✦</div>
         </div>
 
+        <!-- TÜM KATEGORİ MAKALELERİ BUTONU -->
+<div class="category-archive-wrapper">
+    <a href="/explore/category-archive/{{ lang }}/{{ category }}/" class="category-archive-btn">
+        🔸 ALL {{ category_name | upper }} ARTICLES
+    </a>
+</div>
+
         <!-- MAKALE LİSTESİ (İLK MAKALE BÜYÜK) -->
         <div class="container">
             <h2 class="section-title">
@@ -677,35 +686,6 @@
             </div>
         </div>
     </main>
-
-
-    
-
-    <!-- KATEGORİ BÖLÜMÜ - SADECE BULUNDUĞU KATEGORİ -->
-  <!-- KATEGORİ BÖLÜMÜ - SADECE BULUNDUĞU KATEGORİ (home.html'deki çalışan yapı ile) -->
-<div class="category-bottom-bar" style="max-width: 1200px; margin: 3rem auto 2rem auto; display: flex; justify-content: center;">
-    {% if category == 'tech' %}
-    <a href="/{{ lang }}/tech/" class="category-segment" style="background: linear-gradient(135deg, var(--tech-2), var(--tech-4)); flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
-        <span class="category-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); gap: 8px; flex-direction: column;">🔸 TECH & AI</span>
-    </a>
-    {% elif category == 'future-economy' %}
-    <a href="/{{ lang }}/future-economy/" class="category-segment" style="background: linear-gradient(135deg, var(--fe-2), var(--fe-4)); flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
-        <span class="category-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); gap: 8px; flex-direction: column;">🔸 FUTURE ECONOMY</span>
-    </a>
-    {% elif category == 'elearning' %}
-    <a href="/{{ lang }}/elearning/" class="category-segment" style="background: linear-gradient(135deg, var(--el-2), var(--el-4)); flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
-        <span class="category-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); gap: 8px; flex-direction: column;">🔸 E-LEARNING</span>
-    </a>
-    {% elif category == 'wellness' %}
-    <a href="/{{ lang }}/wellness/" class="category-segment" style="background: linear-gradient(135deg, var(--wellness-2), var(--wellness-4)); flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
-        <span class="category-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); gap: 8px; flex-direction: column;">🔸 WELLNESS</span>
-    </a>
-    {% elif category == 'eco' %}
-    <a href="/{{ lang }}/eco/" class="category-segment" style="background: linear-gradient(135deg, var(--eco-2), var(--eco-4)); flex: 1; min-width: 0; position: relative; cursor: pointer; text-decoration: none; min-height: 72px; display: flex; align-items: center; justify-content: center; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
-        <span class="category-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.95); gap: 8px; flex-direction: column;">🔸 ECO & SUSTAINABLE</span>
-    </a>
-    {% endif %}
-</div>
 
     <!-- FOOTER -->
     <footer>
