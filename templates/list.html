@@ -631,18 +631,13 @@
             <div class="sub-manifesto-quote">✦ GATEMIRROR PERSPECTIVE ✦</div>
         </div>
 
-        <!-- TÜM MAKALELER LİNKİ -->
-        <div class="category-buttons" style="display: flex; justify-content: center; margin: 2rem 0;">
-            <a href="/explore/all-articles/{{ lang }}.html" class="cat-btn">📚 ALL ARTICLES</a>
-        </div>
-
         <!-- MAKALE LİSTESİ (İLK MAKALE BÜYÜK) -->
         <div class="container">
             <h2 class="section-title">
-                {% if lang == 'en' %}All {{ category_name }} Articles{% elif lang == 'es' %}Todos los Artículos de {{ category_name }}{% elif lang == 'de' %}Alle {{ category_name }} Artikel{% elif lang == 'fr' %}Tous les Articles {{ category_name }}{% endif %}
+                {% if lang == 'en' %}Latest 10 Articles in {{ category_name }}{% elif lang == 'es' %}Últimos 10 Artículos en {{ category_name }}{% elif lang == 'de' %}Letzte 10 Artikel in {{ category_name }}{% elif lang == 'fr' %}10 Derniers Articles dans {{ category_name }}{% endif %}
             </h2>
             <div class="article-grid">
-                {% for article in articles %}
+                {% for article in articles[:10] %}
                 <article class="article-card">
                     <a href="{{ article.url }}">
                         <img src="{{ article.image }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
@@ -658,6 +653,9 @@
             </div>
         </div>
     </main>
+
+
+    
 
     <!-- KATEGORİ BÖLÜMÜ - SADECE BULUNDUĞU KATEGORİ -->
     <div class="category-bottom-bar">
