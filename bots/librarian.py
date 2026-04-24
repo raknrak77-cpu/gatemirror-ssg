@@ -177,7 +177,12 @@ def atomic_swap():
 def get_articles_from_r2():
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
-        return json.loads(response['Body'].read().decode('utf-8'))
+        data = json.loads(response['Body'].read().decode('utf-8'))
+        # Yeni format kontrolü
+        if isinstance(data, dict) and 'articles' in data:
+            return data['articles']
+        # Eski format
+        return data
     except Exception as e:
         print(f"articles.json okunamadi: {e}")
         return []
