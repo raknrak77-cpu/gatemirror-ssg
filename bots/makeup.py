@@ -83,10 +83,13 @@ def get_category_description(lang, category):
     }
     return descriptions.get(lang, descriptions.get('en', {})).get(category, '')
 
-def calculate_reading_time(html_content):
+def calculate_reading_time_and_word_count(html_content):
+    """Hem okuma süresini hem kelime sayısını hesaplar"""
     text = re.sub(r'<[^>]+>', ' ', html_content)
     words = re.findall(r'\b\w+\b', text)
-    return max(1, len(words) // 200)
+    word_count = len(words)
+    reading_time = max(1, word_count // 200)
+    return reading_time, word_count
 
 def generate_views(hash_id):
     random.seed(hash_id)
@@ -178,6 +181,9 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         display_date = datetime.now().strftime("%d %B %Y")
         cluster_id = None
     
+    # ISO formatında datetime
+    datetime_iso = sort_datetime if sort_datetime else datetime.now().isoformat()
+    
     # Editor's Note
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
     editors_note = note_match.group(1).strip() if note_match else ""
@@ -189,6 +195,18 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         summary_html = "".join([f"<li>{item.strip()}</li>" for item in items])
     else:
         summary_html = "<li>No summary available</li>"
+    
+    # Summary (düz metin olarak - Key Takeaways'dan)
+    summary_text = ""
+    if takeaway_match:
+        items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
+        # İlk 3 maddeyi al, HTML tag'lerini temizle
+        clean_items = []
+        for item in items[:3]:
+            clean = re.sub(r'<[^>]+>', '', item).strip()
+            if clean:
+                clean_items.append(clean)
+        summary_text = " ".join(clean_items)
     
     # Sources
     sources_match = re.search(r'<div class="sources">.*?<ul>(.*?)</ul>.*?</div>', html_content, re.DOTALL | re.IGNORECASE)
@@ -210,8 +228,8 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     # Makaleyi 3 parçaya böl
     content_parts = split_article_content(content_clean)
     
-    # Okuma süresi ve görüntülenme
-    reading_time = calculate_reading_time(content_clean)
+    # Okuma süresi, kelime sayısı ve görüntülenme
+    reading_time, word_count = calculate_reading_time_and_word_count(content_clean)
     views = generate_views(hash_id)
     
     # Açıklama
@@ -265,8 +283,10 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         'date': display_date,
         'sort_date': sort_date,
         'sort_datetime': sort_datetime,
+        'datetime_iso': datetime_iso,
         'editors_note': editors_note,
         'summary': summary_html,
+        'summary_text': summary_text,
         'sources': sources_html,
         'content': content_clean,
         'content_part1': content_parts['content_part1'],
@@ -276,6 +296,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         'content_image_1': content_image_1,
         'content_image_2': content_image_2,
         'reading_time': reading_time,
+        'word_count': word_count,
         'views': views,
         'description': description,
         'hash': hash_id,
