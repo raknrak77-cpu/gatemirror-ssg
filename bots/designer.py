@@ -433,14 +433,14 @@ def designer():
         
         tmpl = get_cached_template(list_tpl, 'list')
         hero_html = get_cached_hero('category', 'en', category)        
-            list_html = tmpl.render(
+        list_html = tmpl.render(
             lang='en',
             R2_PUBLIC_URL=R2_PUBLIC_URL,
             menu=menu_texts,
             category_name=get_category_name('en', category),
             category_description=get_category_description('en', category),
             category_url=f"{R2_PUBLIC_URL}/en/{category}/",
-            category=category,  # ✅ BURAYI EKLE
+            category=category,  # ✅ Bu satırı eklediniz
             og_image=articles_for_list[0]['image'] if articles_for_list else "",
             articles=articles_for_list,
             featured_article=featured_for_cat,
@@ -449,12 +449,11 @@ def designer():
             guide_articles=[],
             alternate_langs=[],
             hero={'html': hero_html, 'show': True}
-            )     
+        )
         s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/en/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
         print(f"   ✅ {category} sayfası: {len(cat_articles)} makale")
-    
-    timings["KATEGORI_SAYFALARI"] = time.time() - t_start
-    print(f"   ✅ Kategori sayfaları: {timings['KATEGORI_SAYFALARI']:.2f}s")
+        timings["KATEGORI_SAYFALARI"] = time.time() - t_start
+        print(f"   ✅ Kategori sayfaları: {timings['KATEGORI_SAYFALARI']:.2f}s")
     
     # 9. ALL ARTICLES SAYFASI
     if all_articles_tpl:
