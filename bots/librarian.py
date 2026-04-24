@@ -172,7 +172,7 @@ def atomic_swap():
     print("Swap tamamlandi!")
     return True
 
-# ================= JSON URETIMI =================
+# ================= ARTICLES.JSON OKU =================
 
 def get_articles_from_r2():
     try:
@@ -181,40 +181,6 @@ def get_articles_from_r2():
     except Exception as e:
         print(f"articles.json okunamadi: {e}")
         return []
-
-def generate_explorer_json(articles):
-    explorer_data = {
-        "version": "1.0",
-        "generated": datetime.now().isoformat(),
-        "total_articles": len(articles),
-        "languages": LANGUAGES,
-        "categories": list(CATEGORIES.keys()),
-        "articles": []
-    }
-    
-    for article in articles:
-        explorer_data["articles"].append({
-            "url": article.get('url', '#'),
-            "lang": article.get('lang', 'en'),
-            "category": article.get('category', ''),
-            "title": article.get('title', 'Untitled'),
-            "description": article.get('description', ''),
-            "date": article.get('date', ''),
-            "sort_date": article.get('sort_date', ''),
-            "reading_time": article.get('reading_time', 0),
-            "views": article.get('views', 0),
-            "cover_image": article.get('cover_image', ''),
-            "slug": article.get('slug', '')
-        })
-    
-    explorer_json = json.dumps(explorer_data, indent=2, ensure_ascii=False)
-    s3.put_object(
-        Bucket=R2_BUCKET,
-        Key='explore/explorer.json',
-        Body=explorer_json.encode('utf-8'),
-        ContentType='application/json'
-    )
-    print(f"   explore/explorer.json olusturuldu ({len(articles)} articles)")
 
 # ================= YARDIMCI FONKSIYONLAR =================
 
@@ -488,20 +454,12 @@ def analyze_r2_storage():
 def librarian():
     print("\n" + "=" * 60)
     print("KUTUPHANECI BOT (Librarian) - MERGE MANTIGI")
-    print("   explore/explorer.json olusturuluyor")
     print("   hero.json ticker guncelleniyor (hide_on korunuyor)")
     print("   hero.json stats guncelleniyor (manuel description korunuyor)")
     print("   Atomic swap: articles_ready/ -> articles/")
     print("=" * 60)
     
     analyze_r2_storage()
-    
-    articles = get_articles_from_r2()
-    if articles:
-        print(f"\nToplam {len(articles)} makale bulundu.")
-        generate_explorer_json(articles)
-    else:
-        print("\narticles.json okunamadi, explorer.json atlaniyor.")
     
     update_hero_ticker()
     update_hero_stats()
@@ -519,7 +477,6 @@ def librarian():
     
     print("\n" + "=" * 60)
     print("KUTUPHANECI BOT TAMAMLANDI!")
-    print("   explore/explorer.json guncellendi")
     print("   hero.json ticker guncellendi (hide_on korundu)")
     print("   hero.json stats guncellendi (manuel description korundu)")
     print("   Atomic swap tamamlandi")
