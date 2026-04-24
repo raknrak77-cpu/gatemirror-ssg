@@ -1879,22 +1879,18 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 <!-- KATEGORİ BÖLÜMÜ - BOTTOM BAR -->
 <!-- ===================== -->
 <div class="category-bottom-bar">
-    <a href="/explore/category-archive/{{ lang }}/tech/" class="category-segment segment-tech">
-        <span class="category-label"><span class="category-icon">🔸</span> TECH & AI</span>
+    {% set bottom_categories = [
+        {"slug": "tech", "name": "TECH & AI", "class": "segment-tech"},
+        {"slug": "future-economy", "name": "FUTURE ECONOMY", "class": "segment-fe"},
+        {"slug": "elearning", "name": "E-LEARNING", "class": "segment-el"},
+        {"slug": "wellness", "name": "WELLNESS", "class": "segment-wellness"},
+        {"slug": "eco", "name": "ECO & SUSTAINABLE", "class": "segment-eco"}
+    ] %}
+    {% for cat in bottom_categories %}
+    <a href="/explore/category-archive/{{ lang }}/{{ cat.slug }}/" class="category-segment {{ cat.class }}">
+        <span class="category-label"><span class="category-icon">🔸</span> {{ cat.name }}</span>
     </a>
-   <a href="/explore/category-archive/{{ lang }}/future-economy/" class="category-segment segment-fe">
-        <span class="category-label"><span class="category-icon">🔸</span> FUTURE ECONOMY</span>
-   </a>
-   <a href="/explore/category-archive/{{ lang }}/elearning/" class="category-segment segment-el">
-        <span class="category-label"><span class="category-icon">🔸</span> E-LEARNING</span>
-   </a>
-    <a href="/explore/category-archive/{{ lang }}/wellness/" class="category-segment segment-wellness">
-        <span class="category-label"><span class="category-icon">🔸</span> WELLNESS</span>
-    </a>
-    <a href="/explore/category-archive/{{ lang }}/eco/" class="category-segment segment-eco">
-        <span class="category-label"><span class="category-icon">🔸</span> ECO</span>
-    </a>
-    
+    {% endfor %}
 </div>
 
 <!-- ===================== -->
