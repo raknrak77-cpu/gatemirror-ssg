@@ -196,7 +196,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         category_name=category_name,
         category_description=category_description,
         category_url=category_url,
-        category=category,  # ✅ BURAYI EKLE
+        category=category,  # ✅ EKLENEN SATIR
         og_image=og_image,
         articles=cat_articles,
         featured_article=featured_article,
@@ -508,5 +508,3 @@ def publisher():
 
 if __name__ == "__main__":
     publisher()
-        
-        
