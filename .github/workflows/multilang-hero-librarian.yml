@@ -81,12 +81,12 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/librarian.py
         
-      - name: 6. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
+      - name: 6. Git Kayit (sadece content ve processed için - tasks.json Uploader tarafından commit edildi)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          git add content/ tasks.json task/
+          git add content/ task/processed.json task/skipped.json
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
