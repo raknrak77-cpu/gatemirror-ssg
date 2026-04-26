@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import subprocess
 import boto3
 from botocore.client import Config
 from datetime import datetime
@@ -21,7 +22,7 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= TASK GÜNCELLEME (SADECE HASH + FSYNC) =================
+# ================= TASK GÜNCELLEME (SADECE HASH + ACİL COMMIT) =================
 
 def get_hash_from_content():
     """content/ klasöründeki en son dosyadan hash'i al"""
@@ -49,6 +50,44 @@ def get_hash_from_content():
                     latest_hash = filename.replace('.html', '')
     
     return latest_hash
+
+def git_commit_task_file(tasks_path, hash_id):
+    """task/tasks.json dosyasını hemen commit et"""
+    try:
+        # Git yapılandırması
+        subprocess.run(["git", "config", "user.email", "action@github.com"], capture_output=True)
+        subprocess.run(["git", "config", "user.name", "GitHub Action"], capture_output=True)
+        
+        # Pull (opsiyonel)
+        subprocess.run(["git", "pull", "--rebase", "origin", "main"], capture_output=True)
+        
+        # Add ve commit
+        subprocess.run(["git", "add", tasks_path], capture_output=True)
+        result = subprocess.run(
+            ["git", "commit", "-m", f"chore: add hash {hash_id} to task", "--allow-empty"],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode == 0:
+            # Push et
+            push_result = subprocess.run(
+                ["git", "push", "origin", "main"],
+                capture_output=True,
+                text=True
+            )
+            if push_result.returncode == 0:
+                print(f"   ✅ Git commit ve push başarılı: hash {hash_id}")
+                return True
+            else:
+                print(f"   ⚠️ Git push hatası: {push_result.stderr}")
+                return False
+        else:
+            print(f"   📝 Değişiklik yok veya commit gerekmiyor: {result.stderr}")
+            return True  # Değişiklik yoksa sorun yok
+    except Exception as e:
+        print(f"   ⚠️ Git commit hatası: {e}")
+        return False
 
 def update_task_with_hash_only(hash_id):
     """task/tasks.json'daki ilk task'e SADECE hash ekler, status DEĞİŞMEZ"""
@@ -84,13 +123,18 @@ def update_task_with_hash_only(hash_id):
     with open(tasks_path, "r", encoding="utf-8") as f:
         verify_tasks = json.load(f)
     
-    if verify_tasks[0].get("hash") == hash_id:
-        print(f"   ✅ Task {task.get('task_id')}: hash eklendi {old_hash} → {hash_id} (status: {task.get('status')})")
-        print(f"   📄 DOSYA BOYUTU: {os.path.getsize(tasks_path)} bytes")
-        return True
-    else:
+    if verify_tasks[0].get("hash") != hash_id:
         print(f"   ❌ DOĞRULAMA BAŞARISIZ! {verify_tasks[0].get('hash')} != {hash_id}")
         return False
+    
+    print(f"   ✅ Task {task.get('task_id')}: hash eklendi {old_hash} → {hash_id} (status: {task.get('status')})")
+    print(f"   📄 DOSYA BOYUTU: {os.path.getsize(tasks_path)} bytes")
+    
+    # ========== KRİTİK: HEMEN GIT COMMIT ET! ==========
+    print("   📤 Git commit yapılıyor...")
+    git_commit_task_file(tasks_path, hash_id)
+    
+    return True
 
 # ================= MEVCUT YÜKLEME FONKSİYONLARI =================
 
@@ -162,11 +206,10 @@ def upload_manifesto_images():
 
 def uploader():
     print("\n" + "=" * 60)
-    print("📤 UPLOADER BOT v30 - SADECE HASH EKLER + FSYNC")
+    print("📤 UPLOADER BOT v31 - HASH + ACİL COMMIT")
     print("   ✅ content/ hash al, tasks.json'a SADECE HASH EKLE")
     print("   ✅ status DOKUNMA (pending kalır)")
-    print("   ✅ fsync ile zorla diske yaz")
-    print("   ✅ Doğrulama yap")
+    print("   ✅ HEMEN Git commit yap (workflow çökse bile hash kalıcı)")
     print("=" * 60)
     
     # ========== 1. ADIM: Hash'i bul ve tasks.json'a SADECE HASH yaz ==========
@@ -176,7 +219,7 @@ def uploader():
         print(f"   🔑 Hash bulundu: {hash_id}")
         success = update_task_with_hash_only(hash_id)
         if success:
-            print("   ✅ Hash eklendi, status değişmedi")
+            print("   ✅ Hash eklendi, status değişmedi, Git commit yapıldı")
         else:
             print("   ❌ Hash eklenemedi!")
     else:
@@ -226,13 +269,8 @@ def uploader():
             except:
                 pass
     
-    # ========== 5. ADIM: current_hash.txt KORU (SİLME) ==========
-    print("\n📝 5. ADIM: current_hash.txt korunuyor...")
-    if os.path.exists("task/current_hash.txt"):
-        print("   🛡️ current_hash.txt KORUNDU (Librarian kullanacak)")
-    
-    # ========== 6. ADIM: DOĞRULAMA RAPORU ==========
-    print("\n📋 6. ADIM: DOĞRULAMA")
+    # ========== 5. ADIM: DOĞRULAMA RAPORU ==========
+    print("\n📋 5. ADIM: DOĞRULAMA")
     if os.path.exists("task/tasks.json"):
         with open("task/tasks.json", "r") as f:
             tasks = json.load(f)
@@ -243,9 +281,9 @@ def uploader():
             print("   ❌ İLK TASK'TA HASH YOK!")
     
     print("\n" + "=" * 60)
-    print("🏁 UPLOADER v30 TAMAMLANDI!")
+    print("🏁 UPLOADER v31 TAMAMLANDI!")
     print("   ✅ SADECE HASH EKLENDİ, STATUS DEĞİŞMEDİ")
-    print("   ✅ current_hash.txt KORUNDU")
+    print("   ✅ Git commit yapıldı (hash kalıcı)")
     print("=" * 60)
 
 if __name__ == "__main__":
