@@ -1,39 +1,5 @@
 [
     {
-        "task_id": "0118",
-        "category": "eco",
-        "cluster_id": "eco_02",
-        "topic": "The Hydrogen Revolution: Powering 2026 Heavy Industry with Zero-Emission Fuel",
-        "reference_link": "https://www.iea.org/hydrogen-outlook-2026",
-        "language": "en",
-        "author_persona": "Renewable Energy Engineer & Hydrogen Policy Expert",
-        "special_instructions": "Analyze the cost-drop in electrolyzers. Discuss hydrogen-powered shipping and steel production.",
-        "visuals": {
-            "kapak": {
-                "prompt": "A giant cargo ship at sea with \"Powered by Hydrogen\" glowing on its side, leaving only water vapor behind, dramatic ocean sunset, 8k, photorealistic",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "A visualization of a water molecule (H2O) splitting into hydrogen and oxygen using glowing green energy, clean scientific animation style, photorealistic",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "A hydrogen refueling station for heavy trucks, sleek silver design, green nozzles, soft evening light, photorealistic",
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": "2026-04-15",
-        "date": "2026-04-15",
-        "display_date": "15 April 2026",
-        "processed_at": "",
-        "hash": "6c77c4fa",
-        "hash_updated_at": "2026-04-26T23:22:34.879178"
-    },
-    {
         "task_id": "0119",
         "category": "eco",
         "cluster_id": "eco_05",
