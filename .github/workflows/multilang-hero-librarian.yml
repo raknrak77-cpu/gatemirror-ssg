@@ -30,7 +30,7 @@ jobs:
           pip install --default-timeout=100 --retries=5 \
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
-      - name: 0. Starter Bot (Template + Task Kontrol - Kota Harcamadan Once)
+      - name: 0. Starter Bot (Template + Task Kontrol - ACİL COMMIT)
         run: python bots/starter-bot.py
         
       - name: 1. Creator Bot (4 Dil Tek Prompt + Gorseller)
@@ -45,7 +45,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/creator.py
         
-      - name: 2. Uploader (Ham HTML'leri + Hero.json R2'ye Yukle - Tüm Diller)
+      - name: 2. Uploader (Ham HTML'leri R2'ye Yukle - ACİL COMMIT)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -81,12 +81,12 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/librarian.py
         
-      - name: 6. Git Kayit (sadece content ve processed için - tasks.json Uploader tarafından commit edildi)
+      - name: 6. Git Kayit (sadece content ve processed için - tasks.json ve skipped.json starter/uploader tarafından commit edildi)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          git add content/ task/processed.json task/skipped.json
+          git add content/ task/processed.json
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
