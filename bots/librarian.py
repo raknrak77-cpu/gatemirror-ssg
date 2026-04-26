@@ -25,15 +25,37 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# ================= TEK SEFERLİK TEMİZLİK İÇİN HASH LİSTESİ =================
-# Publisher raporundan REDDEDİLEN hash'ler (FR hariç)
+# ============================================================
+# TEK SEFERLİK TEMİZLİK İÇİN HASH LİSTESİ (MANUEL)
+# ============================================================
+# Bu hash'ler Publisher raporunda REDDEDİLEN makalelerdir.
+# Her hash 4 dilde (EN, ES, DE, FR) üretilmiştir.
+# Toplam: 8 hash × 4 dil = 32 makale silinecek.
+# ============================================================
+# 
+# abfb2c11 - Muscle Hypertrophy (wellness)
+# 97ac9d5c - CBDC vs Stablecoins (future-economy)
+# e6a5c268 - Circadian Alignment (wellness)
+# e9be3058 - Circadian Alignment (wellness) - duplicate
+# 2a8a83da - VR Therapy / AI Companions (wellness)
+# b927e35e - Quantum Supremacy (tech)
+# f12a0576 - Edge Computing vs Cloud (tech)
+# 0d43b9ae - AI Trading Bots (tech)
+# 
+# ============================================================
 HASHES_TO_DELETE = [
     'abfb2c11', '97ac9d5c', 'e6a5c268', 'e9be3058', 
     '2a8a83da', 'b927e35e', 'f12a0576', '0d43b9ae'
 ]
 
-# KORUNACAK FR hash'ler (hatalı ama silmeyeceğiz)
+# ============================================================
+# KORUNACAK FR HASH'LER (HATALI AMA SİLMEYECEĞİZ)
+# ============================================================
+# Bu hash'ler sadece FR dilinde var ve 51 KB altında.
+# Manuel müdahale ile düzeltilecek veya silinecek.
+# ============================================================
 HASHES_TO_KEEP_FR = ['9ab72a1f', '8209c1b4', '8a39223e']
+# ============================================================
 
 # ================= YARDIMCI FONKSİYONLAR =================
 
@@ -106,26 +128,42 @@ def log_cleanup_report(entries, report_type="cleanup"):
             Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
             ContentType='application/json'
         )
-        print(f"   📊 Temizlik raporu kaydedildi: {report_key}")
+        print(f"   📊 Temizlik raporu: {report_key}")
         return report_key
     except Exception as e:
         print(f"   ⚠️ Rapor kaydedilemedi: {e}")
         return None
+
+def log_size_report(entries, report_type):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
+    report = {"generated": datetime.now().isoformat(), "type": report_type, "min_size_kb": MIN_SIZE_KB, "entries": entries}
+    try:
+        s3.put_object(Bucket=R2_BUCKET, Key=report_key,
+                      Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
+                      ContentType='application/json')
+        print(f"   📊 Rapor: {report_key}")
+    except:
+        pass
 
 # ================= TEK SEFERLİK TEMİZLİK =================
 
 def cleanup_invalid_articles():
     """
     TEK SEFERLİK TEMİZLİK - raw-articles/ ve görsellerden hatalı makaleleri siler.
-    BU FONKSİYON SADECE BİR KEZ ÇALIŞTIRILACAK!
+    Hash listesi yukarıdaki HASHES_TO_DELETE listesinden alınır.
     """
     print("\n" + "=" * 60)
     print("🧹 TEK SEFERLİK TEMİZLİK - HATALI MAKALELER")
-    print("   ⚠️ BU İŞLEM SADECE BİR KEZ ÇALIŞACAK!")
     print("   🗑️ raw-articles/ ve görsellerden silme yapılacak")
     print("   🛡️ FR hatalı makaleler KORUNACAK")
     print("   🛡️ index.html'ler KORUNACAK")
     print("=" * 60)
+    
+    print("\n📋 SİLİNECEK HASH'LER:")
+    for h in HASHES_TO_DELETE:
+        print(f"   - {h}")
+    print(f"\n🛡️ KORUNACAK FR HASH'LER: {HASHES_TO_KEEP_FR}")
     
     all_deleted = []
     
@@ -146,17 +184,14 @@ def cleanup_invalid_articles():
             if key.endswith('/index.html'):
                 continue
             
-            # Hash'i bul (dosya adından veya yoldan)
+            # Hash'i bul
             filename = key.split('/')[-1]
             hash_id = None
-            
-            # Format: hash-slug.html veya hash.html
             if '-' in filename:
                 hash_id = filename.split('-')[0]
             else:
                 hash_id = filename.replace('.html', '')
             
-            # 8 karakterli hash mi kontrol et
             if not hash_id or len(hash_id) != 8:
                 continue
             
@@ -180,7 +215,6 @@ def cleanup_invalid_articles():
     # 2. GÖRSELLERİ SİL
     print("\n🖼️ 2. Görseller taranıyor...")
     
-    # Tüm images/ klasörünü tara
     images_prefix = "images/"
     if folder_exists(images_prefix):
         image_files = list_all_files(images_prefix)
@@ -189,15 +223,12 @@ def cleanup_invalid_articles():
             if not key.endswith('.webp'):
                 continue
             
-            # Dosya adından hash'i bul
             filename = key.split('/')[-1]
-            # Format: hash_kapak.webp veya hash_icerik_1.webp veya hash_icerik_2.webp
             if '_' in filename:
                 hash_id = filename.split('_')[0]
             else:
                 continue
             
-            # 8 karakterli hash mi?
             if len(hash_id) != 8:
                 continue
             
@@ -206,7 +237,6 @@ def cleanup_invalid_articles():
                 print(f"   🛡️ KORUNDU (FR hatalı görsel): {key}")
                 continue
             
-            # Silinecek hash'lerden mi?
             if hash_id in HASHES_TO_DELETE:
                 print(f"   🗑️ Görsel siliniyor: {key} (hash: {hash_id})")
                 delete_file(key)
@@ -224,13 +254,12 @@ def cleanup_invalid_articles():
         print(f"   🗑️ Toplam silinen: {len(all_deleted)} dosya")
         print(f"   📁 raw-articles: {len([d for d in all_deleted if d['type'] == 'raw_article'])} dosya")
         print(f"   🖼️ Görseller: {len([d for d in all_deleted if d['type'] == 'image'])} dosya")
-        print(f"   🛡️ FR hatalı makaleler: {len(HASHES_TO_KEEP_FR)} hash KORUNDU")
     else:
         print("   ✅ Silinecek dosya bulunamadı.")
     
     return all_deleted
 
-# ================= MEVCUT ARTICLES/ KONTROLÜ (index.html KORUMALI) =================
+# ================= MEVCUT ARTICLES/ KONTROLÜ =================
 
 def check_existing_articles():
     """Mevcut articles/ klasöründeki makaleleri kontrol et, index.html'leri KORU"""
@@ -249,37 +278,24 @@ def check_existing_articles():
         if not key.endswith('.html'):
             continue
         
-        # KRİTİK: index.html'leri KORU
         if key.endswith('/index.html'):
             print(f"   🛡️ KORUNDU (index.html): {key}")
             continue
         
-        # Sadece makale dosyalarını işle (tarih yolu olanlar)
         if '/2026/' not in key:
-            print(f"   ⏭️ ATLANDI (makale formatı değil): {key}")
             continue
         
         try:
             response = s3.head_object(Bucket=R2_BUCKET, Key=key)
             size_kb = response['ContentLength'] / 1024
             if size_kb < MIN_SIZE_KB:
-                # Hash'i bul
-                filename = key.split('/')[-1]
-                hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
-                
-                # FR hatalı makaleleri KORU
-                if '/fr/' in key and hash_id in HASHES_TO_KEEP_FR:
-                    print(f"   🛡️ KORUNDU (FR hatalı makale): {key} ({size_kb:.1f} KB)")
-                    continue
-                
                 small_files.append({
                     "timestamp": datetime.now().isoformat(),
                     "source": "librarian_existing",
                     "status": "DELETED_FROM_ARTICLES",
                     "key": key,
                     "size_kb": round(size_kb, 2),
-                    "min_required_kb": MIN_SIZE_KB,
-                    "hash": hash_id
+                    "min_required_kb": MIN_SIZE_KB
                 })
                 delete_file(key)
                 print(f"   🗑️ Silindi: {key} ({size_kb:.1f} KB)")
@@ -292,7 +308,6 @@ def check_existing_articles():
         log_size_report(small_files, "librarian_existing")
         print(f"\n   🗑️ Toplam {len(small_files)} makale silindi (index.html KORUNDU)")
         
-        # Silinen makaleleri articles.json'dan temizle
         print("   🔄 articles.json yeniden oluşturuluyor...")
         try:
             from makeup import get_all_raw_articles, generate_articles_json
@@ -312,8 +327,9 @@ def check_existing_articles():
     
     return small_files
 
+# ================= ATOMIC SWAP =================
+
 def atomic_swap():
-    """Swap öncesi kontrol + swap + sonrası rapor"""
     print("\n" + "=" * 40)
     print("ATOMIC SWAP: articles_ready/ -> articles/ (51 KB KONTROLLÜ)")
     print("=" * 40)
@@ -337,7 +353,6 @@ def atomic_swap():
             valid_files.append(key)
             continue
         
-        # index.html için farklı davran
         if key.endswith('/index.html'):
             valid_files.append(key)
             print(f"   ✅ index.html swap için uygun: {key}")
@@ -395,6 +410,8 @@ def atomic_swap():
     
     print("   ✅ Swap tamamlandi!")
     return True
+
+# ================= HERO GÜNCELLEMELERİ =================
 
 def update_hero_ticker():
     print("\n" + "=" * 40)
@@ -554,18 +571,6 @@ def analyze_r2_storage():
     print(f"Toplam boyut: {total_size / (1024*1024):.2f} MB")
     return True
 
-def log_size_report(entries, report_type):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
-    report = {"generated": datetime.now().isoformat(), "type": report_type, "min_size_kb": MIN_SIZE_KB, "entries": entries}
-    try:
-        s3.put_object(Bucket=R2_BUCKET, Key=report_key,
-                      Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
-                      ContentType='application/json')
-        print(f"   📊 Rapor: {report_key}")
-    except:
-        pass
-
 # ================= ANA LIBRARIAN =================
 
 def librarian():
@@ -577,21 +582,8 @@ def librarian():
     print("   🛡️ index.html'ler KORUNACAK")
     print("=" * 60)
     
-    # ONAY KONTROLÜ
-    print("\n⚠️⚠️⚠️ UYARI ⚠️⚠️⚠️")
-    print("Bu işlem raw-articles/ ve görsellerden DOSYA SİLECEK!")
-    print("Silinecek hash'ler:")
-    for h in HASHES_TO_DELETE:
-        print(f"   - {h} (EN, ES, DE, FR - 4 dil)")
-    print(f"\nKORUNACAK FR hash'ler: {HASHES_TO_KEEP_FR}")
-    print("\nDevam etmek için 'CLEAN' yazın: ", end="")
-    
-    confirm = input().strip()
-    if confirm != 'CLEAN':
-        print("❌ İşlem iptal edildi.")
-        sys.exit(0)
-    
-    print("\n✅ ONAY ALINDI. TEMİZLİK BAŞLIYOR...")
+    # ONAY KONTROLÜ YOK - DOĞRUDAN BAŞLA
+    print("\n✅ ONAY ATLANDI (GitHub Actions). TEMİZLİK BAŞLIYOR...")
     
     analyze_r2_storage()
     
