@@ -86,7 +86,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          git add content/ tasks.json
+          git add content/ tasks.json task/
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
@@ -94,7 +94,6 @@ jobs:
             git push origin main || git push --force origin main
           fi
       
-      # ========== SADECE RAPOR (EKSTRA STEP) ==========
       - name: 7. Raporları Arşivle
         if: always()
         uses: actions/upload-artifact@v4
