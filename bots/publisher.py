@@ -161,7 +161,7 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
         category_name=category_name
     )
 
-def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs):
+def render_home_page(lang, articles, featured_article, template_str, menu_texts, alternate_langs, manifesto_html=""):
     tmpl = get_cached_template(template_str, 'home')
     canonical = f"{R2_PUBLIC_URL}/{lang}/"
     og_image = articles[0]['image'] if articles else ""
@@ -177,7 +177,8 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
         canonical_url=canonical,
         og_image=og_image,
         alternate_langs=alternate_langs,
-        hero={'html': hero_html, 'show': True}
+        hero={'html': hero_html, 'show': True},
+        manifesto=manifesto_html  # ✅ EKLENDI
     )
 
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
