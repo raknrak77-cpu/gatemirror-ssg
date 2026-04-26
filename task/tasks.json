@@ -29,7 +29,9 @@
         "created_at": "2026-04-15",
         "date": "2026-04-15",
         "display_date": "15 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash": "c7023e75",
+        "hash_updated_at": "2026-04-26T23:39:26.291680"
     },
     {
         "task_id": "0120",
