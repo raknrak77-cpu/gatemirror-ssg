@@ -28,11 +28,14 @@ LANGUAGES = ['en', 'es', 'de', 'fr']
 # ================= TASK TAŞIMA (HASH'E GÖRE) =================
 
 def get_current_hash():
-    """current_hash.txt'den hash'i okur"""
+    """current_hash.txt'den hash'i okur ve siler"""
     hash_file = "task/current_hash.txt"
     if os.path.exists(hash_file):
         with open(hash_file, "r") as f:
-            return f.read().strip()
+            hash_id = f.read().strip()
+        os.remove(hash_file)
+        print(f"   📖 current_hash.txt okundu: {hash_id}")
+        return hash_id
     return None
 
 def move_task_by_hash_to_processed(target_hash):
@@ -84,10 +87,6 @@ def move_task_by_hash_to_processed(target_hash):
     
     with open(processed_path, "w", encoding="utf-8") as f:
         json.dump(processed, f, indent=4, ensure_ascii=False)
-    
-    # current_hash.txt temizle
-    if os.path.exists("task/current_hash.txt"):
-        os.remove("task/current_hash.txt")
     
     print(f"   ✅ Task {target_task.get('task_id')} (hash={target_hash}) processed.json'a taşındı")
     return True
@@ -375,7 +374,7 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v25 - HASH'E GÖRE TAŞIR")
+    print("📚 KUTUPHANECI BOT v26 - HASH'E GÖRE TAŞIR")
     print("   🔍 Mevcut articles/ kontrolü")
     print("   🛡️ Swap öncesi kontrol")
     print("   ✅ Swap sonrası current_hash.txt'deki hash'i processed.json'a taşır")
@@ -405,7 +404,7 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v25 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v26 TAMAMLANDI!")
     print("=" * 60)
 
 if __name__ == "__main__":
