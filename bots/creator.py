@@ -37,6 +37,47 @@ def get_author_info(cluster_id, clusters):
                 return cluster_data.get("default_author", {})
     return None
 
+def get_first_pending_task():
+    """task/tasks.json'dan ilk pending task'i alır (silmez, sadece okur)"""
+    tasks_path = "task/tasks.json"
+    
+    if not os.path.exists(tasks_path):
+        print("❌ task/tasks.json bulunamadı!")
+        return None
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    if not tasks:
+        print("❌ task/tasks.json boş!")
+        return None
+    
+    # İlk task'i al (silme, sadece oku)
+    task = tasks[0]
+    print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
+    return task
+
+def remove_first_pending_task():
+    """task/tasks.json'dan ilk task'i SİLER (Uploader başarılı olunca çağrılacak)"""
+    tasks_path = "task/tasks.json"
+    
+    if not os.path.exists(tasks_path):
+        return False
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    if not tasks:
+        return False
+    
+    removed = tasks.pop(0)
+    
+    with open(tasks_path, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+    
+    print(f"   🗑️ Task {removed.get('task_id')} task/tasks.json'dan silindi")
+    return True
+
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info):
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -47,10 +88,8 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
         meta_comment = f"<!-- META: author={author_name}, author_title={author_title}, author_bio={author_bio}, author_avatar={author_avatar}, datetime={datetime_full} -->\n"
-        print(f"   📝 META'ya yazılıyor: author={author_name}")
     else:
         meta_comment = f"<!-- META: author={author_persona}, datetime={datetime_full} -->\n"
-        print(f"   📝 META'ya yazılıyor: author={author_persona} (varsayılan)")
     
     final_html = meta_comment + makale_html
     
@@ -61,7 +100,7 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
-    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path} (slug: {slug})")
+    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path}")
     return target_path
 
 def isle_gorev(task):
@@ -82,10 +121,10 @@ def isle_gorev(task):
     author_info = get_author_info(cluster_id, clusters)
     
     if author_info:
-        print(f"   ✅ Yazar bulundu: {author_info.get('name')} (cluster: {cluster_id})")
+        print(f"   ✅ Yazar bulundu: {author_info.get('name')}")
     else:
         if cluster_id:
-            print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id} clusters.json'da yok")
+            print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id}")
         else:
             print(f"   ⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak")
     
@@ -295,48 +334,47 @@ STRICT RULES:
             
             print(f"📁 Toplam {saved_count} dil kaydedildi (EN/ES/DE/FR)")
             
-            task["status"] = "processed"
-            task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            task["hash"] = hash_id
-            return True, hash_id
+            # ⚠️ CRITICAL: Creator tasks.json'a DOKUNMUYOR!
+            # Sadece hash_id'yi döndür
+            
+            return True, hash_id, task_id
         else:
             print(f"❌ GEMINI HATASI: {json.dumps(res_data, indent=2)}")
-            return False, None
+            return False, None, None
     except Exception as e:
         print(f"❌ SİSTEM HATASI: {str(e)}")
-        return False, None
+        return False, None, None
 
 def operasyon_baslat():
-    print("🛰️ Creator Bot (4 Dil + Cluster Boost + Yazar Desteği + FAQ) başlatılıyor...")
-    if not os.path.exists("tasks.json"):
-        print("❌ tasks.json bulunamadı!")
+    print("=" * 60)
+    print("🛰️ CREATOR BOT v34 - task/ klasörü")
+    print("   ✅ task/tasks.json'dan ilk task'i AL")
+    print("   ✅ Makale + görsel üret")
+    print("   ✅ content/ klasörüne yaz")
+    print("   ⚠️ tasks.json'a DOKUNMA (Uploader yapacak)")
+    print("=" * 60)
+    
+    # İlk pending task'i al
+    task = get_first_pending_task()
+    if not task:
+        print("❌ İşlenecek görev yok!")
         sys.exit(1)
     
-    with open("tasks.json", "r", encoding="utf-8") as f:
-        tasks = json.load(f)
-    
-    pending_tasks = [t for t in tasks if t.get("status") == "pending"]
-    if not pending_tasks:
-        print("💤 Bekleyen görev yok.")
-        return
-    
-    print(f"📋 Toplam {len(pending_tasks)} pending görev var. Sadece 1 tanesi işlenecek.")
-    task = pending_tasks[0]
     print(f"\n--- Görev {task.get('task_id')} işleniyor ---")
     
-    basarili, hash_id = isle_gorev(task)
+    basarili, hash_id, task_id = isle_gorev(task)
     
     if not basarili:
-        print(f"❌ Görev {task.get('task_id')} başarısız, workflow durduruluyor.")
-        task["status"] = "failed"
-        with open("tasks.json", "w", encoding="utf-8") as f:
-            json.dump(tasks, f, indent=4, ensure_ascii=False)
+        print(f"❌ Görev {task_id} başarısız, workflow durduruluyor.")
         sys.exit(1)
     
-    with open("tasks.json", "w", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4, ensure_ascii=False)
+    # Hash'i bir dosyaya yaz (Uploader'ın okuması için)
+    with open("task/current_hash.txt", "w") as f:
+        f.write(hash_id)
+    print(f"📝 Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
-    print("\n🏁 Görev tamamlandı. Kalan pending görevler için workflow'u tekrar çalıştır.")
+    print(f"\n🏁 CREATOR TAMAMLANDI! Hash: {hash_id}")
+    print("   ⚠️ tasks.json GÜNCELLENMEDİ. Uploader devam edecek.")
 
 if __name__ == "__main__":
     operasyon_baslat()
