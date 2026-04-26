@@ -55,7 +55,11 @@ def get_articles_from_r2_cached():
     
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
-        _articles_json_cache = json.loads(response['Body'].read().decode('utf-8'))
+        data = json.loads(response['Body'].read().decode('utf-8'))
+        if isinstance(data, dict) and 'articles' in data:
+            _articles_json_cache = data['articles']
+        else:
+            _articles_json_cache = data
         _articles_json_time = now
         return _articles_json_cache
     except:
@@ -127,7 +131,6 @@ def render_single_page(article, alt_langs, template_str, menu_texts, related_art
     
     hero_html = get_cached_hero('article', article['lang'])
     
-    # Kategori adını al (breadcrumb için)
     category_name = get_category_name(article['lang'], article['category'])
     
     return tmpl.render(
@@ -178,7 +181,7 @@ def render_home_page(lang, articles, featured_article, template_str, menu_texts,
         og_image=og_image,
         alternate_langs=alternate_langs,
         hero={'html': hero_html, 'show': True},
-        manifesto=manifesto_html  # ✅ EKLENDI
+        manifesto=manifesto_html
     )
 
 def render_list_page(lang, category, cat_articles, featured_article, trending_articles, template_str, menu_texts, alternate_langs):
@@ -197,7 +200,7 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         category_name=category_name,
         category_description=category_description,
         category_url=category_url,
-        category=category,  # ✅ EKLENEN SATIR
+        category=category,
         og_image=og_image,
         articles=cat_articles,
         featured_article=featured_article,
@@ -208,17 +211,13 @@ def render_list_page(lang, category, cat_articles, featured_article, trending_ar
         hero={'html': hero_html, 'show': True}
     )
 
-# ================= YENİ: EXPLORE SAYFALARI RENDER =================
-
 def render_all_articles_page(lang, all_articles, featured_article, template_str, menu_texts, alternate_langs):
-    """Tüm makaleleri listeleyen sayfa (all-articles.html template'i ile)"""
     tmpl = get_cached_template(template_str, 'all-articles')
     canonical = f"{R2_PUBLIC_URL}/explore/all-articles/{lang}.html"
     og_image = all_articles[0]['parsed']['cover_image'] if all_articles else ""
     
     hero_html = get_cached_hero('special', lang, 'all-articles')
     
-    # Makaleleri hazırla
     articles_for_template = []
     for a in all_articles:
         articles_for_template.append({
@@ -258,7 +257,6 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
 # ================= PARALEL YAZMA =================
 
 def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for_template):
-    """Tek bir makaleyi render et ve yaz (parallel için)"""
     try:
         single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
         if single_html:
@@ -269,12 +267,9 @@ def write_single_article(article, alt_langs, single_tpl, menu_texts, related_for
         print(f"   ⚠️ {article.get('url', 'unknown')} yazılamadı: {e}")
     return None
 
-# ================= ARTICLES.JSON ÜRETİMİ (YENİ - ZENGİNLEŞTİRİLMİŞ) =================
+# ================= ARTICLES.JSON ÜRETİMİ =================
 
 def generate_articles_json(all_articles):
-    """Zenginleştirilmiş articles.json üretir - word_count, summary_text, author, alternate_langs ile"""
-    
-    # Önce tüm makalelerin listesini oluştur
     articles_list = []
     for article in all_articles:
         parsed = article['parsed']
@@ -304,10 +299,9 @@ def generate_articles_json(all_articles):
             'cover_image': parsed['cover_image'],
             'content_image_1': parsed.get('content_image_1', ''),
             'content_image_2': parsed.get('content_image_2', ''),
-            'tags': []  # Şimdilik boş, ileride doldurulabilir
+            'tags': []
         })
     
-    # Alternatif dilleri ekle (tüm makaleler bittikten sonra, aynı hash'e göre eşle)
     for article in articles_list:
         alt_langs = {}
         for other in articles_list:
@@ -317,7 +311,6 @@ def generate_articles_json(all_articles):
                 alt_langs[other['lang']] = other['url']
         article['alternate_langs'] = alt_langs
     
-    # Meta bilgileri ekle
     final_json = {
         "version": "1.1",
         "generated": datetime.now().isoformat(),
@@ -357,7 +350,6 @@ def publisher():
         print("❌ Template'ler alınamadı.")
         return
     
-    # raw-articles/ dan oku (değişen yok, aynı sistem)
     all_articles = get_all_raw_articles()
     if not all_articles:
         print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
@@ -368,6 +360,16 @@ def publisher():
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
     total_pages = 0
+    
+    # Manifesto içeriğini bir kere oku (tüm diller için aynı)
+    manifesto_html = ""
+    try:
+        manifesto_response = s3.get_object(Bucket=R2_BUCKET, Key='templates/manifesto.html')
+        manifesto_html = manifesto_response['Body'].read().decode('utf-8')
+        manifesto_html = manifesto_html.replace("{{ R2_PUBLIC_URL }}", R2_PUBLIC_URL)
+        print("   ✅ manifesto.html okundu")
+    except Exception as e:
+        print(f"   ⚠️ manifesto.html okunamadı: {e}")
     
     for lang in languages:
         print(f"\n{'=' * 40}")
@@ -400,7 +402,6 @@ def publisher():
             related_for_template = [{'url': r['url'], 'image': r['parsed']['cover_image'], 'title': r['parsed']['title']} for r in related]
             articles_to_write.append((article, alt_langs, related_for_template))
         
-        # Parallel yaz
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for article, alt_langs, related_for_template in articles_to_write:
@@ -443,9 +444,9 @@ def publisher():
 
         home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs, manifesto_html)
         if home_html:
-        s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-        print(f"   ✅ articles_ready/{lang}/index.html")
-        total_pages += 1
+            s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
+            print(f"   ✅ articles_ready/{lang}/index.html")
+            total_pages += 1
         
         # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
@@ -505,7 +506,7 @@ def publisher():
                 print(f"   ✅ articles_ready/{lang}/{category}/index.html ({len(cat_articles)} makale)")
                 total_pages += 1
         
-        # 4. YENİ: TÜM MAKALELER SAYFASI (EXPLORE)
+        # 4. TÜM MAKALELER SAYFASI (EXPLORE)
         if all_articles_tpl:
             print(f"\n📚 Tüm makaleler sayfası oluşturuluyor...")
             
