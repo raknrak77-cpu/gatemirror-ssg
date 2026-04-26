@@ -1,0 +1,322 @@
+[
+    {
+        "task_id": "0116",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Circular Cities 2026: Designing Urban Environments with Zero-Waste Architecture",
+        "reference_link": "https://www.ellenmacarthurfoundation.org/circular-cities-2026",
+        "language": "en",
+        "author_persona": "Urban Planner & Circular Economy Architect",
+        "special_instructions": "Analyze modular building materials and \"Product-as-a-Service\" urban models. Case study: Amsterdam or Singapore.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic city building with vertical gardens and visible solar glass, where robot arms are replacing modular parts instead of demolition, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Trash Filled Landfill\"; right side \"Automated Recycling Loop\" feeding back into a factory, clean infographic, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a modular building brick made from recycled ocean plastic, highly textured, professional studio lighting, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0117",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Regenerative Farming 2026: Vertical AI-Farms and Soil Carbon Sequestration",
+        "reference_link": "https://www.nationalgeographic.com/future-of-farming-2026",
+        "language": "en",
+        "author_persona": "AgTech Innovator & Soil Microbiologist",
+        "special_instructions": "Focus on \"No-Till\" methods and drone-based precision farming. Explain how farmers earn through \"Soil Carbon Credits\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A massive indoor vertical farm with layers of glowing purple and blue LED lights, drones flying through the aisles, cinematic lighting, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A cross-section of healthy dark soil with glowing roots and diverse microorganisms, extremely detailed, scientific render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A tablet showing a \"Farm Carbon Storage: +15%\" dashboard with a map of a lush green field, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0118",
+        "category": "eco",
+        "cluster_id": "eco_02",
+        "topic": "The Hydrogen Revolution: Powering 2026 Heavy Industry with Zero-Emission Fuel",
+        "reference_link": "https://www.iea.org/hydrogen-outlook-2026",
+        "language": "en",
+        "author_persona": "Renewable Energy Engineer & Hydrogen Policy Expert",
+        "special_instructions": "Analyze the cost-drop in electrolyzers. Discuss hydrogen-powered shipping and steel production.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A giant cargo ship at sea with \"Powered by Hydrogen\" glowing on its side, leaving only water vapor behind, dramatic ocean sunset, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A visualization of a water molecule (H2O) splitting into hydrogen and oxygen using glowing green energy, clean scientific animation style, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A hydrogen refueling station for heavy trucks, sleek silver design, green nozzles, soft evening light, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0119",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "2026 Ocean Restoration: Autonomous Plastic Collectors and Coral Reef AI-Bio-Seeding",
+        "reference_link": "https://www.theoceancleanup.com/2026-mission",
+        "language": "en",
+        "author_persona": "Marine Biologist & Ocean Tech Engineer",
+        "special_instructions": "Discuss satellite-tracked ocean cleanup systems and 3D-printed coral reefs.",
+        "visuals": {
+            "kapak": {
+                "prompt": "An underwater view of a vibrant coral reef with small robotic drones carefully planting new coral, sunbeams filtering through blue water, cinematic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A large autonomous solar-powered vessel on the ocean surface pulling in plastic waste with a glowing blue collection net, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Bleached Dead Coral\"; right side \"Healthy Thriving Reef\" after AI-seeding, vibrant colors, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0120",
+        "category": "eco",
+        "cluster_id": "circular_economy",
+        "topic": "Lab-Grown Leather and Mushroom Silk: The 2026 Biotech Revolution in Sustainable Fashion",
+        "reference_link": "https://www.vogue.com/sustainable-fashion-2026",
+        "language": "en",
+        "author_persona": "Sustainable Fashion Designer & Materials Scientist",
+        "special_instructions": "Analyze Mycelium-based fabrics and bacterial dyes. Focus on the end of \"Fast Fashion\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A high-end fashion boutique with a dress made of glowing, translucent mushroom-based silk on a mannequin, soft elegant lighting, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A microscopic view of mushroom (mycelium) fibers weaving themselves into a strong leather-like texture, biological 3D render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person scanning a clothing tag that shows \"CO2 Footprint: Negative\" and \"100% Biodegradable\", clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0121",
+        "category": "elearning",
+        "cluster_id": "exec_education",
+        "topic": "The 2026 Metaverse Schooling: VR Classrooms and Immersive History Lessons",
+        "reference_link": "https://www.edtechmagazine.com/vr-education-2026",
+        "language": "en",
+        "author_persona": "EdTech Visionary & Immersive Learning Designer",
+        "special_instructions": "Focus on \"Time-Travel\" history lessons and VR-based chemistry labs. Discuss the end of static textbooks.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A classroom of students wearing lightweight VR headsets, seeing a holographic T-Rex walking through the room, excited faces, cinematic lighting, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A student's view through VR: standing in ancient Rome, with glowing \"Interact\" labels on buildings and statues, highly detailed, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A virtual chemistry lab where a student is safely mixing glowing liquids with their hands, holographic periodic table in the air, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0122",
+        "category": "elearning",
+        "cluster_id": "language_apps",
+        "topic": "One-on-One AI Tutors for Everyone: Solving the 2026 Global Education Inequality",
+        "reference_link": "https://www.khanacademy.org/ai-education-future",
+        "language": "en",
+        "author_persona": "Pedagogy Expert & AI Ethics Researcher",
+        "special_instructions": "Analyze how LLMs provide 24/7 personalized tutoring. Discuss \"Adaptive Learning Paths\" based on student emotion and speed.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A child in a rural village with a basic tablet, laughing while a friendly glowing AI tutor (hologram) helps them with math, sunset background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A screen showing \"Personalized Learning Path: Mastered Algebra, Moving to Calculus\", with glowing trophy icons, clean gamified UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Confused Student in Large Class\"; right side \"Confident Student with AI Tutor\", emotional contrast, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0123",
+        "category": "elearning",
+        "cluster_id": "exec_education",
+        "topic": "The Death of the 4-Year Degree? 2026's Rise of AI-Verified Micro-Credentials",
+        "reference_link": "https://www.coursera.org/future-of-degrees-2026",
+        "language": "en",
+        "author_persona": "Workforce Development Strategist & Academic Reformist",
+        "special_instructions": "Focus on job-market demand for specific skills like \"AI Prompt Engineering\" or \"Quantum Security\". Discuss blockchain-verified diplomas.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A digital resume glowing on a screen, with \"Verified Skills\" badges popping out like 3D holographic medals, modern clean office background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A person receiving a \"Blockchain Diploma\" on their phone after finishing a 3-month AI intensive course, smiling face, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Outdated University Textbook\"; right side \"Real-time AI Training Module\" showing live market data, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0124",
+        "category": "elearning",
+        "cluster_id": "sidehustle_skills",
+        "topic": "Lifelong Learning in the AI Age: How 2026 Workers are Reskilling Every 6 Months",
+        "reference_link": "https://www.linkedin.com/learning-future-2026",
+        "language": "en",
+        "author_persona": "Career Transition Coach & Lifelong Learner Advocate",
+        "special_instructions": "Focus on \"Micro-Learning\" during commutes and AI-curated skill paths. Mention the \"Human + AI\" collaboration skills.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A professional person in their 50s comfortably learning a new digital skill on a sleek tablet during a commute in a clean autonomous bus, photorealistic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A daily schedule on a smartphone showing \"15 min AI Ethics\", \"10 min Prompt Design\", \"20 min Data Strategy\", clean productivity UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A \"Skill Tree\" visualization on a screen where new branches are glowing and growing as the user completes micro-lessons, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    },
+    {
+        "task_id": "0125",
+        "category": "elearning",
+        "cluster_id": "ai_productivity_tools",
+        "topic": "Level Up: How 2026 Gamified Platforms are Turning Hard Sciences into Addictive Games",
+        "reference_link": "https://www.duolingo.com/gamified-learning-future",
+        "language": "en",
+        "author_persona": "Game Designer & Educational Psychologist",
+        "special_instructions": "Focus on \"Quest-based\" learning and real-world rewards for educational achievements.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A teenager intensely focused on a laptop where a complex physics problem looks like a high-end RPG quest, with glowing swords and \"Knowledge XP\", 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A digital leaderboard showing friends competing in a \"Global Coding Quest\", with glowing avatars and rank badges, vibrant colors, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A smartphone notification showing \"Quest Complete: You earned a local coffee shop discount for mastering Spanish verbs!\", clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "pending",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": ""
+    }
+]
