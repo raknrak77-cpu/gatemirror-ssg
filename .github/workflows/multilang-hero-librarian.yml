@@ -30,6 +30,12 @@ jobs:
           pip install --default-timeout=100 --retries=5 \
             requests boto3 beautifulsoup4 markdown jinja2 pillow
           
+      # ========== YENİ: task/ klasörünü oluştur (yoksa) ==========
+      - name: 0.0 Task Klasörünü Hazırla
+        run: |
+          mkdir -p task
+          echo "✅ task/ klasörü hazır"
+          
       - name: 0. Starter Bot (Template + Task Kontrol - Kota Harcamadan Once)
         run: python bots/starter-bot.py
         
@@ -45,6 +51,12 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/creator.py
         
+      # ========== YENİ: Creator sonrası task/tasks.json durumu ==========
+      - name: 1.5 Creator Sonrası Task Durumu
+        run: |
+          echo "=== task/tasks.json (Creator sonrası) ==="
+          cat task/tasks.json 2>/dev/null || echo "Dosya yok"
+          
       - name: 2. Uploader (Ham HTML'leri + Hero.json R2'ye Yukle - Tüm Diller)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
@@ -54,6 +66,28 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/uploader.py
         
+      # ========== YENİ: Uploader sonrası task/tasks.json DOĞRULAMA ==========
+      - name: 2.5 Uploader Sonrası Task Durumu (DOĞRULAMA)
+        run: |
+          echo "=== task/tasks.json (Uploader sonrası) ==="
+          cat task/tasks.json 2>/dev/null || echo "Dosya yok"
+          echo ""
+          echo "=== İLK TASK HASH ==="
+          python -c "
+import json
+try:
+    with open('task/tasks.json', 'r') as f:
+        tasks = json.load(f)
+    if tasks:
+        print(f'Task ID: {tasks[0].get(\"task_id\")}')
+        print(f'Hash: {tasks[0].get(\"hash\", \"HASH YOK\")}')
+        print(f'Status: {tasks[0].get(\"status\")}')
+    else:
+        print('Dosya boş')
+except Exception as e:
+    print(f'Hata: {e}')
+"
+          
       - name: 3. Hero Bot (Hero.json Oku, Dinamik Hero HTML Uret)
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
@@ -81,15 +115,38 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: python bots/librarian.py
         
+      # ========== YENİ: Librarian sonrası task klasörü durumu ==========
+      - name: 5.5 Librarian Sonrası Task Durumu
+        run: |
+          echo "=== task/tasks.json (kalan pending) ==="
+          cat task/tasks.json 2>/dev/null || echo "Dosya yok"
+          echo ""
+          echo "=== task/processed.json ==="
+          cat task/processed.json 2>/dev/null || echo "Dosya yok"
+          echo ""
+          echo "=== task/skipped.json ==="
+          cat task/skipped.json 2>/dev/null || echo "Dosya yok"
+          
       - name: 6. Git Kayit (tasks.json - content/ uploader tarafindan silinir)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull --rebase origin main || echo "Pull yapılamadı, devam..."
-          git add content/ tasks.json
+          git add content/ tasks.json task/ 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "📭 Değişiklik yok, commit atlanıyor."
           else
             git commit -m "🌍 SSG Multilingual 4Lang + Hero Bot build tamamlandi (EN/ES/DE/FR)"
             git push origin main || git push --force origin main
           fi
+          
+      # ========== YENİ: Raporları artefact olarak kaydet ==========
+      - name: 7. Raporları Arşivle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-reports
+          path: |
+            task/
+            reports/
+          retention-days: 7
