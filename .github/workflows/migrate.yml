@@ -18,7 +18,7 @@ jobs:
       
       - name: Run migrate script
         run: |
-          python migrate_tasks.py
+          python bot/migrate_tasks.py
       
       - name: Upload task folder as artifact (YEDEK)
         uses: actions/upload-artifact@v4
