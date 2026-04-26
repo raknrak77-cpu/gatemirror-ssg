@@ -3747,5 +3747,39 @@
         "processed_at": "2026-04-26 22:37:39",
         "hash": "63d0286d",
         "hash_updated_at": "2026-04-26T22:27:15.419670"
+    },
+    {
+        "task_id": "0119",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "2026 Ocean Restoration: Autonomous Plastic Collectors and Coral Reef AI-Bio-Seeding",
+        "reference_link": "https://www.theoceancleanup.com/2026-mission",
+        "language": "en",
+        "author_persona": "Marine Biologist & Ocean Tech Engineer",
+        "special_instructions": "Discuss satellite-tracked ocean cleanup systems and 3D-printed coral reefs.",
+        "visuals": {
+            "kapak": {
+                "prompt": "An underwater view of a vibrant coral reef with small robotic drones carefully planting new coral, sunbeams filtering through blue water, cinematic, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A large autonomous solar-powered vessel on the ocean surface pulling in plastic waste with a glowing blue collection net, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Bleached Dead Coral\"; right side \"Healthy Thriving Reef\" after AI-seeding, vibrant colors, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "processed",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": "2026-04-26 23:50:05",
+        "hash": "c7023e75",
+        "hash_updated_at": "2026-04-26T23:39:26.291680"
     }
 ]
