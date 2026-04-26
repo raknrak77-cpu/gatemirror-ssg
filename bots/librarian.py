@@ -25,6 +25,18 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
+# ================= TEK SEFERLİK TEMİZLİK İÇİN HASH LİSTESİ =================
+# Publisher raporundan REDDEDİLEN hash'ler (FR hariç)
+HASHES_TO_DELETE = [
+    'abfb2c11', '97ac9d5c', 'e6a5c268', 'e9be3058', 
+    '2a8a83da', 'b927e35e', 'f12a0576', '0d43b9ae'
+]
+
+# KORUNACAK FR hash'ler (hatalı ama silmeyeceğiz)
+HASHES_TO_KEEP_FR = ['9ab72a1f', '8209c1b4', '8a39223e']
+
+# ================= YARDIMCI FONKSİYONLAR =================
+
 def list_all_files(prefix):
     files = []
     continuation_token = None
@@ -46,19 +58,20 @@ def list_all_files(prefix):
             break
     return files
 
+def delete_file(key):
+    try:
+        s3.delete_object(Bucket=R2_BUCKET, Key=key)
+        print(f"   🗑️ Silindi: {key}")
+        return True
+    except Exception as e:
+        print(f"   ⚠️ Silinemedi {key}: {e}")
+        return False
+
 def folder_exists(prefix):
     try:
         response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, MaxKeys=1)
         return 'Contents' in response
     except:
-        return False
-
-def delete_file(key):
-    try:
-        s3.delete_object(Bucket=R2_BUCKET, Key=key)
-        return True
-    except Exception as e:
-        print(f"   Silme hatasi {key}: {e}")
         return False
 
 def delete_folder(prefix):
@@ -67,7 +80,7 @@ def delete_folder(prefix):
         return
     for f in files:
         delete_file(f)
-    print(f"   {len(files)} dosya silindi: {prefix}")
+    print(f"   📁 {len(files)} dosya silindi: {prefix}")
 
 def copy_file(source_key, dest_key):
     try:
@@ -78,29 +91,152 @@ def copy_file(source_key, dest_key):
     except Exception as e:
         return False
 
-def log_size_report(entries, report_type="librarian"):
+def log_cleanup_report(entries, report_type="cleanup"):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
+    report_key = f"reports/cleanup_report_{report_type}_{timestamp}.json"
     report = {
         "generated": datetime.now().isoformat(),
         "type": report_type,
-        "min_size_kb": MIN_SIZE_KB,
         "entries": entries
     }
     try:
-        s3.put_object(Bucket=R2_BUCKET, Key=report_key,
-                      Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
-                      ContentType='application/json')
-        print(f"   📊 Rapor kaydedildi: {report_key}")
+        s3.put_object(
+            Bucket=R2_BUCKET,
+            Key=report_key,
+            Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
+            ContentType='application/json'
+        )
+        print(f"   📊 Temizlik raporu kaydedildi: {report_key}")
         return report_key
     except Exception as e:
         print(f"   ⚠️ Rapor kaydedilemedi: {e}")
         return None
 
+# ================= TEK SEFERLİK TEMİZLİK =================
+
+def cleanup_invalid_articles():
+    """
+    TEK SEFERLİK TEMİZLİK - raw-articles/ ve görsellerden hatalı makaleleri siler.
+    BU FONKSİYON SADECE BİR KEZ ÇALIŞTIRILACAK!
+    """
+    print("\n" + "=" * 60)
+    print("🧹 TEK SEFERLİK TEMİZLİK - HATALI MAKALELER")
+    print("   ⚠️ BU İŞLEM SADECE BİR KEZ ÇALIŞACAK!")
+    print("   🗑️ raw-articles/ ve görsellerden silme yapılacak")
+    print("   🛡️ FR hatalı makaleler KORUNACAK")
+    print("   🛡️ index.html'ler KORUNACAK")
+    print("=" * 60)
+    
+    all_deleted = []
+    
+    # 1. raw-articles/ ALTINDAKİ HATALI MAKALELERİ SİL
+    print("\n📁 1. raw-articles/ altındaki hatalı makaleler taranıyor...")
+    
+    for lang in LANGUAGES:
+        prefix = f"raw-articles/{lang}/"
+        if not folder_exists(prefix):
+            continue
+        
+        files = list_all_files(prefix)
+        for key in files:
+            if not key.endswith('.html'):
+                continue
+            
+            # index.html KORU
+            if key.endswith('/index.html'):
+                continue
+            
+            # Hash'i bul (dosya adından veya yoldan)
+            filename = key.split('/')[-1]
+            hash_id = None
+            
+            # Format: hash-slug.html veya hash.html
+            if '-' in filename:
+                hash_id = filename.split('-')[0]
+            else:
+                hash_id = filename.replace('.html', '')
+            
+            # 8 karakterli hash mi kontrol et
+            if not hash_id or len(hash_id) != 8:
+                continue
+            
+            # FR hatalı makaleleri KORU
+            if lang == 'fr' and hash_id in HASHES_TO_KEEP_FR:
+                print(f"   🛡️ KORUNDU (FR hatalı): {key}")
+                continue
+            
+            # Silinecek hash'lerden mi?
+            if hash_id in HASHES_TO_DELETE:
+                print(f"   🗑️ raw-articles siliniyor: {key} (hash: {hash_id}, lang: {lang})")
+                delete_file(key)
+                all_deleted.append({
+                    "timestamp": datetime.now().isoformat(),
+                    "type": "raw_article",
+                    "key": key,
+                    "hash": hash_id,
+                    "lang": lang
+                })
+    
+    # 2. GÖRSELLERİ SİL
+    print("\n🖼️ 2. Görseller taranıyor...")
+    
+    # Tüm images/ klasörünü tara
+    images_prefix = "images/"
+    if folder_exists(images_prefix):
+        image_files = list_all_files(images_prefix)
+        
+        for key in image_files:
+            if not key.endswith('.webp'):
+                continue
+            
+            # Dosya adından hash'i bul
+            filename = key.split('/')[-1]
+            # Format: hash_kapak.webp veya hash_icerik_1.webp veya hash_icerik_2.webp
+            if '_' in filename:
+                hash_id = filename.split('_')[0]
+            else:
+                continue
+            
+            # 8 karakterli hash mi?
+            if len(hash_id) != 8:
+                continue
+            
+            # FR hatalı makale görsellerini KORU
+            if hash_id in HASHES_TO_KEEP_FR:
+                print(f"   🛡️ KORUNDU (FR hatalı görsel): {key}")
+                continue
+            
+            # Silinecek hash'lerden mi?
+            if hash_id in HASHES_TO_DELETE:
+                print(f"   🗑️ Görsel siliniyor: {key} (hash: {hash_id})")
+                delete_file(key)
+                all_deleted.append({
+                    "timestamp": datetime.now().isoformat(),
+                    "type": "image",
+                    "key": key,
+                    "hash": hash_id
+                })
+    
+    # 3. RAPOR KAYDET
+    if all_deleted:
+        log_cleanup_report(all_deleted, "one_time_cleanup")
+        print(f"\n📊 TEMİZLİK TAMAMLANDI!")
+        print(f"   🗑️ Toplam silinen: {len(all_deleted)} dosya")
+        print(f"   📁 raw-articles: {len([d for d in all_deleted if d['type'] == 'raw_article'])} dosya")
+        print(f"   🖼️ Görseller: {len([d for d in all_deleted if d['type'] == 'image'])} dosya")
+        print(f"   🛡️ FR hatalı makaleler: {len(HASHES_TO_KEEP_FR)} hash KORUNDU")
+    else:
+        print("   ✅ Silinecek dosya bulunamadı.")
+    
+    return all_deleted
+
+# ================= MEVCUT ARTICLES/ KONTROLÜ (index.html KORUMALI) =================
+
 def check_existing_articles():
-    """Mevcut articles/ klasöründeki dosyaları kontrol et, küçükleri sil (yayından kaldır)"""
+    """Mevcut articles/ klasöründeki makaleleri kontrol et, index.html'leri KORU"""
     print("\n" + "=" * 40)
     print("🔍 MEVCUT ARTICLES/ KONTROLÜ (51 KB altı silinecek)")
+    print("   🛡️ index.html KORUNACAK")
     print("=" * 40)
     
     articles_files = list_all_files('articles/')
@@ -112,28 +248,67 @@ def check_existing_articles():
     for key in articles_files:
         if not key.endswith('.html'):
             continue
+        
+        # KRİTİK: index.html'leri KORU
+        if key.endswith('/index.html'):
+            print(f"   🛡️ KORUNDU (index.html): {key}")
+            continue
+        
+        # Sadece makale dosyalarını işle (tarih yolu olanlar)
+        if '/2026/' not in key:
+            print(f"   ⏭️ ATLANDI (makale formatı değil): {key}")
+            continue
+        
         try:
             response = s3.head_object(Bucket=R2_BUCKET, Key=key)
             size_kb = response['ContentLength'] / 1024
             if size_kb < MIN_SIZE_KB:
+                # Hash'i bul
+                filename = key.split('/')[-1]
+                hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+                
+                # FR hatalı makaleleri KORU
+                if '/fr/' in key and hash_id in HASHES_TO_KEEP_FR:
+                    print(f"   🛡️ KORUNDU (FR hatalı makale): {key} ({size_kb:.1f} KB)")
+                    continue
+                
                 small_files.append({
                     "timestamp": datetime.now().isoformat(),
                     "source": "librarian_existing",
                     "status": "DELETED_FROM_ARTICLES",
                     "key": key,
                     "size_kb": round(size_kb, 2),
-                    "min_required_kb": MIN_SIZE_KB
+                    "min_required_kb": MIN_SIZE_KB,
+                    "hash": hash_id
                 })
                 delete_file(key)
-                print(f"   🗑️ Yayından kaldırıldı: {key} ({size_kb:.1f} KB)")
+                print(f"   🗑️ Silindi: {key} ({size_kb:.1f} KB)")
+            else:
+                print(f"   ✅ Korundu: {key} ({size_kb:.1f} KB)")
         except Exception as e:
             print(f"   ⚠️ {key} okunamadı: {e}")
     
     if small_files:
         log_size_report(small_files, "librarian_existing")
-        print(f"   🗑️ Toplam {len(small_files)} hatalı makale yayından kaldırıldı")
+        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi (index.html KORUNDU)")
+        
+        # Silinen makaleleri articles.json'dan temizle
+        print("   🔄 articles.json yeniden oluşturuluyor...")
+        try:
+            from makeup import get_all_raw_articles, generate_articles_json
+            all_articles = get_all_raw_articles()
+            if all_articles:
+                valid_articles = []
+                for article in all_articles:
+                    word_count = article['parsed'].get('word_count', 0)
+                    if word_count >= 1200:
+                        valid_articles.append(article)
+                generate_articles_json(valid_articles)
+                print(f"   ✅ articles.json güncellendi ({len(valid_articles)} makale)")
+        except Exception as e:
+            print(f"   ⚠️ articles.json güncellenemedi: {e}")
     else:
-        print("   ✅ Mevcut tüm makaleler 51 KB üzerinde")
+        print("   ✅ Mevcut tüm makaleler 51 KB üzerinde veya index.html")
     
     return small_files
 
@@ -154,7 +329,6 @@ def atomic_swap():
     
     print(f"   {len(source_files)} dosya bulundu.")
     
-    # 1. KONTROL: articles_ready/ içindeki dosyaları boyut kontrolü yap
     small_in_ready = []
     valid_files = []
     
@@ -162,6 +336,13 @@ def atomic_swap():
         if not key.endswith('.html'):
             valid_files.append(key)
             continue
+        
+        # index.html için farklı davran
+        if key.endswith('/index.html'):
+            valid_files.append(key)
+            print(f"   ✅ index.html swap için uygun: {key}")
+            continue
+        
         try:
             response = s3.head_object(Bucket=R2_BUCKET, Key=key)
             size_kb = response['ContentLength'] / 1024
@@ -174,25 +355,24 @@ def atomic_swap():
                     "size_kb": round(size_kb, 2),
                     "min_required_kb": MIN_SIZE_KB
                 })
-                print(f"   ⚠️ SWAP DIŞI: {key} ({size_kb:.1f} KB) - Yayınlanmayacak")
+                print(f"   ⚠️ SWAP DIŞI: {key} ({size_kb:.1f} KB)")
             else:
                 valid_files.append(key)
+                print(f"   ✅ SWAP UYGUN: {key} ({size_kb:.1f} KB)")
         except Exception as e:
             print(f"   ⚠️ {key} okunamadı: {e}")
             valid_files.append(key)
     
-    # Rapor kaydet (swap öncesi)
     if small_in_ready:
         log_size_report(small_in_ready, "librarian_swap_precheck")
-        print(f"   ⚠️ {len(small_in_ready)} dosya swap DIŞI bırakıldı (51 KB altı)")
+        print(f"   ⚠️ {len(small_in_ready)} dosya swap DIŞI bırakıldı")
     
     if not valid_files:
         print("   ❌ Swap için geçerli dosya kalmadı!")
         return False
     
-    print(f"   ✅ {len(valid_files)} dosya swap için uygun (≥{MIN_SIZE_KB} KB)")
+    print(f"   ✅ {len(valid_files)} dosya swap için uygun")
     
-    # 2. SWAP İŞLEMİ (sadece valid_files)
     success_count = 0
     with ThreadPoolExecutor(max_workers=10) as executor:
         futures = {}
@@ -210,7 +390,6 @@ def atomic_swap():
         print(f"   ⚠️ Çok fazla hata ({success_count}/{len(valid_files)} basarili)")
         return False
     
-    # 3. TEMİZLİK: articles_ready/ SİL
     print("   articles_ready/ siliniyor...")
     delete_folder('articles_ready/')
     
@@ -229,6 +408,22 @@ def update_hero_ticker():
         print("   articles.json okunamadi")
         return False
     
+    def shorten_title(title, max_length=55):
+        if len(title) <= max_length:
+            return title
+        shortened = title[:max_length]
+        last_space = shortened.rfind(' ')
+        if last_space > 0:
+            shortened = shortened[:last_space]
+        return shortened + "..."
+    
+    def sanitize_text(text):
+        text = text.replace('ı', 'i').replace('ğ', 'g').replace('ü', 'u')
+        text = text.replace('ş', 's').replace('ö', 'o').replace('ç', 'c')
+        text = text.replace('İ', 'I').replace('Ğ', 'G').replace('Ü', 'U')
+        text = text.replace('Ş', 'S').replace('Ö', 'O').replace('Ç', 'C')
+        return text
+    
     new_ticker_items = {}
     for lang in LANGUAGES:
         lang_articles = [a for a in articles if a.get('lang') == lang and a.get('cover_image')]
@@ -237,10 +432,10 @@ def update_hero_ticker():
         items = []
         for a in latest:
             title = a.get('title', 'Untitled')
-            title = title[:55] + "..." if len(title) > 55 else title
-            title = title.replace('ı', 'i').replace('ğ', 'g').replace('ü', 'u').replace('ş', 's').replace('ö', 'o').replace('ç', 'c')
+            short_title = shorten_title(title, 55)
+            short_title = sanitize_text(short_title)
             url = a.get('url', '#')
-            items.append(f"{title} -> {url}")
+            items.append(f"{short_title} -> {url}")
         new_ticker_items[lang] = items
         print(f"   {lang.upper()}: {len(items)} makale")
     
@@ -359,38 +554,72 @@ def analyze_r2_storage():
     print(f"Toplam boyut: {total_size / (1024*1024):.2f} MB")
     return True
 
+def log_size_report(entries, report_type):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
+    report = {"generated": datetime.now().isoformat(), "type": report_type, "min_size_kb": MIN_SIZE_KB, "entries": entries}
+    try:
+        s3.put_object(Bucket=R2_BUCKET, Key=report_key,
+                      Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
+                      ContentType='application/json')
+        print(f"   📊 Rapor: {report_key}")
+    except:
+        pass
+
+# ================= ANA LIBRARIAN =================
+
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v20 - 51 KB KONTROLLÜ")
-    print("   🔍 Mevcut articles/ kontrolü (küçükler SİLİNECEK)")
-    print("   🛡️ Swap öncesi articles_ready/ kontrolü (küçükler YAYINLANMAYACAK)")
-    print("   📊 Detaylı rapor (R2/reports/)")
+    print("📚 KUTUPHANECI BOT v22 - TEK SEFERLİK TEMİZLİK")
+    print("   ⚠️ BU SÜRÜM raw-articles/ ve görsellerden SİLME YAPAR!")
+    print("   ⚠️ SADECE BİR KEZ ÇALIŞTIRILACAK!")
+    print("   🛡️ FR hatalı makaleler KORUNACAK")
+    print("   🛡️ index.html'ler KORUNACAK")
     print("=" * 60)
+    
+    # ONAY KONTROLÜ
+    print("\n⚠️⚠️⚠️ UYARI ⚠️⚠️⚠️")
+    print("Bu işlem raw-articles/ ve görsellerden DOSYA SİLECEK!")
+    print("Silinecek hash'ler:")
+    for h in HASHES_TO_DELETE:
+        print(f"   - {h} (EN, ES, DE, FR - 4 dil)")
+    print(f"\nKORUNACAK FR hash'ler: {HASHES_TO_KEEP_FR}")
+    print("\nDevam etmek için 'CLEAN' yazın: ", end="")
+    
+    confirm = input().strip()
+    if confirm != 'CLEAN':
+        print("❌ İşlem iptal edildi.")
+        sys.exit(0)
+    
+    print("\n✅ ONAY ALINDI. TEMİZLİK BAŞLIYOR...")
     
     analyze_r2_storage()
     
-    # 1. MEVCUT ARTICLES/ KONTROLÜ (Yayından kaldır)
-    deleted_articles = check_existing_articles()
+    # TEK SEFERLİK TEMİZLİK
+    cleanup_invalid_articles()
     
-    # 2. HERO GÜNCELLEMELERİ
+    # Mevcut articles/ kontrolü
+    check_existing_articles()
+    
+    # Hero güncellemeleri
     update_hero_ticker()
     update_hero_stats()
     
-    # 3. ATOMIC SWAP (Kontrollü)
+    # Atomic swap
     try:
         swap_success = atomic_swap()
         if swap_success:
-            print("\n✅ SWAP BASARILI! Site yeni icerikle yayinda.")
+            print("\n✅ SWAP BASARILI! Site güncellendi.")
         else:
-            print("\n⚠️ SWAP BASARISIZ! Site eski icerikle devam ediyor.")
+            print("\n⚠️ SWAP BASARISIZ!")
     except Exception as e:
         print(f"\n❌ KRITIK HATA: {e}")
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v20 TAMAMLANDI!")
-    if deleted_articles:
-        print(f"   🗑️ Yayından kaldırılan: {len(deleted_articles)} makale")
+    print("🏁 KUTUPHANECI BOT v22 TAMAMLANDI!")
+    print("   ⚠️ BU SÜRÜMÜ BİR DAHA KULLANMAYIN!")
+    print("   ✅ Normal Librarian v21'e geri dönün")
     print("=" * 60)
 
 if __name__ == "__main__":
