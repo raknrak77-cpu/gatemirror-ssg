@@ -21,7 +21,7 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= TASK GÜNCELLEME (SADECE HASH) =================
+# ================= TASK GÜNCELLEME (SADECE HASH + FSYNC) =================
 
 def get_hash_from_content():
     """content/ klasöründeki en son dosyadan hash'i al"""
@@ -54,35 +54,42 @@ def update_task_with_hash_only(hash_id):
     """task/tasks.json'daki ilk task'e SADECE hash ekler, status DEĞİŞMEZ"""
     tasks_path = "task/tasks.json"
     
+    print(f"   📂 HEDEF DOSYA: {os.path.abspath(tasks_path)}")
+    
     if not os.path.exists(tasks_path):
-        print("   ⚠️ task/tasks.json bulunamadı, task güncellenemedi")
+        print(f"   ❌ DOSYA YOK: {tasks_path}")
         return False
     
     with open(tasks_path, "r", encoding="utf-8") as f:
         tasks = json.load(f)
     
     if not tasks:
-        print("   ⚠️ task/tasks.json boş, task güncellenemedi")
+        print("   ⚠️ task/tasks.json boş")
         return False
     
     # İlk task'i güncelle (sadece hash ekle, status DOKUNMA)
     task = tasks[0]
     old_hash = task.get("hash")
     task["hash"] = hash_id
+    task["hash_updated_at"] = datetime.now().isoformat()
     # status değişmiyor! "pending" kalıyor
     
+    # YAZ ve ZORLA DISKE YAZ (fsync)
     with open(tasks_path, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())
     
-    # DOĞRULA
+    # DOĞRULA (GERÇEKTEN YAZILDI MI?)
     with open(tasks_path, "r", encoding="utf-8") as f:
         verify_tasks = json.load(f)
     
     if verify_tasks[0].get("hash") == hash_id:
         print(f"   ✅ Task {task.get('task_id')}: hash eklendi {old_hash} → {hash_id} (status: {task.get('status')})")
+        print(f"   📄 DOSYA BOYUTU: {os.path.getsize(tasks_path)} bytes")
         return True
     else:
-        print(f"   ❌ DOĞRULAMA BAŞARISIZ! Hash yazılamadı.")
+        print(f"   ❌ DOĞRULAMA BAŞARISIZ! {verify_tasks[0].get('hash')} != {hash_id}")
         return False
 
 # ================= MEVCUT YÜKLEME FONKSİYONLARI =================
@@ -155,11 +162,11 @@ def upload_manifesto_images():
 
 def uploader():
     print("\n" + "=" * 60)
-    print("📤 UPLOADER BOT v29 - SADECE HASH EKLER")
+    print("📤 UPLOADER BOT v30 - SADECE HASH EKLER + FSYNC")
     print("   ✅ content/ hash al, tasks.json'a SADECE HASH EKLE")
     print("   ✅ status DOKUNMA (pending kalır)")
-    print("   ✅ Template, CSS, SVG, Manifesto yükle")
-    print("   ✅ İçerik yükle (raw-articles/)")
+    print("   ✅ fsync ile zorla diske yaz")
+    print("   ✅ Doğrulama yap")
     print("=" * 60)
     
     # ========== 1. ADIM: Hash'i bul ve tasks.json'a SADECE HASH yaz ==========
@@ -219,10 +226,10 @@ def uploader():
             except:
                 pass
     
-    # ========== 5. ADIM: TEMİZLİK ==========
+    # ========== 5. ADIM: current_hash.txt KORU (SİLME) ==========
+    print("\n📝 5. ADIM: current_hash.txt korunuyor...")
     if os.path.exists("task/current_hash.txt"):
-        os.remove("task/current_hash.txt")
-        print("   🗑️ Silindi: task/current_hash.txt")
+        print("   🛡️ current_hash.txt KORUNDU (Librarian kullanacak)")
     
     # ========== 6. ADIM: DOĞRULAMA RAPORU ==========
     print("\n📋 6. ADIM: DOĞRULAMA")
@@ -236,8 +243,9 @@ def uploader():
             print("   ❌ İLK TASK'TA HASH YOK!")
     
     print("\n" + "=" * 60)
-    print("🏁 UPLOADER v29 TAMAMLANDI!")
+    print("🏁 UPLOADER v30 TAMAMLANDI!")
     print("   ✅ SADECE HASH EKLENDİ, STATUS DEĞİŞMEDİ")
+    print("   ✅ current_hash.txt KORUNDU")
     print("=" * 60)
 
 if __name__ == "__main__":
