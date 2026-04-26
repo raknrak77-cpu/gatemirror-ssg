@@ -25,6 +25,50 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
+# ================= TASK TAŞIMA (YENİ) =================
+
+def move_first_task_to_processed():
+    """Swap başarılı olunca task'i tasks.json'dan sil, processed.json'a ekle"""
+    tasks_path = "task/tasks.json"
+    processed_path = "task/processed.json"
+    
+    if not os.path.exists(tasks_path):
+        print("   ⚠️ task/tasks.json bulunamadı, task taşınamadı")
+        return False
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    if not tasks:
+        print("   ⚠️ task/tasks.json boş, task taşınamadı")
+        return False
+    
+    # İlk task'i al
+    task = tasks.pop(0)
+    
+    # tasks.json'a kalanları yaz
+    with open(tasks_path, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+    
+    # processed.json'a ekle
+    if os.path.exists(processed_path):
+        with open(processed_path, "r", encoding="utf-8") as f:
+            processed = json.load(f)
+    else:
+        processed = []
+    
+    task["status"] = "processed"
+    task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    processed.append(task)
+    
+    with open(processed_path, "w", encoding="utf-8") as f:
+        json.dump(processed, f, indent=4, ensure_ascii=False)
+    
+    print(f"   ✅ Task {task.get('task_id')} tasks.json'dan silindi, processed.json'a eklendi")
+    return True
+
+# ================= MEVCUT FONKSİYONLAR =================
+
 def list_all_files(prefix):
     files = []
     continuation_token = None
@@ -411,10 +455,11 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v21 - NORMAL SÜRÜM")
+    print("📚 KUTUPHANECI BOT v24 - TASK TAŞIMA EKLENDİ")
     print("   🔍 Mevcut articles/ kontrolü (küçükler SİLİNECEK, index.html KORUNACAK)")
     print("   🛡️ Swap öncesi articles_ready/ kontrolü")
     print("   📊 Detaylı rapor (R2/reports/)")
+    print("   ✅ Swap başarılı olunca task -> processed.json")
     print("=" * 60)
     
     analyze_r2_storage()
@@ -431,6 +476,8 @@ def librarian():
         swap_success = atomic_swap()
         if swap_success:
             print("\n✅ SWAP BASARILI! Site yeni icerikle yayinda.")
+            # YENİ: Swap başarılı olunca task'i processed.json'a taşı
+            move_first_task_to_processed()
         else:
             print("\n⚠️ SWAP BASARISIZ! Site eski icerikle devam ediyor.")
     except Exception as e:
@@ -438,9 +485,10 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v21 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v24 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTİF")
     print("   ✅ Atomic swap KONTROLLÜ")
+    print("   ✅ Task processed.json'a taşındı (swap başarılıysa)")
     print("=" * 60)
 
 if __name__ == "__main__":
