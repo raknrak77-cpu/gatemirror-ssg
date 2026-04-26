@@ -21,7 +21,7 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= TASK GÜNCELLEME (YENİ) =================
+# ================= TASK GÜNCELLEME (SADECE HASH) =================
 
 def get_hash_from_content():
     """content/ klasöründeki en son dosyadan hash'i al"""
@@ -50,32 +50,40 @@ def get_hash_from_content():
     
     return latest_hash
 
-def update_task_with_hash(hash_id):
-    """task/tasks.json'daki ilk task'e hash ve status ekler (SİLMEZ)"""
+def update_task_with_hash_only(hash_id):
+    """task/tasks.json'daki ilk task'e SADECE hash ekler, status DEĞİŞMEZ"""
     tasks_path = "task/tasks.json"
     
     if not os.path.exists(tasks_path):
         print("   ⚠️ task/tasks.json bulunamadı, task güncellenemedi")
-        return
+        return False
     
     with open(tasks_path, "r", encoding="utf-8") as f:
         tasks = json.load(f)
     
     if not tasks:
         print("   ⚠️ task/tasks.json boş, task güncellenemedi")
-        return
+        return False
     
-    # İlk task'i güncelle
+    # İlk task'i güncelle (sadece hash ekle, status DOKUNMA)
     task = tasks[0]
+    old_hash = task.get("hash")
     task["hash"] = hash_id
-    task["status"] = "uploaded"
-    task["uploaded_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # status değişmiyor! "pending" kalıyor
     
     with open(tasks_path, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
     
-    print(f"   ✅ Task {task.get('task_id')} güncellendi: hash={hash_id}, status=uploaded")
-    print(f"   ⚠️ Task HALA tasks.json'da (Librarian işleyecek)")
+    # DOĞRULA
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        verify_tasks = json.load(f)
+    
+    if verify_tasks[0].get("hash") == hash_id:
+        print(f"   ✅ Task {task.get('task_id')}: hash eklendi {old_hash} → {hash_id} (status: {task.get('status')})")
+        return True
+    else:
+        print(f"   ❌ DOĞRULAMA BAŞARISIZ! Hash yazılamadı.")
+        return False
 
 # ================= MEVCUT YÜKLEME FONKSİYONLARI =================
 
@@ -91,7 +99,6 @@ def upload_file_to_r2(local_path, r2_key, content_type=None):
     return False
 
 def convert_to_webp(input_path, output_path):
-    """PNG/JPG'yi WebP'ye dönüştürür"""
     try:
         from PIL import Image
         with Image.open(input_path) as img:
@@ -108,118 +115,93 @@ def convert_to_webp(input_path, output_path):
 def upload_templates():
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
-        print(f"⚠️ {templates_dir} klasörü yok, atlanıyor.")
         return
-    
     for file in os.listdir(templates_dir):
         if file.endswith('.html'):
             local_path = os.path.join(templates_dir, file)
             if os.path.isfile(local_path):
-                r2_key = f"templates/{file}"
-                upload_file_to_r2(local_path, r2_key)
+                upload_file_to_r2(local_path, f"templates/{file}")
 
 def upload_css_to_assets():
     local_path = "templates/css/style.css"
-    r2_key = "assets/css/style.css"
-    
     if os.path.exists(local_path):
-        print(f"\n🎨 CSS dosyası assets'e yükleniyor...")
-        return upload_file_to_r2(local_path, r2_key, content_type='text/css')
-    else:
-        print(f"\n⚠️ templates/css/style.css dosyası bulunamadı, atlanıyor.")
-        return False
+        upload_file_to_r2(local_path, "assets/css/style.css", content_type='text/css')
 
 def upload_svg_patterns():
-    print("\n🎨 ÖZEL SVG PATTERN YÜKLEME (3 DOSYA)")
-    print("-" * 40)
-    
     svg_files = [
         ("assets/all-patterns/spiral_out/spiral_circular_basic_18.svg", "assets/svg1.svg"),
         ("assets/all-patterns/spiral_out/spiral_circular_medium_09.svg", "assets/svg2.svg"),
         ("assets/all-patterns/breath_wave/breath_wave_basic_02.svgq", "assets/svg3.svg"),
     ]
-    
     for local_path, r2_key in svg_files:
         if os.path.exists(local_path):
             upload_file_to_r2(local_path, r2_key, content_type='image/svg+xml')
-        else:
-            print(f"⚠️ Dosya bulunamadı: {local_path}")
 
 def upload_manifesto_images():
-    """manifesto görsellerini yükler ve WebP'ye çevirir"""
     local_dir = "assets/manifesto"
     if not os.path.exists(local_dir):
-        print(f"⚠️ {local_dir} klasörü yok, atlanıyor.")
         return
-    
-    print("\n🎨 MANIFESTO GÖRSELLERİ YÜKLENİYOR...")
     for file in os.listdir(local_dir):
         if file.endswith(('.jpg', '.jpeg', '.png')):
             local_path = os.path.join(local_dir, file)
             name = os.path.splitext(file)[0]
             webp_file = f"{name}.webp"
             webp_path = os.path.join(local_dir, webp_file)
-            
-            print(f"   📸 {file} → WebP dönüştürülüyor...")
             if convert_to_webp(local_path, webp_path):
-                r2_key = f"assets/manifesto/{webp_file}"
-                upload_file_to_r2(webp_path, r2_key, content_type='image/webp')
+                upload_file_to_r2(webp_path, f"assets/manifesto/{webp_file}", content_type='image/webp')
                 os.remove(webp_path)
-                print(f"   ✅ {webp_file} yüklendi")
-            else:
-                print(f"   ⚠️ {file} dönüştürülemedi")
 
 # ================= ANA UPLOADER =================
 
 def uploader():
     print("\n" + "=" * 60)
-    print("📤 UPLOADER BOT v28 - TASK GÜNCELLEME EKLENDİ")
-    print("   ✅ content/ hash al, tasks.json güncelle")
+    print("📤 UPLOADER BOT v29 - SADECE HASH EKLER")
+    print("   ✅ content/ hash al, tasks.json'a SADECE HASH EKLE")
+    print("   ✅ status DOKUNMA (pending kalır)")
     print("   ✅ Template, CSS, SVG, Manifesto yükle")
     print("   ✅ İçerik yükle (raw-articles/)")
-    print("   ⚠️ Task'i SILMEZ (Librarian yapacak)")
     print("=" * 60)
     
-    # ========== YENİ: Hash'i bul ve tasks.json'a yaz ==========
-    print("\n📝 1. ADIM: Hash bulunuyor ve tasks.json güncelleniyor...")
+    # ========== 1. ADIM: Hash'i bul ve tasks.json'a SADECE HASH yaz ==========
+    print("\n📝 1. ADIM: Hash bulunuyor...")
     hash_id = get_hash_from_content()
     if hash_id:
         print(f"   🔑 Hash bulundu: {hash_id}")
-        update_task_with_hash(hash_id)
+        success = update_task_with_hash_only(hash_id)
+        if success:
+            print("   ✅ Hash eklendi, status değişmedi")
+        else:
+            print("   ❌ Hash eklenemedi!")
     else:
         print("   ⚠️ Hash bulunamadı, task güncelleme atlanıyor")
     
-    # ========== NORMAL YÜKLEME İŞLEMLERİ ==========
+    # ========== 2. ADIM: NORMAL YÜKLEME ==========
     print("\n📁 2. ADIM: Template ve Assets yükleniyor...")
     upload_templates()
     upload_css_to_assets()
     upload_svg_patterns()
     upload_manifesto_images()
     
-    # ========== İÇERİK YÜKLEME ==========
+    # ========== 3. ADIM: İÇERİK YÜKLEME ==========
     content_base = "content"
     if not os.path.exists(content_base):
         print(f"❌ {content_base} klasörü yok!")
         return
     
     print("\n📁 3. ADIM: İÇERİK YÜKLEME (raw-articles/)")
-    print("-" * 40)
-    
     uploaded_files = []
     
     for root, dirs, files in os.walk(content_base):
         for file in files:
             if not file.endswith('.html'):
                 continue
-            
             local_path = os.path.join(root, file)
             r2_key = local_path.replace("content/", "raw-articles/")
             if upload_file_to_r2(local_path, r2_key):
                 uploaded_files.append(local_path)
     
-    # ========== LOCAL TEMİZLİK ==========
+    # ========== 4. ADIM: LOCAL TEMİZLİK ==========
     print("\n🗑️ 4. ADIM: LOCAL TEMİZLİK")
-    print("-" * 40)
     for file_path in uploaded_files:
         try:
             os.remove(file_path)
@@ -237,22 +219,25 @@ def uploader():
             except:
                 pass
     
-    # ========== TEMİZLİK ==========
-    print("\n🗑️ 5. ADIM: current_hash.txt temizleniyor...")
+    # ========== 5. ADIM: TEMİZLİK ==========
     if os.path.exists("task/current_hash.txt"):
         os.remove("task/current_hash.txt")
         print("   🗑️ Silindi: task/current_hash.txt")
     
+    # ========== 6. ADIM: DOĞRULAMA RAPORU ==========
+    print("\n📋 6. ADIM: DOĞRULAMA")
+    if os.path.exists("task/tasks.json"):
+        with open("task/tasks.json", "r") as f:
+            tasks = json.load(f)
+        if tasks and tasks[0].get("hash"):
+            print(f"   ✅ İLK TASK HASH: {tasks[0].get('hash')}")
+            print(f"   ✅ İLK TASK STATUS: {tasks[0].get('status')} (DEĞİŞMEMİŞ OLMALI)")
+        else:
+            print("   ❌ İLK TASK'TA HASH YOK!")
+    
     print("\n" + "=" * 60)
-    print("🏁 UPLOADER v28 TAMAMLANDI!")
-    print("   ✅ Template'ler → R2/templates/")
-    print("   ✅ style.css → R2/assets/css/style.css")
-    print("   ✅ SVG pattern'ler → R2/assets/")
-    print("   ✅ Manifesto görselleri → R2/assets/manifesto/")
-    print("   ✅ content/ → R2/raw-articles/")
-    if hash_id:
-        print(f"   🔑 Hash: {hash_id} → task/tasks.json güncellendi")
-        print("   ⚠️ Task HALA tasks.json'da (Librarian işleyecek)")
+    print("🏁 UPLOADER v29 TAMAMLANDI!")
+    print("   ✅ SADECE HASH EKLENDİ, STATUS DEĞİŞMEDİ")
     print("=" * 60)
 
 if __name__ == "__main__":
