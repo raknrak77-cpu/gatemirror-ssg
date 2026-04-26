@@ -7,7 +7,6 @@ from datetime import datetime
 from botocore.client import Config
 from jinja2 import Template
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import hashlib
 
 from makeup import (
     get_all_raw_articles,
@@ -37,20 +36,41 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= CACHE =================
+# ================= CACHE MEKANİZMALARI =================
 hero_cache = {}
 template_cache = {}
 template_raw_cache = {}
+_articles_json_cache = None
+_articles_json_time = None
+
+def get_articles_from_r2_cached():
+    global _articles_json_cache, _articles_json_time
+    now = datetime.now()
+    if _articles_json_cache and _articles_json_time and (now - _articles_json_time).seconds < 30:
+        return _articles_json_cache
+    try:
+        response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
+        data = json.loads(response['Body'].read().decode('utf-8'))
+        if isinstance(data, dict) and 'articles' in data:
+            _articles_json_cache = data['articles']
+        else:
+            _articles_json_cache = data
+        _articles_json_time = now
+        return _articles_json_cache
+    except:
+        return []
 
 def get_cached_hero(page_type, lang, category=None):
     cache_key = f"{page_type}_{lang}_{category or ''}"
     if cache_key not in hero_cache:
         hero_cache[cache_key] = render_hero(page_type, lang, category)
+        print(f"   🚀 Hero cache: {cache_key}")
     return hero_cache[cache_key]
 
 def get_cached_template(template_str, template_name):
     if template_name not in template_cache:
         template_cache[template_name] = Template(template_str)
+        print(f"   🚀 Template cache: {template_name}")
     return template_cache[template_name]
 
 def get_template_from_r2(template_name):
@@ -75,16 +95,19 @@ def get_template_from_r2(template_name):
 def upload_templates_to_r2():
     templates_dir = "templates"
     if not os.path.exists(templates_dir):
+        print("⚠️ templates/ klasörü bulunamadı.")
         return
     for file in os.listdir(templates_dir):
         if file.endswith('.html'):
             local_path = os.path.join(templates_dir, file)
+            r2_key = f"templates/{file}"
             try:
-                s3.upload_file(local_path, R2_BUCKET, f"templates/{file}")
-            except:
-                pass
+                s3.upload_file(local_path, R2_BUCKET, r2_key)
+                print(f"✅ Template yüklendi: {r2_key}")
+            except Exception as e:
+                print(f"⚠️ Template yüklenemedi {file}: {e}")
 
-# ================= RENDER FONKSIYONLARI =================
+# ================= RENDER FONKSİYONLARI =================
 
 def render_single_page(article, alt_langs, template_str, menu_texts, related_articles):
     tmpl = get_cached_template(template_str, 'single')
@@ -190,17 +213,14 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
 # ================= SIZE KONTROL VE LOG =================
 
 def log_size_report(entries, report_type="publisher"):
-    """Size raporu kaydet (JSON formatında)"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_key = f"reports/size_report_{report_type}_{timestamp}.json"
-    
     report = {
         "generated": datetime.now().isoformat(),
         "type": report_type,
         "min_size_kb": MIN_SIZE_KB,
         "entries": entries
     }
-    
     try:
         s3.put_object(
             Bucket=R2_BUCKET,
@@ -227,7 +247,6 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
         target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
         
         if size_kb < MIN_SIZE_KB:
-            # KÜÇÜK MAKALE: YAYINLANMA, LOGLA
             entry = {
                 "timestamp": datetime.now().isoformat(),
                 "source": "publisher",
@@ -242,10 +261,9 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
                 "title": article['parsed']['title'][:100]
             }
             failed_log.append(entry)
-            print(f"   ⚠️ REDdedildi (Publisher): {target_key} -> {size_kb:.1f} KB (<{MIN_SIZE_KB} KB)")
+            print(f"   ⚠️ REDdedildi: {target_key} -> {size_kb:.1f} KB (<{MIN_SIZE_KB} KB)")
             return None
         
-        # BOYUT YETERLİ: YAYINLA
         s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=html_bytes, ContentType='text/html')
         print(f"   ✅ Yayınlandı: {target_key} ({size_kb:.1f} KB)")
         return target_key
@@ -254,7 +272,7 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
         print(f"   ❌ Hata: {article.get('url', 'unknown')} - {e}")
         return None
 
-# ================= ARTICLES.JSON ÜRETIMI =================
+# ================= ARTICLES.JSON ÜRETİMİ =================
 
 def generate_articles_json(all_articles):
     articles_list = []
@@ -299,6 +317,7 @@ def publisher():
     
     upload_templates_to_r2()
     
+    print("\n📄 Template'ler yükleniyor...")
     single_tpl = get_template_from_r2("single.html")
     home_tpl = get_template_from_r2("home.html")
     list_tpl = get_template_from_r2("list.html")
@@ -310,7 +329,7 @@ def publisher():
     
     all_articles = get_all_raw_articles()
     if not all_articles:
-        print("❌ Hiç makale bulunamadı.")
+        print("❌ Hiç makale bulunamadı (raw-articles/ boş).")
         return
     
     print(f"\n📊 Toplam {len(all_articles)} makale bulundu.")
@@ -318,7 +337,7 @@ def publisher():
     alt_dict = build_alternate_langs_dict(all_articles)
     languages = ['en', 'es', 'de', 'fr']
     total_pages = 0
-    failed_log = []  # Publisher tarafından reddedilenler
+    failed_log = []
     
     # Manifesto
     manifesto_html = ""
@@ -326,8 +345,9 @@ def publisher():
         manifesto_response = s3.get_object(Bucket=R2_BUCKET, Key='templates/manifesto.html')
         manifesto_html = manifesto_response['Body'].read().decode('utf-8')
         manifesto_html = manifesto_html.replace("{{ R2_PUBLIC_URL }}", R2_PUBLIC_URL)
-    except:
-        pass
+        print("   ✅ manifesto.html okundu")
+    except Exception as e:
+        print(f"   ⚠️ manifesto.html okunamadı: {e}")
     
     for lang in languages:
         print(f"\n{'=' * 40}")
@@ -335,12 +355,13 @@ def publisher():
         
         lang_articles = [a for a in all_articles if a['lang'] == lang]
         if not lang_articles:
+            print(f"   ⚠️ {lang.upper()} için makale bulunamadı.")
             continue
         
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
-        # MAKALELERİ KONTROLLÜ YAZ
+        # 1. MAKALELERİ KONTROLLÜ YAZ
         print(f"\n📝 Makaleler işleniyor (51 KB kontrolü)...")
         
         articles_to_write = []
@@ -365,7 +386,8 @@ def publisher():
                 if future.result():
                     total_pages += 1
         
-        # HOME PAGE
+        # 2. ANA SAYFA (HOME)
+        print(f"\n🏠 Ana sayfa oluşturuluyor...")
         featured = lang_articles[0] if lang_articles else None
         featured_for_home = None
         if featured:
@@ -375,6 +397,7 @@ def publisher():
                 'reading_time': featured['parsed']['reading_time'], 'views': featured['parsed']['views'],
                 'excerpt': featured['parsed']['description']
             }
+        
         articles_for_home = []
         for a in lang_articles[:12]:
             articles_for_home.append({
@@ -382,19 +405,25 @@ def publisher():
                 'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
                 'excerpt': a['parsed']['description']
             })
+        
         home_alt_langs = [{'lang': l, 'url': f"{R2_PUBLIC_URL}/{l}/"} for l in languages if l != lang]
         home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs, manifesto_html)
         if home_html:
             s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
+            print(f"   ✅ articles_ready/{lang}/index.html")
             total_pages += 1
         
-        # KATEGORİ SAYFALARI
+        # 3. KATEGORİ SAYFALARI
+        print(f"\n📂 Kategori sayfaları oluşturuluyor...")
         categories = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
+        
         for category in categories:
             cat_articles = [a for a in lang_articles if a['category'] == category]
             if not cat_articles:
                 continue
+            
             cat_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
+            
             featured_cat = cat_articles[0] if cat_articles else None
             featured_for_cat = None
             if featured_cat:
@@ -404,6 +433,7 @@ def publisher():
                     'reading_time': featured_cat['parsed']['reading_time'], 'views': featured_cat['parsed']['views'],
                     'excerpt': featured_cat['parsed']['description']
                 }
+            
             trending = []
             for a in cat_articles[1:4]:
                 trending.append({
@@ -411,6 +441,7 @@ def publisher():
                     'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
                     'excerpt': a['parsed']['description']
                 })
+            
             articles_for_list = []
             for a in cat_articles:
                 articles_for_list.append({
@@ -418,22 +449,28 @@ def publisher():
                     'reading_time': a['parsed']['reading_time'], 'views': a['parsed']['views'],
                     'excerpt': a['parsed']['description']
                 })
+            
             cat_alt_langs = [{'lang': l, 'url': f"{R2_PUBLIC_URL}/{l}/{category}/"} for l in languages if l != lang]
             list_html = render_list_page(lang, category, articles_for_list, featured_for_cat, trending, list_tpl, menu_texts, cat_alt_langs)
             if list_html:
                 s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/{category}/index.html", Body=list_html.encode('utf-8'), ContentType='text/html')
+                print(f"   ✅ articles_ready/{lang}/{category}/index.html ({len(cat_articles)} makale)")
                 total_pages += 1
         
-        # ALL ARTICLES
+        # 4. TÜM MAKALELER SAYFASI (EXPLORE)
         if all_articles_tpl:
+            print(f"\n📚 Tüm makaleler sayfası oluşturuluyor...")
             explore_alt_langs = [{'lang': l, 'url': f"{R2_PUBLIC_URL}/explore/all-articles/{l}.html"} for l in languages if l != lang]
             featured_all = lang_articles[0] if lang_articles else None
-            all_html = render_all_articles_page(lang, lang_articles, featured_all, all_articles_tpl, menu_texts, explore_alt_langs)
-            if all_html:
-                s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/explore/all-articles/{lang}.html", Body=all_html.encode('utf-8'), ContentType='text/html')
+            all_articles_html = render_all_articles_page(lang, lang_articles, featured_all, all_articles_tpl, menu_texts, explore_alt_langs)
+            if all_articles_html:
+                s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/explore/all-articles/{lang}.html", Body=all_articles_html.encode('utf-8'), ContentType='text/html')
+                print(f"   ✅ articles_ready/explore/all-articles/{lang}.html ({len(lang_articles)} makale)")
                 total_pages += 1
+        else:
+            print(f"\n⚠️ all-articles.html template'i bulunamadı, explore sayfası atlanıyor.")
     
-     # RAPOR KAYDET
+    # RAPOR KAYDET
     if failed_log:
         log_size_report(failed_log, "publisher")
         print(f"\n⚠️ Publisher TARAFINDAN REDDEDİLEN: {len(failed_log)} makale")
@@ -441,16 +478,25 @@ def publisher():
         print(f"\n✅ Tüm makaleler Publisher'da 51 KB kontrolünü geçti")
     
     # SITEMAP & ROBOTS & ARTICLES.JSON
+    print(f"\n{'=' * 40}")
+    print("📊 Sitemap ve robots.txt oluşturuluyor...")
+    
     sitemap_xml = generate_sitemap(all_articles, alt_dict)
     s3.put_object(Bucket=R2_BUCKET, Key='sitemap.xml', Body=sitemap_xml.encode('utf-8'), ContentType='application/xml')
+    print("   ✅ sitemap.xml yüklendi")
+    
     robots_txt = generate_robots_txt()
     s3.put_object(Bucket=R2_BUCKET, Key='robots.txt', Body=robots_txt.encode('utf-8'), ContentType='text/plain')
+    print("   ✅ robots.txt yüklendi")
+    
     generate_articles_json(all_articles)
     
     print(f"\n{'=' * 40}")
     print("🏁 PUBLISHER v43 TAMAMLANDI!")
     print(f"   ✅ Toplam sayfa: {total_pages}")
     print(f"   ❌ Reddedilen makale: {len(failed_log)}")
+    print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
+    print(f"   ✅ Template cache: {len(template_cache)} template")
     print(f"{'=' * 40}")
 
 if __name__ == "__main__":
