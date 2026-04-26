@@ -1,0 +1,44 @@
+name: Migrate Tasks (Tek Seferlik)
+
+on:
+  workflow_dispatch:  # Sadece manuel çalıştırılır
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Run migrate script
+        run: |
+          python migrate_tasks.py
+      
+      - name: Upload task folder as artifact (YEDEK)
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-folder-backup
+          path: task/
+          retention-days: 30
+      
+      - name: Upload tasks.json backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tasks-json-backup
+          path: tasks.json.backup.*
+          retention-days: 30
+      
+      - name: Commit and push changes (opsiyonel)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add task/
+          git add tasks.json.backup.*
+          git commit -m "chore: migrate tasks to task/ folder [skip ci]" || echo "No changes to commit"
+          git push || echo "Push failed or no changes"
