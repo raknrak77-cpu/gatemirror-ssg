@@ -3713,5 +3713,39 @@
         "display_date": "15 April 2026",
         "processed_at": "2026-04-26 18:52:22",
         "hash": "6ffa1ae0"
+    },
+    {
+        "task_id": "0116",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "Circular Cities 2026: Designing Urban Environments with Zero-Waste Architecture",
+        "reference_link": "https://www.ellenmacarthurfoundation.org/circular-cities-2026",
+        "language": "en",
+        "author_persona": "Urban Planner & Circular Economy Architect",
+        "special_instructions": "Analyze modular building materials and \"Product-as-a-Service\" urban models. Case study: Amsterdam or Singapore.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A futuristic city building with vertical gardens and visible solar glass, where robot arms are replacing modular parts instead of demolition, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A split screen: left side \"Trash Filled Landfill\"; right side \"Automated Recycling Loop\" feeding back into a factory, clean infographic, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A close-up of a modular building brick made from recycled ocean plastic, highly textured, professional studio lighting, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "processed",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": "2026-04-26 22:37:39",
+        "hash": "63d0286d",
+        "hash_updated_at": "2026-04-26T22:27:15.419670"
     }
 ]
