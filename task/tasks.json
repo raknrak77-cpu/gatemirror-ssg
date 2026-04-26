@@ -1,39 +1,5 @@
 [
     {
-        "task_id": "0117",
-        "category": "eco",
-        "cluster_id": "eco_05",
-        "topic": "Regenerative Farming 2026: Vertical AI-Farms and Soil Carbon Sequestration",
-        "reference_link": "https://www.nationalgeographic.com/future-of-farming-2026",
-        "language": "en",
-        "author_persona": "AgTech Innovator & Soil Microbiologist",
-        "special_instructions": "Focus on \"No-Till\" methods and drone-based precision farming. Explain how farmers earn through \"Soil Carbon Credits\".",
-        "visuals": {
-            "kapak": {
-                "prompt": "A massive indoor vertical farm with layers of glowing purple and blue LED lights, drones flying through the aisles, cinematic lighting, 8k, photorealistic",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "A cross-section of healthy dark soil with glowing roots and diverse microorganisms, extremely detailed, scientific render, photorealistic",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "A tablet showing a \"Farm Carbon Storage: +15%\" dashboard with a map of a lush green field, photorealistic",
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": "2026-04-15",
-        "date": "2026-04-15",
-        "display_date": "15 April 2026",
-        "processed_at": "",
-        "hash": "0461088d",
-        "hash_updated_at": "2026-04-26T23:04:10.552087"
-    },
-    {
         "task_id": "0118",
         "category": "eco",
         "cluster_id": "eco_02",
@@ -63,7 +29,9 @@
         "created_at": "2026-04-15",
         "date": "2026-04-15",
         "display_date": "15 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash": "6c77c4fa",
+        "hash_updated_at": "2026-04-26T23:22:34.879178"
     },
     {
         "task_id": "0119",
