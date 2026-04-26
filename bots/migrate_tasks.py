@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
 MIGRATE TASKS - TEK SEFERLİK ÇALIŞTIRILACAK
-Mevcut tasks.json'u task/ klasörüne ayrıştırır.
-Ana dizindeki tasks.json'a DOKUNMAZ (yedek alır).
+Konum: bots/migrate_tasks.py
 """
 
 import json
@@ -16,6 +15,11 @@ def main():
     print("   tasks.json → task/ klasörüne ayrıştırma")
     print("=" * 60)
     
+    # Ana dizine git (bots/ altından çık)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(base_dir)
+    print(f"📁 Çalışma dizini: {os.getcwd()}")
+    
     # 1. YEDEK AL
     if os.path.exists("tasks.json"):
         backup_name = f"tasks.json.backup.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -23,7 +27,7 @@ def main():
         print(f"✅ Yedek alındı: {backup_name}")
     else:
         print("❌ tasks.json bulunamadı!")
-        sys.exit(1)
+        return
     
     # 2. task/ KLASÖRÜNÜ OLUŞTUR
     os.makedirs("task", exist_ok=True)
@@ -36,42 +40,29 @@ def main():
     print(f"📊 Toplam task: {len(all_tasks)}")
     
     # 4. AYRIŞTIR
-    pending = []      # hash'siz + status pending
-    processed = []    # status processed veya hash var + uploaded
-    skipped = []      # status skipped veya hash var + pending (hatalı)
+    pending = []
+    processed = []
+    skipped = []
     
     for task in all_tasks:
         status = task.get("status")
         hash_id = task.get("hash")
         
-        # Processed olanlar
         if status == "processed":
             processed.append(task)
-            continue
-        
-        # Skipped olanlar
-        if status == "skipped":
+        elif status == "skipped":
             skipped.append(task)
-            continue
-        
-        # Pending olanlar
-        if status == "pending":
+        elif status == "pending":
             if hash_id:
-                # Hash var ama pending = hatalı üretim
                 print(f"   ⚠️ Task {task.get('task_id')}: hash={hash_id} var ama pending → skipped")
                 skipped.append(task)
             else:
                 pending.append(task)
-            continue
-        
-        # Diğer status'ler (hash_created, uploaded, etc.)
-        if hash_id:
-            # Bunlar aslında tamamlanmış sayılır
-            print(f"   📝 Task {task.get('task_id')}: status={status}, hash={hash_id} → processed")
-            processed.append(task)
         else:
-            print(f"   ⚠️ Task {task.get('task_id')}: status={status}, hash yok → pending")
-            pending.append(task)
+            if hash_id:
+                processed.append(task)
+            else:
+                pending.append(task)
     
     # 5. DOSYALARA YAZ
     with open("task/tasks.json", "w", encoding="utf-8") as f:
