@@ -440,12 +440,12 @@ def publisher():
             })
         
         home_alt_langs = [{'lang': l, 'url': f"{R2_PUBLIC_URL}/{l}/"} for l in languages if l != lang]
-        
-        home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs)
+
+        home_html = render_home_page(lang, articles_for_home, featured_for_home, home_tpl, menu_texts, home_alt_langs, manifesto_html)
         if home_html:
-            s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
-            print(f"   ✅ articles_ready/{lang}/index.html")
-            total_pages += 1
+        s3.put_object(Bucket=R2_BUCKET, Key=f"articles_ready/{lang}/index.html", Body=home_html.encode('utf-8'), ContentType='text/html')
+        print(f"   ✅ articles_ready/{lang}/index.html")
+        total_pages += 1
         
         # 3. KATEGORİ SAYFALARI
         print(f"\n📂 Kategori sayfaları oluşturuluyor...")
