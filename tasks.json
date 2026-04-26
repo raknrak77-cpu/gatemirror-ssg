@@ -3674,11 +3674,12 @@
                 "height": 1024
             }
         },
-        "status": "pending",
+        "status": "processed",
         "created_at": "2026-04-15",
         "date": "2026-04-15",
         "display_date": "15 April 2026",
-        "processed_at": ""
+        "processed_at": "2026-04-26 18:31:35",
+        "hash": "dbb5add6"
     },
     {
         "task_id": "0115",
