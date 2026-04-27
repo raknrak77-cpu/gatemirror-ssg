@@ -55,20 +55,18 @@ Style:
 - soft film grain
 
 Technical:
-- square format (1:1)
-- 1024x1024 resolution
+- 16:9 aspect ratio (landscape)
 """
 
-# ================= YENİ: KOMPOZİSYON KURALLARI =================
+# ================= YENİ: KOMPOZİSYON KURALLARI (16:9) =================
 COMPOSITION_RULES = """
 COMPOSITION RULES (CRITICAL):
-- Canvas is SQUARE (1:1 aspect ratio, 1024x1024 pixels)
-- The main subject MUST be positioned in the CENTER of the frame
-- The scene MUST fill the ENTIRE square frame naturally
+- Canvas is 16:9 aspect ratio (landscape format)
+- The main subject MUST be positioned effectively within the wider frame
+- The scene MUST fill the ENTIRE frame naturally
 - NO empty spaces, NO solid color bars, NO letterboxing
-- The composition should work as if it was a wide 16:9 shot adapted to square
-- Extend the background and environment to fill all edges of the square naturally
-- Every part of the square canvas MUST contain meaningful visual content
+- Use the horizontal space for environmental context
+- EVERY part of the 16:9 canvas MUST contain meaningful visual content
 """
 
 NEGATIVE_CONSTRAINTS = """
@@ -81,9 +79,28 @@ Strict constraints:
 - NO distorted anatomy or unrealistic structures
 """
 
+# ================= 16:9 ÖLÇÜLERİ =================
+# 1024x576 -> 16:9, max=1024 (aynı fiyat)
+# 1280x720 -> 16:9, max=1280 (daha pahalı)
+DEFAULT_WIDTH = 1024
+DEFAULT_HEIGHT = 576
+
 def get_category_style(kategori):
-    """Kategori adına göre stil döndürür, varsayılan 'general'"""
     return CATEGORY_STYLES.get(kategori, "professional, clean, modern, versatile")
+
+def get_image_size(image_data):
+    """Görsel boyutlarını al, 16:9 varsayılan"""
+    width = image_data.get("width", DEFAULT_WIDTH)
+    height = image_data.get("height", DEFAULT_HEIGHT)
+    
+    # 16:9 oranını koru (eğer farklı oran geldiyse)
+    if width == 1024 and height == 1024:
+        # Kare ise 16:9'a çevir
+        width = DEFAULT_WIDTH
+        height = DEFAULT_HEIGHT
+        print(f"   📐 Kare → 16:9 dönüştürüldü: {width}x{height}")
+    
+    return width, height
 
 # ================= YARDIMCI FONKSİYONLAR =================
 def is_valid_image(filepath):
@@ -123,9 +140,6 @@ def upload_to_r2(local_path, r2_key):
     return False
 
 def enrich_prompt(base_prompt, kategori):
-    """
-    Task prompt'u + kategori stili + global stil + kompozisyon kuralları + negatif kuralları birleştirir.
-    """
     category_style = get_category_style(kategori)
     
     return f"""You are a world-class versatile visual photographer.
@@ -145,12 +159,11 @@ CATEGORY ATMOSPHERE:
 IMPORTANT:
 - The SUBJECT above is the main focus. DO NOT ignore it.
 - The CATEGORY ATMOSPHERE only guides the mood and lighting, not the subject.
-- The COMPOSITION RULES determine how the subject is placed in the square frame.
-- Create a photorealistic, cinematic image that matches the SUBJECT with the appropriate ATMOSPHERE and COMPOSITION.
+- The COMPOSITION RULES determine how the subject is placed in the 16:9 frame.
+- Create a photorealistic, cinematic landscape image that matches the SUBJECT with the appropriate ATMOSPHERE and COMPOSITION.
 """
 
 def rate_limit_wait():
-    """Rate limit koruması - son 10 saniyede 3 istekten fazla varsa bekle"""
     with time_lock:
         now = time.time()
         global request_times
@@ -164,9 +177,8 @@ def rate_limit_wait():
     return True
 
 def generate_image(prompt, model, width, height, output_png):
-    print(f"🎨 [{output_png}] {width}x{height} formatında görsel üretiliyor...")
+    print(f"🎨 [{output_png}] {width}x{height} (16:9) formatında görsel üretiliyor...")
     
-    # Rate limit kontrolü
     rate_limit_wait()
     
     headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
@@ -212,7 +224,6 @@ def generate_image(prompt, model, width, height, output_png):
     return False
 
 def process_single_image(image_type, image_data, hash_id, kategori, yil, ay, r2_folder, results):
-    """Tek bir görseli işle (parallel için)"""
     try:
         png_file = f"{hash_id}_{image_type}.png"
         webp_file = f"{hash_id}_{image_type}.webp"
@@ -220,7 +231,10 @@ def process_single_image(image_type, image_data, hash_id, kategori, yil, ay, r2_
         base_prompt = image_data.get("prompt", "")
         full_prompt = enrich_prompt(base_prompt, kategori)
         
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", 1024, 1024, png_file):
+        # 16:9 boyutlarını al
+        width, height = get_image_size(image_data)
+        
+        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", width, height, png_file):
             if convert_to_webp(png_file, webp_file):
                 r2_key = f"{r2_folder}/{hash_id}_{image_type}.webp"
                 upload_to_r2(webp_file, r2_key)
@@ -255,7 +269,7 @@ def visual_factory():
     
     print(f"\n🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori})")
     print(f"   🚀 PARALEL MOD: 3 görsel aynı anda işleniyor (rate limit korumalı)")
-    print(f"   🎯 KOMPOZİSYON: Kare tuval, ana konu merkezde, tüm alan dolu")
+    print(f"   🎯 KOMPOZİSYON: 16:9, geniş yatay kadraj")
     
     r2_folder = f"images/{yil}/{ay}/{kategori}"
     
@@ -286,7 +300,6 @@ def visual_factory():
             )
             futures.append(future)
         
-        # Tüm işlemlerin tamamlanmasını bekle
         for future in as_completed(futures):
             img_type, success = future.result()
             status = "✅" if success else "❌"
@@ -300,7 +313,7 @@ def visual_factory():
     print(f"   📊 Başarılı: {success_count}/{len(images_to_process)}")
     print(f"   ⏱️ Toplam süre: {elapsed:.1f} saniye")
     print(f"   🎨 Kategori stili: {get_category_style(kategori)}")
-    print(f"   🎯 Kompozisyon kuralı: Aktif (kare tuval, merkezde konu, tüm alan dolu)")
+    print(f"   🎯 Kompozisyon: 16:9 ({DEFAULT_WIDTH}x{DEFAULT_HEIGHT})")
 
 if __name__ == "__main__":
     visual_factory()
