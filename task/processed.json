@@ -3781,5 +3781,39 @@
         "processed_at": "2026-04-26 23:50:05",
         "hash": "c7023e75",
         "hash_updated_at": "2026-04-26T23:39:26.291680"
+    },
+    {
+        "task_id": "0120",
+        "category": "eco",
+        "cluster_id": "circular_economy",
+        "topic": "Lab-Grown Leather and Mushroom Silk: The 2026 Biotech Revolution in Sustainable Fashion",
+        "reference_link": "https://www.vogue.com/sustainable-fashion-2026",
+        "language": "en",
+        "author_persona": "Sustainable Fashion Designer & Materials Scientist",
+        "special_instructions": "Analyze Mycelium-based fabrics and bacterial dyes. Focus on the end of \"Fast Fashion\".",
+        "visuals": {
+            "kapak": {
+                "prompt": "A high-end fashion boutique with a dress made of glowing, translucent mushroom-based silk on a mannequin, soft elegant lighting, 8k, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A microscopic view of mushroom (mycelium) fibers weaving themselves into a strong leather-like texture, biological 3D render, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A person scanning a clothing tag that shows \"CO2 Footprint: Negative\" and \"100% Biodegradable\", clean UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "processed",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": "2026-04-27 00:18:00",
+        "hash": "d658375b",
+        "hash_updated_at": "2026-04-27T00:05:22.732553"
     }
 ]
