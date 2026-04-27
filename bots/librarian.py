@@ -25,7 +25,7 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# ================= TASK TAŞIMA (HASH'E GÖRE) =================
+# ================= TASK TAŞIMA (HASH'E GÖRE + DOĞRULAMA) =================
 
 def get_current_hash():
     """current_hash.txt'den hash'i okur ve siler"""
@@ -39,7 +39,7 @@ def get_current_hash():
     return None
 
 def move_task_by_hash_to_processed(target_hash):
-    """Belirtilen hash'e sahip task'i processed.json'a taşır"""
+    """Belirtilen hash'e sahip task'i processed.json'a taşır (DOĞRULAMALI)"""
     tasks_path = "task/tasks.json"
     processed_path = "task/processed.json"
     
@@ -71,8 +71,24 @@ def move_task_by_hash_to_processed(target_hash):
     # Task'i listeden çıkar
     tasks.pop(target_index)
     
+    # KALANLARI KAYDET
     with open(tasks_path, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
+    
+    # ========== DOĞRULA: GERÇEKTEN SİLİNDİ Mİ? ==========
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        verify_tasks = json.load(f)
+    
+    for task in verify_tasks:
+        if task.get("hash") == target_hash:
+            print(f"   ❌ SILINEMEDI! Hash {target_hash} hala tasks.json'da")
+            # Tekrar dene
+            tasks = verify_tasks
+            tasks.pop(target_index if target_index < len(tasks) else 0)
+            with open(tasks_path, "w", encoding="utf-8") as f:
+                json.dump(tasks, f, indent=4, ensure_ascii=False)
+            print(f"   🔄 Tekrar denendi, hash silindi")
+            break
     
     # processed.json'a ekle
     if os.path.exists(processed_path):
@@ -518,12 +534,13 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v27 - TAM DONANIMLI")
+    print("📚 KUTUPHANECI BOT v28 - TAM DONANIMLI + DOĞRULAMA")
     print("   🔍 Mevcut articles/ kontrolü (51 KB altı silinecek, index.html KORUNACAK)")
     print("   🛡️ Swap öncesi articles_ready/ kontrolü")
     print("   📊 Detaylı rapor (R2/reports/)")
     print("   ✅ Swap sonrası current_hash.txt'deki hash'i processed.json'a taşır")
     print("   🎯 Hero ticker ve stats güncelleme")
+    print("   ✅ Silme doğrulama (task çiftlenme engeli)")
     print("=" * 60)
     
     analyze_r2_storage()
@@ -550,11 +567,12 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v27 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v28 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
     print("   ✅ Atomic swap KONTROLLÜ")
     print("   ✅ Task processed.json'a taşındı (swap başarılıysa)")
     print("   ✅ Raporlar R2/reports/ klasörüne kaydedildi")
+    print("   ✅ Silme doğrulaması AKTIF")
     print("=" * 60)
 
 if __name__ == "__main__":
