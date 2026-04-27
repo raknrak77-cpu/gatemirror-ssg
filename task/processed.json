@@ -1,5 +1,39 @@
 [
     {
+        "task_id": "0122",
+        "category": "elearning",
+        "cluster_id": "language_apps",
+        "topic": "One-on-One AI Tutors for Everyone: Solving the 2026 Global Education Inequality",
+        "reference_link": "https://www.khanacademy.org/ai-education-future",
+        "language": "en",
+        "author_persona": "Pedagogy Expert & AI Ethics Researcher",
+        "special_instructions": "Analyze how LLMs provide 24/7 personalized tutoring. Discuss \"Adaptive Learning Paths\" based on student emotion and speed.",
+        "visuals": {
+            "kapak": {
+                "prompt": "A child in a rural village with a basic tablet, laughing while a friendly glowing AI tutor (hologram) helps them with math, sunset background, 8k",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_1": {
+                "prompt": "A screen showing \"Personalized Learning Path: Mastered Algebra, Moving to Calculus\", with glowing trophy icons, clean gamified UI, photorealistic",
+                "width": 1024,
+                "height": 1024
+            },
+            "icerik_2": {
+                "prompt": "A split screen: left side \"Confused Student in Large Class\"; right side \"Confident Student with AI Tutor\", emotional contrast, photorealistic",
+                "width": 1024,
+                "height": 1024
+            }
+        },
+        "status": "processed",
+        "created_at": "2026-04-15",
+        "date": "2026-04-15",
+        "display_date": "15 April 2026",
+        "processed_at": "2026-04-27 01:28:33",
+        "hash": "c7617f3e",
+        "hash_updated_at": "2026-04-27T01:17:04.981180"
+    },
+    {
         "task_id": "0121",
         "category": "elearning",
         "cluster_id": "exec_education",
