@@ -1,0 +1,62 @@
+name: Sort Processed Tasks (Tek Seferlik)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sort:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Sort processed.json
+        run: |
+          cat > sort_processed.py << 'EOF'
+          import json
+          import os
+          
+          def sort_processed():
+              processed_path = "task/processed.json"
+              
+              if not os.path.exists(processed_path):
+                  print("❌ task/processed.json bulunamadı!")
+                  return
+              
+              with open(processed_path, "r", encoding="utf-8") as f:
+                  processed = json.load(f)
+              
+              print(f"📊 Mevcut task sayısı: {len(processed)}")
+              
+              processed.sort(key=lambda x: int(x.get("task_id", 0)), reverse=True)
+              
+              with open(processed_path, "w", encoding="utf-8") as f:
+                  json.dump(processed, f, indent=4, ensure_ascii=False)
+              
+              print(f"✅ Sıralama tamamlandı!")
+              print(f"   İlk task: {processed[0].get('task_id')}")
+              print(f"   Son task: {processed[-1].get('task_id')}")
+          
+          if __name__ == "__main__":
+              sort_processed()
+          EOF
+          
+          python sort_processed.py
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add task/processed.json
+          if git diff --staged --quiet; then
+            echo "📭 Değişiklik yok, commit atlanıyor."
+          else
+            git commit -m "chore: sort processed.json by task_id (descending)"
+            git push origin main || git push --force origin main
+          fi
