@@ -1,39 +1,5 @@
 [
     {
-        "task_id": "0121",
-        "category": "elearning",
-        "cluster_id": "exec_education",
-        "topic": "The 2026 Metaverse Schooling: VR Classrooms and Immersive History Lessons",
-        "reference_link": "https://www.edtechmagazine.com/vr-education-2026",
-        "language": "en",
-        "author_persona": "EdTech Visionary & Immersive Learning Designer",
-        "special_instructions": "Focus on \"Time-Travel\" history lessons and VR-based chemistry labs. Discuss the end of static textbooks.",
-        "visuals": {
-            "kapak": {
-                "prompt": "A classroom of students wearing lightweight VR headsets, seeing a holographic T-Rex walking through the room, excited faces, cinematic lighting, 8k",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_1": {
-                "prompt": "A student's view through VR: standing in ancient Rome, with glowing \"Interact\" labels on buildings and statues, highly detailed, photorealistic",
-                "width": 1024,
-                "height": 1024
-            },
-            "icerik_2": {
-                "prompt": "A virtual chemistry lab where a student is safely mixing glowing liquids with their hands, holographic periodic table in the air, photorealistic",
-                "width": 1024,
-                "height": 1024
-            }
-        },
-        "status": "pending",
-        "created_at": "2026-04-15",
-        "date": "2026-04-15",
-        "display_date": "15 April 2026",
-        "processed_at": "",
-        "hash": "70fc256d",
-        "hash_updated_at": "2026-04-27T00:52:22.888016"
-    },
-    {
         "task_id": "0122",
         "category": "elearning",
         "cluster_id": "language_apps",
