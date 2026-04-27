@@ -25,7 +25,7 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# ================= TASK TAŞIMA (HASH'E GÖRE + DOĞRULAMA) =================
+# ================= TASK TAŞIMA (YENİ SIRA: ÖNCE PROCESSED'E EKLE, SONRA SIL) =================
 
 def get_current_hash():
     """current_hash.txt'den hash'i okur ve siler"""
@@ -39,10 +39,16 @@ def get_current_hash():
     return None
 
 def move_task_by_hash_to_processed(target_hash):
-    """Belirtilen hash'e sahip task'i processed.json'a taşır (DOĞRULAMALI)"""
+    """
+    YENI SIRA:
+    1. Önce processed.json'a EN BAŞA ekle
+    2. Sonra tasks.json'dan ZORLA SIL
+    3. Doğrula (silinmemişse tekrar dene)
+    """
     tasks_path = "task/tasks.json"
     processed_path = "task/processed.json"
     
+    # ========== 1. ÖNCE tasks.json'dan task'i BUL ==========
     if not os.path.exists(tasks_path):
         print("   ⚠️ task/tasks.json bulunamadı")
         return False
@@ -68,43 +74,68 @@ def move_task_by_hash_to_processed(target_hash):
         print(f"   ⚠️ Hash {target_hash} ile task bulunamadı")
         return False
     
-    # Task'i listeden çıkar
-    tasks.pop(target_index)
-    
-    # KALANLARI KAYDET
-    with open(tasks_path, "w", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4, ensure_ascii=False)
-    
-    # ========== DOĞRULA: GERÇEKTEN SİLİNDİ Mİ? ==========
-    with open(tasks_path, "r", encoding="utf-8") as f:
-        verify_tasks = json.load(f)
-    
-    for task in verify_tasks:
-        if task.get("hash") == target_hash:
-            print(f"   ❌ SILINEMEDI! Hash {target_hash} hala tasks.json'da")
-            # Tekrar dene
-            tasks = verify_tasks
-            tasks.pop(target_index if target_index < len(tasks) else 0)
-            with open(tasks_path, "w", encoding="utf-8") as f:
-                json.dump(tasks, f, indent=4, ensure_ascii=False)
-            print(f"   🔄 Tekrar denendi, hash silindi")
-            break
-    
-    # processed.json'a ekle
+    # ========== 2. ÖNCE processed.json'a EN BAŞA EKLE ==========
     if os.path.exists(processed_path):
         with open(processed_path, "r", encoding="utf-8") as f:
             processed = json.load(f)
     else:
         processed = []
     
+    # Task'i güncelle
     target_task["status"] = "processed"
     target_task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    processed.append(target_task)
+    
+    # EN BAŞA EKLE (insert(0))
+    processed.insert(0, target_task)
     
     with open(processed_path, "w", encoding="utf-8") as f:
         json.dump(processed, f, indent=4, ensure_ascii=False)
     
-    print(f"   ✅ Task {target_task.get('task_id')} (hash={target_hash}) processed.json'a taşındı")
+    print(f"   ✅ Task {target_task.get('task_id')} (hash={target_hash}) processed.json'a EKLENDI (en basa)")
+    
+    # ========== 3. SONRA tasks.json'dan ZORLA SIL ==========
+    # Task'i listeden çıkar
+    tasks.pop(target_index)
+    
+    # Kalanları kaydet
+    with open(tasks_path, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())  # Zorla diske yaz
+    
+    # ========== 4. DOĞRULA (silinmiş mi?) ==========
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        verify_tasks = json.load(f)
+    
+    for task in verify_tasks:
+        if task.get("hash") == target_hash:
+            print(f"   ❌ SILINEMEDI! Hash {target_hash} hala tasks.json'da, TEKRAR DENENIYOR...")
+            
+            # Tekrar dene - index bul
+            for i, t in enumerate(verify_tasks):
+                if t.get("hash") == target_hash:
+                    verify_tasks.pop(i)
+                    break
+            
+            # Zorla yaz
+            with open(tasks_path, "w", encoding="utf-8") as f:
+                json.dump(verify_tasks, f, indent=4, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            
+            # Son doğrulama
+            with open(tasks_path, "r", encoding="utf-8") as f:
+                final_verify = json.load(f)
+            
+            for task in final_verify:
+                if task.get("hash") == target_hash:
+                    print(f"   ❌ CRITICAL HATA: Hash {target_hash} HALA tasks.json'da!")
+                    return False
+            
+            print(f"   ✅ Tekrar denemede basarili: Hash {target_hash} silindi")
+            break
+    
+    print(f"   ✅ Task {target_task.get('task_id')} tasks.json'dan SILINDI")
     return True
 
 # ================= YARDIMCI FONKSİYONLAR =================
@@ -162,7 +193,6 @@ def folder_exists(prefix):
         return False
 
 def log_size_report(entries, report_type):
-    """R2'ye rapor kaydeder"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_key = f"reports/size_report_{report_type}_{timestamp}.json"
     report = {
@@ -183,7 +213,6 @@ def log_size_report(entries, report_type):
         print(f"   ⚠️ Rapor kaydedilemedi: {e}")
 
 def log_cleanup_report(entries, report_type="cleanup"):
-    """Temizlik raporu kaydeder"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_key = f"reports/cleanup_report_{report_type}_{timestamp}.json"
     report = {
@@ -205,7 +234,6 @@ def log_cleanup_report(entries, report_type="cleanup"):
 # ================= MEVCUT ARTICLES/ KONTROLÜ =================
 
 def check_existing_articles():
-    """Mevcut articles/ klasöründeki makaleleri kontrol et, index.html'leri KORU"""
     print("\n" + "=" * 40)
     print("🔍 MEVCUT ARTICLES/ KONTROLÜ (51 KB altı silinecek)")
     print("   🛡️ index.html KORUNACAK")
@@ -266,7 +294,6 @@ def check_existing_articles():
 # ================= ATOMIC SWAP =================
 
 def atomic_swap():
-    """Swap öncesi kontrol + swap (index.html korumalı)"""
     print("\n" + "=" * 40)
     print("ATOMIC SWAP: articles_ready/ -> articles/ (51 KB KONTROLLÜ)")
     print("=" * 40)
@@ -290,7 +317,6 @@ def atomic_swap():
             valid_files.append(key)
             continue
         
-        # index.html için özel işlem (kontrolsüz geç)
         if key.endswith('/index.html'):
             valid_files.append(key)
             print(f"   ✅ index.html swap için uygun: {key}")
@@ -534,13 +560,13 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v28 - TAM DONANIMLI + DOĞRULAMA")
+    print("📚 KUTUPHANECI BOT v29 - YENI SIRA (ÖNCE PROCESSED'E EKLE, SONRA SIL)")
     print("   🔍 Mevcut articles/ kontrolü (51 KB altı silinecek, index.html KORUNACAK)")
     print("   🛡️ Swap öncesi articles_ready/ kontrolü")
     print("   📊 Detaylı rapor (R2/reports/)")
-    print("   ✅ Swap sonrası current_hash.txt'deki hash'i processed.json'a taşır")
-    print("   🎯 Hero ticker ve stats güncelleme")
-    print("   ✅ Silme doğrulama (task çiftlenme engeli)")
+    print("   ✅ Önce processed.json'a EN BAŞA ekle")
+    print("   ✅ Sonra tasks.json'dan ZORLA SIL")
+    print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
     
     analyze_r2_storage()
@@ -553,7 +579,6 @@ def librarian():
         if swap_success:
             print("\n✅ SWAP BASARILI! Site yeni icerikle yayinda.")
             
-            # Swap başarılı olunca, işlenen hash'i processed.json'a taşı
             current_hash = get_current_hash()
             if current_hash:
                 print(f"   📝 İşlenen hash: {current_hash}")
@@ -567,12 +592,11 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v28 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v29 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
     print("   ✅ Atomic swap KONTROLLÜ")
-    print("   ✅ Task processed.json'a taşındı (swap başarılıysa)")
-    print("   ✅ Raporlar R2/reports/ klasörüne kaydedildi")
-    print("   ✅ Silme doğrulaması AKTIF")
+    print("   ✅ Task processed.json'a eklendi (en basa) ve tasks.json'dan silindi")
+    print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
 
 if __name__ == "__main__":
