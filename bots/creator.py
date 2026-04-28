@@ -7,11 +7,16 @@ import re
 import requests
 import subprocess
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_KEY}"
 
 CLUSTERS_PATH = "task/clusters.json"
+
+def log(msg, level="INFO"):
+    timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+    print(f"[{timestamp}] [{level}] {msg}")
 
 def create_hash():
     return uuid.uuid4().hex[:8]
@@ -28,7 +33,7 @@ def load_clusters():
         with open(CLUSTERS_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
-        print(f"⚠️ clusters.json yüklenemedi: {e}")
+        log(f"clusters.json yüklenemedi: {e}", "WARN")
         return {"categories": {}, "authors": {}}
 
 def get_author_info(cluster_id, clusters):
@@ -72,60 +77,34 @@ def get_first_pending_task():
     tasks_path = "task/tasks.json"
     
     if not os.path.exists(tasks_path):
-        print("❌ task/tasks.json bulunamadı!")
+        log("task/tasks.json bulunamadı!", "ERROR")
         return None
     
     with open(tasks_path, "r", encoding="utf-8") as f:
         tasks = json.load(f)
     
     if not tasks:
-        print("❌ task/tasks.json boş!")
+        log("task/tasks.json boş!", "ERROR")
         return None
     
     task = tasks[0]
-    print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
+    log(f"İlk pending task alındı: ID {task.get('task_id')}")
     return task
-
-def log_meta_info(title, data):
-    """Detaylı META bilgisi log'lar"""
-    print(f"\n   📌 {title}:")
-    for key, value in data.items():
-        if isinstance(value, list):
-            print(f"      {key}: {', '.join(value)}")
-        elif isinstance(value, dict):
-            print(f"      {key}:")
-            for subk, subv in value.items():
-                print(f"         {subk}: {subv}")
-        else:
-            # Uzun değerleri kısalt
-            if isinstance(value, str) and len(value) > 100:
-                print(f"      {key}: {value[:100]}...")
-            else:
-                print(f"      {key}: {value}")
 
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    print(f"\n   📝 META hazırlanıyor [{lang.upper()}]:")
     
     if author_info:
         author_name = author_info.get('name', author_persona)
         author_title = author_info.get('title', '')
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
-        print(f"      author: {author_name}")
-        print(f"      author_title: {author_title}")
-        if author_bio:
-            print(f"      author_bio: {author_bio[:80]}...")
-        if author_avatar:
-            print(f"      author_avatar: {author_avatar}")
     else:
         author_name = author_persona
         author_title = ''
         author_bio = ''
         author_avatar = ''
-        print(f"      author: {author_name} (default)")
     
     meta_parts = [
         f"author={author_name}",
@@ -147,49 +126,28 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         meta_parts.append(f"cpc_max={cluster_rules_data.get('cpc_max', '')}")
         meta_parts.append(f"monetization={cluster_rules_data.get('monetization', '')}")
         
-        print(f"      cluster_id: {cluster_id}")
-        print(f"      intent: {cluster_rules_data.get('intent', '')}")
-        print(f"      monetization: {cluster_rules_data.get('monetization', '')}")
-        
         if cluster_rules_data.get('affiliate_ids'):
             meta_parts.append(f"affiliate_ids={'|'.join(cluster_rules_data['affiliate_ids'])}")
-            print(f"      affiliate_ids: {cluster_rules_data['affiliate_ids']}")
         
         if cluster_rules_data.get('keywords'):
             meta_parts.append(f"keywords={'|'.join(cluster_rules_data['keywords'])}")
-            print(f"      keywords: {cluster_rules_data['keywords'][:5]}...")
         
         if cluster_rules_data.get('required_sections'):
             meta_parts.append(f"required_sections={'|'.join(cluster_rules_data['required_sections'])}")
-            print(f"      required_sections: {cluster_rules_data['required_sections']}")
         
         if cluster_rules_data.get('forbidden'):
             meta_parts.append(f"forbidden={'|'.join(cluster_rules_data['forbidden'])}")
-            print(f"      forbidden: {cluster_rules_data['forbidden']}")
         
         if cluster_rules_data.get('style_boost'):
             style_boost_clean = cluster_rules_data['style_boost'].replace('\n', ' ').replace('"', '\\"')
             meta_parts.append(f"style_boost={style_boost_clean}")
-            print(f"      style_boost: {style_boost_clean[:80]}...")
     
     visuals = task.get('visuals', {})
     if visuals:
-        visual_types = []
-        if 'kapak' in visuals:
-            visual_types.append('kapak')
-            print(f"      visual_kapak_prompt: {visuals['kapak'][:60]}...")
-        if 'icerik_1' in visuals:
-            visual_types.append('icerik_1')
-            print(f"      visual_icerik_1_prompt: {visuals['icerik_1'][:60]}...")
-        if 'icerik_2' in visuals:
-            visual_types.append('icerik_2')
-            print(f"      visual_icerik_2_prompt: {visuals['icerik_2'][:60]}...")
-        if visual_types:
-            meta_parts.append(f"visuals={'|'.join(visual_types)}")
-            print(f"      visuals: {visual_types}")
+        visual_types = list(visuals.keys())
+        meta_parts.append(f"visuals={'|'.join(visual_types)}")
     
     meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
-    
     final_html = meta_comment + makale_html
     
     target_dir = os.path.join("content", lang, kategori, yil, ay)
@@ -200,37 +158,32 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
     
-    # Dosya boyutunu göster
     file_size = os.path.getsize(target_path) // 1024
-    print(f"   ✅ {lang.upper()} HTML kaydedildi: {target_path} ({file_size} KB)")
+    log(f"{lang.upper()} kaydedildi: {filename} ({file_size} KB)")
     return target_path
 
-def run_visual_bot(task, hash_id, kategori, yil, ay):
-    """Görsel bot'u çalıştır. Başarısızsa False döndür."""
+def run_visual_bot_parallel(task, hash_id, kategori, yil, ay):
+    """Görsel bot'u paralel çalıştır - V16 uyumlu"""
     visuals = task.get('visuals', {})
     
-    print("\n   🖼️ GÖRSEL BOT KONTROLÜ:")
-    print(f"      Hash: {hash_id}")
-    print(f"      Kategori: {kategori}")
-    print(f"      Yıl/Ay: {yil}/{ay}")
+    log("=" * 60)
+    log("GÖRSEL ÜRETİM AŞAMASI (PARALEL)")
+    log("=" * 60)
+    log(f"Hash: {hash_id}")
+    log(f"Kategori: {kategori}")
+    log(f"Tarih: {yil}/{ay}")
     
     if not visuals:
-        print("      ❌ GÖRSEL PROMPT'U YOK!")
+        log("GÖRSEL PROMPT'U YOK!", "ERROR")
         return False
     
-    # 3 görsel tipi de var mı kontrol et
-    required = ['kapak', 'icerik_1', 'icerik_2']
-    missing = [r for r in required if r not in visuals]
-    if missing:
-        print(f"      ❌ EKSİK GÖRSEL TİPLERİ: {', '.join(missing)}")
-        return False
+    log(f"Görsel tipleri: {list(visuals.keys())}")
+    for img_type, prompt in visuals.items():
+        log(f"  {img_type}: {len(prompt)} karakter")
+        log(f"    {prompt[:80]}...")
     
-    print("      ✅ Tüm görsel tipleri mevcut:")
-    for img_type in required:
-        prompt_len = len(visuals.get(img_type, ''))
-        print(f"         - {img_type}: {prompt_len} karakter")
+    log("\nvisual_factory.py çağrılıyor (paralel mod)...")
     
-    print("\n   🎨 Görsel bot çağrılıyor...")
     try:
         visuals_json = json.dumps(visuals)
         result = subprocess.run(
@@ -240,352 +193,253 @@ def run_visual_bot(task, hash_id, kategori, yil, ay):
             text=True
         )
         
-        if result.returncode != 0:
-            print(f"      ❌ Görsel bot hata kodu: {result.returncode}")
-            if result.stderr:
-                print(f"      Hata: {result.stderr[:300]}")
+        log(f"Çıkış kodu: {result.returncode}")
+        
+        if result.stdout:
+            log(f"STDOUT:\n{result.stdout}")
+        
+        if result.stderr:
+            log(f"STDERR:\n{result.stderr[:500]}", "WARN")
+        
+        if result.returncode == 0:
+            log("GÖRSEL ÜRETİMİ BAŞARILI!")
+            return True
+        else:
+            log(f"GÖRSEL ÜRETİMİ BAŞARISIZ (exit code: {result.returncode})", "ERROR")
             return False
-        
-        print("      ✅ Görsel bot başarıyla tamamlandı.")
-        print(f"      Çıktı: {result.stdout[:200] if result.stdout else '(no output)'}")
-        
-        # Görsel bot'un gerçekten görsel ürettiğini doğrulamak için kısa bir bekle
-        time.sleep(2)
-        return True
-        
+            
     except subprocess.TimeoutExpired:
-        print("      ❌ Görsel bot ZAMAN AŞIMI (180 saniye)")
+        log("Görsel bot ZAMAN AŞIMI (180 saniye)", "ERROR")
         return False
     except Exception as e:
-        print(f"      ❌ Görsel bot hatası: {e}")
+        log(f"Görsel bot hatası: {e}", "ERROR")
         return False
 
-def isle_gorev(task):
-    task_id = task.get('task_id', '0000')
-    topic = task['topic']
-    persona = task.get('author_persona', 'Expert Analyst')
-    special_instructions = task.get('special_instructions', '')
-    reference_link = task.get('reference_link', '')
-    kategori = task.get('category', 'general').lower()
-    cluster_id = task.get('cluster_id')
-    
-    print("\n" + "=" * 70)
-    print(f"🚀 GÖREV: {topic}")
-    print(f"   ID: {task_id}")
-    print(f"   Kategori: {kategori}")
-    if cluster_id:
-        print(f"   Cluster ID: {cluster_id}")
-    print(f"   Yazar Persona: {persona}")
-    if special_instructions:
-        print(f"   Özel Talimat: {special_instructions[:100]}...")
-    if reference_link:
-        print(f"   Referans: {reference_link}")
-    print("=" * 70)
-    
-    clusters = load_clusters()
-    author_info = get_author_info(cluster_id, clusters)
-    cluster_rules_data = get_cluster_rules(cluster_id, clusters)
-    
-    # CLUSTER BİLGİLERİNİ GÖSTER
-    if cluster_rules_data:
-        print("\n📊 CLUSTER BİLGİLERİ:")
-        log_meta_info("Cluster Rules", {
-            "cluster_name": cluster_rules_data.get('cluster_name'),
-            "intent": cluster_rules_data.get('intent'),
-            "cpc_range": f"{cluster_rules_data.get('cpc_min')}-{cluster_rules_data.get('cpc_max')}",
-            "monetization": cluster_rules_data.get('monetization'),
-            "required_sections": cluster_rules_data.get('required_sections', []),
-            "forbidden": cluster_rules_data.get('forbidden', []),
-            "keywords_count": len(cluster_rules_data.get('keywords', [])),
-            "affiliate_ids_count": len(cluster_rules_data.get('affiliate_ids', []))
-        })
-    
-    # YAZAR BİLGİLERİNİ GÖSTER
-    if author_info:
-        print("\n✍️ YAZAR BİLGİLERİ:")
-        log_meta_info("Author", {
-            "name": author_info.get('name'),
-            "title": author_info.get('title'),
-            "bio": author_info.get('bio', '')[:100],
-            "avatar": author_info.get('avatar', '')[:50]
-        })
-    else:
-        if cluster_id:
-            print(f"\n⚠️ Yazar bulunamadı: cluster_id={cluster_id}")
-        else:
-            print(f"\n⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak")
-    
-    # GÖRSEL PROMPT'LARINI GÖSTER
-    visuals = task.get('visuals', {})
-    if visuals:
-        print("\n🖼️ GÖRSEL PROMPT'LARI:")
-        for img_type, prompt in visuals.items():
-            print(f"   {img_type}: {prompt[:80]}...")
-    else:
-        print("\n⚠️ Görsel prompt'u yok!")
-    
-    cluster_rules = ""
-    if cluster_rules_data:
-        cluster_rules = f"""
-## 🎯 CLUSTER RULES (MUST FOLLOW):
-- Required sections: {', '.join(cluster_rules_data.get('required_sections', []))}
-- Forbidden: {', '.join(cluster_rules_data.get('forbidden', []))}
-- Style boost: {cluster_rules_data.get('style_boost', '')}
-- Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
-"""
-    
-    prompt_emri = f"""
-ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice. You write for Gatemirror, a premium multi-language analysis platform read by professionals globally.
-
-TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone and feel like it was written by a different expert in that region. This is NOT a translation job.
-
-{f"REFERENCE MATERIAL: {reference_link}" if reference_link else ""}
-{f"SPECIAL INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
-{cluster_rules}
-
----
-
-CULTURAL ADAPTATION RULES:
-- EN: Global perspective, US/UK/Australian examples, data from Western institutions
-- ES: Latin American OR Spanish context — use cities like Mexico City, Buenos Aires, Madrid; local brands and regional statistics
-- DE: DACH region focus — Germany, Austria, Switzerland examples; European regulatory angle (EU, DACH market data)
-- FR: French OR Francophone context — Paris, Montreal, Dakar where relevant; French institutional references
-
----
-
-HUMAN WRITING RULES (MUST FOLLOW):
-- Write as if you are a real expert talking to peers, not teaching beginners
-- Use short, punchy sentences mixed with longer analytical ones
-- Include at least ONE opinionated or slightly controversial statement
-- Avoid perfectly balanced "on the one hand, on the other hand" arguments
-- Use real-world scenarios and specific numbers (not "many", "some", "various")
-- Each language version must feel like written by a DIFFERENT expert in that region
-- Do NOT mirror paragraph structure across languages
-- Allow slight asymmetry in paragraph length and rhythm
-
----
-
-CONTENT REQUIREMENTS (per language):
-- STRICT MINIMUM: 2000 words per language. MAXIMUM: 2500 words per language.
-- Total output (4 languages combined) MUST exceed 56,000 characters.
-- Hook: ALWAYS start Introduction with a bold claim, surprising statistic, or provocative question.
-
----
-
-STRUCTURE GUIDELINE (flexible, not identical across languages):
-Follow this general flow but allow variation in section order, emphasis, and depth:
-
-<h1>[Title in target language]</h1>
-
-<div class="editors-note">[2-3 sentences. First-person. Establish your credibility and why this topic is urgent RIGHT NOW.]</div>
-
-<h2>Introduction</h2>
-[Hook + problem + stakes + what reader will learn. Min 2 paragraphs.]
-
-<h2>Key Takeaways</h2>
-⚠️ CRITICAL: Write EXACTLY ONE <h2>Key Takeaways</h2> section per language.
-Write 3-5 actual takeaways as <li> items.
-<ul>
-  <li><strong>First takeaway:</strong> Detailed explanation</li>
-  <li><strong>Second takeaway:</strong> Detailed explanation</li>
-</ul>
-
-<h2>Main Analysis</h2>
-[Minimum 4 subsections using <h3>. Structure: context → evidence → implication]
-
-<h2>Practical Implications</h2>
-[What should the reader DO? Concrete, actionable steps for their specific regional context]
-
-<h2>Conclusion</h2>
-[Synthesis + bold prediction for 2027-2028 + memorable closing line]
-
-<h2>Frequently Asked Questions (FAQ)</h2>
-<div itemscope="" itemtype="https://schema.org/Question">
-  <h3 itemprop="name">[Question 1]</h3>
-  <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-    <div itemprop="text">[Answer 1]</div>
-  </div>
-</div>
-<div itemscope="" itemtype="https://schema.org/Question">
-  <h3 itemprop="name">[Question 2]</h3>
-  <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-    <div itemprop="text">[Answer 2]</div>
-  </div>
-</div>
-<div itemscope="" itemtype="https://schema.org/Question">
-  <h3 itemprop="name">[Question 3]</h3>
-  <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-    <div itemprop="text">[Answer 3]</div>
-  </div>
-</div>
-
-<div class="sources">
-<h3>Sources</h3>
-<ul>
-  <li>[Real, verifiable source — institution name + actual URL. Min 3, max 5. NO fake links.]</li>
-</ul>
-</div>
-
----
-
-SEO RULES:
-- Naturally integrate topic keywords in <h1>, first paragraph, and 2-3 subheadings
-- Use semantic variations — avoid exact keyword repetition
-
----
-
-OUTPUT FORMAT (exact — no deviation):
-<!-- LANG:EN -->
-<!-- SLUG:[english-url-slug-here] -->
-[Full EN HTML here]
-<!-- LANG:ES -->
-<!-- SLUG:[spanish-url-slug-here] -->
-[Full ES HTML here]
-<!-- LANG:DE -->
-<!-- SLUG:[german-url-slug-here] -->
-[Full DE HTML here]
-<!-- LANG:FR -->
-<!-- SLUG:[french-url-slug-here] -->
-[Full FR HTML here]
-
-SLUG RULES:
-- 5-8 words max, lowercase, hyphens, no accents
-- DIFFERENT for each language
-
-STRICT RULES:
-- "Key Takeaways" heading: NEVER translate, ALWAYS English
-- "Frequently Asked Questions (FAQ)": ALWAYS in English heading
-- NO fake URLs
-- NO markdown/code blocks
-"""
-    
-    print("\n🤖 Gemini çağrılıyor (4 dil, EN/ES/DE/FR)...")
+def call_gemini(prompt, task_id):
+    """Gemini'yi çağır ve yanıtı döndür"""
+    log(f"Gemini çağrılıyor (Task: {task_id})...")
     start_time = time.time()
     
     payload = {
-        "contents": [{"parts": [{"text": prompt_emri}]}],
+        "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
     }
     
     try:
         response = requests.post(GEMINI_URL, json=payload, timeout=420)
+        elapsed = time.time() - start_time
+        log(f"Gemini yanıt süresi: {elapsed:.1f}s")
+        
+        if response.status_code != 200:
+            log(f"Gemini HTTP {response.status_code}: {response.text[:200]}", "ERROR")
+            return None
+        
         res_data = response.json()
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             full_response = res_data['candidates'][0]['content']['parts'][0]['text']
-            elapsed = time.time() - start_time
-            print(f"   ✅ Yanıt alındı: {len(full_response)} karakter, {elapsed:.1f} saniye")
-            
-            parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
-            lang_html = {}
-            lang_slug = {}
-            
-            for i in range(1, len(parts), 2):
-                lang_code = parts[i].lower()
-                block = parts[i+1].strip()
-                
-                slug_match = re.search(r'<!-- SLUG:(.*?) -->', block)
-                if slug_match:
-                    lang_slug[lang_code] = slug_match.group(1).strip()
-                    block = re.sub(r'<!-- SLUG:.*? -->', '', block).strip()
-                
-                html_content = block.replace('```html', '').replace('```', '')
-                lang_html[lang_code] = html_content
-                print(f"   📄 {lang_code.upper()} HTML: {len(html_content)} karakter, slug: {lang_slug.get(lang_code, 'auto')}")
-            
-            expected = ['en', 'es', 'de', 'fr']
-            missing_langs = [l for l in expected if l not in lang_html]
-            if missing_langs:
-                print(f"   ⚠️ Eksik diller: {', '.join(missing_langs)}")
-            
-            hash_id = create_hash()
-            print(f"\n🔑 Üretilen hash: {hash_id}")
-            
-            now = datetime.now()
-            yil = now.strftime("%Y")
-            ay = now.strftime("%m")
-            print(f"   📅 Tarih: {yil}/{ay}")
-            
-            # ========== GÖRSEL KONTROLÜ ==========
-            print("\n" + "=" * 70)
-            print("🖼️ GÖRSEL ÜRETİM AŞAMASI")
-            print("=" * 70)
-            
-            visual_success = run_visual_bot(task, hash_id, kategori, yil, ay)
-            
-            if not visual_success:
-                print("\n" + "=" * 70)
-                print("❌ GÖRSEL ÜRETİLEMEDİ!")
-                print("   Makale üretilmeyecek.")
-                print("   tasks.json DEĞİŞMEYECEK.")
-                print("   Workflow DURDURULUYOR.")
-                print("=" * 70)
-                return False, None, None
-            
-            print("\n✅ GÖRSEL BAŞARILI! Makaleler kaydediliyor...")
-            
-            # ========== MAKALELERİ KAYDET ==========
-            print("\n" + "=" * 70)
-            print("📝 MAKALE KAYIT AŞAMASI")
-            print("=" * 70)
-            
-            saved_count = 0
-            for lang, html in lang_html.items():
-                if lang in expected:
-                    slug = lang_slug.get(lang, create_slug(topic))
-                    print(f"\n--- {lang.upper()} ---")
-                    html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
-                    saved_count += 1
-            
-            print(f"\n📁 Toplam {saved_count}/4 dil kaydedildi")
-            
-            return True, hash_id, task_id
+            log(f"Gemini yanıt uzunluğu: {len(full_response)} karakter")
+            return full_response
         else:
-            print(f"\n❌ GEMINI HATASI:")
-            print(json.dumps(res_data, indent=2))
-            return False, None, None
+            log(f"Gemini hata: {json.dumps(res_data, indent=2)[:500]}", "ERROR")
+            return None
+            
     except Exception as e:
-        print(f"\n❌ SİSTEM HATASI: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        log(f"Gemini bağlantı hatası: {e}", "ERROR")
+        return None
+
+def parse_gemini_response(full_response):
+    """Gemini yanıtını parse et"""
+    parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
+    lang_html = {}
+    lang_slug = {}
+    
+    for i in range(1, len(parts), 2):
+        lang_code = parts[i].lower()
+        block = parts[i+1].strip()
+        
+        slug_match = re.search(r'<!-- SLUG:(.*?) -->', block)
+        if slug_match:
+            lang_slug[lang_code] = slug_match.group(1).strip()
+            block = re.sub(r'<!-- SLUG:.*? -->', '', block).strip()
+        
+        html_content = block.replace('```html', '').replace('```', '')
+        lang_html[lang_code] = html_content
+        log(f"{lang_code.upper()}: {len(html_content)} karakter, slug={lang_slug.get(lang_code, 'auto')}")
+    
+    return lang_html, lang_slug
+
+def build_prompt(task, cluster_rules_data):
+    """Prompt oluştur"""
+    topic = task['topic']
+    persona = task.get('author_persona', 'Expert Analyst')
+    special_instructions = task.get('special_instructions', '')
+    reference_link = task.get('reference_link', '')
+    
+    cluster_rules = ""
+    if cluster_rules_data:
+        cluster_rules = f"""
+## CLUSTER RULES:
+- Required sections: {', '.join(cluster_rules_data.get('required_sections', []))}
+- Forbidden: {', '.join(cluster_rules_data.get('forbidden', []))}
+- Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
+"""
+    
+    return f"""
+ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice.
+
+TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone.
+
+{f"REFERENCE: {reference_link}" if reference_link else ""}
+{f"INSTRUCTIONS: {special_instructions}" if special_instructions else ""}
+{cluster_rules}
+
+CULTURAL ADAPTATION:
+- EN: Global perspective
+- ES: Latin American/Spanish context
+- DE: DACH region focus
+- FR: French/Francophone context
+
+CONTENT REQUIREMENTS (per language):
+- MINIMUM: 2000 words per language
+- Hook: Start Introduction with a bold claim or statistic
+
+STRUCTURE:
+<h1>[Title]</h1>
+<div class="editors-note">[2-3 sentences, first-person]</div>
+<h2>Introduction</h2>
+<h2>Key Takeaways</h2>
+<ul><li><strong>Takeaway 1:</strong> explanation</li></ul>
+<h2>Main Analysis</h2>
+[Min 4 subsections with <h3>]
+<h2>Practical Implications</h2>
+<h2>Conclusion</h2>
+<h2>Frequently Asked Questions (FAQ)</h2>
+<div class="sources"><h3>Sources</h3><ul><li>[Real URL]</li></ul></div>
+
+OUTPUT FORMAT:
+<!-- LANG:EN -->
+<!-- SLUG:[slug] -->
+[HTML]
+<!-- LANG:ES -->
+<!-- SLUG:[slug] -->
+[HTML]
+<!-- LANG:DE -->
+<!-- SLUG:[slug] -->
+[HTML]
+<!-- LANG:FR -->
+<!-- SLUG:[slug] -->
+[HTML]
+
+STRICT RULES:
+- NO fake URLs
+- NO markdown/code blocks
+"""
+
+def isle_gorev(task):
+    task_id = task.get('task_id', '0000')
+    topic = task['topic']
+    kategori = task.get('category', 'general').lower()
+    cluster_id = task.get('cluster_id')
+    
+    log("=" * 70)
+    log(f"GÖREV BAŞLIYOR: {task_id}")
+    log("=" * 70)
+    log(f"Topic: {topic}")
+    log(f"Kategori: {kategori}")
+    log(f"Cluster ID: {cluster_id}")
+    log(f"Yazar: {task.get('author_persona')}")
+    
+    clusters = load_clusters()
+    author_info = get_author_info(cluster_id, clusters)
+    cluster_rules_data = get_cluster_rules(cluster_id, clusters)
+    
+    if author_info:
+        log(f"Yazar bulundu: {author_info.get('name')}")
+    
+    # 1. Prompt oluştur
+    prompt = build_prompt(task, cluster_rules_data)
+    
+    # 2. Gemini'den makale üret
+    full_response = call_gemini(prompt, task_id)
+    if not full_response:
         return False, None, None
+    
+    # 3. Parse et
+    lang_html, lang_slug = parse_gemini_response(full_response)
+    
+    expected = ['en', 'es', 'de', 'fr']
+    for lang in expected:
+        if lang not in lang_html:
+            log(f"{lang.upper()} dili eksik!", "WARN")
+    
+    # 4. Hash oluştur
+    hash_id = create_hash()
+    log(f"Hash oluşturuldu: {hash_id}")
+    
+    now = datetime.now()
+    yil = now.strftime("%Y")
+    ay = now.strftime("%m")
+    log(f"Tarih: {yil}/{ay}")
+    
+    # 5. Görsel üret (V16 ile, paralel)
+    visual_success = run_visual_bot_parallel(task, hash_id, kategori, yil, ay)
+    
+    if not visual_success:
+        log("=" * 70)
+        log("GÖRSEL ÜRETİLEMEDİ - MAKALE KAYDEDİLMEYECEK", "ERROR")
+        log("Workflow duracak, tasks.json değişmeyecek")
+        log("=" * 70)
+        return False, None, None
+    
+    # 6. Makaleleri kaydet
+    log("\nMakaleler kaydediliyor...")
+    
+    saved_count = 0
+    for lang, html in lang_html.items():
+        if lang in expected:
+            slug = lang_slug.get(lang, create_slug(topic))
+            html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
+            saved_count += 1
+    
+    log(f"Toplam {saved_count}/4 dil kaydedildi")
+    
+    return True, hash_id, task_id
 
 def operasyon_baslat():
-    print("\n" + "=" * 70)
-    print("🛰️ CREATOR BOT v39 - DETAYLI LOG")
-    print("   ✅ task/tasks.json'dan ilk task'i AL")
-    print("   ✅ Cluster ve yazar bilgilerini GÖSTER")
-    print("   ✅ Görsel prompt'larını GÖSTER")
-    print("   ✅ ÖNCE görsel üret (başarısızsa DUR)")
-    print("   ✅ META bilgilerini DETAYLI GÖSTER")
-    print("=" * 70)
+    log("=" * 70)
+    log("CREATOR BOT V46 - V16 UYUMLU, PARALEL GÖRSEL")
+    log("1. Gemini'den makale üret")
+    log("2. Hash oluştur")
+    log("3. Görsel üret (visual_factory V16)")
+    log("4. Makaleleri kaydet")
+    log("=" * 70)
     
     task = get_first_pending_task()
     if not task:
-        print("❌ İşlenecek görev yok!")
+        log("İşlenecek görev yok!", "ERROR")
         sys.exit(1)
     
     basarili, hash_id, task_id = isle_gorev(task)
     
     if not basarili:
-        print("\n" + "=" * 70)
-        print("🚨 WORKFLOW DURDURULUYOR")
-        print("   Sebep: Görsel üretilemedi")
-        print("   tasks.json DEĞİŞMEDİ")
-        print("   Hiçbir şey yayınlanmayacak")
-        print("=" * 70)
+        log("=" * 70)
+        log("WORKFLOW DURDURULUYOR", "ERROR")
+        log("Sebep: Görsel üretilemedi")
+        log("tasks.json DEĞİŞMEDİ")
+        log("=" * 70)
         sys.exit(1)
     
     with open("task/current_hash.txt", "w") as f:
         f.write(hash_id)
-    print(f"\n📝 Hash kaydedildi: task/current_hash.txt -> {hash_id}")
+    log(f"Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
-    print("\n" + "=" * 70)
-    print(f"🏁 CREATOR V39 TAMAMLANDI!")
-    print(f"   Hash: {hash_id}")
-    print(f"   Task ID: {task_id}")
-    print("   ⚠️ tasks.json GÜNCELLENMEDİ. Uploader devam edecek.")
-    print("=" * 70)
+    log("=" * 70)
+    log(f"CREATOR V46 TAMAMLANDI!")
+    log(f"Hash: {hash_id}")
+    log(f"Task ID: {task_id}")
+    log(f"Görsel formatı: 1024x576 (16:9)")
+    log("=" * 70)
 
 if __name__ == "__main__":
     operasyon_baslat()
