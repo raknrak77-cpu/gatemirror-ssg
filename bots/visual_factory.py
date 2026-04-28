@@ -30,7 +30,7 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# Rate limit koruması için token bucket
+# Rate limit koruması
 request_times = []
 time_lock = threading.Lock()
 
@@ -43,7 +43,6 @@ CATEGORY_STYLES = {
     "elearning": "bright, educational, approachable, modern, focused on people learning, books, digital interfaces, cozy study spaces"
 }
 
-# ================= GLOBAL STYLE (TÜM KATEGORİLER İÇİN ORTAK) =================
 GLOBAL_STYLE = """
 Style:
 - photorealistic
@@ -58,7 +57,6 @@ Technical:
 - 16:9 aspect ratio (landscape)
 """
 
-# ================= YENİ: KOMPOZİSYON KURALLARI (16:9) =================
 COMPOSITION_RULES = """
 COMPOSITION RULES (CRITICAL):
 - Canvas is 16:9 aspect ratio (landscape format)
@@ -79,45 +77,24 @@ Strict constraints:
 - NO distorted anatomy or unrealistic structures
 """
 
-# ================= 16:9 ÖLÇÜLERİ =================
-# 1024x576 -> 16:9, max=1024 (aynı fiyat)
-# 1280x720 -> 16:9, max=1280 (daha pahalı)
 DEFAULT_WIDTH = 1024
 DEFAULT_HEIGHT = 576
 
 def get_category_style(kategori):
     return CATEGORY_STYLES.get(kategori, "professional, clean, modern, versatile")
 
-def get_image_size(image_data):
-    """Görsel boyutlarını al, 16:9 varsayılan"""
-    width = image_data.get("width", DEFAULT_WIDTH)
-    height = image_data.get("height", DEFAULT_HEIGHT)
-    
-    # 16:9 oranını koru (eğer farklı oran geldiyse)
-    if width == 1024 and height == 1024:
-        # Kare ise 16:9'a çevir
-        width = DEFAULT_WIDTH
-        height = DEFAULT_HEIGHT
-        print(f"   📐 Kare → 16:9 dönüştürüldü: {width}x{height}")
-    
-    return width, height
-
-# ================= YARDIMCI FONKSİYONLAR =================
 def is_valid_image(filepath):
     if not os.path.exists(filepath):
         return False
     if os.path.getsize(filepath) < 300000:
         return False
     try:
-        with open(filepath, 'rb') as f:
-            header = f.read(12)
-            if header.startswith(b'\x89PNG\r\n\x1a\n'):
-                return True
-            if header.startswith(b'\xff\xd8\xff'):
-                return True
+        with Image.open(filepath) as img:
+            if img.size[0] < 512 or img.size[1] < 512:
+                return False
+            return True
     except:
-        pass
-    return False
+        return False
 
 def convert_to_webp(input_path, output_path):
     try:
@@ -139,13 +116,13 @@ def upload_to_r2(local_path, r2_key):
         return True
     return False
 
-def enrich_prompt(base_prompt, kategori):
+def enrich_prompt(prompt_text, kategori):
     category_style = get_category_style(kategori)
     
     return f"""You are a world-class versatile visual photographer.
 
 SUBJECT (MUST FOLLOW):
-{base_prompt}
+{prompt_text}
 
 CATEGORY ATMOSPHERE:
 {category_style}
@@ -158,9 +135,8 @@ CATEGORY ATMOSPHERE:
 
 IMPORTANT:
 - The SUBJECT above is the main focus. DO NOT ignore it.
-- The CATEGORY ATMOSPHERE only guides the mood and lighting, not the subject.
-- The COMPOSITION RULES determine how the subject is placed in the 16:9 frame.
-- Create a photorealistic, cinematic landscape image that matches the SUBJECT with the appropriate ATMOSPHERE and COMPOSITION.
+- The CATEGORY ATMOSPHERE only guides the mood and lighting.
+- Create a photorealistic, cinematic landscape image in 16:9 format.
 """
 
 def rate_limit_wait():
@@ -176,8 +152,8 @@ def rate_limit_wait():
         request_times.append(now)
     return True
 
-def generate_image(prompt, model, width, height, output_png):
-    print(f"🎨 [{output_png}] {width}x{height} (16:9) formatında görsel üretiliyor...")
+def generate_image(prompt, model, width, height, output_png, attempt=1):
+    print(f"🎨 [{output_png}] Deneme {attempt}/3: {width}x{height} (16:9) görsel üretiliyor...")
     
     rate_limit_wait()
     
@@ -190,66 +166,93 @@ def generate_image(prompt, model, width, height, output_png):
         "guidance": 7.5
     }
     
-    for attempt in range(3):
-        try:
-            response = requests.post(f"{CF_AI_GATEWAY}{model}", headers=headers, json=payload, timeout=120)
-            if response.status_code == 200:
-                with open(output_png, "wb") as f:
-                    f.write(response.content)
-                
-                if is_valid_image(output_png):
-                    size_kb = os.path.getsize(output_png) // 1024
-                    print(f"✅ {output_png} oluşturuldu (geçerli, {size_kb} KB)")
-                    return True
-                else:
-                    print(f"⚠️ {output_png} geçersiz (bozuk), yeniden deneniyor...")
-                    os.remove(output_png)
-                    time.sleep(3)
-                    continue
-            elif response.status_code == 429:
-                print(f"⚠️ Rate limit (429), 5 saniye bekleniyor...")
-                time.sleep(5)
-                continue
-            else:
-                print(f"⚠️ HTTP {response.status_code} (deneme {attempt+1}/3)")
-        except Exception as e:
-            print(f"⚠️ Hata (deneme {attempt+1}/3): {e}")
+    try:
+        start_time = time.time()
+        response = requests.post(f"{CF_AI_GATEWAY}{model}", headers=headers, json=payload, timeout=120)
+        elapsed = time.time() - start_time
         
-        if attempt < 2:
-            wait = 3 if attempt == 0 else 5
-            print(f"⏳ {wait} saniye bekleniyor...")
-            time.sleep(wait)
-    
-    print(f"❌ {output_png} üretilemedi (3 deneme başarısız).")
-    return False
+        print(f"   HTTP {response.status_code} - {elapsed:.1f}s")
+        
+        if response.status_code == 200:
+            with open(output_png, "wb") as f:
+                f.write(response.content)
+            
+            file_size_kb = os.path.getsize(output_png) // 1024
+            print(f"   Dosya boyutu: {file_size_kb} KB")
+            
+            if is_valid_image(output_png):
+                print(f"✅ {output_png} GEÇERLİ görsel ({file_size_kb} KB)")
+                return True
+            else:
+                print(f"⚠️ {output_png} GEÇERSİZ (bozuk veya çok küçük)")
+                os.remove(output_png)
+                return False
+        elif response.status_code == 429:
+            print(f"⚠️ Rate limit (429), 5 saniye bekleniyor...")
+            time.sleep(5)
+            return False
+        else:
+            print(f"⚠️ HTTP {response.status_code}")
+            try:
+                error_data = response.json()
+                print(f"   Hata detayı: {json.dumps(error_data, indent=2)[:500]}")
+            except:
+                print(f"   Yanıt: {response.text[:200]}")
+            return False
+    except Exception as e:
+        print(f"⚠️ İstek hatası: {e}")
+        return False
 
-def process_single_image(image_type, image_data, hash_id, kategori, yil, ay, r2_folder, results):
+def process_single_image(image_type, prompt_text, hash_id, kategori, yil, ay, r2_folder, results):
+    """Tek bir görseli işle - prompt_text DOĞRUDAN string"""
+    print(f"\n🖼️ [{image_type.upper()}] Başlıyor...")
+    print(f"   Prompt: {prompt_text[:100]}...")
+    
     try:
         png_file = f"{hash_id}_{image_type}.png"
         webp_file = f"{hash_id}_{image_type}.webp"
         
-        base_prompt = image_data.get("prompt", "")
-        full_prompt = enrich_prompt(base_prompt, kategori)
+        full_prompt = enrich_prompt(prompt_text, kategori)
         
-        # 16:9 boyutlarını al
-        width, height = get_image_size(image_data)
+        success = False
+        for attempt in range(1, 4):
+            if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", DEFAULT_WIDTH, DEFAULT_HEIGHT, png_file, attempt):
+                success = True
+                break
+            if attempt < 3:
+                print(f"   {attempt}. deneme başarısız, 3 saniye bekleniyor...")
+                time.sleep(3)
         
-        if generate_image(full_prompt, "@cf/stabilityai/stable-diffusion-xl-base-1.0", width, height, png_file):
-            if convert_to_webp(png_file, webp_file):
-                r2_key = f"{r2_folder}/{hash_id}_{image_type}.webp"
-                upload_to_r2(webp_file, r2_key)
-                os.remove(webp_file)
-            os.remove(png_file)
-            results[image_type] = True
-            return image_type, True
-        results[image_type] = False
-        return image_type, False
+        if not success:
+            print(f"❌ [{image_type.upper()}] 3 deneme sonunda BAŞARISIZ")
+            results[image_type] = False
+            return image_type, False
+        
+        # WebP dönüşümü ve R2 yükleme
+        if convert_to_webp(png_file, webp_file):
+            r2_key = f"{r2_folder}/{hash_id}_{image_type}.webp"
+            upload_to_r2(webp_file, r2_key)
+            os.remove(webp_file)
+            print(f"✅ [{image_type.upper()}] TAMAMLANDI (R2'de)")
+        else:
+            print(f"⚠️ [{image_type.upper()}] WebP dönüşümü başarısız, PNG siliniyor")
+        
+        os.remove(png_file)
+        results[image_type] = True
+        return image_type, True
+        
     except Exception as e:
-        print(f"⚠️ {image_type} işlenirken hata: {e}")
+        print(f"❌ [{image_type.upper()}] KRİTİK HATA: {e}")
+        import traceback
+        traceback.print_exc()
         results[image_type] = False
         return image_type, False
 
 def visual_factory():
+    print("\n" + "=" * 70)
+    print("🎨 VISUAL FACTORY V16 - 16:9 MODE")
+    print("=" * 70)
+    
     if len(sys.argv) < 7:
         print("❌ Kullanım: python visual_factory.py <task_id> <hash> <visuals_json> <kategori> <yil> <ay>")
         return
@@ -261,59 +264,89 @@ def visual_factory():
     yil = sys.argv[5]
     ay = sys.argv[6]
     
+    print(f"\n📋 GÖREV BİLGİLERİ:")
+    print(f"   Task ID: {task_id}")
+    print(f"   Hash: {hash_id}")
+    print(f"   Kategori: {kategori}")
+    print(f"   Tarih: {yil}/{ay}")
+    
     try:
         visuals = json.loads(visuals_json)
-    except:
-        print("❌ visuals JSON parse edilemedi!")
+        print(f"   Görsel sayısı: {len(visuals)}")
+        for key in visuals.keys():
+            print(f"      - {key}")
+    except Exception as e:
+        print(f"❌ visuals JSON parse edilemedi: {e}")
+        print(f"   Raw: {visuals_json[:200]}")
         return
     
-    print(f"\n🖼️ Görsel üretimi (Task: {task_id}, Hash: {hash_id}, Kategori: {kategori})")
-    print(f"   🚀 PARALEL MOD: 3 görsel aynı anda işleniyor (rate limit korumalı)")
-    print(f"   🎯 KOMPOZİSYON: 16:9, geniş yatay kadraj")
+    print(f"\n🖼️ Görsel üretimi başlıyor...")
+    print(f"   🎯 Format: {DEFAULT_WIDTH}x{DEFAULT_HEIGHT} (16:9)")
+    print(f"   🚀 Paralel işleme: 3 görsel aynı anda")
     
     r2_folder = f"images/{yil}/{ay}/{kategori}"
     
-    # İşlenecek görselleri hazırla
+    # İşlenecek görseller - visuals[key] DOĞRUDAN string prompt
     images_to_process = []
-    
-    if "kapak" in visuals:
-        images_to_process.append(("kapak", visuals["kapak"]))
-    if "icerik_1" in visuals:
-        images_to_process.append(("icerik_1", visuals["icerik_1"]))
-    if "icerik_2" in visuals:
-        images_to_process.append(("icerik_2", visuals["icerik_2"]))
+    for img_type, prompt_text in visuals.items():
+        if prompt_text and isinstance(prompt_text, str):
+            images_to_process.append((img_type, prompt_text))
+            print(f"   📝 {img_type}: prompt uzunluğu {len(prompt_text)} karakter")
+        else:
+            print(f"   ⚠️ {img_type}: geçersiz prompt (type: {type(prompt_text)})")
     
     if not images_to_process:
-        print("⚠️ Hiç görsel prompt'u yok!")
+        print("❌ Hiç geçerli görsel prompt'u yok!")
         return
     
-    # PARALEL işleme
+    print(f"\n🚀 {len(images_to_process)} görsel paralel işleniyor...")
+    print("-" * 50)
+    
     results = {}
     start_time = time.time()
     
     with ThreadPoolExecutor(max_workers=3) as executor:
         futures = []
-        for img_type, img_data in images_to_process:
+        for img_type, prompt_text in images_to_process:
             future = executor.submit(
                 process_single_image, 
-                img_type, img_data, hash_id, kategori, yil, ay, r2_folder, results
+                img_type, prompt_text, hash_id, kategori, yil, ay, r2_folder, results
             )
             futures.append(future)
         
         for future in as_completed(futures):
             img_type, success = future.result()
-            status = "✅" if success else "❌"
-            print(f"   {status} {img_type} tamamlandı")
+            status = "✅ BAŞARILI" if success else "❌ BAŞARISIZ"
+            print(f"\n   {status}: {img_type}")
     
     elapsed = time.time() - start_time
     success_count = sum(1 for v in results.values() if v)
+    fail_count = len(images_to_process) - success_count
     
-    print(f"\n✅ Görsel işlemleri tamamlandı!")
-    print(f"   📁 R2 klasörü: {r2_folder}")
-    print(f"   📊 Başarılı: {success_count}/{len(images_to_process)}")
+    print("\n" + "=" * 70)
+    print("📊 GÖRSEL ÜRETİM RAPORU")
+    print(f"   ✅ Başarılı: {success_count}/{len(images_to_process)}")
+    print(f"   ❌ Başarısız: {fail_count}/{len(images_to_process)}")
     print(f"   ⏱️ Toplam süre: {elapsed:.1f} saniye")
-    print(f"   🎨 Kategori stili: {get_category_style(kategori)}")
-    print(f"   🎯 Kompozisyon: 16:9 ({DEFAULT_WIDTH}x{DEFAULT_HEIGHT})")
+    print(f"   📁 R2 klasörü: {r2_folder}")
+    print(f"   🎨 Kategori: {kategori}")
+    print(f"   📐 Boyut: {DEFAULT_WIDTH}x{DEFAULT_HEIGHT} (16:9)")
+    
+    for img_type, success in results.items():
+        print(f"   {img_type}: {'✅' if success else '❌'}")
+    
+    print("=" * 70)
+    
+    # Çıkış kodu: 3 görselin tamamı başarılıysa 0, değilse 1
+    if success_count == 3:
+        print("\n✅ TÜM GÖRSELLER BAŞARILI")
+        sys.exit(0)
+    elif success_count > 0:
+        print(f"\n⚠️ KISMİ BAŞARI ({success_count}/3 görsel başarılı)")
+        sys.exit(1)
+    else:
+        print("\n❌ HİÇBİR GÖRSEL ÜRETİLEMEDİ")
+        sys.exit(1)
 
 if __name__ == "__main__":
     visual_factory()
