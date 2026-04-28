@@ -1,5 +1,28 @@
 [
     {
+        "task_id": "0130",
+        "category": "future-economy",
+        "cluster_id": "fe_02",
+        "topic": "DeFi Meets TradFi: How Tokenized U.S. Treasuries Yield 5% On-Chain in 2026",
+        "reference_link": "https://www.bloomberg.com/tokenized-bonds-2026",
+        "language": "en",
+        "author_persona": "Digital Asset Product Manager & Fixed Income Analyst",
+        "special_instructions": "Explain how real-world yields are brought toDeFi. Focus on compliance and instant settlement.",
+        "visuals": {
+            "kapak": "A glowing digital bond certificate with a US Treasury seal morphing into a blockchain icon, financial chart background, 8k, photorealistic",
+            "icerik_1": "A DeFi dashboard showing \"Deposit USDC -> Receive $YieldToken (4.8% APY) backed by real T-Bills\", clean UI, photorealistic",
+            "icerik_2": "A person holding a smartphone, seeing \"Interest earned every 15 seconds\" on a savings app, happy expression, photorealistic"
+        },
+        "status": "processed",
+        "hash": "2af9e5c5",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "2026-04-28 21:50:56",
+        "hash_updated_at": "2026-04-28T21:31:02.714068",
+        "images_verified": true
+    },
+    {
         "task_id": "0129",
         "category": "wellness",
         "cluster_id": "wl_01",
