@@ -3,40 +3,79 @@ import json
 import re
 from datetime import datetime
 
-# ================= CLUSTER EŞLEME SÖZLÜĞÜ =================
+# ================= CLUSTER EŞLEME SÖZLÜĞÜ (clusters.json'dan otomatik) =================
+# Not: Bu sözlük clusters.json'dan sync edilmelidir.
+# Manuel senkronizasyon için aşağıdaki yapı clusters.json version 3.1 baz alınarak oluşturulmuştur.
+
 CLUSTER_NAME_TO_ID = {
-    # TECH
+    # TECH (7 cluster)
     "ai_trading_bots": "tech_01",
     "cybersecurity_ai": "tech_02",
     "ai_productivity_tools": "tech_03",
     "cloud_computing_ai": "tech_04",
     "generative_search": "tech_05",
-    # FUTURE-ECONOMY
+    "quantum_computing_trends": "tech_06",
+    "wearable_tech_2026": "tech_07",
+    
+    # FUTURE-ECONOMY (9 cluster)
     "crypto_exchanges": "fe_01",
     "rwa_tokenization": "fe_02",
     "digital_banking": "fe_03",
     "defi_staking": "fe_04",
     "wealth_management": "fe_05",
-    # WELLNESS
+    "depin_networks": "fe_06",
+    "cbdc": "fe_07",
+    "gig_economy_3_0": "fe_08",
+    "impact_investing_esg": "fe_09",
+    
+    # WELLNESS (7 cluster)
     "longevity_biohacking": "wl_01",
     "mental_health_apps": "wl_02",
     "telemedicine_tech": "wl_03",
     "sleep_optimization": "wl_04",
     "personalized_nutrition": "wl_05",
-    # ELEARNING
+    "holistic_biohacking": "wl_06",
+    "regenerative_fitness": "wl_07",
+    
+    # ELEARNING (10 cluster)
     "coding_bootcamps": "el_01",
     "exec_education": "el_02",
     "language_apps": "el_03",
     "cloud_certifications": "el_04",
     "sidehustle_skills": "el_05",
-    "corporate_ar_training": "el_06",      # YENİ
-    "adaptive_lms_ai": "el_07",            # YENİ
-    # ECO
+    "corporate_ar_training": "el_06",
+    "adaptive_lms_ai": "el_07",
+    "vr_ar_classrooms": "el_08",
+    "skill_based_nanodegrees": "el_09",
+    "ai_tutors_personalized": "el_10",
+    
+    # ECO (9 cluster)
     "ev_infrastructure": "eco_01",
     "solar_energy": "eco_02",
     "climate_finance": "eco_03",
     "smart_home_energy": "eco_04",
-    "circular_economy": "eco_05"
+    "circular_economy": "eco_05",
+    "ocean_cleanup_tech": "eco_06",
+    "regenerative_agriculture": "eco_07",
+    "green_hydrogen": "eco_08",
+    "sustainable_fashion": "eco_09",
+    
+    # ALIASLAR (eski task'ler için uyumluluk)
+    "longevity_protocols": "wl_01",
+    "personalized_nutrition_ai": "wl_05",
+    "mental_health_tech": "wl_02",
+    "de_pin_networks": "fe_06",
+    "central_bank_digital_currencies": "fe_07",
+    "gig_economy_3_0": "fe_08",
+    "quantum_computing_trends": "tech_06",
+    "wearable_tech_2026": "tech_07",
+    "impact_investing_esg": "fe_09",
+    "regenerative_agriculture": "eco_07",
+    "green_hydrogen_energy": "eco_08",
+    "sustainable_fashion_innovation": "eco_09",
+    "vr_ar_classrooms": "el_08",
+    "skill_based_nanodegrees": "el_09",
+    "ai_tutors_personalized_learning": "el_10"
 }
 
 CLUSTER_ID_TO_NAME = {v: k for k, v in CLUSTER_NAME_TO_ID.items()}
@@ -45,11 +84,13 @@ def resolve_cluster_id(cluster_input):
     if not cluster_input:
         return None
     cluster_input = cluster_input.strip().lower()
+    # Eğer zaten cluster_id formatındaysa (örn: tech_01)
     if re.match(r'^[a-z]+_[0-9]+$', cluster_input):
         return cluster_input
+    # Sözlükten bul
     if cluster_input in CLUSTER_NAME_TO_ID:
         return CLUSTER_NAME_TO_ID[cluster_input]
-    print(f"⚠️ Uyarı: '{cluster_input}' için cluster_id bulunamadı.")
+    print(f"⚠️ Uyarı: '{cluster_input}' için cluster_id bulunamadı. (Lütfen CLUSTER_NAME_TO_ID sözlüğünü kontrol edin)")
     return None
 
 def get_next_task_id(pending_tasks, processed_tasks):
@@ -76,7 +117,9 @@ def parse_task_block(block):
             continue
         if ':' in line:
             parts = line.split(':', 1)
-            key = re.sub(r'[^a-z0-9_]', '', parts[0].strip().lower())
+            key = parts[0].strip().lower()
+            # Key'i temizle (sadece alfanumeric ve underscore)
+            key = re.sub(r'[^a-z0-9_]', '', key)
             value = parts[1].strip()
             task_data[key] = value
     return task_data
@@ -160,10 +203,21 @@ def add_tasks():
     else:
         skipped_tasks = []
     
-    # new_task.txt dosya yolu -> task/new_task.txt
+    # YENİ: task/new_task.txt dosyasını oku
     new_task_path = "task/new_task.txt"
     if not os.path.exists(new_task_path):
         print(f"❌ {new_task_path} bulunamadı! Önce task/new_task.txt dosyasını oluşturun.")
+        print("   Örnek format:\n")
+        print("""category: tech
+cluster: ai_trading_bots
+topic: AI Trading Bots 2026
+reference_link: https://example.com
+author_persona: Expert
+special_instructions: Write content...
+kapak_prompt: A high-tech trading screen...
+icerik_1_prompt: A dashboard showing...
+icerik_2_prompt: A mobile app interface...
+""")
         return
     
     all_task_data = parse_all_tasks(new_task_path)
@@ -204,7 +258,7 @@ def add_tasks():
         cluster_input = task_data.get('cluster', '')
         cluster_id = resolve_cluster_id(cluster_input)
         
-        # GÜNCELLENDİ: width/height kaldırıldı, Visual Bot kendi belirleyecek
+        # Görseller: direkt string olarak al, width/height kaldırıldı
         new_task = {
             "task_id": new_id,
             "category": category,
@@ -240,6 +294,18 @@ def add_tasks():
     print(f"\n✅ Toplam {added_count} task eklendi! ( {duplicate_count} duplicate atlandı )")
     print(f"📋 Toplam pending task sayısı: {len(pending_tasks)}")
     print(f"📋 Toplam processed task sayısı: {len(processed_tasks)}")
+    
+    # İsteğe bağlı: new_task.txt'yi temizle (backup al)
+    if added_count > 0:
+        backup_path = f"task/new_task_backup_{today_iso}.txt"
+        with open(new_task_path, "r", encoding="utf-8") as f_src:
+            with open(backup_path, "w", encoding="utf-8") as f_dst:
+                f_dst.write(f_src.read())
+        print(f"📦 Yeni task'lerin yedeği alındı: {backup_path}")
+        
+        # new_task.txt'yi temizle (opsiyonel - yorum satırı yapıldı)
+        # with open(new_task_path, "w", encoding="utf-8") as f:
+        #     f.write("# Task dosyası temizlendi. Yeni task'ler için buraya ekleme yapın.\n")
 
 if __name__ == "__main__":
     add_tasks()
