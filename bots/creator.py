@@ -182,13 +182,13 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     reading_time = max(1, word_count // 200)
     log(f"   📊 Kelime: {word_count} | Okuma: {reading_time} dk | Karakter: {len(makale_html)}")
     
-    # META başlıklarını logla (içerik değil, sadece başlıklar)
+    # META başlıklarını logla
     log(f"   📝 META: author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '-')}, monetization={cluster_rules_data.get('monetization', '-')}, visuals={visual_types if visuals else '-'}")
     
     return target_path
 
 def run_visual_bot(task, hash_id, kategori, yil, ay):
-    """Görsel bot'u çalıştır - V16 uyumlu"""
+    """Görsel bot'u çalıştır - V16 uyumlu, görsel boyutlarını log'lar"""
     visuals = task.get('visuals', {})
     
     log("=" * 60)
@@ -205,6 +205,7 @@ def run_visual_bot(task, hash_id, kategori, yil, ay):
     log(f"Görsel tipleri: {list(visuals.keys())}")
     for img_type, prompt in visuals.items():
         log(f"  {img_type}: {len(prompt)} karakter")
+        log(f"    Prompt: {prompt[:80]}...")
     
     log("\nvisual_factory.py çağrılıyor...")
     
@@ -219,11 +220,19 @@ def run_visual_bot(task, hash_id, kategori, yil, ay):
         
         log(f"Çıkış kodu: {result.returncode}")
         
+        # Görsel boyutlarını yakalamak için stdout'u parse et
         if result.stdout:
-            # Sadece son satırları göster (çok uzun olmasın)
             lines = result.stdout.strip().split('\n')
-            for line in lines[-10:]:
-                log(f"  {line}")
+            for line in lines:
+                # Görsel başarı mesajlarını ve boyutlarını yakala
+                if 'GEÇERLİ görsel' in line or 'tamamlandı' in line.lower() or 'R2\'ye yüklendi' in line:
+                    log(f"  {line}")
+                # Özet satırlarını da göster
+                if 'BAŞARILI:' in line or 'TAMAMLANDI' in line:
+                    log(f"  {line}")
+        
+        if result.stderr:
+            log(f"STDERR (ilk 500): {result.stderr[:500]}", "WARN")
         
         if result.returncode == 0:
             log("GÖRSEL ÜRETİMİ BAŞARILI!")
@@ -272,7 +281,8 @@ def isle_gorev(task):
 - Forbidden: {', '.join(cluster_rules_data.get('forbidden', []))}
 - Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
 """
-   prompt_emri = f"""
+
+    prompt_emri = f"""
 ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice.
 
 TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone.
@@ -327,7 +337,8 @@ STRICT RULES:
 - NO fake URLs (example.com, domain.com, placeholder.com STRICTLY FORBIDDEN)
 - NO markdown/code blocks
 - If URL cannot be verified, use fallback: "Source: [Institution Name] (no URL available)"
-""" 
+"""
+    
     # Gemini çağrısı
     log("Gemini çağrılıyor (EN/ES/DE/FR)...")
     start_time = time.time()
@@ -404,10 +415,10 @@ STRICT RULES:
 
 def operasyon_baslat():
     log("=" * 70)
-    log("CREATOR BOT V47 - META LOG'LU, V16 UYUMLU")
+    log("CREATOR BOT V48 - META LOG'LU, GÖRSEL BOYUT LOG'LU")
     log("1. Gemini'den makale üret")
     log("2. Hash oluştur")
-    log("3. Görsel üret")
+    log("3. Görsel üret (boyutlar log'da)")
     log("4. Makaleleri kaydet (META yorum satırı olarak)")
     log("5. Tüm veriler log'da göster")
     log("=" * 70)
@@ -432,7 +443,7 @@ def operasyon_baslat():
     log(f"Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
     log("=" * 70)
-    log(f"CREATOR V47 TAMAMLANDI!")
+    log(f"CREATOR V48 TAMAMLANDI!")
     log(f"Hash: {hash_id}")
     log(f"Task ID: {task_id}")
     log("=" * 70)
