@@ -7,7 +7,7 @@ import re
 import requests
 import subprocess
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import traceback
 
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_KEY}"
@@ -92,9 +92,11 @@ def get_first_pending_task():
     return task
 
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
+    """HTML'i META bilgileriyle birlikte yazar - yorum satırı olarak"""
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
+    # Yazar bilgileri
     if author_info:
         author_name = author_info.get('name', author_persona)
         author_title = author_info.get('title', '')
@@ -106,6 +108,7 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         author_bio = ''
         author_avatar = ''
     
+    # META parçalarını hazırla
     meta_parts = [
         f"author={author_name}",
         f"author_title={author_title}",
@@ -117,6 +120,7 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         f"lang={lang}"
     ]
     
+    # Cluster bilgileri varsa ekle
     if cluster_id:
         meta_parts.append(f"cluster_id={cluster_id}")
         meta_parts.append(f"cluster_name={cluster_rules_data.get('cluster_name', '')}")
@@ -142,14 +146,17 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
             style_boost_clean = cluster_rules_data['style_boost'].replace('\n', ' ').replace('"', '\\"')
             meta_parts.append(f"style_boost={style_boost_clean}")
     
+    # Görsel bilgileri
     visuals = task.get('visuals', {})
     if visuals:
         visual_types = list(visuals.keys())
         meta_parts.append(f"visuals={'|'.join(visual_types)}")
     
+    # META yorum satırı
     meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
     final_html = meta_comment + makale_html
     
+    # Kaydet
     target_dir = os.path.join("content", lang, kategori, yil, ay)
     os.makedirs(target_dir, exist_ok=True)
     filename = f"{hash_id}-{slug}.html"
@@ -159,15 +166,33 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         f.write(final_html)
     
     file_size = os.path.getsize(target_path) // 1024
-    log(f"{lang.upper()} kaydedildi: {filename} ({file_size} KB)")
+    
+    # MAKALE DETAYLARINI LOGLA
+    log(f"✅ {lang.upper()} kaydedildi: {filename} ({file_size} KB)")
+    
+    # Makale başlığını bul (h1'den)
+    title_match = re.search(r'<h1>(.*?)</h1>', makale_html, re.DOTALL)
+    title = title_match.group(1).strip() if title_match else "Başlık bulunamadı"
+    log(f"   📌 Başlık: {title[:80]}...")
+    
+    # Kelime sayısı ve okuma süresi
+    text_clean = re.sub(r'<[^>]+>', ' ', makale_html)
+    words = re.findall(r'\b\w+\b', text_clean)
+    word_count = len(words)
+    reading_time = max(1, word_count // 200)
+    log(f"   📊 Kelime: {word_count} | Okuma: {reading_time} dk | Karakter: {len(makale_html)}")
+    
+    # META başlıklarını logla (içerik değil, sadece başlıklar)
+    log(f"   📝 META: author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '-')}, monetization={cluster_rules_data.get('monetization', '-')}, visuals={visual_types if visuals else '-'}")
+    
     return target_path
 
-def run_visual_bot_parallel(task, hash_id, kategori, yil, ay):
-    """Görsel bot'u paralel çalıştır - V16 uyumlu"""
+def run_visual_bot(task, hash_id, kategori, yil, ay):
+    """Görsel bot'u çalıştır - V16 uyumlu"""
     visuals = task.get('visuals', {})
     
     log("=" * 60)
-    log("GÖRSEL ÜRETİM AŞAMASI (PARALEL)")
+    log("GÖRSEL ÜRETİM AŞAMASI")
     log("=" * 60)
     log(f"Hash: {hash_id}")
     log(f"Kategori: {kategori}")
@@ -180,9 +205,8 @@ def run_visual_bot_parallel(task, hash_id, kategori, yil, ay):
     log(f"Görsel tipleri: {list(visuals.keys())}")
     for img_type, prompt in visuals.items():
         log(f"  {img_type}: {len(prompt)} karakter")
-        log(f"    {prompt[:80]}...")
     
-    log("\nvisual_factory.py çağrılıyor (paralel mod)...")
+    log("\nvisual_factory.py çağrılıyor...")
     
     try:
         visuals_json = json.dumps(visuals)
@@ -196,10 +220,10 @@ def run_visual_bot_parallel(task, hash_id, kategori, yil, ay):
         log(f"Çıkış kodu: {result.returncode}")
         
         if result.stdout:
-            log(f"STDOUT:\n{result.stdout}")
-        
-        if result.stderr:
-            log(f"STDERR:\n{result.stderr[:500]}", "WARN")
+            # Sadece son satırları göster (çok uzun olmasın)
+            lines = result.stdout.strip().split('\n')
+            for line in lines[-10:]:
+                log(f"  {line}")
         
         if result.returncode == 0:
             log("GÖRSEL ÜRETİMİ BAŞARILI!")
@@ -215,67 +239,31 @@ def run_visual_bot_parallel(task, hash_id, kategori, yil, ay):
         log(f"Görsel bot hatası: {e}", "ERROR")
         return False
 
-def call_gemini(prompt, task_id):
-    """Gemini'yi çağır ve yanıtı döndür"""
-    log(f"Gemini çağrılıyor (Task: {task_id})...")
-    start_time = time.time()
-    
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
-    }
-    
-    try:
-        response = requests.post(GEMINI_URL, json=payload, timeout=420)
-        elapsed = time.time() - start_time
-        log(f"Gemini yanıt süresi: {elapsed:.1f}s")
-        
-        if response.status_code != 200:
-            log(f"Gemini HTTP {response.status_code}: {response.text[:200]}", "ERROR")
-            return None
-        
-        res_data = response.json()
-        
-        if 'candidates' in res_data and len(res_data['candidates']) > 0:
-            full_response = res_data['candidates'][0]['content']['parts'][0]['text']
-            log(f"Gemini yanıt uzunluğu: {len(full_response)} karakter")
-            return full_response
-        else:
-            log(f"Gemini hata: {json.dumps(res_data, indent=2)[:500]}", "ERROR")
-            return None
-            
-    except Exception as e:
-        log(f"Gemini bağlantı hatası: {e}", "ERROR")
-        return None
-
-def parse_gemini_response(full_response):
-    """Gemini yanıtını parse et"""
-    parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
-    lang_html = {}
-    lang_slug = {}
-    
-    for i in range(1, len(parts), 2):
-        lang_code = parts[i].lower()
-        block = parts[i+1].strip()
-        
-        slug_match = re.search(r'<!-- SLUG:(.*?) -->', block)
-        if slug_match:
-            lang_slug[lang_code] = slug_match.group(1).strip()
-            block = re.sub(r'<!-- SLUG:.*? -->', '', block).strip()
-        
-        html_content = block.replace('```html', '').replace('```', '')
-        lang_html[lang_code] = html_content
-        log(f"{lang_code.upper()}: {len(html_content)} karakter, slug={lang_slug.get(lang_code, 'auto')}")
-    
-    return lang_html, lang_slug
-
-def build_prompt(task, cluster_rules_data):
-    """Prompt oluştur"""
+def isle_gorev(task):
+    task_id = task.get('task_id', '0000')
     topic = task['topic']
     persona = task.get('author_persona', 'Expert Analyst')
     special_instructions = task.get('special_instructions', '')
     reference_link = task.get('reference_link', '')
+    kategori = task.get('category', 'general').lower()
+    cluster_id = task.get('cluster_id')
     
+    log("=" * 70)
+    log(f"GÖREV BAŞLIYOR: {task_id}")
+    log("=" * 70)
+    log(f"Topic: {topic}")
+    log(f"Kategori: {kategori}")
+    log(f"Cluster ID: {cluster_id}")
+    log(f"Yazar: {persona}")
+    
+    clusters = load_clusters()
+    author_info = get_author_info(cluster_id, clusters)
+    cluster_rules_data = get_cluster_rules(cluster_id, clusters)
+    
+    if author_info:
+        log(f"Yazar bulundu: {author_info.get('name')}")
+    
+    # Prompt oluştur
     cluster_rules = ""
     if cluster_rules_data:
         cluster_rules = f"""
@@ -285,7 +273,7 @@ def build_prompt(task, cluster_rules_data):
 - Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
 """
     
-    return f"""
+    prompt_emri = f"""
 ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice.
 
 TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone.
@@ -335,84 +323,89 @@ STRICT RULES:
 - NO fake URLs
 - NO markdown/code blocks
 """
-
-def isle_gorev(task):
-    task_id = task.get('task_id', '0000')
-    topic = task['topic']
-    kategori = task.get('category', 'general').lower()
-    cluster_id = task.get('cluster_id')
     
-    log("=" * 70)
-    log(f"GÖREV BAŞLIYOR: {task_id}")
-    log("=" * 70)
-    log(f"Topic: {topic}")
-    log(f"Kategori: {kategori}")
-    log(f"Cluster ID: {cluster_id}")
-    log(f"Yazar: {task.get('author_persona')}")
+    # Gemini çağrısı
+    log("Gemini çağrılıyor (EN/ES/DE/FR)...")
+    start_time = time.time()
     
-    clusters = load_clusters()
-    author_info = get_author_info(cluster_id, clusters)
-    cluster_rules_data = get_cluster_rules(cluster_id, clusters)
+    payload = {
+        "contents": [{"parts": [{"text": prompt_emri}]}],
+        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
+    }
     
-    if author_info:
-        log(f"Yazar bulundu: {author_info.get('name')}")
-    
-    # 1. Prompt oluştur
-    prompt = build_prompt(task, cluster_rules_data)
-    
-    # 2. Gemini'den makale üret
-    full_response = call_gemini(prompt, task_id)
-    if not full_response:
+    try:
+        response = requests.post(GEMINI_URL, json=payload, timeout=420)
+        res_data = response.json()
+        
+        if 'candidates' in res_data and len(res_data['candidates']) > 0:
+            full_response = res_data['candidates'][0]['content']['parts'][0]['text']
+            elapsed = time.time() - start_time
+            log(f"Gemini yanıtı: {len(full_response)} karakter, {elapsed:.1f}s")
+            
+            # Parse et
+            parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
+            lang_html = {}
+            lang_slug = {}
+            
+            for i in range(1, len(parts), 2):
+                lang_code = parts[i].lower()
+                block = parts[i+1].strip()
+                
+                slug_match = re.search(r'<!-- SLUG:(.*?) -->', block)
+                if slug_match:
+                    lang_slug[lang_code] = slug_match.group(1).strip()
+                    block = re.sub(r'<!-- SLUG:.*? -->', '', block).strip()
+                
+                html_content = block.replace('```html', '').replace('```', '')
+                lang_html[lang_code] = html_content
+                log(f"  {lang_code.upper()}: {len(html_content)} karakter, slug={lang_slug.get(lang_code, 'auto')}")
+            
+            hash_id = create_hash()
+            log(f"Hash oluşturuldu: {hash_id}")
+            
+            now = datetime.now()
+            yil = now.strftime("%Y")
+            ay = now.strftime("%m")
+            
+            # Görsel üret
+            visual_success = run_visual_bot(task, hash_id, kategori, yil, ay)
+            
+            if not visual_success:
+                log("=" * 70)
+                log("GÖRSEL ÜRETİLEMEDİ - MAKALE KAYDEDİLMEYECEK", "ERROR")
+                log("Workflow duracak, tasks.json değişmeyecek")
+                log("=" * 70)
+                return False, None, None
+            
+            # Makaleleri kaydet
+            log("\nMakaleler kaydediliyor...")
+            
+            saved_count = 0
+            for lang, html in lang_html.items():
+                if lang in ['en', 'es', 'de', 'fr']:
+                    slug = lang_slug.get(lang, create_slug(topic))
+                    html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
+                    saved_count += 1
+            
+            log(f"Toplam {saved_count}/4 dil kaydedildi")
+            
+            return True, hash_id, task_id
+        else:
+            log(f"GEMINI HATASI: {json.dumps(res_data, indent=2)[:500]}", "ERROR")
+            return False, None, None
+    except Exception as e:
+        log(f"SİSTEM HATASI: {e}", "ERROR")
+        traceback.print_exc()
         return False, None, None
-    
-    # 3. Parse et
-    lang_html, lang_slug = parse_gemini_response(full_response)
-    
-    expected = ['en', 'es', 'de', 'fr']
-    for lang in expected:
-        if lang not in lang_html:
-            log(f"{lang.upper()} dili eksik!", "WARN")
-    
-    # 4. Hash oluştur
-    hash_id = create_hash()
-    log(f"Hash oluşturuldu: {hash_id}")
-    
-    now = datetime.now()
-    yil = now.strftime("%Y")
-    ay = now.strftime("%m")
-    log(f"Tarih: {yil}/{ay}")
-    
-    # 5. Görsel üret (V16 ile, paralel)
-    visual_success = run_visual_bot_parallel(task, hash_id, kategori, yil, ay)
-    
-    if not visual_success:
-        log("=" * 70)
-        log("GÖRSEL ÜRETİLEMEDİ - MAKALE KAYDEDİLMEYECEK", "ERROR")
-        log("Workflow duracak, tasks.json değişmeyecek")
-        log("=" * 70)
-        return False, None, None
-    
-    # 6. Makaleleri kaydet
-    log("\nMakaleler kaydediliyor...")
-    
-    saved_count = 0
-    for lang, html in lang_html.items():
-        if lang in expected:
-            slug = lang_slug.get(lang, create_slug(topic))
-            html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
-            saved_count += 1
-    
-    log(f"Toplam {saved_count}/4 dil kaydedildi")
-    
-    return True, hash_id, task_id
 
 def operasyon_baslat():
     log("=" * 70)
-    log("CREATOR BOT V46 - V16 UYUMLU, PARALEL GÖRSEL")
+    log("CREATOR BOT V47 - META LOG'LU, V16 UYUMLU")
     log("1. Gemini'den makale üret")
     log("2. Hash oluştur")
-    log("3. Görsel üret (visual_factory V16)")
-    log("4. Makaleleri kaydet")
+    log("3. Görsel üret")
+    log("4. Makaleleri kaydet (META yorum satırı olarak)")
+    log("5. Tüm veriler log'da göster")
     log("=" * 70)
     
     task = get_first_pending_task()
@@ -435,10 +428,9 @@ def operasyon_baslat():
     log(f"Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
     log("=" * 70)
-    log(f"CREATOR V46 TAMAMLANDI!")
+    log(f"CREATOR V47 TAMAMLANDI!")
     log(f"Hash: {hash_id}")
     log(f"Task ID: {task_id}")
-    log(f"Görsel formatı: 1024x576 (16:9)")
     log("=" * 70)
 
 if __name__ == "__main__":
