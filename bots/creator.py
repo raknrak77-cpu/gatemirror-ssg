@@ -89,6 +89,57 @@ def get_first_pending_task():
     print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
     return task
 
+def move_task_to_skipped(task, reason):
+    """Task'i skipped.json'a taşır ve tasks.json'dan siler"""
+    tasks_path = "task/tasks.json"
+    skipped_path = "task/skipped.json"
+    
+    if not os.path.exists(tasks_path):
+        return False
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    target_index = None
+    target_task = None
+    
+    for i, t in enumerate(tasks):
+        if t.get('task_id') == task.get('task_id'):
+            target_index = i
+            target_task = t
+            break
+    
+    if target_index is None:
+        return False
+    
+    # Task'i güncelle
+    target_task["skipped_at"] = datetime.now().isoformat()
+    target_task["skip_reason"] = reason
+    target_task["skipped_by"] = "creator"
+    
+    # skipped.json'a ekle
+    if os.path.exists(skipped_path):
+        with open(skipped_path, "r", encoding="utf-8") as f:
+            skipped = json.load(f)
+    else:
+        skipped = []
+    
+    skipped.append(target_task)
+    
+    with open(skipped_path, "w", encoding="utf-8") as f:
+        json.dump(skipped, f, indent=4, ensure_ascii=False)
+    
+    # tasks.json'dan sil
+    tasks.pop(target_index)
+    
+    with open(tasks_path, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())
+    
+    print(f"   ❌ Task {task.get('task_id')} SKIPPED: {reason}")
+    return True
+
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
     """HTML'i META bilgileriyle birlikte yazar"""
     author_persona = task.get('author_persona', 'Expert Analyst')
@@ -160,8 +211,7 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     # META satırını oluştur
     meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
     
-    # Log'a yaz (geliştirici görmesi için)
-    print(f"   📝 META yazılıyor: author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '')}")
+    print(f"   📝 META yazılıyor: author={author_name}, cluster_id={cluster_id}")
     
     final_html = meta_comment + makale_html
     
@@ -174,6 +224,60 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         f.write(final_html)
     print(f"✅ {lang.upper()} HTML kaydedildi: {target_path}")
     return target_path
+
+def check_and_run_visual_bot(task, hash_id, kategori, yil, ay):
+    """
+    Görsel bot'u çalıştırır ve başarılı olup olmadığını döndürür.
+    Başarısızsa task'i skipped'e atar.
+    """
+    visuals = task.get('visuals', {})
+    
+    if not visuals:
+        print("ℹ️ Bu görev için görsel prompt'u yok, MAKALE ÜRETİLMEYECEK!")
+        move_task_to_skipped(task, "no_visual_prompts")
+        return False
+    
+    # Görsel tiplerini kontrol et
+    required_types = ['kapak', 'icerik_1', 'icerik_2']
+    missing_types = [t for t in required_types if t not in visuals]
+    
+    if missing_types:
+        print(f"⚠️ Eksik görsel tipleri: {', '.join(missing_types)}")
+        move_task_to_skipped(task, f"missing_visual_types_{'|'.join(missing_types)}")
+        return False
+    
+    print("🎨 Görsel bot çağrılıyor...")
+    try:
+        visuals_json = json.dumps(visuals)
+        result = subprocess.run(
+            ['python', 'bots/visual_factory.py', task.get('task_id'), hash_id, visuals_json, kategori, yil, ay],
+            timeout=180,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            print(f"⚠️ Görsel bot hata kodu: {result.returncode}")
+            print(f"   Hata çıktısı: {result.stderr[:200]}")
+            move_task_to_skipped(task, "visual_bot_failed")
+            return False
+        
+        print("✅ Görsel bot tamamlandı.")
+        
+        # Görsel bot'un gerçekten görsel ürettiğini doğrulamak için kısa bir bekle
+        # (R2'ye yazma işleminin tamamlanması için)
+        time.sleep(2)
+        
+        return True
+        
+    except subprocess.TimeoutExpired:
+        print("⚠️ Görsel bot zaman aşımına uğradı (180 saniye)")
+        move_task_to_skipped(task, "visual_bot_timeout")
+        return False
+    except Exception as e:
+        print(f"⚠️ Görsel bot hatası: {e}")
+        move_task_to_skipped(task, f"visual_bot_exception_{str(e)[:50]}")
+        return False
 
 def isle_gorev(task):
     task_id = task.get('task_id', '0000')
@@ -379,20 +483,19 @@ STRICT RULES:
             yil = now.strftime("%Y")
             ay = now.strftime("%m")
             
-            visuals = task.get('visuals', {})
-            if visuals:
-                print("🎨 Görsel bot çağrılıyor...")
-                try:
-                    visuals_json = json.dumps(visuals)
-                    subprocess.run(
-                        ['python', 'bots/visual_factory.py', task_id, hash_id, visuals_json, kategori, yil, ay],
-                        timeout=180, check=False
-                    )
-                    print("✅ Görsel bot tamamlandı.")
-                except Exception as e:
-                    print(f"⚠️ Görsel bot hatası: {e}")
-            else:
-                print("ℹ️ Bu görev için görsel prompt'u yok, atlanıyor.")
+            # ========== YENİ: GÖRSEL KONTROLÜ ÖNCE ==========
+            print("\n" + "=" * 40)
+            print("🖼️ GÖRSEL ÖN KONTROLÜ")
+            print("=" * 40)
+            
+            visual_success = check_and_run_visual_bot(task, hash_id, kategori, yil, ay)
+            
+            if not visual_success:
+                print("\n❌ GÖRSEL ÜRETİLEMEDİ! MAKALE KAYDEDİLMEYECEK.")
+                print(f"   Task {task_id} SKIPPED'e atıldı.")
+                return False, None, None
+            
+            print("\n✅ GÖRSEL ÜRETİMİ BAŞARILI! Makaleler kaydediliyor...\n")
             
             saved_count = 0
             for lang, html in lang_html.items():
@@ -406,19 +509,21 @@ STRICT RULES:
             return True, hash_id, task_id
         else:
             print(f"❌ GEMINI HATASI: {json.dumps(res_data, indent=2)}")
+            move_task_to_skipped(task, "gemini_api_failed")
             return False, None, None
     except Exception as e:
         print(f"❌ SİSTEM HATASI: {str(e)}")
+        move_task_to_skipped(task, f"system_exception_{str(e)[:50]}")
         return False, None, None
 
 def operasyon_baslat():
     print("=" * 60)
-    print("🛰️ CREATOR BOT v36 - TAM META DESTEKLİ")
+    print("🛰️ CREATOR BOT v37 - GÖRSEL ZORUNLU")
     print("   ✅ task/tasks.json'dan ilk task'i AL")
     print("   ✅ task/clusters.json'dan yazar ve kuralları OKU")
-    print("   ✅ Makale + görsel üret")
-    print("   ✅ Tüm cluster bilgilerini META'ya YAZ")
-    print("   ✅ Render'ı bozmaz, özel dashboard için kullanılabilir")
+    print("   ✅ ÖNCE görsel üret (başarısızsa SKIPPED)")
+    print("   ✅ Görsel başarılıysa makale üret + kaydet")
+    print("   ❌ Görsel yoksa veya başarısızsa -> SKIPPED, makale YOK")
     print("=" * 60)
     
     task = get_first_pending_task()
@@ -431,8 +536,9 @@ def operasyon_baslat():
     basarili, hash_id, task_id = isle_gorev(task)
     
     if not basarili:
-        print(f"❌ Görev {task_id} başarısız, workflow durduruluyor.")
-        sys.exit(1)
+        print(f"❌ Görev {task_id} başarısız, SKIPPED'e atıldı. Workflow devam ediyor.")
+        # Workflow'u durdurma, sadece bu görev atlandı
+        sys.exit(0)  # 0 ile çık ki workflow devam etsin
     
     with open("task/current_hash.txt", "w") as f:
         f.write(hash_id)
