@@ -272,8 +272,7 @@ def isle_gorev(task):
 - Forbidden: {', '.join(cluster_rules_data.get('forbidden', []))}
 - Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
 """
-    
-    prompt_emri = f"""
+   prompt_emri = f"""
 ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice.
 
 TASK: Write FOUR culturally independent articles about '{topic}'. Each version must stand alone.
@@ -303,7 +302,12 @@ STRUCTURE:
 <h2>Practical Implications</h2>
 <h2>Conclusion</h2>
 <h2>Frequently Asked Questions (FAQ)</h2>
-<div class="sources"><h3>Sources</h3><ul><li>[Real URL]</li></ul></div>
+<div class="sources">
+<h3>Sources</h3>
+<ul>
+<li>[REAL URL ONLY. Use ONLY: .gov, .edu, .org, reuters.com, bloomberg.com, ft.com, wsj.com, nature.com, science.org, arxiv.org, github.com, or official corporate domains. ABSOLUTELY NO: example.com, domain.com, placeholder.com, or ANY fake/placeholder URLs. If you cannot provide a real URL, write "Source: [Institution Name] (no URL available)". Min 3, max 5 sources.]</li>
+</ul>
+</div>
 
 OUTPUT FORMAT:
 <!-- LANG:EN -->
@@ -320,10 +324,10 @@ OUTPUT FORMAT:
 [HTML]
 
 STRICT RULES:
-- NO fake URLs
+- NO fake URLs (example.com, domain.com, placeholder.com STRICTLY FORBIDDEN)
 - NO markdown/code blocks
-"""
-    
+- If URL cannot be verified, use fallback: "Source: [Institution Name] (no URL available)"
+""" 
     # Gemini çağrısı
     log("Gemini çağrılıyor (EN/ES/DE/FR)...")
     start_time = time.time()
