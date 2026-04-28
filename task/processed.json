@@ -1,5 +1,28 @@
 [
     {
+        "task_id": "0131",
+        "category": "eco",
+        "cluster_id": "eco_05",
+        "topic": "From Trash to Vanilla: How 2026 Enzyme Recycling Converts Plastic Bottles into Food-Grade Vanillin",
+        "reference_link": "https://www.nature.com/plastic-upcycling-2026",
+        "language": "en",
+        "author_persona": "Biotech Circular Engineer & Polymer Scientist",
+        "special_instructions": "Explain the enzymatic process (PET -> terephthalic acid -> vanillin). Include commercial viability analysis.",
+        "visuals": {
+            "kapak": "A clear bottle of vanilla extract next to a pile of shredded plastic bottles, connected by a glowing bio-reactor tube, 8k, photorealistic",
+            "icerik_1": "A split screen: left side \"Landfill plastic\"; middle \"Enzyme Vat (glowing)\"; right side \"Vanilla Cookies\", photorealistic",
+            "icerik_2": "A chef holding a bottle labeled \"Upcycled Vanillin - Zero Waste Certified\", smiling, modern kitchen, photorealistic"
+        },
+        "status": "processed",
+        "hash": "a76fe9e8",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "2026-04-28 22:26:30",
+        "hash_updated_at": "2026-04-28T22:12:19.983389",
+        "images_verified": true
+    },
+    {
         "task_id": "0130",
         "category": "future-economy",
         "cluster_id": "fe_02",
