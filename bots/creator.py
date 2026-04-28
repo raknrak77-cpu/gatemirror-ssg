@@ -11,7 +11,7 @@ from datetime import datetime
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_KEY}"
 
-CLUSTERS_PATH = "task/clusters.json"  # YENİ! task/ klasöründen oku
+CLUSTERS_PATH = "task/clusters.json"
 
 def create_hash():
     return uuid.uuid4().hex[:8]
@@ -27,30 +27,28 @@ def load_clusters():
     try:
         with open(CLUSTERS_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
+    except Exception as e:
+        print(f"⚠️ clusters.json yüklenemedi: {e}")
         return {"categories": {}, "authors": {}}
 
 def get_author_info(cluster_id, clusters):
-    """Yeni yapı: cluster_id → author_id → authors bölümü"""
+    """cluster_id'den yazar bilgisini bulur (author_id veya default_author)"""
     if not cluster_id or not clusters:
         return None
     
-    # 1. Önce eski yapıda ara (default_author - fallback)
     for cat_name, cat_data in clusters.get("categories", {}).items():
         for cluster_name, cluster_data in cat_data.get("clusters", {}).items():
             if cluster_data.get("cluster_id") == cluster_id:
-                # Yeni yapı: author_id var mı?
                 author_id = cluster_data.get("author_id")
                 if author_id:
                     authors = clusters.get("authors", {})
                     if author_id in authors:
                         return authors[author_id]
-                # Eski yapı fallback
                 return cluster_data.get("default_author")
     return None
 
 def get_cluster_rules(cluster_id, clusters):
-    """Cluster kurallarını alır (required_sections, forbidden, style_boost, keywords)"""
+    """Cluster kurallarını alır (tüm alanlar)"""
     if not cluster_id or not clusters:
         return {}
     
@@ -58,6 +56,13 @@ def get_cluster_rules(cluster_id, clusters):
         for cluster_name, cluster_data in cat_data.get("clusters", {}).items():
             if cluster_data.get("cluster_id") == cluster_id:
                 return {
+                    "cluster_name": cluster_name,
+                    "category": cat_name,
+                    "intent": cluster_data.get("intent", ""),
+                    "cpc_min": cluster_data.get("cpc_min", ""),
+                    "cpc_max": cluster_data.get("cpc_max", ""),
+                    "monetization": cluster_data.get("monetization", ""),
+                    "affiliate_ids": cluster_data.get("affiliate_ids", []),
                     "required_sections": cluster_data.get("required_sections", []),
                     "forbidden": cluster_data.get("forbidden", []),
                     "style_boost": cluster_data.get("style_boost", ""),
@@ -66,7 +71,7 @@ def get_cluster_rules(cluster_id, clusters):
     return {}
 
 def get_first_pending_task():
-    """task/tasks.json'dan ilk pending task'i alır (silmez, sadece okur)"""
+    """task/tasks.json'dan ilk pending task'i alır"""
     tasks_path = "task/tasks.json"
     
     if not os.path.exists(tasks_path):
@@ -84,32 +89,79 @@ def get_first_pending_task():
     print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
     return task
 
-def remove_first_pending_task():
-    tasks_path = "task/tasks.json"
-    if not os.path.exists(tasks_path):
-        return False
-    with open(tasks_path, "r", encoding="utf-8") as f:
-        tasks = json.load(f)
-    if not tasks:
-        return False
-    removed = tasks.pop(0)
-    with open(tasks_path, "w", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4, ensure_ascii=False)
-    print(f"   🗑️ Task {removed.get('task_id')} task/tasks.json'dan silindi")
-    return True
-
-def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info):
+def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
+    """HTML'i META bilgileriyle birlikte yazar"""
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
+    # Yazar bilgileri
     if author_info:
         author_name = author_info.get('name', author_persona)
         author_title = author_info.get('title', '')
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
-        meta_comment = f"<!-- META: author={author_name}, author_title={author_title}, author_bio={author_bio}, author_avatar={author_avatar}, datetime={datetime_full} -->\n"
     else:
-        meta_comment = f"<!-- META: author={author_persona}, datetime={datetime_full} -->\n"
+        author_name = author_persona
+        author_title = ''
+        author_bio = ''
+        author_avatar = ''
+    
+    # ========== META BİLGİLERİNİ HAZIRLA ==========
+    meta_parts = [
+        f"author={author_name}",
+        f"author_title={author_title}",
+        f"author_bio={author_bio}",
+        f"author_avatar={author_avatar}",
+        f"datetime={datetime_full}",
+        f"task_id={task.get('task_id', '')}",
+        f"category={kategori}",
+        f"lang={lang}"
+    ]
+    
+    # Cluster bilgileri varsa ekle
+    if cluster_id:
+        meta_parts.append(f"cluster_id={cluster_id}")
+        meta_parts.append(f"cluster_name={cluster_rules_data.get('cluster_name', '')}")
+        meta_parts.append(f"cluster_category={cluster_rules_data.get('category', '')}")
+        meta_parts.append(f"intent={cluster_rules_data.get('intent', '')}")
+        meta_parts.append(f"cpc_min={cluster_rules_data.get('cpc_min', '')}")
+        meta_parts.append(f"cpc_max={cluster_rules_data.get('cpc_max', '')}")
+        meta_parts.append(f"monetization={cluster_rules_data.get('monetization', '')}")
+        
+        if cluster_rules_data.get('affiliate_ids'):
+            meta_parts.append(f"affiliate_ids={'|'.join(cluster_rules_data['affiliate_ids'])}")
+        
+        if cluster_rules_data.get('keywords'):
+            meta_parts.append(f"keywords={'|'.join(cluster_rules_data['keywords'])}")
+        
+        if cluster_rules_data.get('required_sections'):
+            meta_parts.append(f"required_sections={'|'.join(cluster_rules_data['required_sections'])}")
+        
+        if cluster_rules_data.get('forbidden'):
+            meta_parts.append(f"forbidden={'|'.join(cluster_rules_data['forbidden'])}")
+        
+        if cluster_rules_data.get('style_boost'):
+            style_boost_clean = cluster_rules_data['style_boost'].replace('\n', ' ').replace('"', '\\"')
+            meta_parts.append(f"style_boost={style_boost_clean}")
+    
+    # Görsel bilgileri (varsa)
+    visuals = task.get('visuals', {})
+    if visuals:
+        visual_types = []
+        if 'kapak' in visuals:
+            visual_types.append('kapak')
+        if 'icerik_1' in visuals:
+            visual_types.append('icerik_1')
+        if 'icerik_2' in visuals:
+            visual_types.append('icerik_2')
+        if visual_types:
+            meta_parts.append(f"visuals={'|'.join(visual_types)}")
+    
+    # META satırını oluştur
+    meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
+    
+    # Log'a yaz (geliştirici görmesi için)
+    print(f"   📝 META yazılıyor: author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '')}")
     
     final_html = meta_comment + makale_html
     
@@ -143,6 +195,8 @@ def isle_gorev(task):
     
     if author_info:
         print(f"   ✅ Yazar bulundu: {author_info.get('name')}")
+        if cluster_rules_data.get('intent'):
+            print(f"   📊 Intent: {cluster_rules_data.get('intent')}, Monetization: {cluster_rules_data.get('monetization')}")
     else:
         if cluster_id:
             print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id}")
@@ -344,7 +398,7 @@ STRICT RULES:
             for lang, html in lang_html.items():
                 if lang in expected:
                     slug = lang_slug.get(lang, create_slug(topic))
-                    html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info)
+                    html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
                     saved_count += 1
             
             print(f"📁 Toplam {saved_count} dil kaydedildi (EN/ES/DE/FR)")
@@ -359,12 +413,12 @@ STRICT RULES:
 
 def operasyon_baslat():
     print("=" * 60)
-    print("🛰️ CREATOR BOT v35 - task/clusters.json")
+    print("🛰️ CREATOR BOT v36 - TAM META DESTEKLİ")
     print("   ✅ task/tasks.json'dan ilk task'i AL")
     print("   ✅ task/clusters.json'dan yazar ve kuralları OKU")
     print("   ✅ Makale + görsel üret")
-    print("   ✅ content/ klasörüne yaz")
-    print("   ⚠️ tasks.json'a DOKUNMA (Uploader yapacak)")
+    print("   ✅ Tüm cluster bilgilerini META'ya YAZ")
+    print("   ✅ Render'ı bozmaz, özel dashboard için kullanılabilir")
     print("=" * 60)
     
     task = get_first_pending_task()
