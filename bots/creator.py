@@ -11,6 +11,8 @@ from datetime import datetime
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_KEY}"
 
+CLUSTERS_PATH = "task/clusters.json"  # YENİ! task/ klasöründen oku
+
 def create_hash():
     return uuid.uuid4().hex[:8]
 
@@ -23,19 +25,45 @@ def create_slug(text):
 
 def load_clusters():
     try:
-        with open("clusters.json", "r", encoding="utf-8") as f:
+        with open(CLUSTERS_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
     except:
-        return {"categories": {}}
+        return {"categories": {}, "authors": {}}
 
 def get_author_info(cluster_id, clusters):
+    """Yeni yapı: cluster_id → author_id → authors bölümü"""
     if not cluster_id or not clusters:
         return None
+    
+    # 1. Önce eski yapıda ara (default_author - fallback)
     for cat_name, cat_data in clusters.get("categories", {}).items():
         for cluster_name, cluster_data in cat_data.get("clusters", {}).items():
             if cluster_data.get("cluster_id") == cluster_id:
-                return cluster_data.get("default_author", {})
+                # Yeni yapı: author_id var mı?
+                author_id = cluster_data.get("author_id")
+                if author_id:
+                    authors = clusters.get("authors", {})
+                    if author_id in authors:
+                        return authors[author_id]
+                # Eski yapı fallback
+                return cluster_data.get("default_author")
     return None
+
+def get_cluster_rules(cluster_id, clusters):
+    """Cluster kurallarını alır (required_sections, forbidden, style_boost, keywords)"""
+    if not cluster_id or not clusters:
+        return {}
+    
+    for cat_name, cat_data in clusters.get("categories", {}).items():
+        for cluster_name, cluster_data in cat_data.get("clusters", {}).items():
+            if cluster_data.get("cluster_id") == cluster_id:
+                return {
+                    "required_sections": cluster_data.get("required_sections", []),
+                    "forbidden": cluster_data.get("forbidden", []),
+                    "style_boost": cluster_data.get("style_boost", ""),
+                    "keywords": cluster_data.get("keywords", [])
+                }
+    return {}
 
 def get_first_pending_task():
     """task/tasks.json'dan ilk pending task'i alır (silmez, sadece okur)"""
@@ -52,29 +80,21 @@ def get_first_pending_task():
         print("❌ task/tasks.json boş!")
         return None
     
-    # İlk task'i al (silme, sadece oku)
     task = tasks[0]
     print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
     return task
 
 def remove_first_pending_task():
-    """task/tasks.json'dan ilk task'i SİLER (Uploader başarılı olunca çağrılacak)"""
     tasks_path = "task/tasks.json"
-    
     if not os.path.exists(tasks_path):
         return False
-    
     with open(tasks_path, "r", encoding="utf-8") as f:
         tasks = json.load(f)
-    
     if not tasks:
         return False
-    
     removed = tasks.pop(0)
-    
     with open(tasks_path, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
-    
     print(f"   🗑️ Task {removed.get('task_id')} task/tasks.json'dan silindi")
     return True
 
@@ -119,6 +139,7 @@ def isle_gorev(task):
     
     clusters = load_clusters()
     author_info = get_author_info(cluster_id, clusters)
+    cluster_rules_data = get_cluster_rules(cluster_id, clusters)
     
     if author_info:
         print(f"   ✅ Yazar bulundu: {author_info.get('name')}")
@@ -129,20 +150,14 @@ def isle_gorev(task):
             print(f"   ⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak")
     
     cluster_rules = ""
-    if cluster_id:
-        for cat_name, cat_data in clusters.get("categories", {}).items():
-            for cluster_name, cluster_data in cat_data.get("clusters", {}).items():
-                if cluster_data.get("cluster_id") == cluster_id:
-                    cluster_rules = f"""
+    if cluster_rules_data:
+        cluster_rules = f"""
 ## 🎯 CLUSTER RULES (MUST FOLLOW):
-- Required sections: {', '.join(cluster_data.get('required_sections', []))}
-- Forbidden: {', '.join(cluster_data.get('forbidden', []))}
-- Style boost: {cluster_data.get('style_boost', '')}
-- Target keywords: {', '.join(cluster_data.get('keywords', []))}
+- Required sections: {', '.join(cluster_rules_data.get('required_sections', []))}
+- Forbidden: {', '.join(cluster_rules_data.get('forbidden', []))}
+- Style boost: {cluster_rules_data.get('style_boost', '')}
+- Target keywords: {', '.join(cluster_rules_data.get('keywords', []))}
 """
-                    break
-            if cluster_rules:
-                break
     
     prompt_emri = f"""
 ROLE: You are {persona} — a real expert with field experience, strong opinions, and a distinct editorial voice. You write for Gatemirror, a premium multi-language analysis platform read by professionals globally.
@@ -334,9 +349,6 @@ STRICT RULES:
             
             print(f"📁 Toplam {saved_count} dil kaydedildi (EN/ES/DE/FR)")
             
-            # ⚠️ CRITICAL: Creator tasks.json'a DOKUNMUYOR!
-            # Sadece hash_id'yi döndür
-            
             return True, hash_id, task_id
         else:
             print(f"❌ GEMINI HATASI: {json.dumps(res_data, indent=2)}")
@@ -347,14 +359,14 @@ STRICT RULES:
 
 def operasyon_baslat():
     print("=" * 60)
-    print("🛰️ CREATOR BOT v34 - task/ klasörü")
+    print("🛰️ CREATOR BOT v35 - task/clusters.json")
     print("   ✅ task/tasks.json'dan ilk task'i AL")
+    print("   ✅ task/clusters.json'dan yazar ve kuralları OKU")
     print("   ✅ Makale + görsel üret")
     print("   ✅ content/ klasörüne yaz")
     print("   ⚠️ tasks.json'a DOKUNMA (Uploader yapacak)")
     print("=" * 60)
     
-    # İlk pending task'i al
     task = get_first_pending_task()
     if not task:
         print("❌ İşlenecek görev yok!")
@@ -368,7 +380,6 @@ def operasyon_baslat():
         print(f"❌ Görev {task_id} başarısız, workflow durduruluyor.")
         sys.exit(1)
     
-    # Hash'i bir dosyaya yaz (Uploader'ın okuması için)
     with open("task/current_hash.txt", "w") as f:
         f.write(hash_id)
     print(f"📝 Hash kaydedildi: task/current_hash.txt -> {hash_id}")
