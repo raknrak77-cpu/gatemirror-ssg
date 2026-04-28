@@ -14,11 +14,12 @@
             "icerik_2": "An expert sitting at home guiding 3 different field workers via AR, multiple video feeds on one screen, photorealistic"
         },
         "status": "pending",
-        "hash": null,
+        "hash": "a6fa7138",
         "created_at": "2026-04-28",
         "date": "2026-04-28",
         "display_date": "28 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash_updated_at": "2026-04-28T17:21:54.731310"
     },
     {
         "task_id": "0127",
