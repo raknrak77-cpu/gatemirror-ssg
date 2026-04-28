@@ -68,13 +68,18 @@ COMPOSITION RULES (CRITICAL):
 """
 
 NEGATIVE_CONSTRAINTS = """
-Strict constraints:
-- NO text, typography, letters, words, or symbols
-- NO logos, brands, or watermarks
-- NO diagrams, charts, infographics, UI elements, or overlays
-- NO fake data or labels
-- NO exaggerated CGI look
-- NO distorted anatomy or unrealistic structures
+NEGATIVE PROMPT (STRICTLY FORBIDDEN):
+- ANY text, letters, words, numbers, typography, captions, labels, headers
+- ANY logo, brand, watermark, signature, stamp
+- ANY chart, graph, diagram, infographic, data visualization, UI element, button, icon, progress bar
+- ANY fake data, statistics, numbers, percentages
+- ANY barcode, QR code, timestamp
+- ANY frame, border, overlay, HUD element
+- ANY exaggerated CGI, plastic-looking renders
+- ANY distorted anatomy, unnatural proportions
+- ANY blurry or pixelated areas
+
+The image must be a CLEAN, PURE photograph with NO superimposed elements. Only natural scene content.
 """
 
 DEFAULT_WIDTH = 1024
@@ -137,6 +142,7 @@ IMPORTANT:
 - The SUBJECT above is the main focus. DO NOT ignore it.
 - The CATEGORY ATMOSPHERE only guides the mood and lighting.
 - Create a photorealistic, cinematic landscape image in 16:9 format.
+- The image must contain NO text, NO logos, NO charts, NO overlays of any kind.
 """
 
 def rate_limit_wait():
@@ -162,8 +168,8 @@ def generate_image(prompt, model, width, height, output_png, attempt=1):
         "prompt": prompt,
         "width": width,
         "height": height,
-        "num_steps": 20,
-        "guidance": 7.5
+        "num_steps": 40,
+        "guidance": 9.9
     }
     
     try:
