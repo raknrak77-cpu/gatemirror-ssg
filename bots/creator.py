@@ -86,20 +86,46 @@ def get_first_pending_task():
     print(f"📋 İlk pending task alındı: ID {task.get('task_id')}")
     return task
 
+def log_meta_info(title, data):
+    """Detaylı META bilgisi log'lar"""
+    print(f"\n   📌 {title}:")
+    for key, value in data.items():
+        if isinstance(value, list):
+            print(f"      {key}: {', '.join(value)}")
+        elif isinstance(value, dict):
+            print(f"      {key}:")
+            for subk, subv in value.items():
+                print(f"         {subk}: {subv}")
+        else:
+            # Uzun değerleri kısalt
+            if isinstance(value, str) and len(value) > 100:
+                print(f"      {key}: {value[:100]}...")
+            else:
+                print(f"      {key}: {value}")
+
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    print(f"\n   📝 META hazırlanıyor [{lang.upper()}]:")
     
     if author_info:
         author_name = author_info.get('name', author_persona)
         author_title = author_info.get('title', '')
         author_bio = author_info.get('bio', '').replace('\n', ' ').replace('"', '\\"')
         author_avatar = author_info.get('avatar', '')
+        print(f"      author: {author_name}")
+        print(f"      author_title: {author_title}")
+        if author_bio:
+            print(f"      author_bio: {author_bio[:80]}...")
+        if author_avatar:
+            print(f"      author_avatar: {author_avatar}")
     else:
         author_name = author_persona
         author_title = ''
         author_bio = ''
         author_avatar = ''
+        print(f"      author: {author_name} (default)")
     
     meta_parts = [
         f"author={author_name}",
@@ -121,37 +147,48 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         meta_parts.append(f"cpc_max={cluster_rules_data.get('cpc_max', '')}")
         meta_parts.append(f"monetization={cluster_rules_data.get('monetization', '')}")
         
+        print(f"      cluster_id: {cluster_id}")
+        print(f"      intent: {cluster_rules_data.get('intent', '')}")
+        print(f"      monetization: {cluster_rules_data.get('monetization', '')}")
+        
         if cluster_rules_data.get('affiliate_ids'):
             meta_parts.append(f"affiliate_ids={'|'.join(cluster_rules_data['affiliate_ids'])}")
+            print(f"      affiliate_ids: {cluster_rules_data['affiliate_ids']}")
         
         if cluster_rules_data.get('keywords'):
             meta_parts.append(f"keywords={'|'.join(cluster_rules_data['keywords'])}")
+            print(f"      keywords: {cluster_rules_data['keywords'][:5]}...")
         
         if cluster_rules_data.get('required_sections'):
             meta_parts.append(f"required_sections={'|'.join(cluster_rules_data['required_sections'])}")
+            print(f"      required_sections: {cluster_rules_data['required_sections']}")
         
         if cluster_rules_data.get('forbidden'):
             meta_parts.append(f"forbidden={'|'.join(cluster_rules_data['forbidden'])}")
+            print(f"      forbidden: {cluster_rules_data['forbidden']}")
         
         if cluster_rules_data.get('style_boost'):
             style_boost_clean = cluster_rules_data['style_boost'].replace('\n', ' ').replace('"', '\\"')
             meta_parts.append(f"style_boost={style_boost_clean}")
+            print(f"      style_boost: {style_boost_clean[:80]}...")
     
     visuals = task.get('visuals', {})
     if visuals:
         visual_types = []
         if 'kapak' in visuals:
             visual_types.append('kapak')
+            print(f"      visual_kapak_prompt: {visuals['kapak'][:60]}...")
         if 'icerik_1' in visuals:
             visual_types.append('icerik_1')
+            print(f"      visual_icerik_1_prompt: {visuals['icerik_1'][:60]}...")
         if 'icerik_2' in visuals:
             visual_types.append('icerik_2')
+            print(f"      visual_icerik_2_prompt: {visuals['icerik_2'][:60]}...")
         if visual_types:
             meta_parts.append(f"visuals={'|'.join(visual_types)}")
+            print(f"      visuals: {visual_types}")
     
     meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
-    
-    print(f"   📝 META yazılıyor: author={author_name}, cluster_id={cluster_id}")
     
     final_html = meta_comment + makale_html
     
@@ -162,25 +199,38 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
-    print(f"✅ {lang.upper()} HTML kaydedildi: {target_path}")
+    
+    # Dosya boyutunu göster
+    file_size = os.path.getsize(target_path) // 1024
+    print(f"   ✅ {lang.upper()} HTML kaydedildi: {target_path} ({file_size} KB)")
     return target_path
 
 def run_visual_bot(task, hash_id, kategori, yil, ay):
     """Görsel bot'u çalıştır. Başarısızsa False döndür."""
     visuals = task.get('visuals', {})
     
+    print("\n   🖼️ GÖRSEL BOT KONTROLÜ:")
+    print(f"      Hash: {hash_id}")
+    print(f"      Kategori: {kategori}")
+    print(f"      Yıl/Ay: {yil}/{ay}")
+    
     if not visuals:
-        print("❌ GÖRSEL PROMPT'U YOK!")
+        print("      ❌ GÖRSEL PROMPT'U YOK!")
         return False
     
     # 3 görsel tipi de var mı kontrol et
     required = ['kapak', 'icerik_1', 'icerik_2']
     missing = [r for r in required if r not in visuals]
     if missing:
-        print(f"❌ EKSİK GÖRSEL TİPLERİ: {', '.join(missing)}")
+        print(f"      ❌ EKSİK GÖRSEL TİPLERİ: {', '.join(missing)}")
         return False
     
-    print("🎨 Görsel bot çağrılıyor...")
+    print("      ✅ Tüm görsel tipleri mevcut:")
+    for img_type in required:
+        prompt_len = len(visuals.get(img_type, ''))
+        print(f"         - {img_type}: {prompt_len} karakter")
+    
+    print("\n   🎨 Görsel bot çağrılıyor...")
     try:
         visuals_json = json.dumps(visuals)
         result = subprocess.run(
@@ -191,19 +241,23 @@ def run_visual_bot(task, hash_id, kategori, yil, ay):
         )
         
         if result.returncode != 0:
-            print(f"❌ Görsel bot hata kodu: {result.returncode}")
-            print(f"   Hata: {result.stderr[:200]}")
+            print(f"      ❌ Görsel bot hata kodu: {result.returncode}")
+            if result.stderr:
+                print(f"      Hata: {result.stderr[:300]}")
             return False
         
-        print("✅ Görsel bot tamamlandı.")
+        print("      ✅ Görsel bot başarıyla tamamlandı.")
+        print(f"      Çıktı: {result.stdout[:200] if result.stdout else '(no output)'}")
+        
+        # Görsel bot'un gerçekten görsel ürettiğini doğrulamak için kısa bir bekle
         time.sleep(2)
         return True
         
     except subprocess.TimeoutExpired:
-        print("❌ Görsel bot ZAMAN AŞIMI (180 saniye)")
+        print("      ❌ Görsel bot ZAMAN AŞIMI (180 saniye)")
         return False
     except Exception as e:
-        print(f"❌ Görsel bot hatası: {e}")
+        print(f"      ❌ Görsel bot hatası: {e}")
         return False
 
 def isle_gorev(task):
@@ -215,19 +269,60 @@ def isle_gorev(task):
     kategori = task.get('category', 'general').lower()
     cluster_id = task.get('cluster_id')
     
-    print(f"🚀 HEDEF: {topic} (ID: {task_id})")
+    print("\n" + "=" * 70)
+    print(f"🚀 GÖREV: {topic}")
+    print(f"   ID: {task_id}")
+    print(f"   Kategori: {kategori}")
     if cluster_id:
-        print(f"📌 Cluster ID: {cluster_id}")
+        print(f"   Cluster ID: {cluster_id}")
+    print(f"   Yazar Persona: {persona}")
+    if special_instructions:
+        print(f"   Özel Talimat: {special_instructions[:100]}...")
+    if reference_link:
+        print(f"   Referans: {reference_link}")
+    print("=" * 70)
     
     clusters = load_clusters()
     author_info = get_author_info(cluster_id, clusters)
     cluster_rules_data = get_cluster_rules(cluster_id, clusters)
     
+    # CLUSTER BİLGİLERİNİ GÖSTER
+    if cluster_rules_data:
+        print("\n📊 CLUSTER BİLGİLERİ:")
+        log_meta_info("Cluster Rules", {
+            "cluster_name": cluster_rules_data.get('cluster_name'),
+            "intent": cluster_rules_data.get('intent'),
+            "cpc_range": f"{cluster_rules_data.get('cpc_min')}-{cluster_rules_data.get('cpc_max')}",
+            "monetization": cluster_rules_data.get('monetization'),
+            "required_sections": cluster_rules_data.get('required_sections', []),
+            "forbidden": cluster_rules_data.get('forbidden', []),
+            "keywords_count": len(cluster_rules_data.get('keywords', [])),
+            "affiliate_ids_count": len(cluster_rules_data.get('affiliate_ids', []))
+        })
+    
+    # YAZAR BİLGİLERİNİ GÖSTER
     if author_info:
-        print(f"   ✅ Yazar bulundu: {author_info.get('name')}")
+        print("\n✍️ YAZAR BİLGİLERİ:")
+        log_meta_info("Author", {
+            "name": author_info.get('name'),
+            "title": author_info.get('title'),
+            "bio": author_info.get('bio', '')[:100],
+            "avatar": author_info.get('avatar', '')[:50]
+        })
     else:
         if cluster_id:
-            print(f"   ⚠️ Yazar bulunamadı: cluster_id={cluster_id}")
+            print(f"\n⚠️ Yazar bulunamadı: cluster_id={cluster_id}")
+        else:
+            print(f"\n⚠️ Bu task'te cluster_id yok, varsayılan yazar kullanılacak")
+    
+    # GÖRSEL PROMPT'LARINI GÖSTER
+    visuals = task.get('visuals', {})
+    if visuals:
+        print("\n🖼️ GÖRSEL PROMPT'LARI:")
+        for img_type, prompt in visuals.items():
+            print(f"   {img_type}: {prompt[:80]}...")
+    else:
+        print("\n⚠️ Görsel prompt'u yok!")
     
     cluster_rules = ""
     if cluster_rules_data:
@@ -364,6 +459,9 @@ STRICT RULES:
 - NO markdown/code blocks
 """
     
+    print("\n🤖 Gemini çağrılıyor (4 dil, EN/ES/DE/FR)...")
+    start_time = time.time()
+    
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
         "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
@@ -375,7 +473,8 @@ STRICT RULES:
         
         if 'candidates' in res_data and len(res_data['candidates']) > 0:
             full_response = res_data['candidates'][0]['content']['parts'][0]['text']
-            print(f"✅ Yanıt alındı: {len(full_response)} karakter")
+            elapsed = time.time() - start_time
+            print(f"   ✅ Yanıt alındı: {len(full_response)} karakter, {elapsed:.1f} saniye")
             
             parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
             lang_html = {}
@@ -392,85 +491,101 @@ STRICT RULES:
                 
                 html_content = block.replace('```html', '').replace('```', '')
                 lang_html[lang_code] = html_content
+                print(f"   📄 {lang_code.upper()} HTML: {len(html_content)} karakter, slug: {lang_slug.get(lang_code, 'auto')}")
             
             expected = ['en', 'es', 'de', 'fr']
-            for lang in expected:
-                if lang not in lang_html:
-                    print(f"⚠️ {lang.upper()} dili eksik, atlanıyor.")
+            missing_langs = [l for l in expected if l not in lang_html]
+            if missing_langs:
+                print(f"   ⚠️ Eksik diller: {', '.join(missing_langs)}")
             
             hash_id = create_hash()
-            print(f"🔑 Üretilen hash: {hash_id} (Task ID: {task_id})")
+            print(f"\n🔑 Üretilen hash: {hash_id}")
             
             now = datetime.now()
             yil = now.strftime("%Y")
             ay = now.strftime("%m")
+            print(f"   📅 Tarih: {yil}/{ay}")
             
             # ========== GÖRSEL KONTROLÜ ==========
-            print("\n" + "=" * 40)
-            print("🖼️ GÖRSEL ÜRETİLİYOR...")
-            print("=" * 40)
+            print("\n" + "=" * 70)
+            print("🖼️ GÖRSEL ÜRETİM AŞAMASI")
+            print("=" * 70)
             
             visual_success = run_visual_bot(task, hash_id, kategori, yil, ay)
             
             if not visual_success:
-                print("\n" + "=" * 60)
+                print("\n" + "=" * 70)
                 print("❌ GÖRSEL ÜRETİLEMEDİ!")
                 print("   Makale üretilmeyecek.")
                 print("   tasks.json DEĞİŞMEYECEK.")
                 print("   Workflow DURDURULUYOR.")
-                print("=" * 60)
+                print("=" * 70)
                 return False, None, None
             
-            print("\n✅ GÖRSEL BAŞARILI! Makaleler kaydediliyor...\n")
+            print("\n✅ GÖRSEL BAŞARILI! Makaleler kaydediliyor...")
+            
+            # ========== MAKALELERİ KAYDET ==========
+            print("\n" + "=" * 70)
+            print("📝 MAKALE KAYIT AŞAMASI")
+            print("=" * 70)
             
             saved_count = 0
             for lang, html in lang_html.items():
                 if lang in expected:
                     slug = lang_slug.get(lang, create_slug(topic))
+                    print(f"\n--- {lang.upper()} ---")
                     html_yaz(hash_id, task, html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id)
                     saved_count += 1
             
-            print(f"📁 Toplam {saved_count} dil kaydedildi (EN/ES/DE/FR)")
+            print(f"\n📁 Toplam {saved_count}/4 dil kaydedildi")
             
             return True, hash_id, task_id
         else:
-            print(f"❌ GEMINI HATASI: {json.dumps(res_data, indent=2)}")
+            print(f"\n❌ GEMINI HATASI:")
+            print(json.dumps(res_data, indent=2))
             return False, None, None
     except Exception as e:
-        print(f"❌ SİSTEM HATASI: {str(e)}")
+        print(f"\n❌ SİSTEM HATASI: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return False, None, None
 
 def operasyon_baslat():
-    print("=" * 60)
-    print("🛰️ CREATOR BOT v38 - GÖRSEL ZORUNLU")
-    print("   ✅ ÖNCE görsel üret")
-    print("   ❌ Görsel başarısızsa -> MAKALE YOK, WORKFLOW DURUR")
-    print("   📁 tasks.json KARIŞMAZ")
-    print("=" * 60)
+    print("\n" + "=" * 70)
+    print("🛰️ CREATOR BOT v39 - DETAYLI LOG")
+    print("   ✅ task/tasks.json'dan ilk task'i AL")
+    print("   ✅ Cluster ve yazar bilgilerini GÖSTER")
+    print("   ✅ Görsel prompt'larını GÖSTER")
+    print("   ✅ ÖNCE görsel üret (başarısızsa DUR)")
+    print("   ✅ META bilgilerini DETAYLI GÖSTER")
+    print("=" * 70)
     
     task = get_first_pending_task()
     if not task:
         print("❌ İşlenecek görev yok!")
         sys.exit(1)
     
-    print(f"\n--- Görev {task.get('task_id')} işleniyor ---")
-    
     basarili, hash_id, task_id = isle_gorev(task)
     
     if not basarili:
-        print("\n" + "=" * 60)
+        print("\n" + "=" * 70)
         print("🚨 WORKFLOW DURDURULUYOR")
         print("   Sebep: Görsel üretilemedi")
         print("   tasks.json DEĞİŞMEDİ")
         print("   Hiçbir şey yayınlanmayacak")
-        print("=" * 60)
-        sys.exit(1)  # Workflow durur
+        print("=" * 70)
+        sys.exit(1)
     
     with open("task/current_hash.txt", "w") as f:
         f.write(hash_id)
-    print(f"📝 Hash kaydedildi: task/current_hash.txt -> {hash_id}")
+    print(f"\n📝 Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
-    print(f"\n🏁 CREATOR TAMAMLANDI! Hash: {hash_id}")
+    print("\n" + "=" * 70)
+    print(f"🏁 CREATOR V39 TAMAMLANDI!")
+    print(f"   Hash: {hash_id}")
+    print(f"   Task ID: {task_id}")
+    print("   ⚠️ tasks.json GÜNCELLENMEDİ. Uploader devam edecek.")
+    print("=" * 70)
 
 if __name__ == "__main__":
     operasyon_baslat()
