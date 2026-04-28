@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0126",
-        "category": "elearning",
-        "cluster_id": "el_06",
-        "topic": "AR Overlays Replace Manuals: How 2026 Remote Expert Guidance Cuts Industrial Training Time by 70%",
-        "reference_link": "https://www.forbes.com/ar-training-2026",
-        "language": "en",
-        "author_persona": "Corporate Learning & Development (L&D) Futurist & AR Interface Designer",
-        "special_instructions": "Focus on remote expert support (bolts tightening overlay). Compare cost vs traditional training.",
-        "visuals": {
-            "kapak": "A field technician wearing AR glasses, seeing a glowing red arrow pointing to a specific valve and a torque value hologram, industrial background, 8k",
-            "icerik_1": "A split screen: left side \"Confusion - Paper Manual\"; right side \"AR Guide - Step 3/12 completed, green checkmarks\", photorealistic",
-            "icerik_2": "An expert sitting at home guiding 3 different field workers via AR, multiple video feeds on one screen, photorealistic"
-        },
-        "status": "pending",
-        "hash": "a6fa7138",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-28T17:21:54.731310"
-    },
-    {
         "task_id": "0127",
         "category": "elearning",
         "cluster_id": "el_07",
