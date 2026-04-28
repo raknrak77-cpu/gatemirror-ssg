@@ -1,3 +1,30 @@
+category: elearning
+cluster: corporate_ar_training
+topic: AR Overlays Replace Manuals: How 2026 Remote Expert Guidance Cuts Industrial Training Time by 70%
+reference_link: https://www.forbes.com/ar-training-2026
+author_persona: Corporate Learning & Development (L&D) Futurist & AR Interface Designer
+special_instructions: Focus on remote expert support (bolts tightening overlay). Compare cost vs traditional training.
+kapak_prompt: A field technician wearing AR glasses, seeing a glowing red arrow pointing to a specific valve and a torque value hologram, industrial background, 8k
+icerik_1_prompt: A split screen: left side "Confusion - Paper Manual"; right side "AR Guide - Step 3/12 completed, green checkmarks", photorealistic
+icerik_2_prompt: An expert sitting at home guiding 3 different field workers via AR, multiple video feeds on one screen, photorealistic
+
+
+
+category: elearning
+cluster: adaptive_lms_ai
+topic: The LMS That Knows You're Bored: How 2026 Adaptive Learning Systems Change Content in Real-Time
+reference_link: https://www.edsurge.com/adaptive-lms-2026
+author_persona: Learning Platform Product Manager & Educational Psychologist
+special_instructions: Explain eye-tracking and micro-assessment to detect confusion/boredom. Format shifting (video to text).
+kapak_prompt: A student watching a video on a tablet, but the video pauses and turns into an interactive quiz because a small "Bored Detected" icon appeared, 8k
+icerik_1_prompt: A dashboard showing "Engagement Score: Dropping. Switching from Lecture to Gamified Challenge." with a happy student graph, photorealistic
+icerik_2_prompt: A close-up of a tablet camera analyzing a student's pupil and micro-expressions, with "Focus: 72% => Action: Suggest Break" overlay, photorealistic
+
+
+
+
+
+
 category: tech
 cluster: ai_trading_bots
 topic: 2026 AI Trading Bots: Sentiment-Driven Liquidity Pools and On-Chain Execution
@@ -29,6 +56,8 @@ special_instructions: Explain how real-world yields are brought toDeFi. Focus on
 kapak_prompt: A glowing digital bond certificate with a US Treasury seal morphing into a blockchain icon, financial chart background, 8k, photorealistic
 icerik_1_prompt: A DeFi dashboard showing "Deposit USDC -> Receive $YieldToken (4.8% APY) backed by real T-Bills", clean UI, photorealistic
 icerik_2_prompt: A person holding a smartphone, seeing "Interest earned every 15 seconds" on a savings app, happy expression, photorealistic
+
+
 
 category: eco
 cluster: circular_economy
@@ -74,15 +103,16 @@ icerik_2_prompt: A quantum engineer looking at a dilution refrigerator, with a h
 
 
 
-category: tech
-cluster: quantum_computing_trends
-topic: Logical Qubits Are Here: How 2026 Error Correction Unlocks Commercially Viable Quantum Computing
-reference_link: https://www.nature.com/quantum-error-correction-2026
-author_persona: Quantum Error Correction Researcher & Hardware Engineer
-special_instructions: Focus on surface codes and logical qubit fidelity. Discuss the transition from NISQ to fault-tolerant quantum computing.
-kapak_prompt: A complex 3D lattice of glowing interconnected qubits (surface code), with error-correcting light beams fixing a red broken node, 8k, photorealistic
-icerik_1_prompt: A chart showing "Logical Error Rate" dropping below 1e-6 for the first time, vs previous years, clean scientific graph, photorealistic
-icerik_2_prompt: A quantum engineer looking at a dilution refrigerator, with a holographic projection showing "Stable Logical Qubit: 99.99% fidelity", photorealistic
+category: future-economy
+cluster: impact_investing_esg
+topic: Beyond Carbon: The 2026 Boom of Biodiversity Credits (Species Conservation Tokens)
+reference_link: https://www.bloomberg.com/biodiversity-credits-2026
+author_persona: Conservation Finance Expert & ESG Rating Analyst
+special_instructions: Explain how to tokenize conservation of a specific species (e.g., Jaguar corridor). Compare with carbon credits.
+kapak_prompt: A lush jungle with a glowing digital Jaguar roaming, each step leaves a small green token icon, sunrays through leaves, 8k, photorealistic
+icerik_1_prompt: A dashboard showing "1 Biodiversity Credit = 1 hectare of Jaguar habitat protected. Price: $15. Retired: 500 credits", clean UI, photorealistic
+icerik_2_prompt: A drone shot of a reforested corridor, with a digital overlay showing tokenized zones, photorealistic
+
 
 
 
@@ -115,6 +145,17 @@ special_instructions: Discuss the ethical balance of memory vs privacy. Focus on
 kapak_prompt: A warm, softly lit room with a person talking to a floating friendly holographic face (no human body), data scribbles showing "Memory Recall: 100%", 8k
 icerik_1_prompt: An app interface showing "Remember you said you felt anxious on Tuesdays? Let's prepare for tomorrow." with a breathing exercise button, clean UI, photorealistic
 icerik_2_prompt: A timeline visualization showing mood improvement over 6 months of AI therapy, green upward trend, soft colors, photorealistic
+
+category: eco
+cluster: ocean_cleanup_tech
+topic: Silent Seabed Sweepers: How 2026 Passive Traps Collect Microplastics Without Harming Plankton
+reference_link: https://www.theoceancleanup.com/seabed-2026
+author_persona: Marine Microplastics Researcher & Fluid Dynamics Engineer
+special_instructions: Explain the use of biodegradable biopolymer nets and ocean currents.
+kapak_prompt: An underwater view of a gentle conical net resting on the seabed, microplastics flowing in, a fish swimming safely above it, sunbeams, 8k
+icerik_1_prompt: A split screen: left side "Microplastics on Seabed"; right side "Collected in Trap", with a size comparison to a plankton, photorealistic
+icerik_2_prompt: A research vessel dashboard showing "Trap 7: Full. Est. 500kg microplastics. Retrieving." clean marine UI, photorealistic
+
 
 category: wellness
 cluster: holistic_biohacking
@@ -157,6 +198,20 @@ kapak_prompt: A smartphone showing "Payment Sent (Offline Mode)" with a glowing 
 icerik_1_prompt: A cross-section of a phone showing a tiny "Secure Chip" glowing, transferring a payment symbol via NFC to another phone, no towers needed, photorealistic
 icerik_2_prompt: A person buying bread at a rural market with no signal, the vendor's phone beeps "CBDC Received", both smile, photorealistic
 
+
+category: tech
+cluster: quantum_computing_trends
+topic: Logical Qubits Are Here: How 2026 Error Correction Unlocks Commercially Viable Quantum Computing
+reference_link: https://www.nature.com/quantum-error-correction-2026
+author_persona: Quantum Error Correction Researcher & Hardware Engineer
+special_instructions: Focus on surface codes and logical qubit fidelity. Discuss the transition from NISQ to fault-tolerant quantum computing.
+kapak_prompt: A complex 3D lattice of glowing interconnected qubits (surface code), with error-correcting light beams fixing a red broken node, 8k, photorealistic
+icerik_1_prompt: A chart showing "Logical Error Rate" dropping below 1e-6 for the first time, vs previous years, clean scientific graph, photorealistic
+icerik_2_prompt: A quantum engineer looking at a dilution refrigerator, with a holographic projection showing "Stable Logical Qubit: 99.99% fidelity", photorealistic
+
+
+
+
 category: future-economy
 cluster: gig_economy_3_0
 topic: Your AI Agent Works While You Sleep: How Autonomous AI Freelancers Earn Passive Income in 2026
@@ -168,15 +223,7 @@ icerik_1_prompt: A dashboard showing "Agent 'Mark' completed 150 tasks today. Ea
 icerik_2_prompt: A smartphone notification: "Your AI Agent secured a 3-day contract. Revenue split: 80% to you, 20% to Agent upkeep." photorealistic
 
 
-category: future-economy
-cluster: impact_investing_esg
-topic: Beyond Carbon: The 2026 Boom of Biodiversity Credits (Species Conservation Tokens)
-reference_link: https://www.bloomberg.com/biodiversity-credits-2026
-author_persona: Conservation Finance Expert & ESG Rating Analyst
-special_instructions: Explain how to tokenize conservation of a specific species (e.g., Jaguar corridor). Compare with carbon credits.
-kapak_prompt: A lush jungle with a glowing digital Jaguar roaming, each step leaves a small green token icon, sunrays through leaves, 8k, photorealistic
-icerik_1_prompt: A dashboard showing "1 Biodiversity Credit = 1 hectare of Jaguar habitat protected. Price: $15. Retired: 500 credits", clean UI, photorealistic
-icerik_2_prompt: A drone shot of a reforested corridor, with a digital overlay showing tokenized zones, photorealistic
+
 
 category: eco
 cluster: regenerative_agriculture
@@ -201,15 +248,6 @@ icerik_2_prompt: A hydrogen truck refueling at a coastal station, a sign "From S
 
 
 
-category: eco
-cluster: ocean_cleanup_tech
-topic: Silent Seabed Sweepers: How 2026 Passive Traps Collect Microplastics Without Harming Plankton
-reference_link: https://www.theoceancleanup.com/seabed-2026
-author_persona: Marine Microplastics Researcher & Fluid Dynamics Engineer
-special_instructions: Explain the use of biodegradable biopolymer nets and ocean currents.
-kapak_prompt: An underwater view of a gentle conical net resting on the seabed, microplastics flowing in, a fish swimming safely above it, sunbeams, 8k
-icerik_1_prompt: A split screen: left side "Microplastics on Seabed"; right side "Collected in Trap", with a size comparison to a plankton, photorealistic
-icerik_2_prompt: A research vessel dashboard showing "Trap 7: Full. Est. 500kg microplastics. Retrieving." clean marine UI, photorealistic
 
 
 
@@ -243,26 +281,4 @@ special_instructions: Focus on soulbound tokens (SBTs) for diplomas. Discuss the
 kapak_prompt: A digital CV on a screen, each skill has a glowing blue "Verified on-chain" checkmark, a blockchain hash visible below, 8k, photorealistic
 icerik_1_prompt: An employer's dashboard: "Scan Candidate Wallet -> Skills: Python (99th percentile), SQL (Valid). Issuer: MITx SBT." photorealistic
 icerik_2_prompt: A graduate tossing a cap in the air, but instead of paper diploma, a glowing NFT badge appears in their hand, photorealistic
-
-category: elearning
-cluster: corporate_ar_training
-topic: AR Overlays Replace Manuals: How 2026 Remote Expert Guidance Cuts Industrial Training Time by 70%
-reference_link: https://www.forbes.com/ar-training-2026
-author_persona: Corporate Learning & Development (L&D) Futurist & AR Interface Designer
-special_instructions: Focus on remote expert support (bolts tightening overlay). Compare cost vs traditional training.
-kapak_prompt: A field technician wearing AR glasses, seeing a glowing red arrow pointing to a specific valve and a torque value hologram, industrial background, 8k
-icerik_1_prompt: A split screen: left side "Confusion - Paper Manual"; right side "AR Guide - Step 3/12 completed, green checkmarks", photorealistic
-icerik_2_prompt: An expert sitting at home guiding 3 different field workers via AR, multiple video feeds on one screen, photorealistic
-
-
-
-category: elearning
-cluster: adaptive_lms_ai
-topic: The LMS That Knows You're Bored: How 2026 Adaptive Learning Systems Change Content in Real-Time
-reference_link: https://www.edsurge.com/adaptive-lms-2026
-author_persona: Learning Platform Product Manager & Educational Psychologist
-special_instructions: Explain eye-tracking and micro-assessment to detect confusion/boredom. Format shifting (video to text).
-kapak_prompt: A student watching a video on a tablet, but the video pauses and turns into an interactive quiz because a small "Bored Detected" icon appeared, 8k
-icerik_1_prompt: A dashboard showing "Engagement Score: Dropping. Switching from Lecture to Gamified Challenge." with a happy student graph, photorealistic
-icerik_2_prompt: A close-up of a tablet camera analyzing a student's pupil and micro-expressions, with "Focus: 72% => Action: Suggest Break" overlay, photorealistic
 
