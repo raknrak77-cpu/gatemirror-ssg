@@ -274,6 +274,32 @@
                     "forbidden": ["\"Get rich passive income\"", "Pyramid scheme adjacent"],
                     "style_boost": "Tool affiliate (Canva, Shopify, Fiverr). Focus on actionable steps.",
                     "keywords": ["side hustle", "passive income", "freelance skills", "online business", "make money online"]
+                },
+                "corporate_ar_training": {
+                    "cluster_id": "el_06",
+                    "author_id": "AUTH_003",
+                    "intent": "commercial",
+                    "cpc_min": 18,
+                    "cpc_max": 45,
+                    "monetization": "enterprise_saas",
+                    "affiliate_ids": ["AFF_030", "AFF_031"],
+                    "required_sections": ["Hardware compatibility (AR glasses)", "Remote expert feature", "ROI calculation (training hours saved)", "Case study (manufacturing/field service)"],
+                    "forbidden": ["Consumer-level use cases", "\"Gaming\" references"],
+                    "style_boost": "Target L&D directors. Focus on safety compliance and efficiency gains. Include TeamViewer/Vuforia comparisons.",
+                    "keywords": ["AR training", "remote expert", "industrial AR", "field service AR", "augmented reality training"]
+                },
+                "adaptive_lms_ai": {
+                    "cluster_id": "el_07",
+                    "author_id": "AUTH_004",
+                    "intent": "commercial",
+                    "cpc_min": 12,
+                    "cpc_max": 28,
+                    "monetization": "b2b_saas",
+                    "affiliate_ids": ["AFF_032", "AFF_033"],
+                    "required_sections": ["Personalization engine (AI)", "LMS integration (SCORM/xAPI)", "Analytics dashboard", "Pricing (per learner)"],
+                    "forbidden": ["Static course mentions", "\"One-size-fits-all\""],
+                    "style_boost": "Target HR and L&D. Highlight completion rates increase. Compare 3-5 platforms.",
+                    "keywords": ["adaptive learning", "AI LMS", "personalized training", "learning platform", "LMS AI"]
                 }
             }
         },
@@ -536,6 +562,10 @@
         "AFF_027": {"name": "ChargePoint", "commission": "Private", "link_template": "https://www.chargepoint.com/partner/{REF_ID}"},
         "AFF_028": {"name": "EnergySage", "commission": "$50-100 Lead", "link_template": "https://www.energysage.com/partner/{REF_ID}"},
         "AFF_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
+        "AFF_030": {"name": "TeamViewer (AR)", "commission": "15-25%", "link_template": "https://www.teamviewer.com/partner/{REF_ID}"},
+        "AFF_031": {"name": "Vuforia (PTC)", "commission": "Private", "link_template": "https://www.ptc.com/partner/{REF_ID}"},
+        "AFF_032": {"name": "Area9 Lyceum", "commission": "Competitive", "link_template": "https://area9lyceum.com/partner/{REF_ID}"},
+        "AFF_033": {"name": "Smart Sparrow (Pearson)", "commission": "10-20%", "link_template": "https://www.smartsparrow.com/partner/{REF_ID}"}      
     }
 }
  
