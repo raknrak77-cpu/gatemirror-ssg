@@ -24,8 +24,140 @@ s3 = boto3.client(
 )
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
+REQUIRED_IMAGES = ['kapak', 'icerik_1', 'icerik_2']
 
-# ================= TASK TAŞIMA (YENİ SIRA: ÖNCE PROCESSED'E EKLE, SONRA SIL) =================
+# ================= YENİ: GÖRSEL KONTROLÜ =================
+
+def check_hash_images(hash_id, kategori, yil, ay):
+    """
+    Belirtilen hash'e ait 3 görselin R2'de olup olmadığını kontrol eder.
+    Görsel yolu: images/{yil}/{ay}/{kategori}/{hash_id}_{tip}.webp
+    """
+    if not hash_id or not kategori:
+        print(f"   ⚠️ Hash veya kategori eksik: hash={hash_id}, kategori={kategori}")
+        return False
+    
+    # Eğer yil/ay yoksa, raw-articles'dan bulmaya çalış
+    if not yil or not ay:
+        print(f"   🔍 Yıl/Ay eksik, raw-articles'dan aranıyor...")
+        yil, ay = find_image_path_from_raw_articles(hash_id, kategori)
+    
+    missing_images = []
+    for img_type in REQUIRED_IMAGES:
+        if yil and ay:
+            image_key = f"images/{yil}/{ay}/{kategori}/{hash_id}_{img_type}.webp"
+        else:
+            # Eski format (klasörsüz)
+            image_key = f"images/{kategori}/{hash_id}_{img_type}.webp"
+        
+        try:
+            s3.head_object(Bucket=R2_BUCKET, Key=image_key)
+            print(f"   ✅ Görsel mevcut: {image_key}")
+        except:
+            missing_images.append(img_type)
+            print(f"   ❌ Görsel EKSİK: {image_key}")
+    
+    if missing_images:
+        print(f"   ⚠️ Eksik görseller: {', '.join(missing_images)}")
+        return False
+    
+    print(f"   ✅ Tüm görseller mevcut ({len(REQUIRED_IMAGES)}/3)")
+    return True
+
+def find_image_path_from_raw_articles(hash_id, kategori):
+    """raw-articles'dan ilgili makalenin yıl/ay bilgisini bulur"""
+    languages = ['en', 'es', 'de', 'fr']
+    
+    for lang in languages:
+        prefix = f"raw-articles/{lang}/{kategori}/"
+        try:
+            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+            if 'Contents' not in response:
+                continue
+            
+            for obj in response['Contents']:
+                key = obj['Key']
+                filename = key.split('/')[-1]
+                if filename.startswith(hash_id) and filename.endswith('.html'):
+                    # Yıl/Ay bilgisini URL'den çıkar
+                    parts = key.split('/')
+                    if len(parts) >= 5:
+                        # raw-articles/{lang}/{kategori}/{yil}/{ay}/{filename}
+                        yil = parts[3] if len(parts) > 3 else None
+                        ay = parts[4] if len(parts) > 4 else None
+                        print(f"   📍 Bulundu: {lang}/{kategori}/{yil}/{ay}")
+                        return yil, ay
+        except:
+            continue
+    
+    return None, None
+
+def get_task_by_hash(target_hash):
+    """tasks.json'dan hash'e göre task'i bulur"""
+    tasks_path = "task/tasks.json"
+    if not os.path.exists(tasks_path):
+        return None
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    for task in tasks:
+        if task.get("hash") == target_hash:
+            return task
+    return None
+
+def move_task_to_skipped(target_hash, reason):
+    """Task'i skipped.json'a taşır ve tasks.json'dan siler"""
+    tasks_path = "task/tasks.json"
+    skipped_path = "task/skipped.json"
+    
+    # Task'i tasks.json'dan bul ve çıkar
+    if not os.path.exists(tasks_path):
+        return False
+    
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        tasks = json.load(f)
+    
+    target_task = None
+    target_index = None
+    for i, task in enumerate(tasks):
+        if task.get("hash") == target_hash:
+            target_task = task
+            target_index = i
+            break
+    
+    if not target_task:
+        print(f"   ⚠️ Hash {target_hash} tasks.json'da bulunamadı")
+        return False
+    
+    # Task'i güncelle
+    target_task["skipped_at"] = datetime.now().isoformat()
+    target_task["skip_reason"] = reason
+    
+    # skipped.json'a ekle
+    if os.path.exists(skipped_path):
+        with open(skipped_path, "r", encoding="utf-8") as f:
+            skipped = json.load(f)
+    else:
+        skipped = []
+    
+    skipped.append(target_task)
+    
+    with open(skipped_path, "w", encoding="utf-8") as f:
+        json.dump(skipped, f, indent=4, ensure_ascii=False)
+    
+    # tasks.json'dan sil
+    tasks.pop(target_index)
+    
+    with open(tasks_path, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())
+    
+    print(f"   ❌ Task {target_task.get('task_id')} (hash={target_hash}) SKIPPED: {reason}")
+    return True
+
+# ================= TASK TAŞIMA (SADECE GÖRSEL KONTROLÜ GEÇENLER) =================
 
 def get_current_hash():
     """current_hash.txt'den hash'i okur ve siler"""
@@ -38,17 +170,31 @@ def get_current_hash():
         return hash_id
     return None
 
-def move_task_by_hash_to_processed(target_hash):
+def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
     """
-    YENI SIRA:
-    1. Önce processed.json'a EN BAŞA ekle
-    2. Sonra tasks.json'dan ZORLA SIL
-    3. Doğrula (silinmemişse tekrar dene)
+    GÖRSEL KONTROLLÜ VERSİYON:
+    1. Görselleri kontrol et
+    2. Eksik varsa -> skipped.json'a taşı, processed.json'a EKLEME
+    3. Tüm görseller varsa -> processed.json'a ekle, tasks.json'dan sil
     """
+    
+    # ========== 1. GÖRSEL KONTROLÜ ==========
+    print(f"   🔍 Görsel kontrolü yapılıyor (hash={target_hash}, kategori={kategori})...")
+    
+    images_ok = check_hash_images(target_hash, kategori, yil, ay)
+    
+    if not images_ok:
+        # Görsel eksik -> skipped'e taşı
+        print(f"   ⚠️ Görsel eksik, task SKIPPED'e taşınıyor...")
+        move_task_to_skipped(target_hash, "missing_images_swap_precheck")
+        return False
+    
+    print(f"   ✅ Görsel kontrolü geçildi, task processed'e taşınıyor...")
+    
     tasks_path = "task/tasks.json"
     processed_path = "task/processed.json"
     
-    # ========== 1. ÖNCE tasks.json'dan task'i BUL ==========
+    # ========== 2. tasks.json'dan task'i BUL ==========
     if not os.path.exists(tasks_path):
         print("   ⚠️ task/tasks.json bulunamadı")
         return False
@@ -74,7 +220,7 @@ def move_task_by_hash_to_processed(target_hash):
         print(f"   ⚠️ Hash {target_hash} ile task bulunamadı")
         return False
     
-    # ========== 2. ÖNCE processed.json'a EN BAŞA EKLE ==========
+    # ========== 3. processed.json'a EN BAŞA EKLE ==========
     if os.path.exists(processed_path):
         with open(processed_path, "r", encoding="utf-8") as f:
             processed = json.load(f)
@@ -84,6 +230,7 @@ def move_task_by_hash_to_processed(target_hash):
     # Task'i güncelle
     target_task["status"] = "processed"
     target_task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    target_task["images_verified"] = True
     
     # EN BAŞA EKLE (insert(0))
     processed.insert(0, target_task)
@@ -93,47 +240,22 @@ def move_task_by_hash_to_processed(target_hash):
     
     print(f"   ✅ Task {target_task.get('task_id')} (hash={target_hash}) processed.json'a EKLENDI (en basa)")
     
-    # ========== 3. SONRA tasks.json'dan ZORLA SIL ==========
-    # Task'i listeden çıkar
+    # ========== 4. tasks.json'dan ZORLA SIL ==========
     tasks.pop(target_index)
     
-    # Kalanları kaydet
     with open(tasks_path, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4, ensure_ascii=False)
         f.flush()
-        os.fsync(f.fileno())  # Zorla diske yaz
+        os.fsync(f.fileno())
     
-    # ========== 4. DOĞRULA (silinmiş mi?) ==========
+    # ========== 5. DOĞRULA (silinmiş mi?) ==========
     with open(tasks_path, "r", encoding="utf-8") as f:
         verify_tasks = json.load(f)
     
     for task in verify_tasks:
         if task.get("hash") == target_hash:
-            print(f"   ❌ SILINEMEDI! Hash {target_hash} hala tasks.json'da, TEKRAR DENENIYOR...")
-            
-            # Tekrar dene - index bul
-            for i, t in enumerate(verify_tasks):
-                if t.get("hash") == target_hash:
-                    verify_tasks.pop(i)
-                    break
-            
-            # Zorla yaz
-            with open(tasks_path, "w", encoding="utf-8") as f:
-                json.dump(verify_tasks, f, indent=4, ensure_ascii=False)
-                f.flush()
-                os.fsync(f.fileno())
-            
-            # Son doğrulama
-            with open(tasks_path, "r", encoding="utf-8") as f:
-                final_verify = json.load(f)
-            
-            for task in final_verify:
-                if task.get("hash") == target_hash:
-                    print(f"   ❌ CRITICAL HATA: Hash {target_hash} HALA tasks.json'da!")
-                    return False
-            
-            print(f"   ✅ Tekrar denemede basarili: Hash {target_hash} silindi")
-            break
+            print(f"   ❌ SILINEMEDI! Hash {target_hash} hala tasks.json'da!")
+            return False
     
     print(f"   ✅ Task {target_task.get('task_id')} tasks.json'dan SILINDI")
     return True
@@ -560,13 +682,12 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v29 - YENI SIRA (ÖNCE PROCESSED'E EKLE, SONRA SIL)")
+    print("📚 KUTUPHANECI BOT v30 - GÖRSEL KONTROLLU")
     print("   🔍 Mevcut articles/ kontrolü (51 KB altı silinecek, index.html KORUNACAK)")
     print("   🛡️ Swap öncesi articles_ready/ kontrolü")
-    print("   📊 Detaylı rapor (R2/reports/)")
-    print("   ✅ Önce processed.json'a EN BAŞA ekle")
-    print("   ✅ Sonra tasks.json'dan ZORLA SIL")
-    print("   ✅ Processed sıralaması: en son görev en üstte")
+    print("   🖼️ Görsel kontrolü (kapak, icerik_1, icerik_2)")
+    print("   ❌ Eksik görsel varsa -> SKIPPED (processed yapılmayacak)")
+    print("   ✅ Tüm görseller varsa -> processed.json'a ekle")
     print("=" * 60)
     
     analyze_r2_storage()
@@ -582,22 +703,43 @@ def librarian():
             current_hash = get_current_hash()
             if current_hash:
                 print(f"   📝 İşlenen hash: {current_hash}")
-                move_task_by_hash_to_processed(current_hash)
+                
+                # Hash'e ait task'ten kategori bilgisini al
+                task = get_task_by_hash(current_hash)
+                if task:
+                    kategori = task.get('category', '')
+                    yil = task.get('yil', '')
+                    ay = task.get('ay', '')
+                    print(f"   📂 Kategori: {kategori}, Yıl: {yil}, Ay: {ay}")
+                    
+                    move_task_by_hash_to_processed(current_hash, kategori, yil, ay)
+                else:
+                    print(f"   ⚠️ Hash {current_hash} için task bulunamadı, işlem atlanıyor")
             else:
                 print("   ⚠️ current_hash.txt bulunamadı, task taşınamadı")
         else:
             print("\n⚠️ SWAP BASARISIZ! Site eski icerikle devam ediyor.")
+            
+            # Swap başarısızsa current_hash.txt'yi sil (tekrar denenmesin)
+            current_hash = get_current_hash()
+            if current_hash:
+                print(f"   🗑️ Swap başarısız, current_hash.txt silindi: {current_hash}")
     except Exception as e:
         print(f"\n❌ KRITIK HATA: {e}")
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v29 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v30 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
     print("   ✅ Atomic swap KONTROLLÜ")
-    print("   ✅ Task processed.json'a eklendi (en basa) ve tasks.json'dan silindi")
+    print("   ✅ Görsel kontrolü AKTIF")
+    print("   ✅ Eksik görseller SKIPPED'e atıldı")
     print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
 
 if __name__ == "__main__":
     librarian()
+
+
+
+
