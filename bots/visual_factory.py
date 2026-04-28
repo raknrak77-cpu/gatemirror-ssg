@@ -40,7 +40,7 @@ CATEGORY_STYLES = {
     "tech": "clean, futuristic, geometric, blue/silver tones, high-tech aesthetic, sleek surfaces, ambient glow, innovation focus",
     "future-economy": "corporate, data-driven, minimalist, glass and steel, professional, abstract financial metaphors, global perspective",
     "eco": "natural, green, sustainable, outdoor, golden hour, organic textures, renewable energy visuals, pristine environment",
-    "elearning": "bright, educational, approachable, modern, focused on people learning, books, digital interfaces, cozy study spaces"
+    "elearning": "bright, photorealistic, real people in actual learning environments, natural lighting, authentic study moments, actual laptops and tablets, cozy warm atmosphere, documentary style, candid learner perspectives, modern campus areas, libraries, study halls, classrooms"
 }
 
 GLOBAL_STYLE = """
