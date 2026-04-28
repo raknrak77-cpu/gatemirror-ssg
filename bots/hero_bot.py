@@ -121,6 +121,10 @@ def render_countdown_block(block):
 def render_quote_block(block):
     return f'<div class="hero-quote"><blockquote>"{block["content"]}"</blockquote><cite>— {block.get("author", "")}</cite></div>'
 
+def render_breadcrumb_block(block):
+    """Breadcrumb bloğu - sadece article sayfasında gösterilir"""
+    return '<div class="hero-breadcrumb"></div>'  # Breadcrumb template'de ayrıca var, bu sadece placeholder
+
 # ================= BLOK TİPİ RENDER MAP =================
 BLOCK_RENDERERS = {
     'title': render_title_block,
@@ -133,28 +137,69 @@ BLOCK_RENDERERS = {
     'image': render_image_block,
     'carousel': render_carousel_block,
     'countdown': render_countdown_block,
-    'quote': render_quote_block
+    'quote': render_quote_block,
+    'breadcrumb': render_breadcrumb_block
 }
 
 # ================= HERO VERİSİNİ YÜKLE (assets/ klasöründen) =================
 
+# Cache mekanizması (R2'den tekrar tekrar okumamak için)
+_hero_data_cache = None
+_hero_data_cache_time = None
+
 def load_hero_data():
+    """hero.json'u R2'den okur, cache'ler. Hata durumunda None döner (sessizce)"""
+    global _hero_data_cache, _hero_data_cache_time
+    
+    now = datetime.now()
+    if _hero_data_cache and _hero_data_cache_time and (now - _hero_data_cache_time).seconds < 60:
+        return _hero_data_cache
+    
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
-        return json.loads(response['Body'].read().decode('utf-8'))
+        data = json.loads(response['Body'].read().decode('utf-8'))
+        _hero_data_cache = data
+        _hero_data_cache_time = now
+        return data
     except Exception as e:
-        print(f"⚠️ assets/hero.json yüklenemedi: {e}")
+        # Sessizce hata ver, ama çok fazla log basma
+        if not hasattr(load_hero_data, '_warned'):
+            print(f"⚠️ assets/hero.json yüklenemedi (varsayılan kullanılacak): {e}")
+            load_hero_data._warned = True
         return None
+
+def get_default_blocks(lang):
+    """hero.json yoksa kullanılacak varsayılan bloklar"""
+    defaults = {
+        'en': [
+            {'type': 'title', 'content': 'Gatemirror'},
+            {'type': 'description', 'content': 'Global insights on technology, wellness, and future economy.'}
+        ],
+        'es': [
+            {'type': 'title', 'content': 'Gatemirror'},
+            {'type': 'description', 'content': 'Perspectivas globales sobre tecnología, bienestar y economía futura.'}
+        ],
+        'de': [
+            {'type': 'title', 'content': 'Gatemirror'},
+            {'type': 'description', 'content': 'Globale Einblicke in Technologie, Wohlbefinden und Zukunftswirtschaft.'}
+        ],
+        'fr': [
+            {'type': 'title', 'content': 'Gatemirror'},
+            {'type': 'description', 'content': 'Perspectives mondiales sur la technologie, le bien-être et l\'économie future.'}
+        ]
+    }
+    return defaults.get(lang, defaults['en'])
 
 def get_hero_blocks(page_type, lang, category=None):
     hero_data = load_hero_data()
     
-    if not hero_data:
-        return [{'type': 'title', 'content': 'Gatemirror'}, 
-                {'type': 'description', 'content': 'Global insights'}]
+    # hero_data yoksa veya geçersizse default döndür
+    if not hero_data or not isinstance(hero_data, dict):
+        return get_default_blocks(lang)
     
     pages = hero_data.get('pages', {})
     
+    # Sayfa tipine göre veriyi al
     if page_type == 'home':
         page_data = pages.get('home', {})
     elif page_type == 'category' and category:
@@ -163,16 +208,25 @@ def get_hero_blocks(page_type, lang, category=None):
     elif page_type == 'special':
         special_data = pages.get('special', {})
         page_data = special_data.get(category, {})
+    elif page_type == 'article':
+        article_data = pages.get('article', {})
+        page_data = article_data
     else:
         page_data = {}
     
+    # Dil bazlı blokları al
     lang_data = page_data.get(lang, {})
     blocks = lang_data.get('blocks', [])
     
+    # Blok yoksa default dene
     if not blocks:
         defaults = hero_data.get('defaults', {})
         default_data = defaults.get(lang, defaults.get('en', {}))
         blocks = default_data.get('blocks', [])
+    
+    # Hala yoksa hardcoded default
+    if not blocks:
+        blocks = get_default_blocks(lang)
     
     return blocks
 
@@ -188,6 +242,7 @@ def render_block(block, lang=None):
     return ''
 
 def render_hero(page_type, lang, category=None):
+    """Hero HTML'i oluşturur"""
     blocks = get_hero_blocks(page_type, lang, category)
     
     if not blocks:
@@ -202,6 +257,7 @@ def render_hero(page_type, lang, category=None):
         
         block_html = render_block(block, lang)
         if block_html:
+            # full genişlikte göster (grid sistemi için)
             html += f'    <div class="hero-grid-full">{block_html}</div>\n'
     html += '</div>'
     return html
@@ -212,9 +268,21 @@ def get_hero_data(page_type, lang, category=None):
         'has_hero': True
     }
 
+# ================= TEST =================
 if __name__ == "__main__":
     print("🧪 Hero Bot Testi (assets/hero.json okuyor)")
     print("-" * 50)
+    
     print("\n🏠 HOME (EN):")
     print(render_hero('home', 'en'))
+    
+    print("\n🏠 HOME (ES):")
+    print(render_hero('home', 'es'))
+    
+    print("\n📂 CATEGORY TECH (EN):")
+    print(render_hero('category', 'en', 'tech'))
+    
+    print("\n📄 ARTICLE (EN):")
+    print(render_hero('article', 'en'))
+    
     print("\n✅ Hero Bot çalışıyor!")
