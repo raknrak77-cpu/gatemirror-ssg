@@ -3,7 +3,6 @@ import json
 import re
 import boto3
 from botocore.client import Config
-from datetime import datetime
 
 # ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
@@ -21,13 +20,6 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= CACHE =================
-_hero_data_cache = None
-_hero_data_cache_time = None
-_articles_cache = None
-_articles_cache_time = None
-_article_counts_cache = {}
-
 # ================= YARDIMCI FONKSİYONLAR =================
 
 def extract_youtube_id(url):
@@ -43,56 +35,35 @@ def extract_youtube_id(url):
     return None
 
 def get_articles():
-    """articles.json'u R2'den okur, cache'ler"""
-    global _articles_cache, _articles_cache_time
-    now = datetime.now()
-    
-    if _articles_cache and _articles_cache_time and (now - _articles_cache_time).seconds < 60:
-        return _articles_cache
-    
+    """articles.json'u R2'den okur (cache YOK - her seferinde taze)"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='articles.json')
         data = json.loads(response['Body'].read().decode('utf-8'))
         if isinstance(data, dict) and 'articles' in data:
-            _articles_cache = data['articles']
-        else:
-            _articles_cache = data
-        _articles_cache_time = now
-        return _articles_cache
+            return data['articles']
+        return data
     except Exception as e:
         print(f"⚠️ articles.json okunamadı: {e}")
         return []
 
 def get_article_count_by_lang(lang):
-    """Belirtilen dildeki makale sayısını döndürür"""
-    global _article_counts_cache
-    
-    # Cache kontrolü (30 saniye)
-    cache_key = f"count_{lang}"
-    if cache_key in _article_counts_cache:
-        cached_time, cached_count = _article_counts_cache[cache_key]
-        if (datetime.now() - cached_time).seconds < 30:
-            return cached_count
-    
+    """Belirtilen dildeki toplam makale sayısı"""
     articles = get_articles()
-    count = len([a for a in articles if a.get('lang') == lang])
-    _article_counts_cache[cache_key] = (datetime.now(), count)
-    return count
+    return len([a for a in articles if a.get('lang') == lang])
+
+def get_category_article_count(lang, category):
+    """Belirtilen dil ve kategorideki makale sayısı"""
+    articles = get_articles()
+    return len([
+        a for a in articles 
+        if a.get('lang') == lang and a.get('category') == category
+    ])
 
 def load_hero_data():
-    """hero.json'u R2'den okur, cache'ler"""
-    global _hero_data_cache, _hero_data_cache_time
-    
-    now = datetime.now()
-    if _hero_data_cache and _hero_data_cache_time and (now - _hero_data_cache_time).seconds < 60:
-        return _hero_data_cache
-    
+    """hero.json'u R2'den okur (cache YOK)"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key='assets/hero.json')
-        data = json.loads(response['Body'].read().decode('utf-8'))
-        _hero_data_cache = data
-        _hero_data_cache_time = now
-        return data
+        return json.loads(response['Body'].read().decode('utf-8'))
     except Exception as e:
         if not hasattr(load_hero_data, '_warned'):
             print(f"⚠️ assets/hero.json yüklenemedi (varsayılan kullanılacak): {e}")
@@ -130,7 +101,6 @@ def get_hero_blocks(page_type, lang, category=None):
     
     pages = hero_data.get('pages', {})
     
-    # Sayfa tipine göre veriyi al
     if page_type == 'home':
         page_data = pages.get('home', {})
     elif page_type == 'category' and category:
@@ -144,17 +114,14 @@ def get_hero_blocks(page_type, lang, category=None):
     else:
         page_data = {}
     
-    # Dil bazlı blokları al
     lang_data = page_data.get(lang, {})
     blocks = lang_data.get('blocks', [])
     
-    # Blok yoksa default dene
     if not blocks:
         defaults = hero_data.get('defaults', {})
         default_data = defaults.get(lang, defaults.get('en', {}))
         blocks = default_data.get('blocks', [])
     
-    # Hala yoksa hardcoded default
     if not blocks:
         blocks = get_default_blocks(lang)
     
@@ -165,13 +132,18 @@ def get_hero_blocks(page_type, lang, category=None):
 def render_title_block(block):
     return f'<h1 class="hero-title">{block["content"]}</h1>'
 
-def render_description_block(block, lang=None):
+def render_description_block(block, lang=None, category=None):
     content = block["content"]
     
-    # Dinamik makale sayısı (placeholder varsa değiştir)
+    # Toplam makale sayısı (home, all-articles için)
     if '{{ article_count }}' in content and lang:
         article_count = get_article_count_by_lang(lang)
         content = content.replace('{{ article_count }}', str(article_count))
+    
+    # Kategori makale sayısı (category, category-archive için)
+    if '{{ category_article_count }}' in content and lang and category:
+        cat_count = get_category_article_count(lang, category)
+        content = content.replace('{{ category_article_count }}', str(cat_count))
     
     # \n -> <br> dönüşümü
     content = content.replace('\n', '<br>')
@@ -255,7 +227,6 @@ def render_quote_block(block):
     return f'<div class="hero-quote"><blockquote>"{block["content"]}"</blockquote><cite>— {block.get("author", "")}</cite></div>'
 
 def render_breadcrumb_block(block):
-    """Breadcrumb bloğu - sadece article sayfasında gösterilir"""
     return '<div class="hero-breadcrumb"></div>'
 
 # ================= BLOK TİPİ RENDER MAP =================
@@ -274,11 +245,9 @@ BLOCK_RENDERERS = {
     'breadcrumb': render_breadcrumb_block
 }
 
-def render_block(block, page_type, lang=None):
-    """Tek bir bloğu render eder, hide_on kontrolü yapar"""
+def render_block(block, page_type, lang=None, category=None):
     block_type = block.get('type')
     
-    # hide_on kontrolü
     hide_on = block.get('hide_on', [])
     if page_type in hide_on:
         return ''
@@ -286,16 +255,14 @@ def render_block(block, page_type, lang=None):
     renderer = BLOCK_RENDERERS.get(block_type)
     if renderer:
         try:
-            # description bloğuna lang parametresini gönder
             if block_type == 'description':
-                return renderer(block, lang)
+                return renderer(block, lang, category)
             return renderer(block)
         except Exception as e:
             print(f"⚠️ Hero bloğu render hatası ({block_type}): {e}")
     return ''
 
 def render_hero(page_type, lang, category=None):
-    """Hero HTML'ini oluşturur"""
     blocks = get_hero_blocks(page_type, lang, category)
     
     if not blocks:
@@ -303,16 +270,14 @@ def render_hero(page_type, lang, category=None):
     
     html = '<div class="hero-grid">\n'
     for block in blocks:
-        block_html = render_block(block, page_type, lang)
+        block_html = render_block(block, page_type, lang, category)
         if block_html:
-            # grid belirtilmemişse varsayılan olarak 'full'
             grid = block.get('grid', 'full')
             html += f'    <div class="hero-grid-{grid}">{block_html}</div>\n'
     html += '</div>'
     return html
 
 def get_hero_data(page_type, lang, category=None):
-    """Hero verisini döndürür (template'ler için)"""
     return {
         'html': render_hero(page_type, lang, category),
         'has_hero': True
@@ -320,22 +285,16 @@ def get_hero_data(page_type, lang, category=None):
 
 # ================= TEST =================
 if __name__ == "__main__":
-    print("🧪 Hero Bot V15 Testi (Dinamik Makale Sayısı + hide_on Kontrolü)")
+    print("🧪 Hero Bot V16 (CACHE YOK - Her seferinde taze okur)")
     print("-" * 60)
     
     print("\n🏠 HOME (EN):")
     print(render_hero('home', 'en'))
     
-    print("\n🏠 HOME (ES):")
-    print(render_hero('home', 'es'))
-    
     print("\n📂 CATEGORY TECH (EN):")
     print(render_hero('category', 'en', 'tech'))
     
-    print("\n📄 ARTICLE (EN):")
-    print(render_hero('article', 'en'))
+    print("\n📂 CATEGORY WELLNESS (ES):")
+    print(render_hero('category', 'es', 'wellness'))
     
-    print("\n📚 SPECIAL ALL-ARTICLES (EN):")
-    print(render_hero('special', 'en', 'all-articles'))
-    
-    print("\n✅ Hero Bot V15 çalışıyor!")
+    print("\n✅ Hero Bot V16 çalışıyor!")
