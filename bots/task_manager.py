@@ -29,6 +29,8 @@ CLUSTER_NAME_TO_ID = {
     "language_apps": "el_03",
     "cloud_certifications": "el_04",
     "sidehustle_skills": "el_05",
+    "corporate_ar_training": "el_06",      # YENİ
+    "adaptive_lms_ai": "el_07",            # YENİ
     # ECO
     "ev_infrastructure": "eco_01",
     "solar_energy": "eco_02",
@@ -158,10 +160,15 @@ def add_tasks():
     else:
         skipped_tasks = []
     
-    # new_task.txt'den TÜM task'ları oku
-    all_task_data = parse_all_tasks("new_task.txt")
+    # new_task.txt dosya yolu -> task/new_task.txt
+    new_task_path = "task/new_task.txt"
+    if not os.path.exists(new_task_path):
+        print(f"❌ {new_task_path} bulunamadı! Önce task/new_task.txt dosyasını oluşturun.")
+        return
+    
+    all_task_data = parse_all_tasks(new_task_path)
     if not all_task_data:
-        print("❌ Hiç task bulunamadı! new_task.txt dosyasını kontrol et.")
+        print("❌ Hiç task bulunamadı! task/new_task.txt dosyasını kontrol et.")
         return
     
     # Mevcut task_id'leri topla
@@ -197,6 +204,7 @@ def add_tasks():
         cluster_input = task_data.get('cluster', '')
         cluster_id = resolve_cluster_id(cluster_input)
         
+        # GÜNCELLENDİ: width/height kaldırıldı, Visual Bot kendi belirleyecek
         new_task = {
             "task_id": new_id,
             "category": category,
@@ -207,24 +215,12 @@ def add_tasks():
             "author_persona": task_data.get('author_persona', 'Expert Analyst'),
             "special_instructions": task_data.get('special_instructions', ''),
             "visuals": {
-                "kapak": {
-                    "prompt": task_data.get('kapak_prompt', task_data['topic']),
-                    "width": 1024,
-                    "height": 1024
-                },
-                "icerik_1": {
-                    "prompt": task_data.get('icerik_1_prompt', task_data['topic']),
-                    "width": 1024,
-                    "height": 1024
-                },
-                "icerik_2": {
-                    "prompt": task_data.get('icerik_2_prompt', task_data['topic']),
-                    "width": 1024,
-                    "height": 1024
-                }
+                "kapak": task_data.get('kapak_prompt', task_data['topic']),
+                "icerik_1": task_data.get('icerik_1_prompt', task_data['topic']),
+                "icerik_2": task_data.get('icerik_2_prompt', task_data['topic'])
             },
             "status": "pending",
-            "hash": None,  # Creator tarafından doldurulacak
+            "hash": None,
             "created_at": today_iso,
             "date": today_iso,
             "display_date": today_display,
