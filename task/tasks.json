@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0127",
-        "category": "elearning",
-        "cluster_id": "el_07",
-        "topic": "The LMS That Knows You're Bored: How 2026 Adaptive Learning Systems Change Content in Real-Time",
-        "reference_link": "https://www.edsurge.com/adaptive-lms-2026",
-        "language": "en",
-        "author_persona": "Learning Platform Product Manager & Educational Psychologist",
-        "special_instructions": "Explain eye-tracking and micro-assessment to detect confusion/boredom. Format shifting (video to text).",
-        "visuals": {
-            "kapak": "A student watching a video on a tablet, but the video pauses and turns into an interactive quiz because a small \"Bored Detected\" icon appeared, 8k",
-            "icerik_1": "A dashboard showing \"Engagement Score: Dropping. Switching from Lecture to Gamified Challenge.\" with a happy student graph, photorealistic",
-            "icerik_2": "A close-up of a tablet camera analyzing a student's pupil and micro-expressions, with \"Focus: 72% => Action: Suggest Break\" overlay, photorealistic"
-        },
-        "status": "pending",
-        "hash": "9180ed2e",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-28T19:34:06.502696"
-    },
-    {
         "task_id": "0128",
         "category": "tech",
         "cluster_id": "tech_01",
