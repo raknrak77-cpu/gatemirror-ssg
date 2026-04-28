@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0129",
-        "category": "wellness",
-        "cluster_id": "wl_01",
-        "topic": "Reversing the Epigenetic Clock: How 2026 Lifestyle Interventions Add 10 Years of Healthspan",
-        "reference_link": "https://www.aging-us.com/epigenetic-reversal-2026",
-        "language": "en",
-        "author_persona": "Epigeneticist & Anti-Aging Clinical Researcher",
-        "special_instructions": "Focus on DNA methylation age (Horvath clock) reduction via intermittent fasting and specific supplements. Provide a sample weekly protocol.",
-        "visuals": {
-            "kapak": "A close up of a DNA strand with glowing \"methylation tags\" being gently removed by a soft-hand light, youthful skin background, 8k, photorealistic",
-            "icerik_1": "A split screen: left side \"Chronological Age: 60 / Biological Age: 65\"; right side \"Chronological Age: 60 / Biological Age: 52\", glowing UI, photorealistic",
-            "icerik_2": "A person in a kitchen, preparing a time-restricted meal, with a holographic timer showing \"Fasting Window: 16h completed\", warm lighting, photorealistic"
-        },
-        "status": "pending",
-        "hash": "8e83d2e2",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-28T21:03:24.862517"
-    },
-    {
         "task_id": "0130",
         "category": "future-economy",
         "cluster_id": "fe_02",
