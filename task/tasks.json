@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0132",
-        "category": "elearning",
-        "cluster_id": "el_10",
-        "topic": "The Socratic AI Tutor: How 2026 Multimodal LLMs Ask \"Why\" Instead of Giving Answers",
-        "reference_link": "https://www.khanacademy.org/socratic-ai-2026",
-        "language": "en",
-        "author_persona": "Learning Sciences Researcher & AI Pedagogy Lead",
-        "special_instructions": "Explain how AI uses voice, facial expression, and drawing analysis to guide thinking.",
-        "visuals": {
-            "kapak": "A student sitting at a desk, thinking, while a glowing AI on the tablet has drawn a question mark and a diagram, warm light, 8k",
-            "icerik_1": "A conversation interface showing: Student: \"Is it 42?\" AI: \"Not quite. Let's check step 2. What happens when X doubles?\" photorealistic",
-            "icerik_2": "A student's face changing from confused to enlightened as the AI shows a relevant animation, subtle lighting, photorealistic"
-        },
-        "status": "pending",
-        "hash": "3a005196",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-28T22:31:57.056775"
-    },
-    {
         "task_id": "0133",
         "category": "tech",
         "cluster_id": "tech_02",
