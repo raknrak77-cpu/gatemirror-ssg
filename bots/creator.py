@@ -298,7 +298,12 @@ CULTURAL ADAPTATION:
 - FR: French/Francophone context
 
 CONTENT REQUIREMENTS (per language):
-- MINIMUM: 2000 words per language
+- STRICT MINIMUM: 2000 words per language (approximately 12,000-14,000 characters)
+- HARD MINIMUM PER LANGUAGE: 18,000 characters (including HTML tags, spaces, and all content)
+- If a language version falls below 18,000 characters, the article is INCOMPLETE and must be regenerated.
+- The editor will reject and delete articles below 18,000 characters.
+- Use detailed analysis, extended examples, deeper sub‑sections, and more comprehensive FAQ answers to reach the required length.
+- Quality over quantity, but both are mandatory.
 - Hook: Start Introduction with a bold claim or statistic
 
 STRUCTURE:
@@ -345,7 +350,7 @@ STRICT RULES:
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
-        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
+        "generationConfig": {"temperature": 0.92, "maxOutputTokens": 38000, "topP": 0.95}
     }
     
     try:
