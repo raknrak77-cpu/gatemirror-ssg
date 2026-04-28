@@ -70,5 +70,29 @@
         "hash_updated_at": "2026-04-27T00:05:22.732553",
         "skipped_at": "2026-04-27T00:42:54.316458",
         "skip_reason": "hash_exists_but_pending"
+    },
+    {
+        "task_id": "0128",
+        "category": "tech",
+        "cluster_id": "tech_01",
+        "topic": "2026 AI Trading Bots: Sentiment-Driven Liquidity Pools and On-Chain Execution",
+        "reference_link": "https://www.coindesk.com/ai-sentiment-trading-2026",
+        "language": "en",
+        "author_persona": "High-Frequency Crypto Trader & DeFi Quant Analyst",
+        "special_instructions": "Focus on fusing Twitter/Crypto Panic sentiment with on-chain mempool data. Explain how bots front-run retail sentiment. Include a data table for monthly sharpe ratios.",
+        "visuals": {
+            "kapak": "A 3D real-time crypto heatmap with glowing red/green candles, a transparent AI brain icon in the center processing data streams, dark background, 8k, photorealistic",
+            "icerik_1": "Split screen: left side \"Retail FOMO\" with chaotic green candles; right side \"AI Bot Execution\" with precise small profit-taking orders, photorealistic",
+            "icerik_2": "A futuristic terminal showing \"Mempool Sniped: +0.3% profit in 0.4 seconds\", clean monospace UI, neon green on black, photorealistic"
+        },
+        "status": "pending",
+        "hash": "65b815d1",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "",
+        "hash_updated_at": "2026-04-28T20:11:42.928944",
+        "skipped_at": "2026-04-28T21:02:20.379675",
+        "skip_reason": "hash_exists_but_pending"
     }
 ]
