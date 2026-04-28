@@ -1,5 +1,5 @@
 {
-    "version": "3.0",
+    "version": "3.1",
     "categories": {
         "tech": {
             "clusters": {
@@ -67,6 +67,32 @@
                     "forbidden": ["\"Google is dying\" (clickbait)", "Unsubstantiated claims"],
                     "style_boost": "Cite recent studies. Authority-building, traffic driver. Neutral tone.",
                     "keywords": ["generative search", "Google SGE", "Perplexity", "AI search", "SEO future"]
+                },
+                "quantum_computing_trends": {
+                    "cluster_id": "tech_06",
+                    "author_id": "AUTH_011",
+                    "intent": "informational",
+                    "cpc_min": 30,
+                    "cpc_max": 75,
+                    "monetization": "enterprise_sales",
+                    "affiliate_ids": ["AFF_034"],
+                    "required_sections": ["Qubit fidelity metrics", "Error correction breakthrough", "Commercial applications (pharma, finance)", "Timeline to advantage"],
+                    "forbidden": ["\"Quantum supremacy\" hype", "Ignoring decoherence"],
+                    "style_boost": "Deep technical authority. Target R&D directors. Cite Nature/arXiv papers.",
+                    "keywords": ["quantum computing", "qubit", "quantum error correction", "quantum advantage", "NISQ"]
+                },
+                "wearable_tech_2026": {
+                    "cluster_id": "tech_07",
+                    "author_id": "AUTH_014",
+                    "intent": "commercial",
+                    "cpc_min": 8,
+                    "cpc_max": 20,
+                    "monetization": "wearable_affiliate",
+                    "affiliate_ids": ["AFF_019", "AFF_047"],
+                    "required_sections": ["Sensor accuracy comparison", "Battery life", "App ecosystem", "Privacy policy (health data)"],
+                    "forbidden": ["Medical diagnosis claims", "\"Miracle device\" language"],
+                    "style_boost": "Consumer-focused. Comparison tables. Affiliate heavy. Include user reviews.",
+                    "keywords": ["smartwatch", "fitness tracker", "wearable tech", "health wearable", "BCI headband"]
                 }
             }
         },
@@ -136,6 +162,58 @@
                     "forbidden": ["\"Beat the market\" promises", "Short-term focus"],
                     "style_boost": "HNW lead gen. Professional, conservative tone. Target accredited investors.",
                     "keywords": ["wealth management", "private wealth", "investment advisory", "HNW", "asset management"]
+                },
+                "depin_networks": {
+                    "cluster_id": "fe_06",
+                    "author_id": "AUTH_007",
+                    "intent": "informational",
+                    "cpc_min": 12,
+                    "cpc_max": 28,
+                    "monetization": "protocols",
+                    "affiliate_ids": ["AFF_035"],
+                    "required_sections": ["Network participation requirements", "Tokenomics breakdown", "ROI calculation (hardware cost vs earnings)", "Comparison (Helium, Hivemapper, etc.)"],
+                    "forbidden": ["\"Passive income\" guarantees", "Ignoring hardware costs"],
+                    "style_boost": "Target DIY tech enthusiasts. Include real-world earnings data.",
+                    "keywords": ["DePIN", "decentralized infrastructure", "Helium", "IoT network", "crowdsourced WiFi"]
+                },
+                "cbdc": {
+                    "cluster_id": "fe_07",
+                    "author_id": "AUTH_008",
+                    "intent": "informational",
+                    "cpc_min": 18,
+                    "cpc_max": 35,
+                    "monetization": "adsense",
+                    "affiliate_ids": ["AFF_036"],
+                    "required_sections": ["Privacy comparison (CBDC vs crypto)", "Programmable money use cases", "Global adoption status (Digital Dollar, Digital Euro)", "Offline payment tech"],
+                    "forbidden": ["Political bias", "Conspiracy theories"],
+                    "style_boost": "Neutral, academic tone. Cite central bank publications.",
+                    "keywords": ["CBDC", "digital dollar", "digital euro", "central bank digital currency", "programmable money"]
+                },
+                "gig_economy_3_0": {
+                    "cluster_id": "fe_08",
+                    "author_id": "AUTH_020",
+                    "intent": "commercial",
+                    "cpc_min": 8,
+                    "cpc_max": 18,
+                    "monetization": "tool_affiliate",
+                    "affiliate_ids": ["AFF_037"],
+                    "required_sections": ["Platform fee comparison", "Earning potential (realistic)", "AI agent integration", "DAO governance overview"],
+                    "forbidden": ["\"Get rich quick\" promises", "Pyramid scheme adjacent"],
+                    "style_boost": "Tool affiliate (Upwork, Fiverr, Braintrust). Focus on actionable steps.",
+                    "keywords": ["gig economy", "freelance platform", "AI freelancer", "DAO work", "future of work"]
+                },
+                "impact_investing_esg": {
+                    "cluster_id": "fe_09",
+                    "author_id": "AUTH_023",
+                    "intent": "informational",
+                    "cpc_min": 22,
+                    "cpc_max": 45,
+                    "monetization": "fintech_b2b",
+                    "affiliate_ids": ["AFF_038"],
+                    "required_sections": ["ESG scoring methodology", "Regulatory landscape (SFDR, SEC)", "Fund performance comparison", "Greenwashing red flags"],
+                    "forbidden": ["\"Save the planet\" virtue signaling", "Ignoring trade-offs"],
+                    "style_boost": "Authority content. Attracts high-CPC financial ads. Neutral, data-driven.",
+                    "keywords": ["ESG investing", "impact investing", "sustainable finance", "green bonds", "carbon markets"]
                 }
             }
         },
@@ -143,7 +221,7 @@
             "clusters": {
                 "longevity_biohacking": {
                     "cluster_id": "wl_01",
-                    "author_id": "AUTH_012",
+                    "author_id": "AUTH_011",
                     "intent": "commercial",
                     "cpc_min": 8,
                     "cpc_max": 18,
@@ -156,7 +234,7 @@
                 },
                 "mental_health_apps": {
                     "cluster_id": "wl_02",
-                    "author_id": "AUTH_013",
+                    "author_id": "AUTH_012",
                     "intent": "mixed",
                     "cpc_min": 10,
                     "cpc_max": 22,
@@ -169,7 +247,7 @@
                 },
                 "telemedicine_tech": {
                     "cluster_id": "wl_03",
-                    "author_id": "AUTH_014",
+                    "author_id": "AUTH_013",
                     "intent": "informational",
                     "cpc_min": 15,
                     "cpc_max": 35,
@@ -182,7 +260,7 @@
                 },
                 "sleep_optimization": {
                     "cluster_id": "wl_04",
-                    "author_id": "AUTH_015",
+                    "author_id": "AUTH_014",
                     "intent": "commercial",
                     "cpc_min": 5,
                     "cpc_max": 12,
@@ -195,7 +273,7 @@
                 },
                 "personalized_nutrition": {
                     "cluster_id": "wl_05",
-                    "author_id": "AUTH_016",
+                    "author_id": "AUTH_015",
                     "intent": "commercial",
                     "cpc_min": 7,
                     "cpc_max": 15,
@@ -205,6 +283,32 @@
                     "forbidden": ["Medical diagnosis claims", "Guaranteed weight loss"],
                     "style_boost": "SaaS + kit affiliate. Educational + commercial balance. Cite clinical validation.",
                     "keywords": ["personalized nutrition", "DNA diet", "microbiome testing", "nutrition kit", "health testing"]
+                },
+                "holistic_biohacking": {
+                    "cluster_id": "wl_06",
+                    "author_id": "AUTH_012",
+                    "intent": "commercial",
+                    "cpc_min": 6,
+                    "cpc_max": 14,
+                    "monetization": "supplements_wearable",
+                    "affiliate_ids": ["AFF_039"],
+                    "required_sections": ["Circadian rhythm protocols", "Light therapy (red/blue)", "Binaural beats guide", "Temperature optimization"],
+                    "forbidden": ["\"Detox\" pseudoscience", "Unproven frequency claims"],
+                    "style_boost": "Science-informed but accessible. Focus on measurable biomarkers.",
+                    "keywords": ["circadian rhythm", "red light therapy", "binaural beats", "cold exposure", "holistic biohacking"]
+                },
+                "regenerative_fitness": {
+                    "cluster_id": "wl_07",
+                    "author_id": "AUTH_003",
+                    "intent": "commercial",
+                    "cpc_min": 9,
+                    "cpc_max": 22,
+                    "monetization": "gear_affiliate",
+                    "affiliate_ids": ["AFF_040"],
+                    "required_sections": ["EMS suit comparison", "Recovery protocol (cold plunge, compression)", "AI coach accuracy", "Before/after (verified)"],
+                    "forbidden": ["Steroid/testosterone claims", "Unrealistic muscle gain"],
+                    "style_boost": "Fitness influencer tone. Affiliate links to high-end gear.",
+                    "keywords": ["EMS training", "muscle recovery", "AI fitness coach", "wearable resistance", "regenerative fitness"]
                 }
             }
         },
@@ -212,7 +316,7 @@
             "clusters": {
                 "coding_bootcamps": {
                     "cluster_id": "el_01",
-                    "author_id": "AUTH_017",
+                    "author_id": "AUTH_016",
                     "intent": "commercial",
                     "cpc_min": 15,
                     "cpc_max": 40,
@@ -225,7 +329,7 @@
                 },
                 "exec_education": {
                     "cluster_id": "el_02",
-                    "author_id": "AUTH_018",
+                    "author_id": "AUTH_017",
                     "intent": "mixed",
                     "cpc_min": 40,
                     "cpc_max": 120,
@@ -238,7 +342,7 @@
                 },
                 "language_apps": {
                     "cluster_id": "el_03",
-                    "author_id": "AUTH_019",
+                    "author_id": "AUTH_018",
                     "intent": "commercial",
                     "cpc_min": 3,
                     "cpc_max": 9,
@@ -251,7 +355,7 @@
                 },
                 "cloud_certifications": {
                     "cluster_id": "el_04",
-                    "author_id": "AUTH_020",
+                    "author_id": "AUTH_019",
                     "intent": "commercial",
                     "cpc_min": 12,
                     "cpc_max": 25,
@@ -264,7 +368,7 @@
                 },
                 "sidehustle_skills": {
                     "cluster_id": "el_05",
-                    "author_id": "AUTH_021",
+                    "author_id": "AUTH_020",
                     "intent": "commercial",
                     "cpc_min": 4,
                     "cpc_max": 10,
@@ -300,6 +404,45 @@
                     "forbidden": ["Static course mentions", "\"One-size-fits-all\""],
                     "style_boost": "Target HR and L&D. Highlight completion rates increase. Compare 3-5 platforms.",
                     "keywords": ["adaptive learning", "AI LMS", "personalized training", "learning platform", "LMS AI"]
+                },
+                "vr_ar_classrooms": {
+                    "cluster_id": "el_08",
+                    "author_id": "AUTH_003",
+                    "intent": "mixed",
+                    "cpc_min": 10,
+                    "cpc_max": 22,
+                    "monetization": "hardware_affiliate",
+                    "affiliate_ids": ["AFF_030", "AFF_048"],
+                    "required_sections": ["Headset comparison (Meta, Apple, HTC)", "Educational app ecosystem", "Classroom management features", "Cost per student"],
+                    "forbidden": ["VR sickness ignore", "\"Replace teachers\" narrative"],
+                    "style_boost": "Educator-focused. ROI on engagement. Include case studies.",
+                    "keywords": ["VR classroom", "AR education", "metaverse school", "immersive learning", "virtual field trip"]
+                },
+                "skill_based_nanodegrees": {
+                    "cluster_id": "el_09",
+                    "author_id": "AUTH_016",
+                    "intent": "commercial",
+                    "cpc_min": 14,
+                    "cpc_max": 35,
+                    "monetization": "course_sales",
+                    "affiliate_ids": ["AFF_041"],
+                    "required_sections": ["Program structure (months, hours/week)", "Industry recognition", "Alumni outcomes", "Cost vs traditional degree"],
+                    "forbidden": ["\"Degree replacement\" absolutism", "Unverified employer recognition"],
+                    "style_boost": "ROI-focused. Compare 3-5 providers (Coursera, Udacity, edX).",
+                    "keywords": ["nanodegree", "micro-credential", "professional certificate", "skills based credential", "alternative credential"]
+                },
+                "ai_tutors_personalized": {
+                    "cluster_id": "el_10",
+                    "author_id": "AUTH_004",
+                    "intent": "commercial",
+                    "cpc_min": 8,
+                    "cpc_max": 18,
+                    "monetization": "subscription",
+                    "affiliate_ids": ["AFF_042"],
+                    "required_sections": ["Personalization algorithm depth", "Subject coverage", "Parent/teacher dashboard", "Pricing (family vs classroom)"],
+                    "forbidden": ["\"Replace human teachers\" claims", "Overpromising learning speed"],
+                    "style_boost": "Parent/educator focused. Evidence-based claims.",
+                    "keywords": ["AI tutor", "personalized learning", "intelligent tutoring", "adaptive learning", "AI education"]
                 }
             }
         },
@@ -307,7 +450,7 @@
             "clusters": {
                 "ev_infrastructure": {
                     "cluster_id": "eco_01",
-                    "author_id": "AUTH_022",
+                    "author_id": "AUTH_021",
                     "intent": "mixed",
                     "cpc_min": 12,
                     "cpc_max": 28,
@@ -320,7 +463,7 @@
                 },
                 "solar_energy": {
                     "cluster_id": "eco_02",
-                    "author_id": "AUTH_023",
+                    "author_id": "AUTH_022",
                     "intent": "commercial",
                     "cpc_min": 20,
                     "cpc_max": 55,
@@ -333,7 +476,7 @@
                 },
                 "climate_finance": {
                     "cluster_id": "eco_03",
-                    "author_id": "AUTH_024",
+                    "author_id": "AUTH_023",
                     "intent": "informational",
                     "cpc_min": 15,
                     "cpc_max": 30,
@@ -345,9 +488,8 @@
                     "keywords": ["ESG investing", "climate finance", "sustainable finance", "green bonds", "carbon markets"]
                 },
                 "smart_home_energy": {
-                    "smart_home_energy": {
                     "cluster_id": "eco_04",
-                    "author_id": "AUTH_025",
+                    "author_id": "AUTH_024",
                     "intent": "commercial",
                     "cpc_min": 6,
                     "cpc_max": 14,
@@ -360,7 +502,7 @@
                 },
                 "circular_economy": {
                     "cluster_id": "eco_05",
-                    "author_id": "AUTH_026",
+                    "author_id": "AUTH_025",
                     "intent": "informational",
                     "cpc_min": 5,
                     "cpc_max": 11,
@@ -370,167 +512,88 @@
                     "forbidden": ["\"Zero waste\" absolutism", "Greenwashing"],
                     "style_boost": "B2B focused. Authority content for AdSense. Cite circular economy stats.",
                     "keywords": ["circular economy", "zero waste", "sustainable business", "right to repair", "circular business model"]
+                },
+                "ocean_cleanup_tech": {
+                    "cluster_id": "eco_06",
+                    "author_id": "AUTH_022",
+                    "intent": "informational",
+                    "cpc_min": 4,
+                    "cpc_max": 9,
+                    "monetization": "nonprofit_donate",
+                    "affiliate_ids": ["AFF_043"],
+                    "required_sections": ["Technology comparison (passive vs active)", "Environmental impact assessment", "Cost per kg removed", "Partner organizations"],
+                    "forbidden": ["\"Saving the ocean\" virtue signaling without data", "Ignoring bycatch"],
+                    "style_boost": "Mission-driven but data-backed. Inspire action.",
+                    "keywords": ["ocean cleanup", "plastic pollution", "marine debris", "seabed collection", "ocean restoration"]
+                },
+                "regenerative_agriculture": {
+                    "cluster_id": "eco_07",
+                    "author_id": "AUTH_011",
+                    "intent": "informational",
+                    "cpc_min": 7,
+                    "cpc_max": 16,
+                    "monetization": "adsense",
+                    "affiliate_ids": ["AFF_044"],
+                    "required_sections": ["Soil carbon sequestration science", "No-till vs traditional comparison", "Cover crop benefits", "Carbon credit economics"],
+                    "forbidden": ["\"Miracle soil\" claims", "Ignoring transition costs"],
+                    "style_boost": "Farmer and agronomist focused. Practical, evidence-based.",
+                    "keywords": ["regenerative agriculture", "soil health", "carbon farming", "no-till farming", "cover crops"]
+                },
+                "green_hydrogen": {
+                    "cluster_id": "eco_08",
+                    "author_id": "AUTH_022",
+                    "intent": "informational",
+                    "cpc_min": 18,
+                    "cpc_max": 38,
+                    "monetization": "b2b_lead",
+                    "affiliate_ids": ["AFF_045"],
+                    "required_sections": ["Electrolyzer efficiency comparison", "Production cost ($/kg)", "Storage & transport challenges", "Industry adoption (steel, shipping)"],
+                    "forbidden": ["\"Silver bullet\" language", "Ignoring energy losses"],
+                    "style_boost": "Industrial/energy professional tone. Cite IEA reports.",
+                    "keywords": ["green hydrogen", "electrolyzer", "hydrogen economy", "renewable hydrogen", "H2 production"]
+                },
+                "sustainable_fashion": {
+                    "cluster_id": "eco_09",
+                    "author_id": "AUTH_025",
+                    "intent": "commercial",
+                    "cpc_min": 5,
+                    "cpc_max": 12,
+                    "monetization": "product_affiliate",
+                    "affiliate_ids": ["AFF_046"],
+                    "required_sections": ["Material comparison (mycelium, lab-grown leather)", "Durability testing", "Price vs traditional", "Brand sustainability ratings"],
+                    "forbidden": ["Greenwashing", "\"Eco-friendly\" without evidence"],
+                    "style_boost": "Fashion-forward but critical. Affiliate to sustainable brands.",
+                    "keywords": ["sustainable fashion", "lab grown leather", "mycelium leather", "circular fashion", "eco clothing"]
                 }
             }
         }
     },
     "authors": {
-        "AUTH_001": {
-            "name": "Alp Deniz",
-            "title": "Algorithmic Trading Strategist",
-            "bio": "Former quantitative analyst at a proprietary trading firm. Specializes in high-frequency AI execution models and portfolio automation. Based in Istanbul.",
-            "avatar": "/images/authors/alp-deniz.webp"
-        },
-        "AUTH_002": {
-            "name": "Elena Varga",
-            "title": "Cyber Threat Intelligence Researcher",
-            "bio": "Former SOC lead for a European critical infrastructure operator. Focuses on AI-driven defense and zero-day exploit mitigation.",
-            "avatar": "/images/authors/elena-varga.webp"
-        },
-        "AUTH_003": {
-            "name": "Caner Yılmaz",
-            "title": "Digital Workplace Consultant",
-            "bio": "Helped over 150 companies integrate AI copilots and automation workflows. Passionate about measurable productivity gains.",
-            "avatar": "/images/authors/caner-yilmaz.webp"
-        },
-        "AUTH_004": {
-            "name": "Sofia Larsson",
-            "title": "Cloud Solutions Architect",
-            "bio": "Designs multi-cloud infrastructure for fintech and AI-first startups. Certified AWS, Azure, and GCP professional.",
-            "avatar": "/images/authors/sofia-larsson.webp"
-        },
-        "AUTH_005": {
-            "name": "Mert Akıncı",
-            "title": "SEO & Generative Search Analyst",
-            "bio": "Tracks search algorithm shifts since the early 2010s. Focuses on how publishers can adapt to SGE and answer engines.",
-            "avatar": "/images/authors/mert-akinci.webp"
-        },
-        "AUTH_006": {
-            "name": "Zeynep Korkmaz",
-            "title": "Cryptocurrency Market Analyst",
-            "bio": "Full-time crypto trader since 2017. Analyzes exchange liquidity, fee structures, and security practices for retail and institutional investors.",
-            "avatar": "/images/authors/zeynep-korkmaz.webp"
-        },
-        "AUTH_007": {
-            "name": "Dimitri Volkov",
-            "title": "Tokenization & Digital Assets Economist",
-            "bio": "Advised European regulators on MiCA implementation for RWAs. Previously structured tokenized real estate funds.",
-            "avatar": "/images/authors/dimitri-volkov.webp"
-        },
-        "AUTH_008": {
-            "name": "Elif Taşkın",
-            "title": "Fintech & Neobank Specialist",
-            "bio": "Former product manager at a leading digital bank. Reviews account features, fee transparency, and user experience across Europe.",
-            "avatar": "/images/authors/elif-taskin.webp"
-        },
-        "AUTH_009": {
-            "name": "Lucas Fontaine",
-            "title": "DeFi Protocol Researcher",
-            "bio": "Audits smart contracts and staking mechanisms. Focuses on risk-adjusted yield strategies for long-term holders.",
-            "avatar": "/images/authors/lucas-fontaine.webp"
-        },
-        "AUTH_010": {
-            "name": "Clara Hofmann",
-            "title": "Private Wealth Advisor",
-            "bio": "15 years experience in multi‑family office asset allocation. Specializes in alternative investments and tax‑efficient portfolios.",
-            "avatar": "/images/authors/clara-hofmann.webp"
-        },
-        "AUTH_011": {
-            "name": "Dr. Aris Thorne",
-            "title": "Longevity & Metabolic Health Researcher",
-            "bio": "PhD in molecular biology. Translates aging science into actionable protocols for biohackers and health optimizers.",
-            "avatar": "/images/authors/aris-thorne.webp"
-        },
-        "AUTH_012": {
-            "name": "Dr. Sibel Günay",
-            "title": "Clinical Psychologist & Digital Therapeutics Consultant",
-            "bio": "Evaluates evidence‑based mental health apps. Focuses on data privacy, therapeutic alliance, and real‑world outcomes.",
-            "avatar": "/images/authors/sibel-gunay.webp"
-        },
-        "AUTH_013": {
-            "name": "Dr. Mateo Reyes",
-            "title": "Telehealth Policy & Platform Analyst",
-            "bio": "Works at the intersection of digital health and regulation. Reviews telemedicine services for accessibility and quality.",
-            "avatar": "/images/authors/mateo-reyes.webp"
-        },
-        "AUTH_014": {
-            "name": "Nora Bergman",
-            "title": "Sleep Science & Wearable Tech Reviewer",
-            "bio": "Tests sleep trackers and smart rings. Translates sleep metrics into practical advice for better recovery.",
-            "avatar": "/images/authors/nora-bergman.webp"
-        },
-        "AUTH_015": {
-            "name": "Dr. Linh Nguyen",
-            "title": "Nutrigenomics & Microbiome Researcher",
-            "bio": "Focuses on how genetics and gut bacteria influence dietary responses. Reviews direct‑to‑consumer testing kits.",
-            "avatar": "/images/authors/linh-nguyen.webp"
-        },
-        "AUTH_016": {
-            "name": "Emre Aydoğan",
-            "title": "Career Coach & Coding Bootcamp Analyst",
-            "bio": "Helped 2,000+ students transition into tech. Reviews bootcamp outcomes, curriculum quality, and job placement support.",
-            "avatar": "/images/authors/emre-aydogan.webp"
-        },
-        "AUTH_017": {
-            "name": "Isabella Conti",
-            "title": "Executive Education Advisor",
-            "bio": "Previously managed EMBA admissions at a top European business school. Advises senior leaders on program selection and ROI.",
-            "avatar": "/images/authors/isabella-conti.webp"
-        },
-        "AUTH_018": {
-            "name": "Mei Lin",
-            "title": "Polyglot & EdTech Reviewer",
-            "bio": "Speaks six languages. Tests apps for pedagogical effectiveness, speech recognition accuracy, and long‑term engagement.",
-            "avatar": "/images/authors/mei-lin.webp"
-        },
-        "AUTH_019": {
-            "name": "Khalid Al‑Rashid",
-            "title": "Cloud Certification Trainer",
-            "bio": "Holds all three main cloud certifications (AWS, Azure, GCP). Helps professionals pass exams on the first attempt.",
-            "avatar": "/images/authors/khalid-alrashid.webp"
-        },
-        "AUTH_020": {
-            "name": "Rebecca Tan",
-            "title": "Digital Entrepreneurship Coach",
-            "bio": "Built multiple six‑figure online businesses. Reviews side hustle platforms and teaches practical skills for freelancing.",
-            "avatar": "/images/authors/rebecca-tan.webp"
-        },
-        "AUTH_021": {
-            "name": "Henrik Lund",
-            "title": "E‑Mobility Infrastructure Analyst",
-            "bio": "Tracks EV charger deployment across Europe. Advises consumers on home charger selection and network reliability.",
-            "avatar": "/images/authors/henrik-lund.webp"
-        },
-        "AUTH_022": {
-            "name": "Fatima Al‑Zahra",
-            "title": "Renewable Energy Engineer",
-            "bio": "Designs residential and commercial solar systems. Evaluates panel efficiency, inverter reliability, and installer quality.",
-            "avatar": "/images/authors/fatima-alzahra.webp"
-        },
-        "AUTH_023": {
-            "name": "Oliver Klein",
-            "title": "Sustainable Finance Strategist",
-            "bio": "Previously managed ESG portfolios at an asset manager. Focuses on regulatory shifts and green investment performance.",
-            "avatar": "/images/authors/oliver-klein.webp"
-        },
-        "AUTH_024": {
-            "name": "Tess van der Meer",
-            "title": "Smart Home Tech Reviewer",
-            "bio": "Tests energy monitoring devices and smart plugs. Provides real‑world savings estimates and compatibility guides.",
-            "avatar": "/images/authors/tess-vandermeer.webp"
-        },
-        "AUTH_025": {
-            "name": "Anastasia Lisichka Rakova",
-            "title": "Legal Counsel & Circular Economy Compliance Specialist",
-            "bio": "Expert attorney specializing in international law and regulatory frameworks for sustainable business. Researches legal models that support zero-waste initiatives, EU environmental regulations, and corporate governance in the circular space.",
-            "avatar": "/images/authors/anastasia-lisichka-rakova.webp"
-        },
-        "AUTH_026": {
-            "name": "Anastasia Lisichka Rakova",
-            "title": "Legal Counsel & Circular Economy Compliance Specialist",
-            "bio": "Expert attorney specializing in international law and regulatory frameworks for sustainable business. Researches legal models that support zero-waste initiatives, EU environmental regulations, and corporate governance in the circular space.",
-            "avatar": "/images/authors/anastasia-lisichka-rakova.webp"
-        }
+        "AUTH_001": {"name": "Alp Deniz", "title": "Algorithmic Trading Strategist", "bio": "Former quantitative analyst at a proprietary trading firm. Specializes in high-frequency AI execution models and portfolio automation. Based in Istanbul.", "avatar": "/images/authors/alp-deniz.webp"},
+        "AUTH_002": {"name": "Elena Varga", "title": "Cyber Threat Intelligence Researcher", "bio": "Former SOC lead for a European critical infrastructure operator. Focuses on AI-driven defense and zero-day exploit mitigation.", "avatar": "/images/authors/elena-varga.webp"},
+        "AUTH_003": {"name": "Caner Yılmaz", "title": "Digital Workplace Consultant", "bio": "Helped over 150 companies integrate AI copilots and automation workflows. Passionate about measurable productivity gains.", "avatar": "/images/authors/caner-yilmaz.webp"},
+        "AUTH_004": {"name": "Sofia Larsson", "title": "Cloud Solutions Architect", "bio": "Designs multi-cloud infrastructure for fintech and AI-first startups. Certified AWS, Azure, and GCP professional.", "avatar": "/images/authors/sofia-larsson.webp"},
+        "AUTH_005": {"name": "Mert Akıncı", "title": "SEO & Generative Search Analyst", "bio": "Tracks search algorithm shifts since the early 2010s. Focuses on how publishers can adapt to SGE and answer engines.", "avatar": "/images/authors/mert-akinci.webp"},
+        "AUTH_006": {"name": "Zeynep Korkmaz", "title": "Cryptocurrency Market Analyst", "bio": "Full-time crypto trader since 2017. Analyzes exchange liquidity, fee structures, and security practices for retail and institutional investors.", "avatar": "/images/authors/zeynep-korkmaz.webp"},
+        "AUTH_007": {"name": "Dimitri Volkov", "title": "Tokenization & Digital Assets Economist", "bio": "Advised European regulators on MiCA implementation for RWAs. Previously structured tokenized real estate funds.", "avatar": "/images/authors/dimitri-volkov.webp"},
+        "AUTH_008": {"name": "Elif Taşkın", "title": "Fintech & Neobank Specialist", "bio": "Former product manager at a leading digital bank. Reviews account features, fee transparency, and user experience across Europe.", "avatar": "/images/authors/elif-taskin.webp"},
+        "AUTH_009": {"name": "Lucas Fontaine", "title": "DeFi Protocol Researcher", "bio": "Audits smart contracts and staking mechanisms. Focuses on risk-adjusted yield strategies for long-term holders.", "avatar": "/images/authors/lucas-fontaine.webp"},
+        "AUTH_010": {"name": "Clara Hofmann", "title": "Private Wealth Advisor", "bio": "15 years experience in multi‑family office asset allocation. Specializes in alternative investments and tax‑efficient portfolios.", "avatar": "/images/authors/clara-hofmann.webp"},
+        "AUTH_011": {"name": "Dr. Aris Thorne", "title": "Longevity & Metabolic Health Researcher", "bio": "PhD in molecular biology. Translates aging science into actionable protocols for biohackers and health optimizers.", "avatar": "/images/authors/aris-thorne.webp"},
+        "AUTH_012": {"name": "Dr. Sibel Günay", "title": "Clinical Psychologist & Digital Therapeutics Consultant", "bio": "Evaluates evidence‑based mental health apps. Focuses on data privacy, therapeutic alliance, and real‑world outcomes.", "avatar": "/images/authors/sibel-gunay.webp"},
+        "AUTH_013": {"name": "Dr. Mateo Reyes", "title": "Telehealth Policy & Platform Analyst", "bio": "Works at the intersection of digital health and regulation. Reviews telemedicine services for accessibility and quality.", "avatar": "/images/authors/mateo-reyes.webp"},
+        "AUTH_014": {"name": "Nora Bergman", "title": "Sleep Science & Wearable Tech Reviewer", "bio": "Tests sleep trackers and smart rings. Translates sleep metrics into practical advice for better recovery.", "avatar": "/images/authors/nora-bergman.webp"},
+        "AUTH_015": {"name": "Dr. Linh Nguyen", "title": "Nutrigenomics & Microbiome Researcher", "bio": "Focuses on how genetics and gut bacteria influence dietary responses. Reviews direct‑to‑consumer testing kits.", "avatar": "/images/authors/linh-nguyen.webp"},
+        "AUTH_016": {"name": "Emre Aydoğan", "title": "Career Coach & Coding Bootcamp Analyst", "bio": "Helped 2,000+ students transition into tech. Reviews bootcamp outcomes, curriculum quality, and job placement support.", "avatar": "/images/authors/emre-aydogan.webp"},
+        "AUTH_017": {"name": "Isabella Conti", "title": "Executive Education Advisor", "bio": "Previously managed EMBA admissions at a top European business school. Advises senior leaders on program selection and ROI.", "avatar": "/images/authors/isabella-conti.webp"},
+        "AUTH_018": {"name": "Mei Lin", "title": "Polyglot & EdTech Reviewer", "bio": "Speaks six languages. Tests apps for pedagogical effectiveness, speech recognition accuracy, and long‑term engagement.", "avatar": "/images/authors/mei-lin.webp"},
+        "AUTH_019": {"name": "Khalid Al‑Rashid", "title": "Cloud Certification Trainer", "bio": "Holds all three main cloud certifications (AWS, Azure, GCP). Helps professionals pass exams on the first attempt.", "avatar": "/images/authors/khalid-alrashid.webp"},
+        "AUTH_020": {"name": "Rebecca Tan", "title": "Digital Entrepreneurship Coach", "bio": "Built multiple six‑figure online businesses. Reviews side hustle platforms and teaches practical skills for freelancing.", "avatar": "/images/authors/rebecca-tan.webp"},
+        "AUTH_021": {"name": "Henrik Lund", "title": "E‑Mobility Infrastructure Analyst", "bio": "Tracks EV charger deployment across Europe. Advises consumers on home charger selection and network reliability.", "avatar": "/images/authors/henrik-lund.webp"},
+        "AUTH_022": {"name": "Fatima Al‑Zahra", "title": "Renewable Energy Engineer", "bio": "Designs residential and commercial solar systems. Evaluates panel efficiency, inverter reliability, and installer quality.", "avatar": "/images/authors/fatima-alzahra.webp"},
+        "AUTH_023": {"name": "Oliver Klein", "title": "Sustainable Finance Strategist", "bio": "Previously managed ESG portfolios at an asset manager. Focuses on regulatory shifts and green investment performance.", "avatar": "/images/authors/oliver-klein.webp"},
+        "AUTH_024": {"name": "Tess van der Meer", "title": "Smart Home Tech Reviewer", "bio": "Tests energy monitoring devices and smart plugs. Provides real‑world savings estimates and compatibility guides.", "avatar": "/images/authors/tess-vandermeer.webp"},
+        "AUTH_025": {"name": "Anastasia Lisichka Rakova", "title": "Legal Counsel & Circular Economy Compliance Specialist", "bio": "Expert attorney specializing in international law and regulatory frameworks for sustainable business. Researches legal models that support zero-waste initiatives, EU environmental regulations, and corporate governance in the circular space.", "avatar": "/images/authors/anastasia-lisichka-rakova.webp"}
     },
     "affiliates": {
         "AFF_001": {"name": "Binance", "commission": "40% RevShare", "link_template": "https://accounts.binance.com/en/register?ref={REF_ID}"},
@@ -561,11 +624,25 @@
         "AFF_026": {"name": "Shopify", "commission": "$100-200 CPA", "link_template": "https://shopify.com/ref/{REF_ID}"},
         "AFF_027": {"name": "ChargePoint", "commission": "Private", "link_template": "https://www.chargepoint.com/partner/{REF_ID}"},
         "AFF_028": {"name": "EnergySage", "commission": "$50-100 Lead", "link_template": "https://www.energysage.com/partner/{REF_ID}"},
-        "AFF_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"}
+        "AFF_029": {"name": "Amazon (IoT)", "commission": "3-10%", "link_template": "https://www.amazon.com/s?k={KEYWORD}&tag={REF_ID}"},
         "AFF_030": {"name": "TeamViewer (AR)", "commission": "15-25%", "link_template": "https://www.teamviewer.com/partner/{REF_ID}"},
         "AFF_031": {"name": "Vuforia (PTC)", "commission": "Private", "link_template": "https://www.ptc.com/partner/{REF_ID}"},
         "AFF_032": {"name": "Area9 Lyceum", "commission": "Competitive", "link_template": "https://area9lyceum.com/partner/{REF_ID}"},
-        "AFF_033": {"name": "Smart Sparrow (Pearson)", "commission": "10-20%", "link_template": "https://www.smartsparrow.com/partner/{REF_ID}"}      
+        "AFF_033": {"name": "Smart Sparrow (Pearson)", "commission": "10-20%", "link_template": "https://www.smartsparrow.com/partner/{REF_ID}"},
+        "AFF_034": {"name": "IonQ (Quantum)", "commission": "Private", "link_template": "https://ionq.com/partner/{REF_ID}"},
+        "AFF_035": {"name": "Helium (DePIN)", "commission": "Token-based", "link_template": "https://www.helium.com/partner/{REF_ID}"},
+        "AFF_036": {"name": "Ripple (CBDC)", "commission": "Private", "link_template": "https://ripple.com/partner/{REF_ID}"},
+        "AFF_037": {"name": "Braintrust (Gig)", "commission": "10%", "link_template": "https://www.usebraintrust.com/partner/{REF_ID}"},
+        "AFF_038": {"name": "Aspiration (ESG)", "commission": "$50 CPA", "link_template": "https://www.aspiration.com/partner/{REF_ID}"},
+        "AFF_039": {"name": "Joovv (Red Light)", "commission": "10-15%", "link_template": "https://joovv.com/discount/{REF_ID}"},
+        "AFF_040": {"name": "VisionBody (EMS)", "commission": "12%", "link_template": "https://visionbody.com/partner/{REF_ID}"},
+        "AFF_041": {"name": "Coursera (Nanodegree)", "commission": "45%", "link_template": "https://www.coursera.org/partner/{REF_ID}"},
+        "AFF_042": {"name": "Khan Academy (AI)", "commission": "Donation", "link_template": "https://www.khanacademy.org/partner/{REF_ID}"},
+        "AFF_043": {"name": "The Ocean Cleanup", "commission": "Donation", "link_template": "https://theoceancleanup.com/partner/{REF_ID}"},
+        "AFF_044": {"name": "Indigo Ag (Carbon)", "commission": "Private", "link_template": "https://www.indigoag.com/partner/{REF_ID}"},
+        "AFF_045": {"name": "Plug Power (H2)", "commission": "B2B", "link_template": "https://www.plugpower.com/partner/{REF_ID}"},
+        "AFF_046": {"name": "MycoWorks (Fashion)", "commission": "10%", "link_template": "https://www.mycoworks.com/partner/{REF_ID}"},
+        "AFF_047": {"name": "Apple Watch", "commission": "3-7%", "link_template": "https://www.apple.com/partner/{REF_ID}"},
+        "AFF_048": {"name": "Meta Quest (VR)", "commission": "5-10%", "link_template": "https://www.meta.com/partner/{REF_ID}"}
     }
 }
- 
