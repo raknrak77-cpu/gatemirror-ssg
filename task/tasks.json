@@ -14,11 +14,12 @@
             "icerik_2": "A chef holding a bottle labeled \"Upcycled Vanillin - Zero Waste Certified\", smiling, modern kitchen, photorealistic"
         },
         "status": "pending",
-        "hash": null,
+        "hash": "a76fe9e8",
         "created_at": "2026-04-28",
         "date": "2026-04-28",
         "display_date": "28 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash_updated_at": "2026-04-28T22:12:19.983389"
     },
     {
         "task_id": "0132",
