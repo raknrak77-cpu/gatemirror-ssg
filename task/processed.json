@@ -1,5 +1,28 @@
 [
     {
+        "task_id": "0133",
+        "category": "tech",
+        "cluster_id": "tech_02",
+        "topic": "Deepfake 2.0 Defense: How AI Watermarking and Behavioral Biometrics Secure 2026 Enterprise Calls",
+        "reference_link": "https://www.wired.com/deepfake-defense-2026",
+        "language": "en",
+        "author_persona": "Identity Access Management (IAM) Lead & Digital Forensics Expert",
+        "special_instructions": "Analyze liveness detection through micro-movements and voice spectral analysis. Discuss \"Zero-Trust Voice\" protocols.",
+        "visuals": {
+            "kapak": "A holographic face splitting into two: one real skin texture, one pixelated glitch mask, with a green \"Verification Pass\" shield, cinematic, 8k",
+            "icerik_1": "A zoomed-in view of an audio waveform, with a red \"Fake\" flag on one side and a green \"Real\" on the other, glowing data points, photorealistic",
+            "icerik_2": "A video call screen showing \"Deepfake Detected: 99.8% confidence - Call Blocked\", clean enterprise UI, red warning glow, photorealistic"
+        },
+        "status": "processed",
+        "hash": "41673832",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "2026-04-28 23:08:00",
+        "hash_updated_at": "2026-04-28T22:51:36.076540",
+        "images_verified": true
+    },
+    {
         "task_id": "0132",
         "category": "elearning",
         "cluster_id": "el_10",
