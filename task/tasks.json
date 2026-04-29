@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0145",
-        "category": "future-economy",
-        "cluster_id": "fe_08",
-        "topic": "Your AI Agent Works While You Sleep: How Autonomous AI Freelancers Earn Passive Income in 2026",
-        "reference_link": "https://www.hbr.org/ai-freelancers-2026",
-        "language": "en",
-        "author_persona": "AI Labor Economist & Automation Strategist",
-        "special_instructions": "Discuss \"Agent-as-a-Service\" models. Focus on data labeling, content moderation, and simple coding tasks.",
-        "visuals": {
-            "kapak": "A person sleeping peacefully in bed, while a glowing holographic robot avatar sits at a computer desk outside the bedroom, working, 8k, photorealistic",
-            "icerik_1": "A dashboard showing \"Agent 'Mark' completed 150 tasks today. Earned $42. Tasks: Data cleaning, Sentiment analysis.\" Clean UI, photorealistic",
-            "icerik_2": "A smartphone notification: \"Your AI Agent secured a 3-day contract. Revenue split: 80% to you, 20% to Agent upkeep.\" photorealistic"
-        },
-        "status": "pending",
-        "hash": "80e147d9",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T16:35:44.404557"
-    },
-    {
         "task_id": "0146",
         "category": "eco",
         "cluster_id": "eco_07",
