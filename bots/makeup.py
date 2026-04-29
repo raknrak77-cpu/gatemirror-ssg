@@ -101,20 +101,70 @@ def image_exists(url):
     except:
         return False
 
-def split_article_content(content_html):
+# ================= ÇOK DİLLİ BAŞLIK BULMA =================
+
+def find_section(content, patterns, start=True):
+    """Birden fazla dilde başlık bulur"""
+    for pattern in patterns:
+        if start:
+            match = re.search(rf'<h2>{pattern}</h2>(.*?)<h2>', content, re.DOTALL)
+        else:
+            match = re.search(rf'<h2>{pattern}</h2>(.*?)$', content, re.DOTALL)
+        if match:
+            return match.group(1)
+    return ""
+
+def split_article_content_multilang(content_html, lang):
+    """Dil bazlı içerik bölme"""
     if not content_html:
         return {'content_part1': '', 'content_part2': '', 'content_part3': ''}
     
-    intro_match = re.search(r'(<h2>Introduction</h2>.*?)<h2>Main Analysis</h2>', content_html, re.DOTALL)
-    main_analysis_match = re.search(r'<h2>Main Analysis</h2>(.*?)<h2>Practical Implications</h2>', content_html, re.DOTALL)
-    practical_match = re.search(r'<h2>Practical Implications</h2>(.*?)<h2>Conclusion</h2>', content_html, re.DOTALL)
-    conclusion_match = re.search(r'<h2>Conclusion</h2>(.*?)(?=<h2>Frequently Asked Questions|$)', content_html, re.DOTALL)
+    # Dillere göre başlık pattern'leri
+    patterns = {
+        'introduction': {
+            'en': ['Introduction'],
+            'es': ['Introducción'],
+            'de': ['Einleitung'],
+            'fr': ['Introduction']
+        },
+        'main_analysis': {
+            'en': ['Main Analysis'],
+            'es': ['Análisis Principal'],
+            'de': ['Hauptanalyse'],
+            'fr': ['Analyse principale']
+        },
+        'practical': {
+            'en': ['Practical Implications'],
+            'es': ['Implicaciones Prácticas'],
+            'de': ['Praktische Auswirkungen'],
+            'fr': ['Implications pratiques']
+        },
+        'conclusion': {
+            'en': ['Conclusion'],
+            'es': ['Conclusión'],
+            'de': ['Fazit'],
+            'fr': ['Conclusion']
+        }
+    }
+    
+    # Dil bazlı pattern'leri al
+    intro_patterns = patterns['introduction'].get(lang, patterns['introduction']['en'])
+    main_patterns = patterns['main_analysis'].get(lang, patterns['main_analysis']['en'])
+    practical_patterns = patterns['practical'].get(lang, patterns['practical']['en'])
+    conclusion_patterns = patterns['conclusion'].get(lang, patterns['conclusion']['en'])
+    
+    # Regex ile bul
+    intro_match = re.search(rf'<h2>(?:{"|".join(intro_patterns)}|Introduction)</h2>(.*?)<h2>', content_html, re.DOTALL)
+    main_analysis_match = re.search(rf'<h2>(?:{"|".join(main_patterns)}|Main Analysis)</h2>(.*?)<h2>', content_html, re.DOTALL)
+    practical_match = re.search(rf'<h2>(?:{"|".join(practical_patterns)}|Practical Implications)</h2>(.*?)<h2>', content_html, re.DOTALL)
+    conclusion_match = re.search(rf'<h2>(?:{"|".join(conclusion_patterns)}|Conclusion)</h2>(.*?)(?:<h2>|$)', content_html, re.DOTALL)
     
     intro = intro_match.group(1) if intro_match else ""
     main_analysis = main_analysis_match.group(1) if main_analysis_match else ""
     practical = practical_match.group(1) if practical_match else ""
     conclusion = conclusion_match.group(1) if conclusion_match else ""
     
+    # Main Analysis'i <h3> başlıklarına göre ikiye böl
     h3_sections = re.findall(r'(<h3>.*?</h3>.*?)(?=<h3>|$)', main_analysis, re.DOTALL)
     
     if h3_sections:
@@ -136,6 +186,8 @@ def split_article_content(content_html):
         'content_part3': part3.strip()
     }
 
+# ================= META PARSER (V16'DAN) =================
+
 def parse_meta(html_content):
     """META yorum satırını key=value formatında parse eder"""
     meta_match = re.search(r'<!-- META: (.*?) -->', html_content, re.DOTALL)
@@ -145,20 +197,19 @@ def parse_meta(html_content):
     meta_content = meta_match.group(1)
     result = {}
     
-    # Önce tırnak içindeki değerleri koruyarak parçala
-    # Pattern: key=value (value tırnak içinde olabilir veya virgüle kadar)
     pattern = r'(\w+)=("[^"]*"|[^,]+)'
     matches = re.findall(pattern, meta_content)
     
     for key, value in matches:
-        # Tırnakları temizle
         value = value.strip().strip('"')
         result[key] = value
     
     return result
 
+# ================= ANA PARSE FONKSİYONU =================
+
 def parse_article_html(html_content, lang, category, hash_id, yil, ay):
-    """HTML içeriğini parse eder - YENİ META PARSER ile"""
+    """HTML içeriğini parse eder - ÇOK DİLLİ VERSİYON"""
     
     # META'yı parse et
     meta = parse_meta(html_content)
@@ -167,7 +218,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
-    # META'dan değerleri al veya varsayılanları kullan
+    # META'dan değerleri al
     author = meta.get('author', 'Gatemirror Expert')
     author_title = meta.get('author_title', '')
     author_bio = meta.get('author_bio', '')
@@ -189,16 +240,15 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     
     datetime_iso = sort_datetime if sort_datetime else datetime.now().isoformat()
     
-    # Editor's Note
+    # Editor's Note (dil bağımsız - class ile)
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
     editors_note = note_match.group(1).strip() if note_match else ""
     
-    # Key Takeaways
+    # Key Takeaways (sabit İngilizce)
     takeaway_match = re.search(r'<h2>Key Takeaways</h2>\s*<ul>(.*?)</ul>', html_content, re.DOTALL | re.IGNORECASE)
     if takeaway_match:
         items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
         summary_html = "".join([f"<li>{item.strip()}</li>" for item in items])
-        # Summary text (düz metin)
         clean_items = []
         for item in items[:3]:
             clean = re.sub(r'<[^>]+>', '', item).strip()
@@ -209,7 +259,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         summary_html = "<li>No summary available</li>"
         summary_text = ""
     
-    # Sources
+    # Sources (dil bağımsız - class ile)
     sources_match = re.search(r'<div class="sources">.*?<ul>(.*?)</ul>.*?</div>', html_content, re.DOTALL | re.IGNORECASE)
     if sources_match:
         items = re.findall(r'<li>(.*?)</li>', sources_match.group(1), re.DOTALL)
@@ -217,7 +267,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     else:
         sources_html = "<li>Sources not available</li>"
     
-    # İçeriği temizle (META ve diğer blokları kaldır)
+    # İçeriği temizle (SADECE META ve class bazlı bloklar)
     content_clean = html_content
     content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
@@ -226,12 +276,8 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
     content_clean = content_clean.strip()
     
-    # KARAKTER KONTROLÜ - eğer içerik çok kısaysa uyar
-    if len(content_clean) < 500:
-        print(f"   ⚠️ UYARI: {lang}/{category}/{hash_id} içeriği çok kısa: {len(content_clean)} karakter")
-    
-    # Makaleyi 3 parçaya böl
-    content_parts = split_article_content(content_clean)
+    # Makaleyi 3 parçaya böl (ÇOK DİLLİ)
+    content_parts = split_article_content_multilang(content_clean, lang)
     
     # Okuma süresi, kelime sayısı
     reading_time, word_count = calculate_reading_time_and_word_count(content_clean)
