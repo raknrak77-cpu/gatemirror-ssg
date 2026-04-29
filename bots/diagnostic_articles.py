@@ -23,9 +23,8 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# ================= BOŞ MAKALE KRİTERLERİ (SADECE İÇERİK) =================
-MIN_CLEAN_TEXT = 750      # Temiz metin 1000 karakter altı = BOŞ
-MIN_WORD_COUNT = 100       # Kelime 150 altı = BOŞ
+# ================= BOŞ MAKALE KRİTERİ =================
+MIN_CLEAN_TEXT = 700      # 750 karakter altı = BOŞ
 
 
 def list_all_articles():
@@ -82,18 +81,8 @@ def analyze_article(key):
     text_clean = re.sub(r'\s+', ' ', text_clean).strip()
     clean_text_len = len(text_clean)
     
-    # KELİME SAYISI
-    words = re.findall(r'\b\w+\b', text_clean)
-    word_count = len(words)
-    
-    # ================= BOŞ KONTROLÜ (SADECE KARAKTER VE KELİME) =================
-    is_empty = clean_text_len < MIN_CLEAN_TEXT or word_count < MIN_WORD_COUNT
-    
-    reason = ""
-    if clean_text_len < MIN_CLEAN_TEXT:
-        reason = f"temiz_metin:{clean_text_len}<{MIN_CLEAN_TEXT}"
-    elif word_count < MIN_WORD_COUNT:
-        reason = f"kelime:{word_count}<{MIN_WORD_COUNT}"
+    # ================= BOŞ KONTROLÜ (SADECE KARAKTER) =================
+    is_empty = clean_text_len < MIN_CLEAN_TEXT
     
     return {
         'key': key,
@@ -102,9 +91,8 @@ def analyze_article(key):
         'category': category,
         'size_kb': round(size_kb, 2),
         'clean_text_len': clean_text_len,
-        'word_count': word_count,
         'is_empty': is_empty,
-        'reason': reason
+        'status': 'BOŞ' if is_empty else 'DOLU'
     }
 
 
@@ -123,13 +111,12 @@ def group_by_hash(analyses):
 def write_report(analyses, grouped, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write("=" * 100 + "\n")
-        f.write("ARTICLES DENETİM BOTU V6 - SADECE KARAKTER + KELİME\n")
+        f.write("ARTICLES DENETİM BOTU V7 - SADECE KARAKTER KONTROLÜ\n")
         f.write(f"Oluşturulma: {datetime.now().isoformat()}\n")
         f.write("=" * 100 + "\n\n")
         
-        f.write("📋 BOŞ MAKALE KRİTERLERİ:\n")
-        f.write(f"   - Temiz metin < {MIN_CLEAN_TEXT} karakter\n")
-        f.write(f"   - veya Kelime < {MIN_WORD_COUNT}\n\n")
+        f.write("📋 BOŞ MAKALE KRİTERİ:\n")
+        f.write(f"   - Temiz metin < {MIN_CLEAN_TEXT} karakter\n\n")
         
         total = len(analyses)
         empty = len([a for a in analyses if a['is_empty']])
@@ -138,8 +125,8 @@ def write_report(analyses, grouped, output_path):
         f.write("📊 GENEL İSTATİSTİKLER\n")
         f.write("-" * 50 + "\n")
         f.write(f"Toplam makale: {total}\n")
-        f.write(f"✅ SAĞLIKLI: {healthy}\n")
-        f.write(f"❌ BOŞ MAKALE: {empty}\n\n")
+        f.write(f"✅ DOLU: {healthy}\n")
+        f.write(f"❌ BOŞ: {empty}\n\n")
         
         # Dil bazında
         f.write("📊 DİL BAZINDA DURUM\n")
@@ -168,31 +155,20 @@ def write_report(analyses, grouped, output_path):
             for hash_id, files in empty_by_hash.items():
                 f.write(f"🔑 HASH: {hash_id}\n")
                 for a in files:
-                    f.write(f"   📁 {a['lang'].upper()} | {a['category']} | {a['size_kb']} KB\n")
-                    f.write(f"      Temiz metin: {a['clean_text_len']} karakter | Kelime: {a['word_count']}\n")
-                    f.write(f"      Sebep: {a['reason']}\n")
+                    f.write(f"   📁 {a['lang'].upper()} | {a['category']} | {a['size_kb']} KB | {a['clean_text_len']} karakter\n")
                 f.write("\n")
         else:
             f.write("   ✅ BOŞ MAKALE YOK\n\n")
         
         f.write("=" * 100 + "\n")
-        f.write("🔧 YAPILACAKLAR\n")
-        f.write("=" * 100 + "\n")
-        if empty > 0:
-            f.write(f"1. {empty} BOŞ makaleyi R2'den SİLİN\n")
-            f.write("2. Yukarıdaki hash'leri not alın\n")
-        else:
-            f.write("   ✅ SİLİNECEK MAKALE YOK\n")
-        
-        f.write("\n" + "=" * 100 + "\n")
         f.write("🏁 RAPOR SONU\n")
         f.write("=" * 100 + "\n")
 
 
 def diagnostic_articles():
     print("\n" + "=" * 100)
-    print("🔬 ARTICLES DENETİM BOTU V6 - SADECE KARAKTER + KELİME")
-    print(f"   KRİTER: Temiz metin < {MIN_CLEAN_TEXT} veya kelime < {MIN_WORD_COUNT}")
+    print("🔬 ARTICLES DENETİM BOTU V7 - SADECE KARAKTER")
+    print(f"   KRİTER: Temiz metin < {MIN_CLEAN_TEXT} karakter")
     print("=" * 100)
     
     print("\n📂 R2'den makaleler listeleniyor...")
@@ -216,7 +192,7 @@ def diagnostic_articles():
     empty = len([a for a in analyses if a['is_empty']])
     print(f"\n📊 ÖZET:")
     print(f"   Toplam makale: {len(analyses)}")
-    print(f"   ❌ BOŞ MAKALE: {empty}")
+    print(f"   ❌ BOŞ (temiz metin < {MIN_CLEAN_TEXT}): {empty}")
     print(f"\n📄 Rapor: {output_path}")
 
 
