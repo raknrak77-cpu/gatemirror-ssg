@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0141",
-        "category": "wellness",
-        "cluster_id": "wl_07",
-        "topic": "AI-Optimized BFR Training: How 2026 Smart Cuffs Maximize Muscle Growth with Light Weights",
-        "reference_link": "https://www.menshealth.com/bfr-ai-training-2026",
-        "language": "en",
-        "author_persona": "Sports Medicine Doctor & Strength Coach",
-        "special_instructions": "Focus on personalized pressure and rest intervals. Discuss rehabilitation uses.",
-        "visuals": {
-            "kapak": "An athlete's leg with a high-tech black cuff (BFR) glowing blue, muscle fibers visible underneath, gym background with soft lighting, 8k, photorealistic",
-            "icerik_1": "A smartwatch interface showing \"Cuff Pressure: Optimal 80%\", \"Pump Set: 30 reps\", \"Muscle Oxygen: 65%\", photorealistic",
-            "icerik_2": "A split screen: left side \"Heavy Weights, Joint Pain\"; right side \"Light Weights + BFR Cuff, No Pain, Same Growth\", photorealistic"
-        },
-        "status": "pending",
-        "hash": "d301a740",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T15:20:51.528585"
-    },
-    {
         "task_id": "0142",
         "category": "future-economy",
         "cluster_id": null,
