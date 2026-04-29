@@ -1,16 +1,13 @@
 import os
 import re
-import json
 import boto3
 from datetime import datetime
 from botocore.client import Config
 
-# ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
-R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
 
 s3 = boto3.client(
     's3',
@@ -23,8 +20,9 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# ================= BOŞ MAKALE KRİTERİ =================
-MIN_CLEAN_TEXT = 700      # 750 karakter altı = BOŞ
+# NOKTA ATIŞI KRİTERLERİ
+MIN_P_TAG_COUNT = 2        # En az 2 paragraf
+MIN_P_TEXT_LEN = 300       # Paragraf içi metin toplamı 300 karakter altı = BOŞ
 
 
 def list_all_articles():
@@ -76,13 +74,27 @@ def analyze_article(key):
     lang = extract_lang_from_key(key)
     category = extract_category_from_key(key)
     
-    # TEMİZ METİN (tag'leri temizle)
-    text_clean = re.sub(r'<[^>]+>', ' ', content)
-    text_clean = re.sub(r'\s+', ' ', text_clean).strip()
-    clean_text_len = len(text_clean)
+    # Tüm <p> tag'lerini bul
+    p_tags = re.findall(r'<p>(.*?)</p>', content, re.DOTALL)
+    p_count = len(p_tags)
     
-    # ================= BOŞ KONTROLÜ (SADECE KARAKTER) =================
-    is_empty = clean_text_len < MIN_CLEAN_TEXT
+    # <p> tag'leri içindeki metin uzunluğu (tag'siz)
+    p_text = " ".join(p_tags)
+    p_text_clean = re.sub(r'<[^>]+>', ' ', p_text)
+    p_text_clean = re.sub(r'\s+', ' ', p_text_clean).strip()
+    p_text_len = len(p_text_clean)
+    
+    # Ayrıca <div class="sources"> içindeki metni sayma (kaynaklar içerik değil)
+    # Kaynakları temizle
+    
+    # BOŞ MAKALE KRİTERİ
+    is_empty = p_count < MIN_P_TAG_COUNT or p_text_len < MIN_P_TEXT_LEN
+    
+    reason = ""
+    if p_count < MIN_P_TAG_COUNT:
+        reason = f"paragraf:{p_count}<{MIN_P_TAG_COUNT}"
+    elif p_text_len < MIN_P_TEXT_LEN:
+        reason = f"paragraf_metni:{p_text_len}<{MIN_P_TEXT_LEN}"
     
     return {
         'key': key,
@@ -90,33 +102,24 @@ def analyze_article(key):
         'lang': lang,
         'category': category,
         'size_kb': round(size_kb, 2),
-        'clean_text_len': clean_text_len,
+        'p_count': p_count,
+        'p_text_len': p_text_len,
         'is_empty': is_empty,
-        'status': 'BOŞ' if is_empty else 'DOLU'
+        'reason': reason,
+        'first_p_text': p_tags[0][:200] if p_tags else "(no paragraph)"
     }
 
 
-def group_by_hash(analyses):
-    grouped = {}
-    for analysis in analyses:
-        if not analysis:
-            continue
-        hash_id = analysis['hash']
-        if hash_id not in grouped:
-            grouped[hash_id] = []
-        grouped[hash_id].append(analysis)
-    return grouped
-
-
-def write_report(analyses, grouped, output_path):
+def write_report(analyses, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write("=" * 100 + "\n")
-        f.write("ARTICLES DENETİM BOTU V7 - SADECE KARAKTER KONTROLÜ\n")
+        f.write("ARTICLES DENETİM BOTU V8 - NOKTA ATIŞI\n")
         f.write(f"Oluşturulma: {datetime.now().isoformat()}\n")
         f.write("=" * 100 + "\n\n")
         
-        f.write("📋 BOŞ MAKALE KRİTERİ:\n")
-        f.write(f"   - Temiz metin < {MIN_CLEAN_TEXT} karakter\n\n")
+        f.write("📋 NOKTA ATIŞI KRİTERLERİ:\n")
+        f.write(f"   - Paragraf sayısı (<p> tag) < {MIN_P_TAG_COUNT}\n")
+        f.write(f"   - veya Paragraf içi metin < {MIN_P_TEXT_LEN} karakter\n\n")
         
         total = len(analyses)
         empty = len([a for a in analyses if a['is_empty']])
@@ -137,26 +140,20 @@ def write_report(analyses, grouped, output_path):
             f.write(f"{lang.upper()}: Toplam {len(lang_articles)} | ❌ Boş: {lang_empty}\n")
         f.write("\n")
         
-        # BOŞ MAKALELER
+        # BOŞ MAKALELER (DETAYLI)
         f.write("=" * 100 + "\n")
         f.write("❌ BOŞ MAKALELER (SİLİNMELİ)\n")
         f.write("=" * 100 + "\n\n")
         
         empty_files = [a for a in analyses if a['is_empty']]
         if empty_files:
-            empty_by_hash = {}
             for a in empty_files:
-                if a['hash'] not in empty_by_hash:
-                    empty_by_hash[a['hash']] = []
-                empty_by_hash[a['hash']].append(a)
-            
-            f.write(f"Toplam {len(empty_files)} boş dosya, {len(empty_by_hash)} benzersiz hash\n\n")
-            
-            for hash_id, files in empty_by_hash.items():
-                f.write(f"🔑 HASH: {hash_id}\n")
-                for a in files:
-                    f.write(f"   📁 {a['lang'].upper()} | {a['category']} | {a['size_kb']} KB | {a['clean_text_len']} karakter\n")
-                f.write("\n")
+                f.write(f"📁 {a['key']}\n")
+                f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
+                f.write(f"   Boyut: {a['size_kb']} KB | Paragraf sayısı: {a['p_count']} | Paragraf metni: {a['p_text_len']} karakter\n")
+                f.write(f"   İlk paragraf: {a['first_p_text'][:150]}...\n")
+                f.write(f"   ❌ Sebep: {a['reason']}\n")
+                f.write("\n" + "-" * 80 + "\n\n")
         else:
             f.write("   ✅ BOŞ MAKALE YOK\n\n")
         
@@ -167,8 +164,8 @@ def write_report(analyses, grouped, output_path):
 
 def diagnostic_articles():
     print("\n" + "=" * 100)
-    print("🔬 ARTICLES DENETİM BOTU V7 - SADECE KARAKTER")
-    print(f"   KRİTER: Temiz metin < {MIN_CLEAN_TEXT} karakter")
+    print("🔬 ARTICLES DENETİM BOTU V8 - NOKTA ATIŞI")
+    print(f"   KRİTER: Paragraf sayısı < {MIN_P_TAG_COUNT} veya paragraf metni < {MIN_P_TEXT_LEN} karakter")
     print("=" * 100)
     
     print("\n📂 R2'den makaleler listeleniyor...")
@@ -187,12 +184,12 @@ def diagnostic_articles():
     print(f"\n   Analiz tamamlandı. {len(analyses)} makale işlendi.")
     
     output_path = "articles_diagnostic_report.txt"
-    write_report(analyses, group_by_hash(analyses), output_path)
+    write_report(analyses, output_path)
     
     empty = len([a for a in analyses if a['is_empty']])
     print(f"\n📊 ÖZET:")
     print(f"   Toplam makale: {len(analyses)}")
-    print(f"   ❌ BOŞ (temiz metin < {MIN_CLEAN_TEXT}): {empty}")
+    print(f"   ❌ BOŞ (paragraf < {MIN_P_TAG_COUNT} veya metin < {MIN_P_TEXT_LEN}): {empty}")
     print(f"\n📄 Rapor: {output_path}")
 
 
