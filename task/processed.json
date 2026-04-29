@@ -1,5 +1,28 @@
 [
     {
+        "task_id": "0137",
+        "category": "wellness",
+        "cluster_id": "wl_05",
+        "topic": "Beyond Probiotics: AI-Designed Phage Cocktails for Precision Gut Microbiome Engineering in 2026",
+        "reference_link": "https://www.cell.com/gut-microbiome-phage-2026",
+        "language": "en",
+        "author_persona": "Gut Microbiome Scientist & Data-Driven Nutritionist",
+        "special_instructions": "Explain how bacteriophages target specific bad bacteria (e.g., C. diff) without killing good flora. Include a case study.",
+        "visuals": {
+            "kapak": "A microscopic view of a glowing gut environment, with cute robot-like phages attaching to bad bacteria, vibrant colors, 8k, photorealistic",
+            "icerik_1": "A smartphone app showing \"Dysbiosis Detected -> Phage Cocktail Designed -> ETA 48h improvement\", clean medical UI, photorealistic",
+            "icerik_2": "A person drinking a clear, glowing \"phage shot\" from a sleek glass bottle, with a holographic label showing bacterial targets, photorealistic"
+        },
+        "status": "processed",
+        "hash": "63d7d6e8",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "2026-04-29 09:39:03",
+        "hash_updated_at": "2026-04-29T09:26:19.483138",
+        "images_verified": true
+    },
+    {
         "task_id": "0136",
         "category": "tech",
         "cluster_id": "tech_07",
