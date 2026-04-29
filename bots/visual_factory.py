@@ -168,8 +168,8 @@ def generate_image(prompt, model, width, height, output_png, attempt=1):
         "prompt": prompt,
         "width": width,
         "height": height,
-        "num_steps": 27,
-        "guidance": 8
+        "num_steps": 20,
+        "guidance": 9.5
     }
     
     try:
