@@ -23,18 +23,10 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# Dil bazlı beklenen başlıklar
-EXPECTED_HEADERS = {
-    'en': ['Introduction', 'Main Analysis', 'Practical Implications', 'Conclusion'],
-    'es': ['Introducción', 'Análisis Principal', 'Implicaciones Prácticas', 'Conclusión'],
-    'de': ['Einleitung', 'Hauptanalyse', 'Praktische Auswirkungen', 'Fazit'],
-    'fr': ['Introduction', 'Analyse principale', 'Implications pratiques', 'Conclusion']
-}
-
-# Minimum eşikler
-MIN_CLEAN_TEXT_LEN = 500     # Temiz metin minimum karakter
-MIN_WORD_COUNT = 80           # Minimum kelime sayısı (yaklaşık 500 karaktere denk)
-MIN_H2_COUNT = 2              # Minimum h2 başlık sayısı (en az Intro + bir şey)
+# ================= YUMUŞAK KRİTERLER =================
+MIN_CLEAN_TEXT = 1000      # 1000 karakter altı = KRİTİK HATALI
+MIN_WORD_COUNT = 150       # 150 kelime altı = KRİTİK HATALI
+MIN_H2_COUNT = 1           # 0 h2 = ORTA HATALI (sadece uyarı)
 
 
 def list_all_articles():
@@ -55,7 +47,6 @@ def list_all_articles():
 
 
 def extract_hash_from_key(key):
-    """Dosya yolundan hash'i çıkarır"""
     filename = key.split('/')[-1]
     if '-' in filename:
         return filename.split('-')[0]
@@ -63,7 +54,6 @@ def extract_hash_from_key(key):
 
 
 def extract_lang_from_key(key):
-    """Dosya yolundan dili çıkarır"""
     parts = key.split('/')
     if len(parts) >= 2:
         return parts[1]
@@ -78,7 +68,7 @@ def extract_category_from_key(key):
 
 
 def analyze_article(key):
-    """Tek bir makaleyi analiz eder"""
+    """Tek bir makaleyi analiz eder - YUMUŞAK KRİTERLER"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key=key)
         content = response['Body'].read().decode('utf-8')
@@ -90,7 +80,7 @@ def analyze_article(key):
     lang = extract_lang_from_key(key)
     category = extract_category_from_key(key)
     
-    # 1. TEMİZ METİN (tag'leri temizle)
+    # 1. TEMİZ METİN
     text_clean = re.sub(r'<[^>]+>', ' ', content)
     text_clean = re.sub(r'\s+', ' ', text_clean).strip()
     clean_text_len = len(text_clean)
@@ -104,50 +94,26 @@ def analyze_article(key):
     h2_tags = [tag.strip() for tag in h2_tags]
     h2_count = len(h2_tags)
     
-    # 4. BEKLENEN BAŞLIKLAR VAR MI? (dil bazlı)
-    expected = EXPECTED_HEADERS.get(lang, EXPECTED_HEADERS['en'])
-    found_headers = []
-    missing_headers = []
+    # 4. INTRODUCTION VAR MI? (dil bazlı)
+    intro_patterns = {
+        'en': r'<h2>Introduction</h2>',
+        'es': r'<h2>Introducción</h2>',
+        'de': r'<h2>Einleitung</h2>',
+        'fr': r'<h2>Introduction</h2>'
+    }
+    intro_pattern = intro_patterns.get(lang, intro_patterns['en'])
+    has_intro = re.search(intro_pattern, content, re.IGNORECASE) is not None
     
-    for header in expected:
-        if re.search(rf'<h2>{header}</h2>', content, re.IGNORECASE):
-            found_headers.append(header)
-        else:
-            missing_headers.append(header)
-    
-    # 5. META KONTROLÜ
-    meta_match = re.search(r'<!-- META: (.*?) -->', content, re.DOTALL)
-    has_meta = meta_match is not None
-    
-    # 6. GÖRSEL KONTROLÜ (URL var mı, gerçekten var mı kontrol etme)
-    cover_image_match = re.search(r'cover_image["\']?\s*:\s*["\']([^"\']+)', content)
-    content_img1_match = re.search(r'content_image_1["\']?\s*:\s*["\']([^"\']+)', content)
-    content_img2_match = re.search(r'content_image_2["\']?\s*:\s*["\']([^"\']+)', content)
-    
-    has_cover = cover_image_match is not None
-    has_img1 = content_img1_match is not None
-    has_img2 = content_img2_match is not None
-    
-    # 7. MAKALE SAĞLIKLI MI?
-    is_healthy = (
-        clean_text_len >= MIN_CLEAN_TEXT_LEN and
-        word_count >= MIN_WORD_COUNT and
-        h2_count >= MIN_H2_COUNT and
-        len(missing_headers) <= 2  # En fazla 2 başlık eksik olabilir
-    )
-    
-    # 8. HATA NEDENİ
-    issues = []
-    if clean_text_len < MIN_CLEAN_TEXT_LEN:
-        issues.append(f"temiz_metin_kisa({clean_text_len}<{MIN_CLEAN_TEXT_LEN})")
-    if word_count < MIN_WORD_COUNT:
-        issues.append(f"kelime_az({word_count}<{MIN_WORD_COUNT})")
-    if h2_count < MIN_H2_COUNT:
-        issues.append(f"h2_az({h2_count}<{MIN_H2_COUNT})")
-    if missing_headers:
-        issues.append(f"eksik_başlıklar:{','.join(missing_headers[:2])}")
-    if not has_meta:
-        issues.append("meta_yok")
+    # 5. MAKALE DURUMU (YUMUŞAK)
+    if clean_text_len < MIN_CLEAN_TEXT or word_count < MIN_WORD_COUNT:
+        status = "KRITIK_HATALI"
+        reason = f"temiz_metin:{clean_text_len}(<{MIN_CLEAN_TEXT}) veya kelime:{word_count}(<{MIN_WORD_COUNT})"
+    elif h2_count < MIN_H2_COUNT or not has_intro:
+        status = "ORTA_HATALI"
+        reason = f"h2_sayisi:{h2_count}(<{MIN_H2_COUNT}) veya intro_yok"
+    else:
+        status = "SAĞLIKLI"
+        reason = ""
     
     return {
         'key': key,
@@ -158,20 +124,14 @@ def analyze_article(key):
         'clean_text_len': clean_text_len,
         'word_count': word_count,
         'h2_count': h2_count,
-        'h2_tags': h2_tags[:10],
-        'found_headers': found_headers,
-        'missing_headers': missing_headers,
-        'has_meta': has_meta,
-        'has_cover': has_cover,
-        'has_img1': has_img1,
-        'has_img2': has_img2,
-        'is_healthy': is_healthy,
-        'issues': issues
+        'h2_tags': h2_tags[:5],
+        'has_intro': has_intro,
+        'status': status,
+        'reason': reason
     }
 
 
 def group_by_hash(analyses):
-    """Analizleri hash'e göre gruplar"""
     grouped = {}
     for analysis in analyses:
         if not analysis:
@@ -186,89 +146,90 @@ def group_by_hash(analyses):
 def write_report(analyses, grouped, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write("=" * 100 + "\n")
-        f.write("ARTICLES DENETİM BOTU V1 - YAYINLANAN MAKALE KALİTE KONTROLÜ\n")
+        f.write("ARTICLES DENETİM BOTU V2 - YUMUŞAK KRİTERLER\n")
         f.write(f"Oluşturulma: {datetime.now().isoformat()}\n")
         f.write("=" * 100 + "\n\n")
         
+        # KRİTERLER
+        f.write("📋 KRİTERLER:\n")
+        f.write(f"   - KRİTİK HATALI: temiz metin < {MIN_CLEAN_TEXT} veya kelime < {MIN_WORD_COUNT}\n")
+        f.write(f"   - ORTA HATALI: h2 sayısı < {MIN_H2_COUNT} veya Introduction yok\n")
+        f.write(f"   - SAĞLIKLI: tüm kriterleri geçer\n\n")
+        
         total = len(analyses)
-        healthy = sum(1 for a in analyses if a['is_healthy'])
-        unhealthy = total - healthy
+        critical = len([a for a in analyses if a['status'] == 'KRITIK_HATALI'])
+        medium = len([a for a in analyses if a['status'] == 'ORTA_HATALI'])
+        healthy = len([a for a in analyses if a['status'] == 'SAĞLIKLI'])
         
         f.write("📊 GENEL İSTATİSTİKLER\n")
         f.write("-" * 50 + "\n")
         f.write(f"Toplam makale: {total}\n")
-        f.write(f"Sağlıklı makale: {healthy}\n")
-        f.write(f"Sorunlu makale: {unhealthy}\n\n")
+        f.write(f"✅ SAĞLIKLI: {healthy}\n")
+        f.write(f"⚠️ ORTA HATALI: {medium}\n")
+        f.write(f"❌ KRİTİK HATALI: {critical}\n\n")
         
         # Dil bazında
         f.write("📊 DİL BAZINDA DURUM\n")
         f.write("-" * 50 + "\n")
         for lang in LANGUAGES:
             lang_articles = [a for a in analyses if a['lang'] == lang]
-            lang_healthy = sum(1 for a in lang_articles if a['is_healthy'])
-            f.write(f"{lang.upper()}: {len(lang_articles)} makale, {lang_healthy} sağlıklı, {len(lang_articles)-lang_healthy} sorunlu\n")
+            lang_healthy = len([a for a in lang_articles if a['status'] == 'SAĞLIKLI'])
+            lang_medium = len([a for a in lang_articles if a['status'] == 'ORTA HATALI'])
+            lang_critical = len([a for a in lang_articles if a['status'] == 'KRITIK_HATALI'])
+            f.write(f"{lang.upper()}: Toplam {len(lang_articles)} | ✅ {lang_healthy} | ⚠️ {lang_medium} | ❌ {lang_critical}\n")
         f.write("\n")
         
-        # Hash bazında (4 dil kontrolü)
+        # KRİTİK HATALILAR (SİLİNMELİ)
         f.write("=" * 100 + "\n")
-        f.write("🔑 HASH BAZINDA 4 DİL KONTROLÜ\n")
+        f.write("❌ KRİTİK HATALI MAKALELER (SİLİNMELİ)\n")
         f.write("=" * 100 + "\n\n")
         
-        for hash_id, items in grouped.items():
-            langs_present = [item['lang'] for item in items]
-            missing_langs = [lang for lang in LANGUAGES if lang not in langs_present]
-            
-            # Tüm diller sağlıklı mı?
-            all_healthy = all(item['is_healthy'] for item in items)
-            
-            if missing_langs or not all_healthy:
-                f.write(f"📁 Hash: {hash_id}\n")
-                f.write(f"   Mevcut diller: {', '.join(langs_present)}\n")
-                if missing_langs:
-                    f.write(f"   ❌ Eksik diller: {', '.join(missing_langs)}\n")
-                for item in items:
-                    status = "✅" if item['is_healthy'] else "❌"
-                    f.write(f"   {status} {item['lang'].upper()}: {item['clean_text_len']} karakter, {item['word_count']} kelime, {item['h2_count']} h2\n")
-                    if not item['is_healthy'] and item['issues']:
-                        f.write(f"      Sorunlar: {', '.join(item['issues'])}\n")
+        critical_files = [a for a in analyses if a['status'] == 'KRITIK_HATALI']
+        if critical_files:
+            for a in critical_files:
+                f.write(f"📁 {a['key']}\n")
+                f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
+                f.write(f"   Boyut: {a['size_kb']} KB | Temiz metin: {a['clean_text_len']} karakter | Kelime: {a['word_count']}\n")
+                f.write(f"   Sebep: {a['reason']}\n")
+                f.write("\n" + "-" * 80 + "\n\n")
+        else:
+            f.write("   ✅ KRİTİK HATALI MAKALE YOK\n\n")
+        
+        # ORTA HATALILAR (İNCELENMELİ)
+        f.write("=" * 100 + "\n")
+        f.write("⚠️ ORTA HATALI MAKALELER (İNCELENMELİ)\n")
+        f.write("=" * 100 + "\n\n")
+        
+        medium_files = [a for a in analyses if a['status'] == 'ORTA_HATALI']
+        if medium_files:
+            for a in medium_files[:50]:  # İlk 50
+                f.write(f"📁 {a['key']}\n")
+                f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
+                f.write(f"   h2 sayısı: {a['h2_count']} | Introduction var: {'✅' if a['has_intro'] else '❌'}\n")
+                f.write(f"   İlk 3 h2: {a['h2_tags'][:3]}\n")
                 f.write("\n")
+            if len(medium_files) > 50:
+                f.write(f"... ve {len(medium_files) - 50} dosya daha\n\n")
+        else:
+            f.write("   ✅ ORTA HATALI MAKALE YOK\n\n")
         
-        # SORUNLU MAKALELER (detaylı)
+        # SAĞLIKLI ÖZET
         f.write("=" * 100 + "\n")
-        f.write("❌ SORUNLU MAKALELER (DETAYLI)\n")
-        f.write("=" * 100 + "\n\n")
-        
-        unhealthy_articles = [a for a in analyses if not a['is_healthy']]
-        for a in unhealthy_articles:
-            f.write(f"📁 {a['key']}\n")
-            f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
-            f.write(f"   Boyut: {a['size_kb']} KB\n")
-            f.write(f"   Temiz metin: {a['clean_text_len']} karakter\n")
-            f.write(f"   Kelime: {a['word_count']}\n")
-            f.write(f"   h2 sayısı: {a['h2_count']}\n")
-            f.write(f"   Bulunan başlıklar: {a['found_headers'][:3]}\n")
-            f.write(f"   Eksik başlıklar: {a['missing_headers']}\n")
-            f.write(f"   META: {'✅' if a['has_meta'] else '❌'}\n")
-            f.write(f"   Görseller: kapak:{'✅' if a['has_cover'] else '❌'}, icerik1:{'✅' if a['has_img1'] else '❌'}, icerik2:{'✅' if a['has_img2'] else '❌'}\n")
-            f.write(f"   ❌ Sorunlar: {', '.join(a['issues'])}\n")
-            f.write("\n" + "-" * 80 + "\n\n")
+        f.write("✅ SAĞLIKLI MAKALELER (ÖZET)\n")
+        f.write("=" * 100 + "\n")
+        f.write(f"Toplam {healthy} makale sağlıklı.\n\n")
         
         # ÖZET
         f.write("=" * 100 + "\n")
-        f.write("✅ ÖZET VE ÖNERİLER\n")
-        f.write("=" * 100 + "\n\n")
-        
-        f.write(f"Sağlıklı makale sayısı: {healthy}\n")
-        f.write(f"Sorunlu makale sayısı: {unhealthy}\n\n")
-        
-        if unhealthy > 0:
-            f.write("🔧 ÖNERİLEN AKSİYONLAR:\n")
-            f.write("   1. Yukarıdaki sorunlu makalelerin hash'lerini not alın\n")
-            f.write("   2. Bu hash'lere ait raw-articles dosyalarını kontrol edin\n")
-            f.write("   3. Eğer raw-articles da boşsa, R2'den silin ve task'ı yeniden işletin\n")
-            f.write("   4. Eğer raw-articles dolu ama articles boşsa, Publisher'dan geçmemiştir\n")
-        else:
-            f.write("✅ Tüm makaleler sağlıklı görünüyor!\n")
+        f.write("🔧 YAPILACAKLAR\n")
+        f.write("=" * 100 + "\n")
+        f.write(f"1. {critical} KRİTİK HATALI makaleyi R2'den SİLİN\n")
+        if critical > 0:
+            f.write("   - raw-articles/ klasöründen\n")
+            f.write("   - articles/ klasöründen\n")
+            f.write("   - images/ klasöründen (görseller)\n")
+        f.write(f"2. {medium} ORTA HATALI makaleyi İNCELEYİN (gerekirse düzeltin)\n")
+        f.write(f"3. {healthy} SAĞLIKLI makaleye dokunmayın\n")
         
         f.write("\n" + "=" * 100 + "\n")
         f.write("🏁 RAPOR SONU\n")
@@ -277,8 +238,9 @@ def write_report(analyses, grouped, output_path):
 
 def diagnostic_articles():
     print("\n" + "=" * 100)
-    print("🔬 ARTICLES DENETİM BOTU V1")
-    print("   Amaç: Yayınlanan makalelerin kalitesini kontrol etmek")
+    print("🔬 ARTICLES DENETİM BOTU V2 - YUMUŞAK KRİTERLER")
+    print(f"   KRİTİK: temiz metin < {MIN_CLEAN_TEXT} veya kelime < {MIN_WORD_COUNT}")
+    print(f"   ORTA: h2 sayısı < {MIN_H2_COUNT} veya Introduction yok")
     print("=" * 100)
     
     print("\n📂 R2'den makaleler listeleniyor...")
@@ -301,12 +263,17 @@ def diagnostic_articles():
     output_path = "articles_diagnostic_report.txt"
     write_report(analyses, grouped, output_path)
     
-    healthy = sum(1 for a in analyses if a['is_healthy'])
+    critical = len([a for a in analyses if a['status'] == 'KRITIK_HATALI'])
+    medium = len([a for a in analyses if a['status'] == 'ORTA_HATALI'])
+    healthy = len([a for a in analyses if a['status'] == 'SAĞLIKLI'])
+    
     print(f"\n📊 ÖZET:")
     print(f"   Toplam makale: {len(analyses)}")
-    print(f"   Sağlıklı makale: {healthy}")
-    print(f"   Sorunlu makale: {len(analyses) - healthy}")
+    print(f"   ✅ SAĞLIKLI: {healthy}")
+    print(f"   ⚠️ ORTA HATALI: {medium}")
+    print(f"   ❌ KRİTİK HATALI: {critical}")
     print(f"\n📄 Rapor: {output_path}")
+
 
 if __name__ == "__main__":
     diagnostic_articles()
