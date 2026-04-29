@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0136",
-        "category": "tech",
-        "cluster_id": "tech_07",
-        "topic": "Neurofeedback Wearables: How BCI Headbands Are Boosting Human Focus and Productivity in 2026",
-        "reference_link": "https://www.technologyreview.com/bci-focus-2026",
-        "language": "en",
-        "author_persona": "Neurotech Entrepreneur & Cognitive Performance Coach",
-        "special_instructions": "Analyze EEG-based attention tracking and neurostimulation (tACS). Discuss workplace adoption for deep work sessions.",
-        "visuals": {
-            "kapak": "A professional wearing a sleek, minimalist white headband (BCI), with a glowing blue brain network visible around their head, calm office background, 8k",
-            "icerik_1": "A dashboard showing \"Focus Score: 94%\", \"Distraction Alerts: 0\", \"Optimal Work State Reached\", clean UI with brain wave visuals, photorealistic",
-            "icerik_2": "Split screen: left side \"Without BCI\" - tired scattered brain; right side \"With BCI\" - organized glowing neural paths, 3D render, photorealistic"
-        },
-        "status": "pending",
-        "hash": "fd7ad7e8",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T08:58:59.879957"
-    },
-    {
         "task_id": "0137",
         "category": "wellness",
         "cluster_id": "wl_05",
