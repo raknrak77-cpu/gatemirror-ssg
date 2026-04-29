@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0151",
+        "category": "tech",
+        "cluster_id": "tech_03",
+        "topic": "AI Productivity Tools 2026: Which One Saves Your Team the Most Time and Money?",
+        "reference_link": "https://www.forbes.com/ai-productivity-tools-2026",
+        "language": "en",
+        "author_persona": "Digital Workplace Consultant & Productivity Researcher",
+        "special_instructions": "Compare 3-5 AI tools (Jasper, Copy.ai, Notion AI, Grammarly). Focus on time saved, pricing tiers, integrations (Slack, Zoom, Teams). Include user testimonials. End with free trial CTA.",
+        "visuals": {
+            "kapak": "A clean modern desk with a laptop showing multiple AI productivity apps floating as holographic icons, warm morning light, minimalist aesthetic, photorealistic",
+            "icerik_1": "Split comparison: left side \"Without AI\" showing messy calendar and long to-do list; right side \"With AI\" showing clean completed tasks and automated schedule, photorealistic",
+            "icerik_2": "Dashboard showing \"Time Saved: 15 hours/week\", \"Tasks Automated: 234\", \"ROI: 340%\", modern interface, soft green glow, photorealistic"
+        },
+        "status": "processed",
+        "hash": "9b8d46d5",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-04-29 21:18:44",
+        "hash_updated_at": "2026-04-29T21:06:12.111689"
+    },
+    {
         "task_id": "0150",
         "category": "elearning",
         "cluster_id": "el_09",
