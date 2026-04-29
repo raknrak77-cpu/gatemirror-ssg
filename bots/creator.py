@@ -92,7 +92,7 @@ def get_first_pending_task():
     return task
 
 def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_info, cluster_rules_data, cluster_id):
-    """HTML'i META bilgileriyle birlikte yazar - yorum satırı olarak"""
+    """HTML'i META bilgileriyle birlikte yazar - META EN SONA"""
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
@@ -152,9 +152,9 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         visual_types = list(visuals.keys())
         meta_parts.append(f"visuals={'|'.join(visual_types)}")
     
-    # META yorum satırı
-    meta_comment = "<!-- META: " + ", ".join(meta_parts) + " -->\n"
-    final_html = meta_comment + makale_html
+    # META yorum satırı - EN SONA
+    meta_comment = "\n<!-- META: " + ", ".join(meta_parts) + " -->\n"
+    final_html = makale_html + meta_comment
     
     # Kaydet
     target_dir = os.path.join("content", lang, kategori, yil, ay)
@@ -183,12 +183,12 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     log(f"   📊 Kelime: {word_count} | Okuma: {reading_time} dk | Karakter: {len(makale_html)}")
     
     # META başlıklarını logla
-    log(f"   📝 META: author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '-')}, monetization={cluster_rules_data.get('monetization', '-')}, visuals={visual_types if visuals else '-'}")
+    log(f"   📝 META (sonda): author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '-')}, monetization={cluster_rules_data.get('monetization', '-')}, visuals={visual_types if visuals else '-'}")
     
     return target_path
 
 def run_visual_bot(task, hash_id, kategori, yil, ay):
-    """Görsel bot'u çalıştır - V16 uyumlu, görsel boyutlarını log'lar"""
+    """Görsel bot'u çalıştır - V16 uyumlu"""
     visuals = task.get('visuals', {})
     
     log("=" * 60)
@@ -220,15 +220,10 @@ def run_visual_bot(task, hash_id, kategori, yil, ay):
         
         log(f"Çıkış kodu: {result.returncode}")
         
-        # Görsel boyutlarını yakalamak için stdout'u parse et
         if result.stdout:
             lines = result.stdout.strip().split('\n')
-            for line in lines:
-                # Görsel başarı mesajlarını ve boyutlarını yakala
-                if 'GEÇERLİ görsel' in line or 'tamamlandı' in line.lower() or 'R2\'ye yüklendi' in line:
-                    log(f"  {line}")
-                # Özet satırlarını da göster
-                if 'BAŞARILI:' in line or 'TAMAMLANDI' in line:
+            for line in lines[-15:]:
+                if 'GEÇERLİ görsel' in line or 'tamamlandı' in line.lower() or 'R2\'ye yüklendi' in line or 'BAŞARILI:' in line:
                     log(f"  {line}")
         
         if result.stderr:
@@ -298,12 +293,7 @@ CULTURAL ADAPTATION:
 - FR: French/Francophone context
 
 CONTENT REQUIREMENTS (per language):
-- STRICT MINIMUM: 2000 words per language (approximately 12,000-14,000 characters)
-- HARD MINIMUM PER LANGUAGE: 18,000 characters (including HTML tags, spaces, and all content)
-- If a language version falls below 18,000 characters, the article is INCOMPLETE and must be regenerated.
-- The editor will reject and delete articles below 18,000 characters.
-- Use detailed analysis, extended examples, deeper sub‑sections, and more comprehensive FAQ answers to reach the required length.
-- Quality over quantity, but both are mandatory.
+- STRICT MINIMUM: 2000 words per language
 - Hook: Start Introduction with a bold claim or statistic
 
 STRUCTURE:
@@ -344,13 +334,12 @@ STRICT RULES:
 - If URL cannot be verified, use fallback: "Source: [Institution Name] (no URL available)"
 """
     
-    # Gemini çağrısı
     log("Gemini çağrılıyor (EN/ES/DE/FR)...")
     start_time = time.time()
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
-        "generationConfig": {"temperature": 0.92, "maxOutputTokens": 38000, "topP": 0.95}
+        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
     }
     
     try:
@@ -362,7 +351,6 @@ STRICT RULES:
             elapsed = time.time() - start_time
             log(f"Gemini yanıtı: {len(full_response)} karakter, {elapsed:.1f}s")
             
-            # Parse et
             parts = re.split(r'<!-- LANG:(EN|ES|DE|FR) -->', full_response)
             lang_html = {}
             lang_slug = {}
@@ -420,12 +408,11 @@ STRICT RULES:
 
 def operasyon_baslat():
     log("=" * 70)
-    log("CREATOR BOT V48 - META LOG'LU, GÖRSEL BOYUT LOG'LU")
+    log("CREATOR BOT V50 - META EN SONA")
     log("1. Gemini'den makale üret")
     log("2. Hash oluştur")
-    log("3. Görsel üret (boyutlar log'da)")
-    log("4. Makaleleri kaydet (META yorum satırı olarak)")
-    log("5. Tüm veriler log'da göster")
+    log("3. Görsel üret")
+    log("4. Makaleleri kaydet (META yorum satırı EN SONA)")
     log("=" * 70)
     
     task = get_first_pending_task()
@@ -448,7 +435,7 @@ def operasyon_baslat():
     log(f"Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
     log("=" * 70)
-    log(f"CREATOR V48 TAMAMLANDI!")
+    log(f"CREATOR V50 TAMAMLANDI!")
     log(f"Hash: {hash_id}")
     log(f"Task ID: {task_id}")
     log("=" * 70)
