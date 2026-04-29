@@ -274,7 +274,7 @@ def diagnostic_bot():
     
     print(f"\n   Analiz tamamlandı. {len(analyses)} dosya işlendi.")
     
-    output_path = "diagnostic_report_v3.txt"
+    output_path = "diagnostic_report.txt"
     write_report(analyses, output_path)
     
     parseable = sum(1 for a in analyses if a['can_parse'])
