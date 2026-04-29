@@ -12,7 +12,6 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_RENDERED_LEN = 15000  # Giydirilmiş HTML minimum karakter (Publisher V48 ile uyumlu)
 
 s3 = boto3.client(
     's3',
@@ -24,66 +23,24 @@ s3 = boto3.client(
 )
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
-REQUIRED_IMAGES = ['kapak', 'icerik_1', 'icerik_2']
 
 
-# ================= GÖRSEL KONTROLÜ =================
-
-def check_hash_images(hash_id, kategori, yil, ay):
-    """Belirtilen hash'e ait 3 görselin R2'de olup olmadığını kontrol eder."""
-    if not hash_id or not kategori:
-        print(f"   ⚠️ Hash veya kategori eksik: hash={hash_id}, kategori={kategori}")
-        return False
-    
-    if not yil or not ay:
-        print(f"   🔍 Yıl/Ay eksik, raw-articles'dan aranıyor...")
-        yil, ay = find_image_path_from_raw_articles(hash_id, kategori)
-    
-    missing_images = []
-    for img_type in REQUIRED_IMAGES:
-        if yil and ay:
-            image_key = f"images/{yil}/{ay}/{kategori}/{hash_id}_{img_type}.webp"
-        else:
-            image_key = f"images/{kategori}/{hash_id}_{img_type}.webp"
-        
-        try:
-            s3.head_object(Bucket=R2_BUCKET, Key=image_key)
-            print(f"   ✅ Görsel mevcut: {image_key}")
-        except:
-            missing_images.append(img_type)
-            print(f"   ❌ Görsel EKSİK: {image_key}")
-    
-    if missing_images:
-        print(f"   ⚠️ Eksik görseller: {', '.join(missing_images)}")
-        return False
-    
-    print(f"   ✅ Tüm görseller mevcut ({len(REQUIRED_IMAGES)}/3)")
-    return True
+# ================= GÖRSEL KONTROLÜ (KALDIRILDI - Publisher parse kontrolü yeterli) =================
+# Artık görsel kontrolü YAPILMAYACAK. Publisher parse edebildiyse yayınlanır.
 
 
-def find_image_path_from_raw_articles(hash_id, kategori):
-    """raw-articles'dan ilgili makalenin yıl/ay bilgisini bulur"""
-    for lang in LANGUAGES:
-        prefix = f"raw-articles/{lang}/{kategori}/"
-        try:
-            response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
-            if 'Contents' not in response:
-                continue
-            
-            for obj in response['Contents']:
-                key = obj['Key']
-                filename = key.split('/')[-1]
-                if filename.startswith(hash_id) and filename.endswith('.html'):
-                    parts = key.split('/')
-                    if len(parts) >= 5:
-                        yil = parts[3] if len(parts) > 3 else None
-                        ay = parts[4] if len(parts) > 4 else None
-                        print(f"   📍 Bulundu: {lang}/{kategori}/{yil}/{ay}")
-                        return yil, ay
-        except:
-            continue
-    
-    return None, None
+# ================= TASK TAŞIMA =================
+
+def get_current_hash():
+    """current_hash.txt'den hash'i okur ve siler"""
+    hash_file = "task/current_hash.txt"
+    if os.path.exists(hash_file):
+        with open(hash_file, "r") as f:
+            hash_id = f.read().strip()
+        os.remove(hash_file)
+        print(f"   📖 current_hash.txt okundu: {hash_id}")
+        return hash_id
+    return None
 
 
 def get_task_by_hash(target_hash):
@@ -149,33 +106,8 @@ def move_task_to_skipped(target_hash, reason):
     return True
 
 
-# ================= TASK TAŞIMA =================
-
-def get_current_hash():
-    """current_hash.txt'den hash'i okur ve siler"""
-    hash_file = "task/current_hash.txt"
-    if os.path.exists(hash_file):
-        with open(hash_file, "r") as f:
-            hash_id = f.read().strip()
-        os.remove(hash_file)
-        print(f"   📖 current_hash.txt okundu: {hash_id}")
-        return hash_id
-    return None
-
-
-def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
-    """Görsel kontrolü yap, başarılıysa processed'e taşı"""
-    print(f"   🔍 Görsel kontrolü yapılıyor (hash={target_hash}, kategori={kategori})...")
-    
-    images_ok = check_hash_images(target_hash, kategori, yil, ay)
-    
-    if not images_ok:
-        print(f"   ⚠️ Görsel eksik, task SKIPPED'e taşınıyor...")
-        move_task_to_skipped(target_hash, "missing_images_swap_precheck")
-        return False
-    
-    print(f"   ✅ Görsel kontrolü geçildi, task processed'e taşınıyor...")
-    
+def move_task_to_processed(target_hash):
+    """Task'i processed.json'a taşır (görsel kontrolü YOK)"""
     tasks_path = "task/tasks.json"
     processed_path = "task/processed.json"
     
@@ -211,7 +143,6 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
     
     target_task["status"] = "processed"
     target_task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    target_task["images_verified"] = True
     
     processed.insert(0, target_task)
     
@@ -298,12 +229,13 @@ def folder_exists(prefix):
         return False
 
 
-# ================= MEVCUT ARTICLES/ KONTROLÜ (15000 KARAKTER + INDEX.HTML KORUMASI) =================
+# ================= MEVCUT ARTICLES/ KONTROLÜ (KALDIRILDI - Publisher yönetiyor) =================
 
 def check_existing_articles():
-    """Mevcut articles/ klasöründeki makaleleri 15000 karakter altında mı kontrol et, index.html KORU, altındakileri sil"""
+    """Mevcut articles/ kontrolü - SADECE LİSTELEME, SİLME YOK"""
     print("\n" + "=" * 40)
-    print(f"🔍 MEVCUT ARTICLES/ KONTROLÜ ({MIN_RENDERED_LEN} karakter altı silinecek)")
+    print("🔍 MEVCUT ARTICLES/ KONTROLÜ")
+    print("   ⚠️ Tüm kontroller KALDIRILDI (Publisher V50 parse kontrolü yapıyor)")
     print("   🛡️ index.html KORUNACAK")
     print("=" * 40)
     
@@ -312,70 +244,14 @@ def check_existing_articles():
         print("   articles/ klasörü boş veya yok.")
         return []
     
-    small_files = []
+    html_count = 0
     for key in articles_files:
-        if not key.endswith('.html'):
-            continue
-        
-        # index.html KORU, asla silme
-        if key.endswith('/index.html'):
-            print(f"   🛡️ KORUNDU (index.html): {key}")
-            continue
-        
-        # Sadece 2026 yılındaki makaleleri kontrol et
-        if '/2026/' not in key:
-            continue
-        
-        try:
-            response = s3.get_object(Bucket=R2_BUCKET, Key=key)
-            html_content = response['Body'].read().decode('utf-8')
-            html_len = len(html_content)  # Direkt uzunluk, tag temizleme YOK
-            
-            # Binary görsel kontrolü (RIFF = webp başlığı)
-            if b'RIFF' in html_content.encode()[:500]:
-                print(f"   ⚠️ Binary görsel içeriyor, siliniyor: {key}")
-                delete_file(key)
-                continue
-            
-            if html_len < MIN_RENDERED_LEN:
-                small_files.append({
-                    "timestamp": datetime.now().isoformat(),
-                    "source": "librarian_existing",
-                    "key": key,
-                    "html_len": html_len,
-                    "min_required_len": MIN_RENDERED_LEN
-                })
-                delete_file(key)
-                print(f"   🗑️ Silindi: {key} ({html_len} karakter <{MIN_RENDERED_LEN})")
-            else:
-                print(f"   ✅ Korundu: {key} ({html_len} karakter)")
-        except Exception as e:
-            print(f"   ⚠️ Kontrol edilemedi: {key} - {e}")
+        if key.endswith('.html') and not key.endswith('/index.html'):
+            html_count += 1
     
-    if small_files:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_key = f"reports/cleanup_{timestamp}.json"
-        report = {
-            "generated": datetime.now().isoformat(),
-            "type": "librarian_cleanup",
-            "min_rendered_len": MIN_RENDERED_LEN,
-            "entries": small_files
-        }
-        try:
-            s3.put_object(
-                Bucket=R2_BUCKET,
-                Key=report_key,
-                Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
-                ContentType='application/json'
-            )
-            print(f"   📊 Rapor kaydedildi: {report_key}")
-        except:
-            pass
-        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi ({MIN_RENDERED_LEN} karakter altı)")
-    else:
-        print(f"   ✅ Mevcut tüm makaleler {MIN_RENDERED_LEN} karakter üzerinde veya index.html")
-    
-    return small_files
+    print(f"   📄 Toplam {html_count} makale dosyası mevcut (hepsi korunuyor)")
+    print("   ✅ Hiçbir dosya silinmedi (Publisher V50'ye güveniyoruz)")
+    return []
 
 
 # ================= ATOMIC SWAP (KONTROLSÜZ) =================
@@ -383,7 +259,7 @@ def check_existing_articles():
 def atomic_swap():
     print("\n" + "=" * 40)
     print("ATOMIC SWAP: articles_ready/ -> articles/ (KONTROLSÜZ)")
-    print(f"   ⚠️ Publisher V48 zaten {MIN_RENDERED_LEN} karakter + 3 görsel + içerik kontrolü yaptı")
+    print("   ⚠️ Publisher V50 parse kontrolü yaptı, tüm dosyalar güvenli")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
@@ -619,12 +495,12 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print(f"📚 KUTUPHANECI BOT v33 - {MIN_RENDERED_LEN} KARAKTER KONTROLLU")
-    print(f"   🔍 Mevcut articles/ kontrolü ({MIN_RENDERED_LEN} karakter altı silinecek)")
+    print("📚 KUTUPHANECI BOT v34 - SADECE SWAP + TASK TAŞIMA")
+    print("   🔍 Mevcut articles/ kontrolü (SADECE LİSTELEME, SİLME YOK)")
     print("   🛡️ index.html KORUNACAK")
-    print("   🖼️ Görsel kontrolü (kapak, icerik_1, icerik_2)")
-    print("   ❌ Eksik görsel varsa -> SKIPPED")
-    print("   ✅ Tüm görseller varsa -> processed.json'a ekle")
+    print("   ❌ Görsel kontrolü KALDIRILDI (Publisher V50 parse kontrolü yeterli)")
+    print("   ❌ Karakter kontrolü KALDIRILDI")
+    print("   ✅ Sadece swap ve task taşıma yapılır")
     print("=" * 60)
     
     analyze_r2_storage()
@@ -643,12 +519,7 @@ def librarian():
                 
                 task = get_task_by_hash(current_hash)
                 if task:
-                    kategori = task.get('category', '')
-                    yil = task.get('yil', '')
-                    ay = task.get('ay', '')
-                    print(f"   📂 Kategori: {kategori}, Yıl: {yil}, Ay: {ay}")
-                    
-                    move_task_by_hash_to_processed(current_hash, kategori, yil, ay)
+                    move_task_to_processed(current_hash)
                 else:
                     print(f"   ⚠️ Hash {current_hash} için task bulunamadı, işlem atlanıyor")
             else:
@@ -664,11 +535,10 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v33 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v34 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
     print("   ✅ Atomic swap KONTROLSÜZ (Publisher'a güveniyor)")
-    print("   ✅ Görsel kontrolü AKTIF")
-    print(f"   ✅ {MIN_RENDERED_LEN} karakter kontrolü AKTIF")
+    print("   ❌ Görsel ve karakter kontrolleri KALDIRILDI")
     print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
 
