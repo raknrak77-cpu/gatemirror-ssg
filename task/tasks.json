@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0150",
-        "category": "elearning",
-        "cluster_id": "el_09",
-        "topic": "Proof-of-Skill: How 2026 Blockchain Credentials Let Employers Instantly Verify Nanodegree Authenticity",
-        "reference_link": "https://www.coursera.org/on-chain-credentials-2026",
-        "language": "en",
-        "author_persona": "Workforce Credentialing Specialist & Blockchain Identity Expert",
-        "special_instructions": "Focus on soulbound tokens (SBTs) for diplomas. Discuss the end of CV lying.",
-        "visuals": {
-            "kapak": "A digital CV on a screen, each skill has a glowing blue \"Verified on-chain\" checkmark, a blockchain hash visible below, 8k, photorealistic",
-            "icerik_1": "An employer's dashboard: \"Scan Candidate Wallet -> Skills: Python (99th percentile), SQL (Valid). Issuer: MITx SBT.\" photorealistic",
-            "icerik_2": "A graduate tossing a cap in the air, but instead of paper diploma, a glowing NFT badge appears in their hand, photorealistic"
-        },
-        "status": "pending",
-        "hash": "de6904f0",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T20:34:40.893542"
-    },
-    {
         "task_id": "0151",
         "category": "tech",
         "cluster_id": "tech_03",
