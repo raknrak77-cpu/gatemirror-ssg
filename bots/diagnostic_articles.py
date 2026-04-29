@@ -24,8 +24,8 @@ s3 = boto3.client(
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
 # ================= BOŞ MAKALE KRİTERLERİ (SADECE İÇERİK) =================
-MIN_CLEAN_TEXT = 1000      # Temiz metin 1000 karakter altı = BOŞ
-MIN_WORD_COUNT = 150       # Kelime 150 altı = BOŞ
+MIN_CLEAN_TEXT = 750      # Temiz metin 1000 karakter altı = BOŞ
+MIN_WORD_COUNT = 100       # Kelime 150 altı = BOŞ
 
 
 def list_all_articles():
