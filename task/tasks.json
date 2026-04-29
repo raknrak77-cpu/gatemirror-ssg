@@ -14,11 +14,12 @@
             "icerik_2": "Close-up of a smartphone showing an AI trading app with \"Profit: +24%\" and \"Win Rate: 89%\", modern UI, soft blue glow, photorealistic"
         },
         "status": "pending",
-        "hash": null,
+        "hash": "634b6ada",
         "created_at": "2026-04-29",
         "date": "2026-04-29",
         "display_date": "29 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash_updated_at": "2026-04-29T23:13:03.642756"
     },
     {
         "task_id": "0154",
