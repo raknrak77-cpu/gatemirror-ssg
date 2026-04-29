@@ -12,7 +12,7 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_CHAR_COUNT = 7500
+MIN_RENDERED_LEN = 15000  # Giydirilmiş HTML minimum karakter (Publisher V48 ile uyumlu)
 
 s3 = boto3.client(
     's3',
@@ -298,12 +298,12 @@ def folder_exists(prefix):
         return False
 
 
-# ================= MEVCUT ARTICLES/ KONTROLÜ (7500 KARAKTER + INDEX.HTML KORUMASI) =================
+# ================= MEVCUT ARTICLES/ KONTROLÜ (15000 KARAKTER + INDEX.HTML KORUMASI) =================
 
 def check_existing_articles():
-    """Mevcut articles/ klasöründeki makaleleri 7500 karakter altında mı kontrol et, index.html KORU, altındakileri sil"""
+    """Mevcut articles/ klasöründeki makaleleri 15000 karakter altında mı kontrol et, index.html KORU, altındakileri sil"""
     print("\n" + "=" * 40)
-    print("🔍 MEVCUT ARTICLES/ KONTROLÜ (7500 karakter altı silinecek)")
+    print(f"🔍 MEVCUT ARTICLES/ KONTROLÜ ({MIN_RENDERED_LEN} karakter altı silinecek)")
     print("   🛡️ index.html KORUNACAK")
     print("=" * 40)
     
@@ -314,7 +314,6 @@ def check_existing_articles():
     
     small_files = []
     for key in articles_files:
-        # SADECE .html dosyaları
         if not key.endswith('.html'):
             continue
         
@@ -323,42 +322,43 @@ def check_existing_articles():
             print(f"   🛡️ KORUNDU (index.html): {key}")
             continue
         
-        # Sadece 2026 yılındaki makaleleri kontrol et (eski sistemden kalma)
+        # Sadece 2026 yılındaki makaleleri kontrol et
         if '/2026/' not in key:
             continue
         
         try:
             response = s3.get_object(Bucket=R2_BUCKET, Key=key)
             html_content = response['Body'].read().decode('utf-8')
+            html_len = len(html_content)  # Direkt uzunluk, tag temizleme YOK
             
-            # Tag'leri temizle, sadece metin kal
-            text_clean = re.sub(r'<[^>]+>', ' ', html_content)
-            text_clean = re.sub(r'\s+', ' ', text_clean).strip()
-            char_count = len(text_clean)
+            # Binary görsel kontrolü (RIFF = webp başlığı)
+            if b'RIFF' in html_content.encode()[:500]:
+                print(f"   ⚠️ Binary görsel içeriyor, siliniyor: {key}")
+                delete_file(key)
+                continue
             
-            if char_count < MIN_CHAR_COUNT:
+            if html_len < MIN_RENDERED_LEN:
                 small_files.append({
                     "timestamp": datetime.now().isoformat(),
                     "source": "librarian_existing",
                     "key": key,
-                    "char_count": char_count,
-                    "min_required_char": MIN_CHAR_COUNT
+                    "html_len": html_len,
+                    "min_required_len": MIN_RENDERED_LEN
                 })
                 delete_file(key)
-                print(f"   🗑️ Silindi: {key} ({char_count} karakter <{MIN_CHAR_COUNT})")
+                print(f"   🗑️ Silindi: {key} ({html_len} karakter <{MIN_RENDERED_LEN})")
             else:
-                print(f"   ✅ Korundu: {key} ({char_count} karakter)")
+                print(f"   ✅ Korundu: {key} ({html_len} karakter)")
         except Exception as e:
             print(f"   ⚠️ Kontrol edilemedi: {key} - {e}")
     
     if small_files:
-        # Rapor kaydet
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_key = f"reports/cleanup_{timestamp}.json"
         report = {
             "generated": datetime.now().isoformat(),
             "type": "librarian_cleanup",
-            "min_char_count": MIN_CHAR_COUNT,
+            "min_rendered_len": MIN_RENDERED_LEN,
             "entries": small_files
         }
         try:
@@ -371,9 +371,9 @@ def check_existing_articles():
             print(f"   📊 Rapor kaydedildi: {report_key}")
         except:
             pass
-        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi ({MIN_CHAR_COUNT} karakter altı)")
+        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi ({MIN_RENDERED_LEN} karakter altı)")
     else:
-        print(f"   ✅ Mevcut tüm makaleler {MIN_CHAR_COUNT} karakter üzerinde veya index.html")
+        print(f"   ✅ Mevcut tüm makaleler {MIN_RENDERED_LEN} karakter üzerinde veya index.html")
     
     return small_files
 
@@ -383,7 +383,7 @@ def check_existing_articles():
 def atomic_swap():
     print("\n" + "=" * 40)
     print("ATOMIC SWAP: articles_ready/ -> articles/ (KONTROLSÜZ)")
-    print("   ⚠️ Publisher zaten 7500 karakter + 3 görsel kontrolü yaptı")
+    print(f"   ⚠️ Publisher V48 zaten {MIN_RENDERED_LEN} karakter + 3 görsel + içerik kontrolü yaptı")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
@@ -619,8 +619,8 @@ def analyze_r2_storage():
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v32 - 7500 KARAKTER KONTROLLU")
-    print("   🔍 Mevcut articles/ kontrolü (7500 karakter altı silinecek)")
+    print(f"📚 KUTUPHANECI BOT v33 - {MIN_RENDERED_LEN} KARAKTER KONTROLLU")
+    print(f"   🔍 Mevcut articles/ kontrolü ({MIN_RENDERED_LEN} karakter altı silinecek)")
     print("   🛡️ index.html KORUNACAK")
     print("   🖼️ Görsel kontrolü (kapak, icerik_1, icerik_2)")
     print("   ❌ Eksik görsel varsa -> SKIPPED")
@@ -664,11 +664,11 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v32 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v33 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
     print("   ✅ Atomic swap KONTROLSÜZ (Publisher'a güveniyor)")
     print("   ✅ Görsel kontrolü AKTIF")
-    print(f"   ✅ {MIN_CHAR_COUNT} karakter kontrolü AKTIF")
+    print(f"   ✅ {MIN_RENDERED_LEN} karakter kontrolü AKTIF")
     print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
 
