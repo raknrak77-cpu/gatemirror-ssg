@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0143",
-        "category": "future-economy",
-        "cluster_id": "fe_07",
-        "topic": "The Offline Digital Dollar: How 2026 CBDCs Use Secure Hardware for Blackout-Proof Payments",
-        "reference_link": "https://www.reuters.com/cbdc-offline-2026",
-        "language": "en",
-        "author_persona": "Payments Infrastructure Lead & Hardware Security Expert",
-        "special_instructions": "Explain the secure element in smartphones. Discuss disaster resilience and privacy trade-offs.",
-        "visuals": {
-            "kapak": "A smartphone showing \"Payment Sent (Offline Mode)\" with a glowing satellite link icon crossed out, but a green checkmark appears, 8k, photorealistic",
-            "icerik_1": "A cross-section of a phone showing a tiny \"Secure Chip\" glowing, transferring a payment symbol via NFC to another phone, no towers needed, photorealistic",
-            "icerik_2": "A person buying bread at a rural market with no signal, the vendor's phone beeps \"CBDC Received\", both smile, photorealistic"
-        },
-        "status": "pending",
-        "hash": "e6c9f632",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T16:04:06.927441"
-    },
-    {
         "task_id": "0144",
         "category": "tech",
         "cluster_id": "tech_06",
