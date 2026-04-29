@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0149",
+        "category": "elearning",
+        "cluster_id": "el_08",
+        "topic": "The Global Metaclassroom: How 2026 VR Eliminates School Boundaries for Real-Time Collaboration",
+        "reference_link": "https://www.edweek.org/vr-global-class-2026",
+        "language": "en",
+        "author_persona": "International Education Technology Lead & VR Curriculum Designer",
+        "special_instructions": "Focus on language learning through immersion and physics experiments with shared virtual objects.",
+        "visuals": {
+            "kapak": "A VR classroom with students from different cultures (flag icons above heads) all building a virtual volcano together, realistic avatars, 8k",
+            "icerik_1": "A student's view: a Japanese student and a Brazilian student working on a virtual car engine, hands interacting with holographic parts, photorealistic",
+            "icerik_2": "A dashboard showing \"Real-time Translation Active. Collaboration Score: 95%.\" clean UI, global map background, photorealistic"
+        },
+        "status": "processed",
+        "hash": "389ed3e3",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "2026-04-29 20:17:06",
+        "hash_updated_at": "2026-04-29T20:07:22.297257"
+    },
+    {
         "task_id": "0147",
         "category": "eco",
         "cluster_id": "eco_08",
