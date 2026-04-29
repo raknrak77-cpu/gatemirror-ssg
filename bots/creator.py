@@ -359,7 +359,7 @@ STRICT RULES:
     
     payload = {
         "contents": [{"parts": [{"text": prompt_emri}]}],
-        "generationConfig": {"temperature": 0.85, "maxOutputTokens": 28000, "topP": 0.95}
+        "generationConfig": {"temperature": 0.91, "maxOutputTokens": 38888, "topP": 0.95}
     }
     
     try:
