@@ -96,7 +96,6 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     author_persona = task.get('author_persona', 'Expert Analyst')
     datetime_full = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    # Yazar bilgileri
     if author_info:
         author_name = author_info.get('name', author_persona)
         author_title = author_info.get('title', '')
@@ -108,7 +107,6 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         author_bio = ''
         author_avatar = ''
     
-    # META parçalarını hazırla
     meta_parts = [
         f"author={author_name}",
         f"author_title={author_title}",
@@ -120,7 +118,6 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
         f"lang={lang}"
     ]
     
-    # Cluster bilgileri varsa ekle
     if cluster_id:
         meta_parts.append(f"cluster_id={cluster_id}")
         meta_parts.append(f"cluster_name={cluster_rules_data.get('cluster_name', '')}")
@@ -146,17 +143,14 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
             style_boost_clean = cluster_rules_data['style_boost'].replace('\n', ' ').replace('"', '\\"')
             meta_parts.append(f"style_boost={style_boost_clean}")
     
-    # Görsel bilgileri
     visuals = task.get('visuals', {})
     if visuals:
         visual_types = list(visuals.keys())
         meta_parts.append(f"visuals={'|'.join(visual_types)}")
     
-    # META yorum satırı - EN SONA
     meta_comment = "\n<!-- META: " + ", ".join(meta_parts) + " -->\n"
     final_html = makale_html + meta_comment
     
-    # Kaydet
     target_dir = os.path.join("content", lang, kategori, yil, ay)
     os.makedirs(target_dir, exist_ok=True)
     filename = f"{hash_id}-{slug}.html"
@@ -167,28 +161,23 @@ def html_yaz(hash_id, task, makale_html, kategori, lang, yil, ay, slug, author_i
     
     file_size = os.path.getsize(target_path) // 1024
     
-    # MAKALE DETAYLARINI LOGLA
     log(f"✅ {lang.upper()} kaydedildi: {filename} ({file_size} KB)")
     
-    # Makale başlığını bul (h1'den)
     title_match = re.search(r'<h1>(.*?)</h1>', makale_html, re.DOTALL)
     title = title_match.group(1).strip() if title_match else "Başlık bulunamadı"
     log(f"   📌 Başlık: {title[:80]}...")
     
-    # Kelime sayısı ve okuma süresi
     text_clean = re.sub(r'<[^>]+>', ' ', makale_html)
     words = re.findall(r'\b\w+\b', text_clean)
     word_count = len(words)
     reading_time = max(1, word_count // 200)
     log(f"   📊 Kelime: {word_count} | Okuma: {reading_time} dk | Karakter: {len(makale_html)}")
     
-    # META başlıklarını logla
     log(f"   📝 META (sonda): author={author_name}, cluster_id={cluster_id}, intent={cluster_rules_data.get('intent', '-')}, monetization={cluster_rules_data.get('monetization', '-')}, visuals={visual_types if visuals else '-'}")
     
     return target_path
 
 def run_visual_bot(task, hash_id, kategori, yil, ay):
-    """Görsel bot'u çalıştır - V16 uyumlu"""
     visuals = task.get('visuals', {})
     
     log("=" * 60)
@@ -267,7 +256,6 @@ def isle_gorev(task):
     if author_info:
         log(f"Yazar bulundu: {author_info.get('name')}")
     
-    # Prompt oluştur
     cluster_rules = ""
     if cluster_rules_data:
         cluster_rules = f"""
@@ -296,16 +284,48 @@ CONTENT REQUIREMENTS (per language):
 - STRICT MINIMUM: 2000 words per language
 - Hook: Start Introduction with a bold claim or statistic
 
+============================================================================
+STRICT HEADER RULES (CRITICAL - MUST FOLLOW EXACTLY):
+============================================================================
+
+ENGLISH (EN):
+- MUST use exactly: <h2>Introduction</h2>
+- MUST use exactly: <h2>Main Analysis</h2>
+- MUST use exactly: <h2>Practical Implications</h2>
+- MUST use exactly: <h2>Conclusion</h2>
+
+SPANISH (ES):
+- MUST use exactly: <h2>Introducción</h2>
+- MUST use exactly: <h2>Análisis Principal</h2>
+- MUST use exactly: <h2>Implicaciones Prácticas</h2>
+- MUST use exactly: <h2>Conclusión</h2>
+
+GERMAN (DE):
+- MUST use exactly: <h2>Einleitung</h2>
+- MUST use exactly: <h2>Hauptanalyse</h2>
+- MUST use exactly: <h2>Praktische Auswirkungen</h2>
+- MUST use exactly: <h2>Fazit</h2>
+
+FRENCH (FR):
+- MUST use exactly: <h2>Introduction</h2>
+- MUST use exactly: <h2>Analyse principale</h2>
+- MUST use exactly: <h2>Implications pratiques</h2>
+- MUST use exactly: <h2>Conclusion</h2>
+
+DO NOT use alternative headers. These exact strings are required for the publishing system.
+
+============================================================================
+
 STRUCTURE:
 <h1>[Title]</h1>
 <div class="editors-note">[2-3 sentences, first-person]</div>
-<h2>Introduction</h2>
+<h2>Introduction</h2>  <!-- Use language-specific version from rules above -->
 <h2>Key Takeaways</h2>
 <ul><li><strong>Takeaway 1:</strong> explanation</li></ul>
-<h2>Main Analysis</h2>
+<h2>Main Analysis</h2>  <!-- Use language-specific version from rules above -->
 [Min 4 subsections with <h3>]
-<h2>Practical Implications</h2>
-<h2>Conclusion</h2>
+<h2>Practical Implications</h2>  <!-- Use language-specific version from rules above -->
+<h2>Conclusion</h2>  <!-- Use language-specific version from rules above -->
 <h2>Frequently Asked Questions (FAQ)</h2>
 <div class="sources">
 <h3>Sources</h3>
@@ -375,7 +395,6 @@ STRICT RULES:
             yil = now.strftime("%Y")
             ay = now.strftime("%m")
             
-            # Görsel üret
             visual_success = run_visual_bot(task, hash_id, kategori, yil, ay)
             
             if not visual_success:
@@ -385,7 +404,6 @@ STRICT RULES:
                 log("=" * 70)
                 return False, None, None
             
-            # Makaleleri kaydet
             log("\nMakaleler kaydediliyor...")
             
             saved_count = 0
@@ -408,11 +426,12 @@ STRICT RULES:
 
 def operasyon_baslat():
     log("=" * 70)
-    log("CREATOR BOT V50 - META EN SONA")
+    log("CREATOR BOT V51 - DİL BAZLI BAŞLIK ZORLAMASI")
     log("1. Gemini'den makale üret")
     log("2. Hash oluştur")
     log("3. Görsel üret")
     log("4. Makaleleri kaydet (META yorum satırı EN SONA)")
+    log("5. Her dil KENDİ BAŞLIĞINI KULLANIR")
     log("=" * 70)
     
     task = get_first_pending_task()
@@ -435,7 +454,7 @@ def operasyon_baslat():
     log(f"Hash kaydedildi: task/current_hash.txt -> {hash_id}")
     
     log("=" * 70)
-    log(f"CREATOR V50 TAMAMLANDI!")
+    log(f"CREATOR V51 TAMAMLANDI!")
     log(f"Hash: {hash_id}")
     log(f"Task ID: {task_id}")
     log("=" * 70)
