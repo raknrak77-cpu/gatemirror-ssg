@@ -84,7 +84,6 @@ def get_category_description(lang, category):
     return descriptions.get(lang, descriptions.get('en', {})).get(category, '')
 
 def calculate_reading_time_and_word_count(html_content):
-    """Hem okuma süresini hem kelime sayısını hesaplar"""
     text = re.sub(r'<[^>]+>', ' ', html_content)
     words = re.findall(r'\b\w+\b', text)
     word_count = len(words)
@@ -102,22 +101,50 @@ def image_exists(url):
     except:
         return False
 
-def split_article_content(content_html):
+def split_article_content_multilang(content_html, lang):
     """
-    Makale içeriğini <h2> başlıklarına göre 3 parçaya böler:
-    - Part 1: Introduction + Main Analysis'ın ilk yarısı
-    - Part 2: Main Analysis'ın ikinci yarısı
-    - Part 3: Practical Implications + Conclusion
+    Makale içeriğini <h2> başlıklarına göre 3 parçaya böler.
+    DİL BAZLI BAŞLIK DESTEĞİ İLE (ES, DE, FR)
     """
-    
     if not content_html:
         return {'content_part1': '', 'content_part2': '', 'content_part3': ''}
     
-    # Başlıkları bul
-    intro_match = re.search(r'(<h2>Introduction</h2>.*?)<h2>Main Analysis</h2>', content_html, re.DOTALL)
-    main_analysis_match = re.search(r'<h2>Main Analysis</h2>(.*?)<h2>Practical Implications</h2>', content_html, re.DOTALL)
-    practical_match = re.search(r'<h2>Practical Implications</h2>(.*?)<h2>Conclusion</h2>', content_html, re.DOTALL)
-    conclusion_match = re.search(r'<h2>Conclusion</h2>(.*?)(?=<h2>Frequently Asked Questions|$)', content_html, re.DOTALL)
+    # Dillere göre başlık pattern'leri
+    patterns = {
+        'en': {
+            'intro': r'<h2>Introduction</h2>',
+            'main': r'<h2>Main Analysis</h2>',
+            'practical': r'<h2>Practical Implications</h2>',
+            'conclusion': r'<h2>Conclusion</h2>'
+        },
+        'es': {
+            'intro': r'<h2>Introducción</h2>',
+            'main': r'<h2>Análisis Principal</h2>',
+            'practical': r'<h2>Implicaciones Prácticas</h2>',
+            'conclusion': r'<h2>Conclusión</h2>'
+        },
+        'de': {
+            'intro': r'<h2>Einleitung</h2>',
+            'main': r'<h2>Hauptanalyse</h2>',
+            'practical': r'<h2>Praktische Auswirkungen</h2>',
+            'conclusion': r'<h2>Fazit</h2>'
+        },
+        'fr': {
+            'intro': r'<h2>Introduction</h2>',
+            'main': r'<h2>Analyse principale</h2>',
+            'practical': r'<h2>Implications pratiques</h2>',
+            'conclusion': r'<h2>Conclusion</h2>'
+        }
+    }
+    
+    # Varsayılan İngilizce
+    p = patterns.get(lang, patterns['en'])
+    
+    # Başlıkları bul (dil bazlı)
+    intro_match = re.search(rf'({p["intro"]}.*?){p["main"]}', content_html, re.DOTALL)
+    main_analysis_match = re.search(rf'{p["main"]}(.*?){p["practical"]}', content_html, re.DOTALL)
+    practical_match = re.search(rf'{p["practical"]}(.*?){p["conclusion"]}', content_html, re.DOTALL)
+    conclusion_match = re.search(rf'{p["conclusion"]}(.*?)(?=<h2>|$)', content_html, re.DOTALL)
     
     intro = intro_match.group(1) if intro_match else ""
     main_analysis = main_analysis_match.group(1) if main_analysis_match else ""
@@ -132,12 +159,10 @@ def split_article_content(content_html):
         main_part1 = ''.join(h3_sections[:mid])
         main_part2 = ''.join(h3_sections[mid:])
     else:
-        # <h3> yoksa, karakter sayısına göre böl
         mid = len(main_analysis) // 2
         main_part1 = main_analysis[:mid]
         main_part2 = main_analysis[mid:]
     
-    # Parçaları oluştur
     part1 = intro + main_part1
     part2 = main_part2
     part3 = practical + conclusion
@@ -181,7 +206,6 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         display_date = datetime.now().strftime("%d %B %Y")
         cluster_id = None
     
-    # ISO formatında datetime
     datetime_iso = sort_datetime if sort_datetime else datetime.now().isoformat()
     
     # Editor's Note
@@ -196,11 +220,9 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     else:
         summary_html = "<li>No summary available</li>"
     
-    # Summary (düz metin olarak - Key Takeaways'dan)
     summary_text = ""
     if takeaway_match:
         items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
-        # İlk 3 maddeyi al, HTML tag'lerini temizle
         clean_items = []
         for item in items[:3]:
             clean = re.sub(r'<[^>]+>', '', item).strip()
@@ -225,14 +247,12 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
     content_clean = content_clean.strip()
 
-    # Makaleyi 3 parçaya böl
-    content_parts = split_article_content(content_clean)
+    # Makaleyi 3 parçaya böl - ÇOK DİLLİ VERSİYON
+    content_parts = split_article_content_multilang(content_clean, lang)
     
-    # Okuma süresi, kelime sayısı ve görüntülenme
     reading_time, word_count = calculate_reading_time_and_word_count(content_clean)
     views = generate_views(hash_id)
     
-    # Açıklama
     plain_text = re.sub(r'<[^>]+>', '', content_clean[:500])
     description = plain_text[:150].strip() + ("..." if len(plain_text) > 150 else "")
     if not description:
@@ -246,13 +266,11 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         base_new = None
         base_old = f"{R2_PUBLIC_URL}/images/{category}/{hash_id}"
     
-    # Kapak görseli
     if base_new and image_exists(f"{base_new}_kapak.webp"):
         cover_image = f"{base_new}_kapak.webp"
     else:
         cover_image = f"{base_old}_kapak.webp"
     
-    # İç görsel 1
     if base_new:
         if image_exists(f"{base_new}_icerik_1.webp"):
             content_image_1 = f"{base_new}_icerik_1.webp"
@@ -268,7 +286,6 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
         else:
             content_image_1 = f"{base_old}_icerik.webp"
     
-    # İç görsel 2
     if base_new and image_exists(f"{base_new}_icerik_2.webp"):
         content_image_2 = f"{base_new}_icerik_2.webp"
     else:
@@ -306,7 +323,6 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     }
 
 def get_all_raw_articles():
-    """raw-articles/ altındaki tüm HTML dosyalarını listeler ve parse eder"""
     languages = ['en', 'es', 'de', 'fr']
     all_articles = []
     
@@ -390,7 +406,6 @@ def get_all_raw_articles():
     return all_articles
 
 def build_alternate_langs_dict(all_articles):
-    """Makalelerin alternatif dillerini oluşturur (hreflang için)"""
     alt_dict = {}
     for article in all_articles:
         key = (article['category'], article['hash'])
@@ -401,7 +416,6 @@ def build_alternate_langs_dict(all_articles):
     return alt_dict
 
 def generate_sitemap(all_articles, alt_dict):
-    """Sitemap.xml oluşturur"""
     base_url = R2_PUBLIC_URL
     urls = []
     languages = ['en', 'es', 'de', 'fr']
@@ -467,7 +481,6 @@ def generate_sitemap(all_articles, alt_dict):
     return xml
 
 def generate_robots_txt():
-    """robots.txt oluşturur"""
     base_url = R2_PUBLIC_URL
     return f"""# Tüm arama motorlarına izin ver
 User-agent: *
@@ -485,4 +498,3 @@ Disallow: /*.json$
 Disallow: /tmp/
 Disallow: /private/
 """
-            
