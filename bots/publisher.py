@@ -26,7 +26,6 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_CHAR_COUNT = 7500  # YENİ: Karakter bazlı eşik
 
 s3 = boto3.client(
     's3',
@@ -211,15 +210,14 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
         alternate_langs=alternate_langs, hero={'html': hero_html, 'show': True}
     )
 
-# ================= SIZE KONTROL VE LOG (YENİ) =================
+# ================= TEK KONTROL: PARSE KONTROLÜ =================
 
-def log_size_report(entries, report_type="publisher"):
+def log_failed_report(entries, report_type="publisher"):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
+    report_key = f"reports/failed_report_{report_type}_{timestamp}.json"
     report = {
         "generated": datetime.now().isoformat(),
         "type": report_type,
-        "min_char_count": MIN_CHAR_COUNT,
         "entries": entries
     }
     try:
@@ -235,77 +233,71 @@ def log_size_report(entries, report_type="publisher"):
         print(f"   ⚠️ Rapor kaydedilemedi: {e}")
         return None
 
+def check_parse_success(article):
+    """Makeup'ın parse edip edemediğini kontrol et"""
+    parsed = article['parsed']
+    
+    # content veya content_part1/2/3 dolu mu?
+    content = parsed.get('content', '')
+    content_part1 = parsed.get('content_part1', '')
+    content_part2 = parsed.get('content_part2', '')
+    content_part3 = parsed.get('content_part3', '')
+    
+    total_len = len(content) + len(content_part1) + len(content_part2) + len(content_part3)
+    
+    # En az 500 karakter içerik olmalı
+    return total_len >= 500, total_len
+
 def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_for_template, failed_log):
-    """Tek bir makaleyi kontrol et + yaz (7500 KARAKTER + 3 GÖRSEL kontrolü)"""
+    """Tek bir makaleyi kontrol et + yaz - SADECE PARSE KONTROLÜ"""
     try:
-        single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
-        if not single_html:
-            return None
-        
-        # HTML'den tag'leri temizle, sadece metin kal
-        text_clean = re.sub(r'<[^>]+>', ' ', single_html)
-        text_clean = re.sub(r'\s+', ' ', text_clean).strip()
-        char_count = len(text_clean)
-        
-        # Görsel kontrolü (cover_image, content_image_1, content_image_2)
-        parsed = article['parsed']
-        has_cover = bool(parsed.get('cover_image'))
-        has_img1 = bool(parsed.get('content_image_1'))
-        has_img2 = bool(parsed.get('content_image_2'))
-        has_all_images = has_cover and has_img1 and has_img2
+        # Önce parse kontrolü yap (render etmeden önce)
+        parse_ok, total_len = check_parse_success(article)
         
         target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
         
-        # KONTROL: 7500 karakter ve 3 görsel
-        if char_count < MIN_CHAR_COUNT:
+        if not parse_ok:
             entry = {
                 "timestamp": datetime.now().isoformat(),
-                "source": "publisher",
-                "status": "REJECTED_CHAR_COUNT",
+                "status": "REJECTED_PARSE_FAILED",
                 "url": article['url'],
                 "target_key": target_key,
-                "char_count": char_count,
-                "min_required_char": MIN_CHAR_COUNT,
+                "content_len": total_len,
                 "hash": article.get('hash'),
                 "lang": article['lang'],
                 "category": article['category'],
-                "title": article['parsed']['title'][:100]
+                "title": article['parsed']['title'][:100] if article['parsed']['title'] else "No title"
             }
             failed_log.append(entry)
-            print(f"   ⚠️ REDdedildi (karakter): {target_key} -> {char_count} karakter (<{MIN_CHAR_COUNT})")
+            print(f"   ❌ RED (Makeup parse edemedi - içerik çok kısa): {total_len} karakter")
             return None
         
-        if not has_all_images:
-            missing = []
-            if not has_cover: missing.append("kapak")
-            if not has_img1: missing.append("icerik_1")
-            if not has_img2: missing.append("icerik_2")
+        # Parse başarılı -> render et
+        single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
+        if not single_html:
             entry = {
                 "timestamp": datetime.now().isoformat(),
-                "source": "publisher",
-                "status": "REJECTED_MISSING_IMAGES",
+                "status": "REJECTED_RENDER_FAILED",
                 "url": article['url'],
                 "target_key": target_key,
-                "missing_images": missing,
                 "hash": article.get('hash'),
                 "lang": article['lang'],
                 "category": article['category'],
-                "title": article['parsed']['title'][:100]
+                "title": article['parsed']['title'][:100] if article['parsed']['title'] else "No title"
             }
             failed_log.append(entry)
-            print(f"   ⚠️ REDdedildi (görsel eksik): {target_key} -> eksik: {', '.join(missing)}")
+            print(f"   ❌ RED (render edilemedi): {target_key}")
             return None
         
-        # Tüm kontroller geçildi -> yayınla
-        html_bytes = single_html.encode('utf-8')
-        size_kb = len(html_bytes) / 1024
-        
-        s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=html_bytes, ContentType='text/html')
-        print(f"   ✅ Yayınlandı: {target_key} ({char_count} karakter, {size_kb:.1f} KB, 3/3 görsel)")
+        # Yayınla
+        s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=single_html.encode('utf-8'), ContentType='text/html')
+        print(f"   ✅ Yayınlandı: {target_key} ({total_len} karakter içerik)")
         return target_key
         
     except Exception as e:
         print(f"   ❌ Hata: {article.get('url', 'unknown')} - {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 # ================= ARTICLES.JSON ÜRETİMİ =================
@@ -335,7 +327,7 @@ def generate_articles_json(all_articles):
             if other['category'] == article['category'] and other['hash'] == article['hash'] and other['lang'] != article['lang']:
                 alt_langs[other['lang']] = other['url']
         article['alternate_langs'] = alt_langs
-    final_json = {"version": "1.1", "generated": datetime.now().isoformat(),
+    final_json = {"version": "1.3", "generated": datetime.now().isoformat(),
                   "total_articles": len(articles_list), "articles": articles_list}
     s3.put_object(Bucket=R2_BUCKET, Key='articles.json',
                   Body=json.dumps(final_json, indent=2, ensure_ascii=False).encode('utf-8'),
@@ -346,9 +338,9 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT v47 - 7500 KARAKTER + 3 GÖRSEL KONTROLLÜ")
-    print(f"   ❌ {MIN_CHAR_COUNT} karakter altı makaleler YAYINLANMAYACAK")
-    print("   ❌ Eksik görsel varsa YAYINLANMAYACAK")
+    print("🚀 PUBLISHER BOT v50 - SADECE PARSE KONTROLÜ")
+    print("   ❌ Makeup parse edemeyen makaleler YAYINLANMAYACAK")
+    print("   ❌ Render edilemeyen makaleler YAYINLANMAYACAK")
     print("   📊 Detaylı rapor (R2/reports/)")
     print("=" * 60)
     
@@ -398,8 +390,8 @@ def publisher():
         lang_articles.sort(key=lambda x: x['sort_datetime'], reverse=True)
         menu_texts = get_menu_texts(lang)
         
-        # 1. MAKALELERİ KONTROLLÜ YAZ
-        print(f"\n📝 Makaleler işleniyor ({MIN_CHAR_COUNT} karakter + 3 görsel kontrolü)...")
+        # 1. MAKALELERİ KONTROLLÜ YAZ (SADECE PARSE KONTROLÜ)
+        print(f"\n📝 Makaleler işleniyor (parse kontrolü)...")
         
         articles_to_write = []
         for article in lang_articles:
@@ -509,14 +501,13 @@ def publisher():
     
     # RAPOR KAYDET
     if failed_log:
-        log_size_report(failed_log, "publisher")
+        log_failed_report(failed_log, "publisher")
         print(f"\n⚠️ Publisher TARAFINDAN REDDEDİLEN: {len(failed_log)} makale")
-        # Reddedilenlerin özetini göster
-        char_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_CHAR_COUNT'])
-        img_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_MISSING_IMAGES'])
-        print(f"   └─ Karakter reddi: {char_rejects}, Görsel eksik reddi: {img_rejects}")
+        parse_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_PARSE_FAILED'])
+        render_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_RENDER_FAILED'])
+        print(f"   └─ Parse hatası: {parse_rejects}, Render hatası: {render_rejects}")
     else:
-        print(f"\n✅ Tüm makaleler Publisher'da {MIN_CHAR_COUNT} karakter + 3 görsel kontrolünü geçti")
+        print(f"\n✅ Tüm makaleler Publisher V50 parse kontrolünü geçti")
     
     # SITEMAP & ROBOTS & ARTICLES.JSON
     print(f"\n{'=' * 40}")
@@ -533,7 +524,7 @@ def publisher():
     generate_articles_json(all_articles)
     
     print(f"\n{'=' * 40}")
-    print("🏁 PUBLISHER v47 TAMAMLANDI!")
+    print("🏁 PUBLISHER V50 TAMAMLANDI!")
     print(f"   ✅ Toplam sayfa: {total_pages}")
     print(f"   ❌ Reddedilen makale: {len(failed_log)}")
     print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
