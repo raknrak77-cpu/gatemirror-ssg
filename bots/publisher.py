@@ -3,6 +3,7 @@ import random
 import json
 import boto3
 import requests
+import re
 from datetime import datetime
 from botocore.client import Config
 from jinja2 import Template
@@ -25,7 +26,7 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_SIZE_KB = 51
+MIN_CHAR_COUNT = 7500  # YENİ: Karakter bazlı eşik
 
 s3 = boto3.client(
     's3',
@@ -210,7 +211,7 @@ def render_all_articles_page(lang, all_articles, featured_article, template_str,
         alternate_langs=alternate_langs, hero={'html': hero_html, 'show': True}
     )
 
-# ================= SIZE KONTROL VE LOG =================
+# ================= SIZE KONTROL VE LOG (YENİ) =================
 
 def log_size_report(entries, report_type="publisher"):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -218,7 +219,7 @@ def log_size_report(entries, report_type="publisher"):
     report = {
         "generated": datetime.now().isoformat(),
         "type": report_type,
-        "min_size_kb": MIN_SIZE_KB,
+        "min_char_count": MIN_CHAR_COUNT,
         "entries": entries
     }
     try:
@@ -235,37 +236,72 @@ def log_size_report(entries, report_type="publisher"):
         return None
 
 def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_for_template, failed_log):
-    """Tek bir makaleyi kontrol et + yaz (51 KB kontrolü)"""
+    """Tek bir makaleyi kontrol et + yaz (7500 KARAKTER + 3 GÖRSEL kontrolü)"""
     try:
         single_html = render_single_page(article, alt_langs, single_tpl, menu_texts, related_for_template)
         if not single_html:
             return None
         
-        html_bytes = single_html.encode('utf-8')
-        size_kb = len(html_bytes) / 1024
+        # HTML'den tag'leri temizle, sadece metin kal
+        text_clean = re.sub(r'<[^>]+>', ' ', single_html)
+        text_clean = re.sub(r'\s+', ' ', text_clean).strip()
+        char_count = len(text_clean)
+        
+        # Görsel kontrolü (cover_image, content_image_1, content_image_2)
+        parsed = article['parsed']
+        has_cover = bool(parsed.get('cover_image'))
+        has_img1 = bool(parsed.get('content_image_1'))
+        has_img2 = bool(parsed.get('content_image_2'))
+        has_all_images = has_cover and has_img1 and has_img2
         
         target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
         
-        if size_kb < MIN_SIZE_KB:
+        # KONTROL: 7500 karakter ve 3 görsel
+        if char_count < MIN_CHAR_COUNT:
             entry = {
                 "timestamp": datetime.now().isoformat(),
                 "source": "publisher",
-                "status": "REJECTED",
+                "status": "REJECTED_CHAR_COUNT",
                 "url": article['url'],
                 "target_key": target_key,
-                "size_kb": round(size_kb, 2),
-                "min_required_kb": MIN_SIZE_KB,
+                "char_count": char_count,
+                "min_required_char": MIN_CHAR_COUNT,
                 "hash": article.get('hash'),
                 "lang": article['lang'],
                 "category": article['category'],
                 "title": article['parsed']['title'][:100]
             }
             failed_log.append(entry)
-            print(f"   ⚠️ REDdedildi: {target_key} -> {size_kb:.1f} KB (<{MIN_SIZE_KB} KB)")
+            print(f"   ⚠️ REDdedildi (karakter): {target_key} -> {char_count} karakter (<{MIN_CHAR_COUNT})")
             return None
         
+        if not has_all_images:
+            missing = []
+            if not has_cover: missing.append("kapak")
+            if not has_img1: missing.append("icerik_1")
+            if not has_img2: missing.append("icerik_2")
+            entry = {
+                "timestamp": datetime.now().isoformat(),
+                "source": "publisher",
+                "status": "REJECTED_MISSING_IMAGES",
+                "url": article['url'],
+                "target_key": target_key,
+                "missing_images": missing,
+                "hash": article.get('hash'),
+                "lang": article['lang'],
+                "category": article['category'],
+                "title": article['parsed']['title'][:100]
+            }
+            failed_log.append(entry)
+            print(f"   ⚠️ REDdedildi (görsel eksik): {target_key} -> eksik: {', '.join(missing)}")
+            return None
+        
+        # Tüm kontroller geçildi -> yayınla
+        html_bytes = single_html.encode('utf-8')
+        size_kb = len(html_bytes) / 1024
+        
         s3.put_object(Bucket=R2_BUCKET, Key=target_key, Body=html_bytes, ContentType='text/html')
-        print(f"   ✅ Yayınlandı: {target_key} ({size_kb:.1f} KB)")
+        print(f"   ✅ Yayınlandı: {target_key} ({char_count} karakter, {size_kb:.1f} KB, 3/3 görsel)")
         return target_key
         
     except Exception as e:
@@ -310,8 +346,9 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT v43 - 51 KB KONTROLLÜ")
-    print("   ❌ Küçük makaleler YAYINLANMAYACAK")
+    print("🚀 PUBLISHER BOT v47 - 7500 KARAKTER + 3 GÖRSEL KONTROLLÜ")
+    print(f"   ❌ {MIN_CHAR_COUNT} karakter altı makaleler YAYINLANMAYACAK")
+    print("   ❌ Eksik görsel varsa YAYINLANMAYACAK")
     print("   📊 Detaylı rapor (R2/reports/)")
     print("=" * 60)
     
@@ -362,7 +399,7 @@ def publisher():
         menu_texts = get_menu_texts(lang)
         
         # 1. MAKALELERİ KONTROLLÜ YAZ
-        print(f"\n📝 Makaleler işleniyor (51 KB kontrolü)...")
+        print(f"\n📝 Makaleler işleniyor ({MIN_CHAR_COUNT} karakter + 3 görsel kontrolü)...")
         
         articles_to_write = []
         for article in lang_articles:
@@ -474,8 +511,12 @@ def publisher():
     if failed_log:
         log_size_report(failed_log, "publisher")
         print(f"\n⚠️ Publisher TARAFINDAN REDDEDİLEN: {len(failed_log)} makale")
+        # Reddedilenlerin özetini göster
+        char_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_CHAR_COUNT'])
+        img_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_MISSING_IMAGES'])
+        print(f"   └─ Karakter reddi: {char_rejects}, Görsel eksik reddi: {img_rejects}")
     else:
-        print(f"\n✅ Tüm makaleler Publisher'da 51 KB kontrolünü geçti")
+        print(f"\n✅ Tüm makaleler Publisher'da {MIN_CHAR_COUNT} karakter + 3 görsel kontrolünü geçti")
     
     # SITEMAP & ROBOTS & ARTICLES.JSON
     print(f"\n{'=' * 40}")
@@ -492,7 +533,7 @@ def publisher():
     generate_articles_json(all_articles)
     
     print(f"\n{'=' * 40}")
-    print("🏁 PUBLISHER v43 TAMAMLANDI!")
+    print("🏁 PUBLISHER v47 TAMAMLANDI!")
     print(f"   ✅ Toplam sayfa: {total_pages}")
     print(f"   ❌ Reddedilen makale: {len(failed_log)}")
     print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
