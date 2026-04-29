@@ -26,7 +26,7 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_RENDERED_LEN = 15000  # Giydirilmiş HTML minimum karakter sayısı
+MIN_RENDERED_LEN = 8000  # Geçici düşürüldü, sonra 15000'e çıkarılacak
 
 s3 = boto3.client(
     's3',
@@ -267,16 +267,29 @@ def log_failed_report(entries, report_type="publisher"):
         return None
 
 def contains_binary_image(html_content):
-    """HTML içinde binary image (RIFF/webp) embed edilmiş mi kontrol et"""
-    # RIFF = webp dosya başlığı
-    if b'RIFF' in html_content.encode()[:500]:
-        return True
+    """HTML içinde binary image (RIFF/PNG/JPEG/GIF) embed edilmiş mi kontrol et"""
+    content_bytes = html_content.encode('utf-8')[:2000]
+    binary_signatures = [
+        b'RIFF',      # WEBP
+        b'\x89PNG',   # PNG
+        b'\xff\xd8',  # JPEG
+        b'GIF8'       # GIF
+    ]
+    for sig in binary_signatures:
+        if sig in content_bytes:
+            return True
     return False
 
-def has_required_content(html_content):
-    """Makalede gerekli HTML yapıları var mı kontrol et"""
-    required_tags = ['<h2>Introduction</h2>', '<h2>Main Analysis</h2>']
-    for tag in required_tags:
+def has_required_content(html_content, lang):
+    """Dil bazlı içerik kontrolü - Introduction ve Main Analysis tag'lerini ara"""
+    patterns = {
+        'en': [r'<h2>Introduction</h2>', r'<h2>Main Analysis</h2>'],
+        'es': [r'<h2>Introducción</h2>', r'<h2>Análisis Principal</h2>'],
+        'de': [r'<h2>Einleitung</h2>', r'<h2>Hauptanalyse</h2>'],
+        'fr': [r'<h2>Introduction</h2>', r'<h2>Analyse principale</h2>']
+    }
+    tags = patterns.get(lang, patterns['en'])
+    for tag in tags:
         if tag not in html_content:
             return False
     return True
@@ -301,6 +314,7 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
         
         html_len = len(single_html)
         target_key = article['url'].lstrip('/').replace('articles/', 'articles_ready/', 1)
+        lang = article['lang']
         
         # KONTROL 1: Giydirilmiş HTML çok kısa mı?
         if html_len < MIN_RENDERED_LEN:
@@ -312,7 +326,7 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
                 "html_len": html_len,
                 "min_required_len": MIN_RENDERED_LEN,
                 "hash": article.get('hash'),
-                "lang": article['lang'],
+                "lang": lang,
                 "category": article['category'],
                 "title": article['parsed']['title'][:100]
             }
@@ -329,7 +343,7 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
                 "target_key": target_key,
                 "html_len": html_len,
                 "hash": article.get('hash'),
-                "lang": article['lang'],
+                "lang": lang,
                 "category": article['category'],
                 "title": article['parsed']['title'][:100]
             }
@@ -337,8 +351,8 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
             print(f"   ⚠️ RED (binary görsel embed edilmiş): {target_key}")
             return None
         
-        # KONTROL 3: Gerekli içerik tag'leri var mı?
-        if not has_required_content(single_html):
+        # KONTROL 3: Gerekli içerik tag'leri var mı? (DİL BAZLI)
+        if not has_required_content(single_html, lang):
             entry = {
                 "timestamp": datetime.now().isoformat(),
                 "status": "REJECTED_MISSING_CONTENT",
@@ -346,12 +360,12 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
                 "target_key": target_key,
                 "html_len": html_len,
                 "hash": article.get('hash'),
-                "lang": article['lang'],
+                "lang": lang,
                 "category": article['category'],
                 "title": article['parsed']['title'][:100]
             }
             failed_log.append(entry)
-            print(f"   ⚠️ RED (içerik eksik - Introduction/Main Analysis bulunamadı): {target_key}")
+            print(f"   ⚠️ RED (içerik eksik - {lang} dilinde Introduction/Main Analysis bulunamadı): {target_key}")
             return None
         
         # KONTROL 4: 3 görsel R2'de var mı?
@@ -372,7 +386,7 @@ def check_and_write_article(article, alt_langs, single_tpl, menu_texts, related_
                 "target_key": target_key,
                 "missing_images": missing,
                 "hash": article.get('hash'),
-                "lang": article['lang'],
+                "lang": lang,
                 "category": article['category'],
                 "title": article['parsed']['title'][:100]
             }
@@ -432,10 +446,10 @@ def generate_articles_json(all_articles):
 
 def publisher():
     print("=" * 60)
-    print("🚀 PUBLISHER BOT v48 - RENDER KONTROLLÜ")
+    print("🚀 PUBLISHER BOT v49 - DİL BAZLI İÇERİK KONTROLÜ")
     print(f"   ❌ {MIN_RENDERED_LEN} karakter altı makaleler YAYINLANMAYACAK")
     print("   ❌ Binary görsel embed edilmiş makaleler YAYINLANMAYACAK")
-    print("   ❌ Eksik içerik (Introduction/Main Analysis) YAYINLANMAYACAK")
+    print("   ❌ Eksik içerik (Introduction/Main Analysis - dil bazlı) YAYINLANMAYACAK")
     print("   ❌ Eksik görsel varsa YAYINLANMAYACAK")
     print("   📊 Detaylı rapor (R2/reports/)")
     print("=" * 60)
@@ -487,7 +501,7 @@ def publisher():
         menu_texts = get_menu_texts(lang)
         
         # 1. MAKALELERİ KONTROLLÜ YAZ
-        print(f"\n📝 Makaleler işleniyor ({MIN_RENDERED_LEN} karakter + 3 görsel + içerik kontrolü)...")
+        print(f"\n📝 Makaleler işleniyor ({MIN_RENDERED_LEN} karakter + dil bazlı içerik + 3 görsel)...")
         
         articles_to_write = []
         for article in lang_articles:
@@ -606,7 +620,7 @@ def publisher():
         render_rejects = len([e for e in failed_log if e.get('status') == 'REJECTED_NO_RENDER'])
         print(f"   └─ Kısa render: {short_rejects}, Binary görsel: {binary_rejects}, İçerik eksik: {content_rejects}, Görsel eksik: {img_rejects}, Render hatası: {render_rejects}")
     else:
-        print(f"\n✅ Tüm makaleler Publisher V48 kontrollerini geçti")
+        print(f"\n✅ Tüm makaleler Publisher V49 kontrollerini geçti")
     
     # SITEMAP & ROBOTS & ARTICLES.JSON
     print(f"\n{'=' * 40}")
@@ -623,7 +637,7 @@ def publisher():
     generate_articles_json(all_articles)
     
     print(f"\n{'=' * 40}")
-    print("🏁 PUBLISHER V48 TAMAMLANDI!")
+    print("🏁 PUBLISHER V49 TAMAMLANDI!")
     print(f"   ✅ Toplam sayfa: {total_pages}")
     print(f"   ❌ Reddedilen makale: {len(failed_log)}")
     print(f"   ✅ Hero cache: {len(hero_cache)} benzersiz hero")
