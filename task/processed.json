@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0152",
+        "category": "tech",
+        "cluster_id": "tech_02",
+        "topic": "AI-Powered Cybersecurity: How Machine Learning Stops Zero-Day Attacks Before They Strike",
+        "reference_link": "https://www.crowdstrike.com/ai-cybersecurity-report-2026",
+        "language": "en",
+        "author_persona": "Chief Information Security Officer (CISO) & AI Security Researcher",
+        "special_instructions": "Analyze threat landscape for 2026. Explain how AI detects anomalies and prevents zero-day attacks. Case study: real attack prevented by CrowdStrike. Discuss compliance requirements (GDPR, SOC2). End with 2028 threat predictions.",
+        "visuals": {
+            "kapak": "A glowing digital shield protecting a network from multiple incoming attack vectors, neon blue and red contrast, futuristic cybersecurity interface, photorealistic",
+            "icerik_1": "Before/after visualization: left side chaotic network traffic with red attack indicators; right side AI-secured network with green shields and clean data flow, photorealistic",
+            "icerik_2": "Dashboard showing \"Threats Blocked: 12,847\", \"Zero-Day Prevention: 99.7%\", modern dark mode UI, clean professional design, photorealistic"
+        },
+        "status": "processed",
+        "hash": "9d7ef1a6",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-04-29 21:40:47",
+        "hash_updated_at": "2026-04-29T21:31:52.234437"
+    },
+    {
         "task_id": "0151",
         "category": "tech",
         "cluster_id": "tech_03",
