@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0140",
-        "category": "wellness",
-        "cluster_id": "wl_06",
-        "topic": "Space Weather Biohacking: How 2026 Wearables Track Geomagnetic Storms to Optimize Sleep and Mood",
-        "reference_link": "https://www.biohackerreview.com/space-weather-2026",
-        "language": "en",
-        "author_persona": "Circadian Biologist & Environmental Biohacker",
-        "special_instructions": "Explain how solar flares affect melatonin and HRV. Provide a \"Space Weather Routine\" app concept.",
-        "visuals": {
-            "kapak": "A person sleeping peacefully under a transparent ceiling showing the aurora borealis, with a wearable glowing softly, calm blue tones, 8k, photorealistic",
-            "icerik_1": "A dashboard showing \"Geomagnetic Storm Alert: Lower HRV expected. Recommending early sleep at 9 PM\", clean UI, aurora background, photorealistic",
-            "icerik_2": "Split screen: left side \"Ignoring Storm\" - restless sleep graph; right side \"Adapted\" - deep sleep graph, photorealistic"
-        },
-        "status": "pending",
-        "hash": "b4e2a5a2",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T11:59:25.842512"
-    },
-    {
         "task_id": "0141",
         "category": "wellness",
         "cluster_id": "wl_07",
