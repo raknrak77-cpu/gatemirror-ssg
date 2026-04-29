@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0153",
+        "category": "tech",
+        "cluster_id": "tech_01",
+        "topic": "AI Trading Bots: Which Platform Delivers the Highest ROI in 2026?",
+        "reference_link": "https://www.gartner.com/en/ai-trading-platforms",
+        "language": "en",
+        "author_persona": "Quantitative Trading Analyst & Fintech Consultant",
+        "special_instructions": "Compare top 3 AI trading platforms (Binance, Bybit, 3Commas). Focus on ROI, fee structures, security, and automation features. Include a comparison table. End with \"Best for\" scenarios for different trader profiles.",
+        "visuals": {
+            "kapak": "A futuristic trading dashboard showing multiple AI bots executing trades, glowing green and red candlesticks, holographic interface, dark background with neon blue accents, photorealistic",
+            "icerik_1": "Split comparison: left side \"Manual Trading\" showing stressful red graphs; right side \"AI Trading Bot\" showing automated profitable trades with green upward arrows, clean interface, photorealistic",
+            "icerik_2": "Close-up of a smartphone showing an AI trading app with \"Profit: +24%\" and \"Win Rate: 89%\", modern UI, soft blue glow, photorealistic"
+        },
+        "status": "processed",
+        "hash": "634b6ada",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-04-29 23:24:25",
+        "hash_updated_at": "2026-04-29T23:13:03.642756"
+    },
+    {
         "task_id": "0152",
         "category": "tech",
         "cluster_id": "tech_02",
