@@ -1,0 +1,49 @@
+name: 🧹 Eraser Bot - Hatalı Makale Temizliği
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force mod (onaysız sil)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  eraser:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: 📥 Install dependencies
+        run: pip install boto3
+      
+      - name: 🧹 Run Eraser Bot
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+        run: |
+          if [[ "${{ github.event.inputs.force }}" == "true" ]]; then
+            python bots/eraser_bot.py --force
+          else
+            echo "yes | python bots/eraser_bot.py"
+          fi
+      
+      - name: 📤 Upload eraser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eraser-report-${{ github.run_id }}
+          path: |
+            eraser_report.txt
+          retention-days: 7
