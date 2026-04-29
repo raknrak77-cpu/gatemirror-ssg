@@ -84,6 +84,7 @@ def get_category_description(lang, category):
     return descriptions.get(lang, descriptions.get('en', {})).get(category, '')
 
 def calculate_reading_time_and_word_count(html_content):
+    """Hem okuma süresini hem kelime sayısını hesaplar"""
     text = re.sub(r'<[^>]+>', ' ', html_content)
     words = re.findall(r'\b\w+\b', text)
     word_count = len(words)
@@ -101,63 +102,22 @@ def image_exists(url):
     except:
         return False
 
-# ================= ÇOK DİLLİ BAŞLIK BULMA =================
-
-def find_section(content, patterns, start=True):
-    """Birden fazla dilde başlık bulur"""
-    for pattern in patterns:
-        if start:
-            match = re.search(rf'<h2>{pattern}</h2>(.*?)<h2>', content, re.DOTALL)
-        else:
-            match = re.search(rf'<h2>{pattern}</h2>(.*?)$', content, re.DOTALL)
-        if match:
-            return match.group(1)
-    return ""
-
-def split_article_content_multilang(content_html, lang):
-    """Dil bazlı içerik bölme"""
+def split_article_content(content_html):
+    """
+    Makale içeriğini <h2> başlıklarına göre 3 parçaya böler:
+    - Part 1: Introduction + Main Analysis'ın ilk yarısı
+    - Part 2: Main Analysis'ın ikinci yarısı
+    - Part 3: Practical Implications + Conclusion
+    """
+    
     if not content_html:
         return {'content_part1': '', 'content_part2': '', 'content_part3': ''}
     
-    # Dillere göre başlık pattern'leri
-    patterns = {
-        'introduction': {
-            'en': ['Introduction'],
-            'es': ['Introducción'],
-            'de': ['Einleitung'],
-            'fr': ['Introduction']
-        },
-        'main_analysis': {
-            'en': ['Main Analysis'],
-            'es': ['Análisis Principal'],
-            'de': ['Hauptanalyse'],
-            'fr': ['Analyse principale']
-        },
-        'practical': {
-            'en': ['Practical Implications'],
-            'es': ['Implicaciones Prácticas'],
-            'de': ['Praktische Auswirkungen'],
-            'fr': ['Implications pratiques']
-        },
-        'conclusion': {
-            'en': ['Conclusion'],
-            'es': ['Conclusión'],
-            'de': ['Fazit'],
-            'fr': ['Conclusion']
-        }
-    }
-    
-    # Dil bazlı pattern'leri al
-    intro_patterns = patterns['introduction'].get(lang, patterns['introduction']['en'])
-    main_patterns = patterns['main_analysis'].get(lang, patterns['main_analysis']['en'])
-    practical_patterns = patterns['practical'].get(lang, patterns['practical']['en'])
-    conclusion_patterns = patterns['conclusion'].get(lang, patterns['conclusion']['en'])
-    
-    # Regex ile bul
-    intro_match = re.search(rf'<h2>(?:{"|".join(intro_patterns)}|Introduction)</h2>(.*?)<h2>', content_html, re.DOTALL)
-    main_analysis_match = re.search(rf'<h2>(?:{"|".join(main_patterns)}|Main Analysis)</h2>(.*?)<h2>', content_html, re.DOTALL)
-    practical_match = re.search(rf'<h2>(?:{"|".join(practical_patterns)}|Practical Implications)</h2>(.*?)<h2>', content_html, re.DOTALL)
-    conclusion_match = re.search(rf'<h2>(?:{"|".join(conclusion_patterns)}|Conclusion)</h2>(.*?)(?:<h2>|$)', content_html, re.DOTALL)
+    # Başlıkları bul
+    intro_match = re.search(r'(<h2>Introduction</h2>.*?)<h2>Main Analysis</h2>', content_html, re.DOTALL)
+    main_analysis_match = re.search(r'<h2>Main Analysis</h2>(.*?)<h2>Practical Implications</h2>', content_html, re.DOTALL)
+    practical_match = re.search(r'<h2>Practical Implications</h2>(.*?)<h2>Conclusion</h2>', content_html, re.DOTALL)
+    conclusion_match = re.search(r'<h2>Conclusion</h2>(.*?)(?=<h2>Frequently Asked Questions|$)', content_html, re.DOTALL)
     
     intro = intro_match.group(1) if intro_match else ""
     main_analysis = main_analysis_match.group(1) if main_analysis_match else ""
@@ -172,10 +132,12 @@ def split_article_content_multilang(content_html, lang):
         main_part1 = ''.join(h3_sections[:mid])
         main_part2 = ''.join(h3_sections[mid:])
     else:
+        # <h3> yoksa, karakter sayısına göre böl
         mid = len(main_analysis) // 2
         main_part1 = main_analysis[:mid]
         main_part2 = main_analysis[mid:]
     
+    # Parçaları oluştur
     part1 = intro + main_part1
     part2 = main_part2
     part3 = practical + conclusion
@@ -186,80 +148,67 @@ def split_article_content_multilang(content_html, lang):
         'content_part3': part3.strip()
     }
 
-# ================= META PARSER (V16'DAN) =================
-
-def parse_meta(html_content):
-    """META yorum satırını key=value formatında parse eder"""
-    meta_match = re.search(r'<!-- META: (.*?) -->', html_content, re.DOTALL)
-    if not meta_match:
-        return {}
-    
-    meta_content = meta_match.group(1)
-    result = {}
-    
-    pattern = r'(\w+)=("[^"]*"|[^,]+)'
-    matches = re.findall(pattern, meta_content)
-    
-    for key, value in matches:
-        value = value.strip().strip('"')
-        result[key] = value
-    
-    return result
-
-# ================= ANA PARSE FONKSİYONU =================
-
 def parse_article_html(html_content, lang, category, hash_id, yil, ay):
-    """HTML içeriğini parse eder - ÇOK DİLLİ VERSİYON"""
-    
-    # META'yı parse et
-    meta = parse_meta(html_content)
+    """HTML içeriğini parse eder, yazar bilgilerini ve cluster_id'yi META'dan okur"""
     
     # Başlık
     title_match = re.search(r'<h1>(.*?)</h1>', html_content, re.DOTALL)
     title = title_match.group(1).strip() if title_match else ""
     
-    # META'dan değerleri al
-    author = meta.get('author', 'Gatemirror Expert')
-    author_title = meta.get('author_title', '')
-    author_bio = meta.get('author_bio', '')
-    author_avatar = meta.get('author_avatar', '')
-    sort_datetime_raw = meta.get('datetime', '')
-    cluster_id = meta.get('cluster_id')
+    # META: author, author_title, author_bio, author_avatar, datetime, cluster_id
+    meta_match = re.search(r'<!-- META: author=(.*?), author_title=(.*?), author_bio=(.*?), author_avatar=(.*?), datetime=(.*?)(?:, cluster_id=(.*?))? -->', html_content)
     
-    if sort_datetime_raw:
+    if meta_match:
+        author = meta_match.group(1).strip()
+        author_title = meta_match.group(2).strip()
+        author_bio = meta_match.group(3).strip()
+        author_avatar = meta_match.group(4).strip()
+        sort_datetime_raw = meta_match.group(5).strip()
         sort_datetime = sort_datetime_raw
         sort_date = sort_datetime_raw[:10]
+        cluster_id = meta_match.group(6).strip() if meta_match.group(6) else None
         try:
             display_date = datetime.strptime(sort_date, "%Y-%m-%d").strftime("%d %B %Y")
         except:
             display_date = sort_date
     else:
+        author = "Gatemirror Expert"
+        author_title = ""
+        author_bio = ""
+        author_avatar = ""
         sort_datetime = None
         sort_date = None
         display_date = datetime.now().strftime("%d %B %Y")
+        cluster_id = None
     
+    # ISO formatında datetime
     datetime_iso = sort_datetime if sort_datetime else datetime.now().isoformat()
     
-    # Editor's Note (dil bağımsız - class ile)
+    # Editor's Note
     note_match = re.search(r'<div class="editors-note">(.*?)</div>', html_content, re.DOTALL)
     editors_note = note_match.group(1).strip() if note_match else ""
     
-    # Key Takeaways (sabit İngilizce)
+    # Key Takeaways
     takeaway_match = re.search(r'<h2>Key Takeaways</h2>\s*<ul>(.*?)</ul>', html_content, re.DOTALL | re.IGNORECASE)
     if takeaway_match:
         items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
         summary_html = "".join([f"<li>{item.strip()}</li>" for item in items])
+    else:
+        summary_html = "<li>No summary available</li>"
+    
+    # Summary (düz metin olarak - Key Takeaways'dan)
+    summary_text = ""
+    if takeaway_match:
+        items = re.findall(r'<li>(.*?)</li>', takeaway_match.group(1), re.DOTALL)
+        # İlk 3 maddeyi al, HTML tag'lerini temizle
         clean_items = []
         for item in items[:3]:
             clean = re.sub(r'<[^>]+>', '', item).strip()
             if clean:
                 clean_items.append(clean)
         summary_text = " ".join(clean_items)
-    else:
-        summary_html = "<li>No summary available</li>"
-        summary_text = ""
     
-    # Sources (dil bağımsız - class ile)
+    # Sources
     sources_match = re.search(r'<div class="sources">.*?<ul>(.*?)</ul>.*?</div>', html_content, re.DOTALL | re.IGNORECASE)
     if sources_match:
         items = re.findall(r'<li>(.*?)</li>', sources_match.group(1), re.DOTALL)
@@ -267,7 +216,7 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     else:
         sources_html = "<li>Sources not available</li>"
     
-    # İçeriği temizle (SADECE META ve class bazlı bloklar)
+    # İçeriği temizle
     content_clean = html_content
     content_clean = re.sub(r'<!-- META:.*?-->', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<div class="editors-note">.*?</div>', '', content_clean, flags=re.DOTALL)
@@ -275,11 +224,11 @@ def parse_article_html(html_content, lang, category, hash_id, yil, ay):
     content_clean = re.sub(r'<div class="sources">.*?</div>', '', content_clean, flags=re.DOTALL)
     content_clean = re.sub(r'<h1>.*?</h1>', '', content_clean, flags=re.DOTALL)
     content_clean = content_clean.strip()
+
+    # Makaleyi 3 parçaya böl
+    content_parts = split_article_content(content_clean)
     
-    # Makaleyi 3 parçaya böl (ÇOK DİLLİ)
-    content_parts = split_article_content_multilang(content_clean, lang)
-    
-    # Okuma süresi, kelime sayısı
+    # Okuma süresi, kelime sayısı ve görüntülenme
     reading_time, word_count = calculate_reading_time_and_word_count(content_clean)
     views = generate_views(hash_id)
     
@@ -441,6 +390,7 @@ def get_all_raw_articles():
     return all_articles
 
 def build_alternate_langs_dict(all_articles):
+    """Makalelerin alternatif dillerini oluşturur (hreflang için)"""
     alt_dict = {}
     for article in all_articles:
         key = (article['category'], article['hash'])
@@ -451,6 +401,7 @@ def build_alternate_langs_dict(all_articles):
     return alt_dict
 
 def generate_sitemap(all_articles, alt_dict):
+    """Sitemap.xml oluşturur"""
     base_url = R2_PUBLIC_URL
     urls = []
     languages = ['en', 'es', 'de', 'fr']
@@ -516,6 +467,7 @@ def generate_sitemap(all_articles, alt_dict):
     return xml
 
 def generate_robots_txt():
+    """robots.txt oluşturur"""
     base_url = R2_PUBLIC_URL
     return f"""# Tüm arama motorlarına izin ver
 User-agent: *
@@ -533,3 +485,4 @@ Disallow: /*.json$
 Disallow: /tmp/
 Disallow: /private/
 """
+            
