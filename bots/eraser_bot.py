@@ -1,3 +1,4 @@
+import os
 import sys
 import boto3
 from datetime import datetime
@@ -39,7 +40,8 @@ def delete_file(key):
         s3.delete_object(Bucket=R2_BUCKET, Key=key)
         log(f"🗑️ {key}")
         return True
-    except:
+    except Exception as e:
+        log(f"❌ Silinemedi: {key} - {e}")
         return False
 
 def delete_raw_articles():
@@ -50,11 +52,15 @@ def delete_raw_articles():
                 for prefix in [f"raw-articles/{lang}/{cat}/{YEAR}/{MONTH}/", f"raw-articles/{lang}/{cat}/"]:
                     try:
                         resp = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
-                        if 'Contents' not in resp: continue
+                        if 'Contents' not in resp: 
+                            continue
                         for obj in resp['Contents']:
-                            if obj['Key'].split('/')[-1].startswith(h) and obj['Key'].endswith('.html'):
-                                if delete_file(obj['Key']): deleted += 1
-                    except: pass
+                            filename = obj['Key'].split('/')[-1]
+                            if filename.startswith(h) and filename.endswith('.html'):
+                                if delete_file(obj['Key']): 
+                                    deleted += 1
+                    except Exception as e:
+                        log(f"Hata: {e}")
     return deleted
 
 def delete_images():
@@ -65,8 +71,10 @@ def delete_images():
                 key = f"images/{YEAR}/{MONTH}/{cat}/{h}_{typ}.webp"
                 try:
                     s3.head_object(Bucket=R2_BUCKET, Key=key)
-                    if delete_file(key): deleted += 1
-                except: pass
+                    if delete_file(key): 
+                        deleted += 1
+                except:
+                    pass
     return deleted
 
 def delete_articles():
@@ -77,20 +85,35 @@ def delete_articles():
                 for prefix in [f"articles/{lang}/{cat}/{YEAR}/{MONTH}/", f"articles/{lang}/{cat}/"]:
                     try:
                         resp = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
-                        if 'Contents' not in resp: continue
+                        if 'Contents' not in resp: 
+                            continue
                         for obj in resp['Contents']:
-                            if obj['Key'].split('/')[-1].startswith(h) and obj['Key'].endswith('.html'):
-                                if delete_file(obj['Key']): deleted += 1
-                    except: pass
+                            filename = obj['Key'].split('/')[-1]
+                            if filename.startswith(h) and filename.endswith('.html'):
+                                if delete_file(obj['Key']): 
+                                    deleted += 1
+                    except:
+                        pass
     return deleted
 
 def main():
+    print("=" * 60)
     print("🧹 ERASER BOT - ONAYSIZ SİLİNİYOR")
-    print(f"37 hash, tüm diller, tüm kategoriler\n")
+    print(f"   37 hash, tüm diller, tüm kategoriler")
+    print("=" * 60)
+    
     d1 = delete_raw_articles()
     d2 = delete_images()
     d3 = delete_articles()
-    print(f"\n✅ Silindi: raw:{d1}, images:{d2}, articles:{d3}, TOPLAM:{d1+d2+d3}")
+    
+    print("\n" + "=" * 60)
+    print("📊 RAPOR")
+    print("=" * 60)
+    print(f"   raw-articles: {d1} dosya silindi")
+    print(f"   images: {d2} dosya silindi")
+    print(f"   articles: {d3} dosya silindi")
+    print(f"   TOPLAM: {d1 + d2 + d3} dosya silindi")
+    print("=" * 60)
 
 if __name__ == "__main__":
     main()
