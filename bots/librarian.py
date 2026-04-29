@@ -12,7 +12,7 @@ R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
 R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
-MIN_SIZE_KB = 51
+MIN_CHAR_COUNT = 7500
 
 s3 = boto3.client(
     's3',
@@ -26,18 +26,15 @@ s3 = boto3.client(
 LANGUAGES = ['en', 'es', 'de', 'fr']
 REQUIRED_IMAGES = ['kapak', 'icerik_1', 'icerik_2']
 
-# ================= YENİ: GÖRSEL KONTROLÜ =================
+
+# ================= GÖRSEL KONTROLÜ =================
 
 def check_hash_images(hash_id, kategori, yil, ay):
-    """
-    Belirtilen hash'e ait 3 görselin R2'de olup olmadığını kontrol eder.
-    Görsel yolu: images/{yil}/{ay}/{kategori}/{hash_id}_{tip}.webp
-    """
+    """Belirtilen hash'e ait 3 görselin R2'de olup olmadığını kontrol eder."""
     if not hash_id or not kategori:
         print(f"   ⚠️ Hash veya kategori eksik: hash={hash_id}, kategori={kategori}")
         return False
     
-    # Eğer yil/ay yoksa, raw-articles'dan bulmaya çalış
     if not yil or not ay:
         print(f"   🔍 Yıl/Ay eksik, raw-articles'dan aranıyor...")
         yil, ay = find_image_path_from_raw_articles(hash_id, kategori)
@@ -47,7 +44,6 @@ def check_hash_images(hash_id, kategori, yil, ay):
         if yil and ay:
             image_key = f"images/{yil}/{ay}/{kategori}/{hash_id}_{img_type}.webp"
         else:
-            # Eski format (klasörsüz)
             image_key = f"images/{kategori}/{hash_id}_{img_type}.webp"
         
         try:
@@ -64,11 +60,10 @@ def check_hash_images(hash_id, kategori, yil, ay):
     print(f"   ✅ Tüm görseller mevcut ({len(REQUIRED_IMAGES)}/3)")
     return True
 
+
 def find_image_path_from_raw_articles(hash_id, kategori):
     """raw-articles'dan ilgili makalenin yıl/ay bilgisini bulur"""
-    languages = ['en', 'es', 'de', 'fr']
-    
-    for lang in languages:
+    for lang in LANGUAGES:
         prefix = f"raw-articles/{lang}/{kategori}/"
         try:
             response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
@@ -79,10 +74,8 @@ def find_image_path_from_raw_articles(hash_id, kategori):
                 key = obj['Key']
                 filename = key.split('/')[-1]
                 if filename.startswith(hash_id) and filename.endswith('.html'):
-                    # Yıl/Ay bilgisini URL'den çıkar
                     parts = key.split('/')
                     if len(parts) >= 5:
-                        # raw-articles/{lang}/{kategori}/{yil}/{ay}/{filename}
                         yil = parts[3] if len(parts) > 3 else None
                         ay = parts[4] if len(parts) > 4 else None
                         print(f"   📍 Bulundu: {lang}/{kategori}/{yil}/{ay}")
@@ -91,6 +84,7 @@ def find_image_path_from_raw_articles(hash_id, kategori):
             continue
     
     return None, None
+
 
 def get_task_by_hash(target_hash):
     """tasks.json'dan hash'e göre task'i bulur"""
@@ -106,12 +100,12 @@ def get_task_by_hash(target_hash):
             return task
     return None
 
+
 def move_task_to_skipped(target_hash, reason):
     """Task'i skipped.json'a taşır ve tasks.json'dan siler"""
     tasks_path = "task/tasks.json"
     skipped_path = "task/skipped.json"
     
-    # Task'i tasks.json'dan bul ve çıkar
     if not os.path.exists(tasks_path):
         return False
     
@@ -130,11 +124,9 @@ def move_task_to_skipped(target_hash, reason):
         print(f"   ⚠️ Hash {target_hash} tasks.json'da bulunamadı")
         return False
     
-    # Task'i güncelle
     target_task["skipped_at"] = datetime.now().isoformat()
     target_task["skip_reason"] = reason
     
-    # skipped.json'a ekle
     if os.path.exists(skipped_path):
         with open(skipped_path, "r", encoding="utf-8") as f:
             skipped = json.load(f)
@@ -146,7 +138,6 @@ def move_task_to_skipped(target_hash, reason):
     with open(skipped_path, "w", encoding="utf-8") as f:
         json.dump(skipped, f, indent=4, ensure_ascii=False)
     
-    # tasks.json'dan sil
     tasks.pop(target_index)
     
     with open(tasks_path, "w", encoding="utf-8") as f:
@@ -157,7 +148,8 @@ def move_task_to_skipped(target_hash, reason):
     print(f"   ❌ Task {target_task.get('task_id')} (hash={target_hash}) SKIPPED: {reason}")
     return True
 
-# ================= TASK TAŞIMA (SADECE GÖRSEL KONTROLÜ GEÇENLER) =================
+
+# ================= TASK TAŞIMA =================
 
 def get_current_hash():
     """current_hash.txt'den hash'i okur ve siler"""
@@ -170,21 +162,14 @@ def get_current_hash():
         return hash_id
     return None
 
+
 def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
-    """
-    GÖRSEL KONTROLLÜ VERSİYON:
-    1. Görselleri kontrol et
-    2. Eksik varsa -> skipped.json'a taşı, processed.json'a EKLEME
-    3. Tüm görseller varsa -> processed.json'a ekle, tasks.json'dan sil
-    """
-    
-    # ========== 1. GÖRSEL KONTROLÜ ==========
+    """Görsel kontrolü yap, başarılıysa processed'e taşı"""
     print(f"   🔍 Görsel kontrolü yapılıyor (hash={target_hash}, kategori={kategori})...")
     
     images_ok = check_hash_images(target_hash, kategori, yil, ay)
     
     if not images_ok:
-        # Görsel eksik -> skipped'e taşı
         print(f"   ⚠️ Görsel eksik, task SKIPPED'e taşınıyor...")
         move_task_to_skipped(target_hash, "missing_images_swap_precheck")
         return False
@@ -194,7 +179,6 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
     tasks_path = "task/tasks.json"
     processed_path = "task/processed.json"
     
-    # ========== 2. tasks.json'dan task'i BUL ==========
     if not os.path.exists(tasks_path):
         print("   ⚠️ task/tasks.json bulunamadı")
         return False
@@ -206,7 +190,6 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
         print("   ⚠️ task/tasks.json boş")
         return False
     
-    # Hash'e göre task'i bul
     target_index = None
     target_task = None
     
@@ -220,19 +203,16 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
         print(f"   ⚠️ Hash {target_hash} ile task bulunamadı")
         return False
     
-    # ========== 3. processed.json'a EN BAŞA EKLE ==========
     if os.path.exists(processed_path):
         with open(processed_path, "r", encoding="utf-8") as f:
             processed = json.load(f)
     else:
         processed = []
     
-    # Task'i güncelle
     target_task["status"] = "processed"
     target_task["processed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     target_task["images_verified"] = True
     
-    # EN BAŞA EKLE (insert(0))
     processed.insert(0, target_task)
     
     with open(processed_path, "w", encoding="utf-8") as f:
@@ -240,7 +220,6 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
     
     print(f"   ✅ Task {target_task.get('task_id')} (hash={target_hash}) processed.json'a EKLENDI (en basa)")
     
-    # ========== 4. tasks.json'dan ZORLA SIL ==========
     tasks.pop(target_index)
     
     with open(tasks_path, "w", encoding="utf-8") as f:
@@ -248,7 +227,6 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
         f.flush()
         os.fsync(f.fileno())
     
-    # ========== 5. DOĞRULA (silinmiş mi?) ==========
     with open(tasks_path, "r", encoding="utf-8") as f:
         verify_tasks = json.load(f)
     
@@ -259,6 +237,7 @@ def move_task_by_hash_to_processed(target_hash, kategori, yil, ay):
     
     print(f"   ✅ Task {target_task.get('task_id')} tasks.json'dan SILINDI")
     return True
+
 
 # ================= YARDIMCI FONKSİYONLAR =================
 
@@ -283,12 +262,14 @@ def list_all_files(prefix):
             break
     return files
 
+
 def delete_file(key):
     try:
         s3.delete_object(Bucket=R2_BUCKET, Key=key)
         return True
     except:
         return False
+
 
 def delete_folder(prefix):
     files = list_all_files(prefix)
@@ -297,6 +278,7 @@ def delete_folder(prefix):
     for f in files:
         delete_file(f)
     print(f"   {len(files)} dosya silindi: {prefix}")
+
 
 def copy_file(source_key, dest_key):
     try:
@@ -307,6 +289,7 @@ def copy_file(source_key, dest_key):
     except:
         return False
 
+
 def folder_exists(prefix):
     try:
         response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix, MaxKeys=1)
@@ -314,50 +297,13 @@ def folder_exists(prefix):
     except:
         return False
 
-def log_size_report(entries, report_type):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_key = f"reports/size_report_{report_type}_{timestamp}.json"
-    report = {
-        "generated": datetime.now().isoformat(),
-        "type": report_type,
-        "min_size_kb": MIN_SIZE_KB,
-        "entries": entries
-    }
-    try:
-        s3.put_object(
-            Bucket=R2_BUCKET,
-            Key=report_key,
-            Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
-            ContentType='application/json'
-        )
-        print(f"   📊 Rapor kaydedildi: {report_key}")
-    except Exception as e:
-        print(f"   ⚠️ Rapor kaydedilemedi: {e}")
 
-def log_cleanup_report(entries, report_type="cleanup"):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_key = f"reports/cleanup_report_{report_type}_{timestamp}.json"
-    report = {
-        "generated": datetime.now().isoformat(),
-        "type": report_type,
-        "entries": entries
-    }
-    try:
-        s3.put_object(
-            Bucket=R2_BUCKET,
-            Key=report_key,
-            Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
-            ContentType='application/json'
-        )
-        print(f"   📊 Temizlik raporu: {report_key}")
-    except Exception as e:
-        print(f"   ⚠️ Rapor kaydedilemedi: {e}")
-
-# ================= MEVCUT ARTICLES/ KONTROLÜ =================
+# ================= MEVCUT ARTICLES/ KONTROLÜ (7500 KARAKTER + INDEX.HTML KORUMASI) =================
 
 def check_existing_articles():
+    """Mevcut articles/ klasöründeki makaleleri 7500 karakter altında mı kontrol et, index.html KORU, altındakileri sil"""
     print("\n" + "=" * 40)
-    print("🔍 MEVCUT ARTICLES/ KONTROLÜ (51 KB altı silinecek)")
+    print("🔍 MEVCUT ARTICLES/ KONTROLÜ (7500 karakter altı silinecek)")
     print("   🛡️ index.html KORUNACAK")
     print("=" * 40)
     
@@ -368,56 +314,76 @@ def check_existing_articles():
     
     small_files = []
     for key in articles_files:
+        # SADECE .html dosyaları
         if not key.endswith('.html'):
             continue
+        
+        # index.html KORU, asla silme
         if key.endswith('/index.html'):
             print(f"   🛡️ KORUNDU (index.html): {key}")
             continue
+        
+        # Sadece 2026 yılındaki makaleleri kontrol et (eski sistemden kalma)
         if '/2026/' not in key:
             continue
         
         try:
-            response = s3.head_object(Bucket=R2_BUCKET, Key=key)
-            size_kb = response['ContentLength'] / 1024
-            if size_kb < MIN_SIZE_KB:
+            response = s3.get_object(Bucket=R2_BUCKET, Key=key)
+            html_content = response['Body'].read().decode('utf-8')
+            
+            # Tag'leri temizle, sadece metin kal
+            text_clean = re.sub(r'<[^>]+>', ' ', html_content)
+            text_clean = re.sub(r'\s+', ' ', text_clean).strip()
+            char_count = len(text_clean)
+            
+            if char_count < MIN_CHAR_COUNT:
                 small_files.append({
                     "timestamp": datetime.now().isoformat(),
                     "source": "librarian_existing",
                     "key": key,
-                    "size_kb": round(size_kb, 2),
-                    "min_required_kb": MIN_SIZE_KB
+                    "char_count": char_count,
+                    "min_required_char": MIN_CHAR_COUNT
                 })
                 delete_file(key)
-                print(f"   🗑️ Silindi: {key} ({size_kb:.1f} KB)")
+                print(f"   🗑️ Silindi: {key} ({char_count} karakter <{MIN_CHAR_COUNT})")
             else:
-                print(f"   ✅ Korundu: {key} ({size_kb:.1f} KB)")
-        except:
-            pass
+                print(f"   ✅ Korundu: {key} ({char_count} karakter)")
+        except Exception as e:
+            print(f"   ⚠️ Kontrol edilemedi: {key} - {e}")
     
     if small_files:
-        log_size_report(small_files, "librarian_existing")
-        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi (index.html KORUNDU)")
-        
-        print("   🔄 articles.json yeniden oluşturuluyor...")
+        # Rapor kaydet
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_key = f"reports/cleanup_{timestamp}.json"
+        report = {
+            "generated": datetime.now().isoformat(),
+            "type": "librarian_cleanup",
+            "min_char_count": MIN_CHAR_COUNT,
+            "entries": small_files
+        }
         try:
-            from makeup import get_all_raw_articles, generate_articles_json
-            all_articles = get_all_raw_articles()
-            if all_articles:
-                valid_articles = [a for a in all_articles if a['parsed'].get('word_count', 0) >= 1200]
-                generate_articles_json(valid_articles)
-                print(f"   ✅ articles.json güncellendi ({len(valid_articles)} makale)")
-        except Exception as e:
-            print(f"   ⚠️ articles.json güncellenemedi: {e}")
+            s3.put_object(
+                Bucket=R2_BUCKET,
+                Key=report_key,
+                Body=json.dumps(report, indent=2, ensure_ascii=False).encode('utf-8'),
+                ContentType='application/json'
+            )
+            print(f"   📊 Rapor kaydedildi: {report_key}")
+        except:
+            pass
+        print(f"\n   🗑️ Toplam {len(small_files)} makale silindi ({MIN_CHAR_COUNT} karakter altı)")
     else:
-        print("   ✅ Mevcut tüm makaleler 51 KB üzerinde veya index.html")
+        print(f"   ✅ Mevcut tüm makaleler {MIN_CHAR_COUNT} karakter üzerinde veya index.html")
     
     return small_files
 
-# ================= ATOMIC SWAP =================
+
+# ================= ATOMIC SWAP (KONTROLSÜZ) =================
 
 def atomic_swap():
     print("\n" + "=" * 40)
-    print("ATOMIC SWAP: articles_ready/ -> articles/ (51 KB KONTROLLÜ)")
+    print("ATOMIC SWAP: articles_ready/ -> articles/ (KONTROLSÜZ)")
+    print("   ⚠️ Publisher zaten 7500 karakter + 3 görsel kontrolü yaptı")
     print("=" * 40)
     
     if not folder_exists('articles_ready/'):
@@ -429,45 +395,12 @@ def atomic_swap():
         print("articles_ready/ bos, swap iptal.")
         return False
     
-    print(f"   {len(source_files)} dosya bulundu.")
+    print(f"   {len(source_files)} dosya bulundu (hepsi swap edilecek)")
     
-    small_in_ready = []
-    valid_files = []
-    
-    for key in source_files:
-        if not key.endswith('.html'):
-            valid_files.append(key)
-            continue
-        
-        if key.endswith('/index.html'):
-            valid_files.append(key)
-            print(f"   ✅ index.html swap için uygun: {key}")
-            continue
-        
-        try:
-            resp = s3.head_object(Bucket=R2_BUCKET, Key=key)
-            size_kb = resp['ContentLength'] / 1024
-            if size_kb < MIN_SIZE_KB:
-                small_in_ready.append({
-                    "timestamp": datetime.now().isoformat(),
-                    "source": "librarian_swap_precheck",
-                    "key": key,
-                    "size_kb": round(size_kb, 2),
-                    "min_required_kb": MIN_SIZE_KB
-                })
-                print(f"   ⚠️ SWAP DIŞI: {key} ({size_kb:.1f} KB)")
-            else:
-                valid_files.append(key)
-                print(f"   ✅ SWAP UYGUN: {key} ({size_kb:.1f} KB)")
-        except:
-            valid_files.append(key)
-    
-    if small_in_ready:
-        log_size_report(small_in_ready, "librarian_swap_precheck")
-        print(f"   ⚠️ {len(small_in_ready)} dosya swap DIŞI bırakıldı")
+    valid_files = source_files
     
     if not valid_files:
-        print("   ❌ Swap için geçerli dosya kalmadı!")
+        print("   ❌ Swap için dosya kalmadı!")
         return False
     
     print(f"   ✅ {len(valid_files)} dosya swap için uygun")
@@ -494,6 +427,7 @@ def atomic_swap():
     
     print("   ✅ Swap tamamlandi!")
     return True
+
 
 # ================= HERO GÜNCELLEMELERİ =================
 
@@ -573,6 +507,7 @@ def update_hero_ticker():
     print("   hero.json guncellendi")
     return True
 
+
 def update_hero_stats():
     print("\n" + "=" * 40)
     print("HERO STATS GUNCELLENIYOR")
@@ -618,6 +553,7 @@ def update_hero_stats():
     )
     print("   hero.json stats guncellendi")
     return True
+
 
 def analyze_r2_storage():
     print("\n" + "=" * 40)
@@ -678,15 +614,16 @@ def analyze_r2_storage():
             print(f"   .{k}: {v} dosya")
     return True
 
+
 # ================= ANA LIBRARIAN =================
 
 def librarian():
     print("\n" + "=" * 60)
-    print("📚 KUTUPHANECI BOT v30 - GÖRSEL KONTROLLU")
-    print("   🔍 Mevcut articles/ kontrolü (51 KB altı silinecek, index.html KORUNACAK)")
-    print("   🛡️ Swap öncesi articles_ready/ kontrolü")
+    print("📚 KUTUPHANECI BOT v32 - 7500 KARAKTER KONTROLLU")
+    print("   🔍 Mevcut articles/ kontrolü (7500 karakter altı silinecek)")
+    print("   🛡️ index.html KORUNACAK")
     print("   🖼️ Görsel kontrolü (kapak, icerik_1, icerik_2)")
-    print("   ❌ Eksik görsel varsa -> SKIPPED (processed yapılmayacak)")
+    print("   ❌ Eksik görsel varsa -> SKIPPED")
     print("   ✅ Tüm görseller varsa -> processed.json'a ekle")
     print("=" * 60)
     
@@ -704,7 +641,6 @@ def librarian():
             if current_hash:
                 print(f"   📝 İşlenen hash: {current_hash}")
                 
-                # Hash'e ait task'ten kategori bilgisini al
                 task = get_task_by_hash(current_hash)
                 if task:
                     kategori = task.get('category', '')
@@ -720,7 +656,6 @@ def librarian():
         else:
             print("\n⚠️ SWAP BASARISIZ! Site eski icerikle devam ediyor.")
             
-            # Swap başarısızsa current_hash.txt'yi sil (tekrar denenmesin)
             current_hash = get_current_hash()
             if current_hash:
                 print(f"   🗑️ Swap başarısız, current_hash.txt silindi: {current_hash}")
@@ -729,17 +664,14 @@ def librarian():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-    print("🏁 KUTUPHANECI BOT v30 TAMAMLANDI!")
+    print("🏁 KUTUPHANECI BOT v32 TAMAMLANDI!")
     print("   ✅ index.html koruması AKTIF")
-    print("   ✅ Atomic swap KONTROLLÜ")
+    print("   ✅ Atomic swap KONTROLSÜZ (Publisher'a güveniyor)")
     print("   ✅ Görsel kontrolü AKTIF")
-    print("   ✅ Eksik görseller SKIPPED'e atıldı")
+    print(f"   ✅ {MIN_CHAR_COUNT} karakter kontrolü AKTIF")
     print("   ✅ Processed sıralaması: en son görev en üstte")
     print("=" * 60)
 
+
 if __name__ == "__main__":
     librarian()
-
-
-
-
