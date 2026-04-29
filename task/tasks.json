@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0138",
-        "category": "wellness",
-        "cluster_id": "wl_02",
-        "topic": "The AI Therapist That Remembers: How Long-Term Memory LLMs Are Transforming 2026 Mental Healthcare",
-        "reference_link": "https://www.thelancet.com/ai-psychiatry-2026",
-        "language": "en",
-        "author_persona": "AI Psychiatrist & Digital Therapeutics (DTx) Designer",
-        "special_instructions": "Discuss the ethical balance of memory vs privacy. Focus on CBT consistency over months.",
-        "visuals": {
-            "kapak": "A warm, softly lit room with a person talking to a floating friendly holographic face (no human body), data scribbles showing \"Memory Recall: 100%\", 8k",
-            "icerik_1": "An app interface showing \"Remember you said you felt anxious on Tuesdays? Let's prepare for tomorrow.\" with a breathing exercise button, clean UI, photorealistic",
-            "icerik_2": "A timeline visualization showing mood improvement over 6 months of AI therapy, green upward trend, soft colors, photorealistic"
-        },
-        "status": "pending",
-        "hash": "9c81ffc4",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T09:47:25.457179"
-    },
-    {
         "task_id": "0139",
         "category": "eco",
         "cluster_id": "eco_06",
