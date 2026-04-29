@@ -1,6 +1,5 @@
 import os
 import re
-import json
 import boto3
 from datetime import datetime
 from botocore.client import Config
@@ -10,7 +9,6 @@ R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
 R2_BUCKET = os.getenv('R2_BUCKET_NAME')
-R2_PUBLIC_URL = os.getenv('R2_PUBLIC_URL', '').rstrip('/')
 
 s3 = boto3.client(
     's3',
@@ -23,49 +21,23 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# Çok dilli başlık pattern'leri
-HEADER_PATTERNS = {
-    'introduction': {
-        'en': ['Introduction'],
-        'es': ['Introducción'],
-        'de': ['Einleitung'],
-        'fr': ['Introduction']
-    },
-    'main_analysis': {
-        'en': ['Main Analysis'],
-        'es': ['Análisis Principal'],
-        'de': ['Hauptanalyse'],
-        'fr': ['Analyse principale']
-    },
-    'practical': {
-        'en': ['Practical Implications'],
-        'es': ['Implicaciones Prácticas'],
-        'de': ['Praktische Auswirkungen'],
-        'fr': ['Implications pratiques']
-    },
-    'conclusion': {
-        'en': ['Conclusion'],
-        'es': ['Conclusión'],
-        'de': ['Fazit'],
-        'fr': ['Conclusion']
-    },
-    'key_takeaways': {
-        'en': ['Key Takeaways'],
-        'es': ['Key Takeaways', 'Puntos Clave'],
-        'de': ['Key Takeaways', 'Wichtige Erkenntnisse'],
-        'fr': ['Key Takeaways', 'À retenir']
-    },
-    'faq': {
-        'en': ['Frequently Asked Questions', 'FAQ'],
-        'es': ['Frequently Asked Questions', 'FAQ', 'Preguntas Frecuentes'],
-        'de': ['Frequently Asked Questions', 'FAQ', 'Häufig gestellte Fragen'],
-        'fr': ['Frequently Asked Questions', 'FAQ', 'Questions fréquentes']
-    }
+# Makeup'ın gerçekten ihtiyaç duyduğu şeyler (META hariç, yazar hariç)
+REQUIRED_FOR_PARSE = {
+    'has_h1': r'<h1>.*?</h1>',
+    'has_editors_note': r'<div class="editors-note">.*?</div>',
+    'has_key_takeaways': r'<h2>Key Takeaways</h2>',
+    'has_sources': r'<div class="sources">.*?</div>',
+    'has_intro': r'<h2>Introduction</h2>',      # Makeup İngilizce arıyor
+    'has_main_analysis': r'<h2>Main Analysis</h2>',  # Makeup İngilizce arıyor
+    'has_practical': r'<h2>Practical Implications</h2>',
+    'has_conclusion': r'<h2>Conclusion</h2>',
+    'has_faq': r'<h2>Frequently Asked Questions</h2>',
+    'has_body': r'<body>.*?</body>',
 }
 
-def list_all_html_files():
-    """R2'deki tüm HTML dosyalarını listeler"""
-    all_files = []
+def list_all_files():
+    """Tüm HTML dosyalarını listele"""
+    files = []
     for lang in LANGUAGES:
         prefix = f"raw-articles/{lang}/"
         try:
@@ -75,424 +47,163 @@ def list_all_html_files():
             for obj in response['Contents']:
                 key = obj['Key']
                 if key.endswith('.html') and not key.endswith('index.html'):
-                    all_files.append(key)
+                    files.append(key)
         except Exception as e:
             print(f"⚠️ {lang} listelenemedi: {e}")
-    return all_files
+    return files
 
-def extract_hash_from_key(key):
-    """Dosya yolundan hash'i çıkarır"""
-    filename = key.split('/')[-1]
-    if '-' in filename:
-        return filename.split('-')[0]
-    return filename.replace('.html', '')
-
-def extract_lang_from_key(key):
-    """Dosya yolundan dili çıkarır"""
-    parts = key.split('/')
-    if len(parts) >= 2:
-        return parts[1]
-    return 'unknown'
-
-def extract_category_from_key(key):
-    """Dosya yolundan kategoriyi çıkarır"""
-    parts = key.split('/')
-    if len(parts) >= 3:
-        return parts[2]
-    return 'unknown'
-
-def get_file_size_and_char_count(key):
-    """Dosya boyutu ve karakter sayısını alır"""
+def analyze_file(key):
+    """Tek dosyayı Makeup perspektifinden analiz et"""
     try:
         response = s3.get_object(Bucket=R2_BUCKET, Key=key)
         content = response['Body'].read().decode('utf-8')
         size_kb = len(content.encode('utf-8')) / 1024
-        char_count = len(content)
-        return size_kb, char_count, content
-    except Exception as e:
-        return 0, 0, None
-
-def find_headers(html_content, lang):
-    """HTML içinde başlıkları bulur - hangileri var, hangileri yok"""
-    result = {}
-    
-    for section, patterns in HEADER_PATTERNS.items():
-        section_patterns = patterns.get(lang, patterns['en'])
-        found = False
-        found_pattern = None
-        
-        for pattern in section_patterns:
-            # <h2> veya <h3> olarak ara
-            if re.search(rf'<h[23]>{pattern}</h[23]>', html_content, re.IGNORECASE):
-                found = True
-                found_pattern = pattern
-                break
-        
-        result[section] = {
-            'found': found,
-            'pattern': found_pattern,
-            'expected_patterns': section_patterns
-        }
-    
-    return result
-
-def parse_meta_simple(html_content):
-    """META yorum satırını basitçe parse et - başarılı mı değil mi"""
-    meta_match = re.search(r'<!-- META: (.*?) -->', html_content, re.DOTALL)
-    if not meta_match:
-        return {'exists': False, 'error': 'META yorum satırı yok'}
-    
-    meta_content = meta_match.group(1)
-    
-    # Temel alanları kontrol et
-    required_fields = ['author', 'datetime', 'category', 'lang']
-    missing_fields = []
-    
-    for field in required_fields:
-        if not re.search(rf'{field}=', meta_content):
-            missing_fields.append(field)
-    
-    return {
-        'exists': True,
-        'length': len(meta_content),
-        'missing_fields': missing_fields,
-        'has_cluster': 'cluster_id' in meta_content
-    }
-
-def check_html_structure(html_content):
-    """HTML yapısının temel bütünlüğünü kontrol eder"""
-    issues = []
-    
-    # h1 kontrolü
-    if not re.search(r'<h1>.*?</h1>', html_content, re.DOTALL):
-        issues.append('h1 etiketi yok')
-    
-    # editors-note kontrolü
-    if not re.search(r'<div class="editors-note">.*?</div>', html_content, re.DOTALL):
-        issues.append('editors-note yok')
-    
-    # sources kontrolü
-    if not re.search(r'<div class="sources">.*?</div>', html_content, re.DOTALL):
-        issues.append('sources yok')
-    
-    # Body içeriği var mı?
-    body_match = re.search(r'<body>(.*?)</body>', html_content, re.DOTALL)
-    if body_match:
-        body_content = body_match.group(1).strip()
-        if len(body_content) < 500:
-            issues.append(f'body içeriği çok kısa: {len(body_content)} karakter')
-    else:
-        issues.append('body etiketi yok')
-    
-    return issues
-
-def detect_language_headers(html_content):
-    """Makalenin kendi içindeki başlıkları dillerine göre tespit et"""
-    detected = {
-        'has_english_headers': False,
-        'has_spanish_headers': False,
-        'has_german_headers': False,
-        'has_french_headers': False,
-        'actual_headers_found': []
-    }
-    
-    # Her dil için başlıkları ara
-    for lang, patterns in HEADER_PATTERNS.items():
-        found_any = False
-        for section, section_patterns in patterns.items():
-            for pattern in section_patterns:
-                if re.search(rf'<h[23]>{pattern}</h[23]>', html_content, re.IGNORECASE):
-                    found_any = True
-                    detected['actual_headers_found'].append(f"{lang}:{section}:{pattern}")
-        if lang == 'en' and found_any:
-            detected['has_english_headers'] = True
-        elif lang == 'es' and found_any:
-            detected['has_spanish_headers'] = True
-        elif lang == 'de' and found_any:
-            detected['has_german_headers'] = True
-        elif lang == 'fr' and found_any:
-            detected['has_french_headers'] = True
-    
-    return detected
-
-def analyze_single_file(key):
-    """Tek bir dosyayı analiz eder"""
-    size_kb, char_count, content = get_file_size_and_char_count(key)
-    
-    if not content:
+    except:
         return None
     
-    hash_id = extract_hash_from_key(key)
-    lang = extract_lang_from_key(key)
-    category = extract_category_from_key(key)
+    # Hash ve dil bilgisi
+    filename = key.split('/')[-1]
+    hash_id = filename.split('-')[0] if '-' in filename else filename.replace('.html', '')
+    lang = key.split('/')[1] if len(key.split('/')) >= 2 else 'unknown'
     
-    # Başlık kontrolü (dil bazlı)
-    headers = find_headers(content, lang)
+    # Makeup'ın ihtiyaç duyduğu kontroller
+    checks = {}
+    for check_name, pattern in REQUIRED_FOR_PARSE.items():
+        found = re.search(pattern, content, re.DOTALL | re.IGNORECASE) is not None
+        checks[check_name] = found
     
-    # Kaç başlık bulundu?
-    found_headers_count = sum(1 for v in headers.values() if v['found'])
+    # Özet: Makeup parse edebilir mi?
+    # has_intro ve has_main_analysis ZORUNLU (çünkü split_article_content bunları arıyor)
+    can_parse = checks['has_intro'] and checks['has_main_analysis']
     
-    # META kontrolü
-    meta_info = parse_meta_simple(content)
-    
-    # HTML yapı sorunları
-    structure_issues = check_html_structure(content)
-    
-    # Dil tespiti (makale hangi dilde yazılmış)
-    language_detection = detect_language_headers(content)
+    # Eksik olanlar (sadece önemli olanlar)
+    missing = []
+    if not checks['has_intro']:
+        missing.append('Introduction')
+    if not checks['has_main_analysis']:
+        missing.append('Main Analysis')
+    if not checks['has_practical']:
+        missing.append('Practical Implications')
+    if not checks['has_conclusion']:
+        missing.append('Conclusion')
     
     return {
         'key': key,
         'hash': hash_id,
         'lang': lang,
-        'category': category,
         'size_kb': round(size_kb, 2),
-        'char_count': char_count,
-        'found_headers_count': found_headers_count,
-        'headers': headers,
-        'meta': meta_info,
-        'structure_issues': structure_issues,
-        'language_detection': language_detection,
-        'is_valid': found_headers_count >= 3 and len(structure_issues) == 0
+        'can_parse': can_parse,
+        'missing': missing,
+        'checks': checks
     }
 
-def group_by_hash(analyses):
-    """Analizleri hash'e göre gruplar"""
-    grouped = {}
-    for analysis in analyses:
-        if not analysis:
-            continue
-        hash_id = analysis['hash']
-        if hash_id not in grouped:
-            grouped[hash_id] = []
-        grouped[hash_id].append(analysis)
-    return grouped
-
-def detect_anomalies(grouped):
-    """Anomali tespiti yapar"""
-    anomalies = []
-    
-    for hash_id, items in grouped.items():
-        lang_map = {item['lang']: item for item in items}
+def write_report(analyses, output_path):
+    """TXT rapor yaz"""
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write("=" * 80 + "\n")
+        f.write("RAW-ARTICLES TANI BOTU V2 - MAKEPERSPEKTİFİ\n")
+        f.write(f"Oluşturulma: {datetime.now().isoformat()}\n")
+        f.write("=" * 80 + "\n\n")
         
-        # Eksik dil kontrolü
-        missing_langs = [lang for lang in LANGUAGES if lang not in lang_map]
-        if missing_langs:
-            anomalies.append({
-                'hash': hash_id,
-                'type': 'MISSING_LANGUAGE',
-                'description': f'Eksik diller: {missing_langs}',
-                'details': {lang: 'dosya yok' for lang in missing_langs}
-            })
+        # İstatistikler
+        total = len(analyses)
+        parseable = sum(1 for a in analyses if a['can_parse'])
+        not_parseable = total - parseable
         
-        # Karakter sayısı anomali (bir dil diğerlerinden çok farklı)
-        if len(lang_map) >= 3:
-            sizes = {lang: item['char_count'] for lang, item in lang_map.items()}
-            avg_size = sum(sizes.values()) / len(sizes)
-            for lang, size in sizes.items():
-                if size < avg_size * 0.5:  # %50 daha kısa
-                    anomalies.append({
-                        'hash': hash_id,
-                        'type': 'SHORT_CONTENT',
-                        'description': f'{lang.upper()} dili diğerlerinden çok kısa',
-                        'details': {
-                            'lang': lang,
-                            'size': size,
-                            'average': round(avg_size, 2),
-                            'ratio': round(size / avg_size, 2)
-                        }
-                    })
+        f.write("📊 GENEL İSTATİSTİKLER\n")
+        f.write("-" * 40 + "\n")
+        f.write(f"Toplam dosya: {total}\n")
+        f.write(f"Parse edilebilir: {parseable}\n")
+        f.write(f"Parse edilemez: {not_parseable}\n\n")
         
-        # Header anomali kontrolü
-        for lang, item in lang_map.items():
-            if item['found_headers_count'] < 3:
-                # Hangi başlıklar eksik?
-                missing_headers = [h for h, v in item['headers'].items() if not v['found']]
-                if missing_headers:
-                    anomalies.append({
-                        'hash': hash_id,
-                        'type': 'MISSING_HEADERS',
-                        'description': f'{lang.upper()} dilinde eksik başlıklar: {missing_headers}',
-                        'details': {
-                            'lang': lang,
-                            'missing_headers': missing_headers,
-                            'found_headers': item['found_headers_count'],
-                            'headers_detail': item['headers']
-                        }
-                    })
+        # Dil bazında
+        f.write("📊 DİL BAZINDA DURUM\n")
+        f.write("-" * 40 + "\n")
+        for lang in LANGUAGES:
+            lang_files = [a for a in analyses if a['lang'] == lang]
+            lang_parseable = sum(1 for a in lang_files if a['can_parse'])
+            f.write(f"{lang.upper()}: {len(lang_files)} dosya, {lang_parseable} parse edilebilir\n")
+        f.write("\n")
         
-        # META anomali kontrolü
-        for lang, item in lang_map.items():
-            if not item['meta']['exists']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'MISSING_META',
-                    'description': f'{lang.upper()} dilinde META yorum satırı yok',
-                    'details': {'lang': lang}
-                })
-            elif item['meta']['missing_fields']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'INCOMPLETE_META',
-                    'description': f'{lang.upper()} dilinde META eksik alanlar: {item["meta"]["missing_fields"]}',
-                    'details': {'lang': lang, 'missing_fields': item['meta']['missing_fields']}
-                })
+        # PARSE EDİLEMEYEN DOSYALAR (ASIL ÖNEMLİ)
+        f.write("=" * 80 + "\n")
+        f.write("❌ PARSE EDİLEMEYEN DOSYALAR\n")
+        f.write("=" * 80 + "\n\n")
         
-        # Yapı anomali kontrolü
-        for lang, item in lang_map.items():
-            if item['structure_issues']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'STRUCTURE_ISSUE',
-                    'description': f'{lang.upper()} dilinde yapı sorunları: {item["structure_issues"]}',
-                    'details': {'lang': lang, 'issues': item['structure_issues']}
-                })
+        not_parseable_files = [a for a in analyses if not a['can_parse']]
+        for a in not_parseable_files:
+            f.write(f"📁 {a['key']}\n")
+            f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Boyut: {a['size_kb']} KB\n")
+            f.write(f"   ❌ Eksik: {', '.join(a['missing'])}\n")
+            
+            # Özel not: eğer sadece Intro/Main eksikse
+            if not a['checks']['has_intro'] and not a['checks']['has_main_analysis']:
+                f.write(f"   ⚠️ KRİTİK: Introduction ve Main Analysis tag'leri yok - Makeup split yapamaz\n")
+            elif not a['checks']['has_intro']:
+                f.write(f"   ⚠️ Introduction tag'i yok\n")
+            elif not a['checks']['has_main_analysis']:
+                f.write(f"   ⚠️ Main Analysis tag'i yok\n")
+            f.write("\n")
         
-        # Dil uyumsuzluğu (makale başlıkları ile dosya dili farklı)
-        for lang, item in lang_map.items():
-            detection = item['language_detection']
-            if lang == 'en' and not detection['has_english_headers']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'LANGUAGE_MISMATCH',
-                    'description': f'EN dosyasında İngilizce başlık bulunamadı',
-                    'details': {'lang': lang, 'detected': detection}
-                })
-            elif lang == 'es' and not detection['has_spanish_headers']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'LANGUAGE_MISMATCH',
-                    'description': f'ES dosyasında İspanyolca başlık bulunamadı',
-                    'details': {'lang': lang, 'detected': detection}
-                })
-            elif lang == 'de' and not detection['has_german_headers']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'LANGUAGE_MISMATCH',
-                    'description': f'DE dosyasında Almanca başlık bulunamadı',
-                    'details': {'lang': lang, 'detected': detection}
-                })
-            elif lang == 'fr' and not detection['has_french_headers']:
-                anomalies.append({
-                    'hash': hash_id,
-                    'type': 'LANGUAGE_MISMATCH',
-                    'description': f'FR dosyasında Fransızca başlık bulunamadı',
-                    'details': {'lang': lang, 'detected': detection}
-                })
-    
-    return anomalies
-
-def print_report(analyses, grouped, anomalies):
-    """Rapor yazdırır"""
-    print("\n" + "=" * 80)
-    print("📊 RAW-ARTICLES TANI BOTU RAPORU")
-    print("=" * 80)
-    
-    # Genel istatistik
-    valid_count = sum(1 for a in analyses if a and a['is_valid'])
-    total_count = len([a for a in analyses if a])
-    
-    print(f"\n📈 GENEL İSTATİSTİK:")
-    print(f"   Toplam dosya: {total_count}")
-    print(f"   Geçerli dosya: {valid_count}")
-    print(f"   Geçersiz dosya: {total_count - valid_count}")
-    
-    # Hash istatistikleri
-    print(f"\n🔑 HASH İSTATİSTİKLERİ:")
-    print(f"   Toplam hash: {len(grouped)}")
-    
-    complete_hashes = sum(1 for items in grouped.values() if len(items) == 4)
-    print(f"   4 dil tamam: {complete_hashes}")
-    print(f"   Eksik dil: {len(grouped) - complete_hashes}")
-    
-    # Anomaliler
-    print(f"\n⚠️ ANOMALİLER ({len(anomalies)} adet):")
-    print("-" * 60)
-    
-    for anomaly in anomalies:
-        print(f"\n🔴 [{anomaly['type']}] Hash: {anomaly['hash']}")
-        print(f"   {anomaly['description']}")
-        if 'details' in anomaly:
-            for k, v in anomaly['details'].items():
-                print(f"   └─ {k}: {v}")
-    
-    # Detaylı dosya bazlı rapor (sadece problemli olanlar)
-    print("\n" + "=" * 80)
-    print("📄 PROBLEMLİ DOSYALAR (DETAYLI)")
-    print("=" * 80)
-    
-    problem_files = [a for a in analyses if a and not a['is_valid']]
-    for pf in problem_files[:20]:  # İlk 20 problemli dosya
-        print(f"\n📁 {pf['key']}")
-        print(f"   Hash: {pf['hash']} | Dil: {pf['lang'].upper()} | Kategori: {pf['category']}")
-        print(f"   Boyut: {pf['size_kb']} KB | Karakter: {pf['char_count']}")
-        print(f"   Bulunan başlık sayısı: {pf['found_headers_count']}/6")
+        # PARSE EDİLEBİLENLER (kısa özet)
+        f.write("=" * 80 + "\n")
+        f.write("✅ PARSE EDİLEBİLEN DOSYALAR (ÖZET)\n")
+        f.write("=" * 80 + "\n")
         
-        if pf['structure_issues']:
-            print(f"   🏗️ Yapı sorunları: {pf['structure_issues']}")
+        parseable_files = [a for a in analyses if a['can_parse']]
+        for a in parseable_files[:50]:  # İlk 50
+            f.write(f"✅ {a['key']} ({a['size_kb']} KB)\n")
         
-        if not pf['meta']['exists']:
-            print(f"   🔖 META: YOK")
-        elif pf['meta']['missing_fields']:
-            print(f"   🔖 META: Eksik alanlar {pf['meta']['missing_fields']}")
+        if len(parseable_files) > 50:
+            f.write(f"\n... ve {len(parseable_files) - 50} dosya daha\n")
         
-        # Eksik başlıkları göster
-        missing = [h for h, v in pf['headers'].items() if not v['found']]
-        if missing:
-            print(f"   📌 Eksik başlıklar: {missing}")
-            for h in missing:
-                expected = pf['headers'][h]['expected_patterns']
-                print(f"      - {h}: aranan {expected}")
+        # Sonuç özeti
+        f.write("\n" + "=" * 80 + "\n")
+        f.write("🔍 SONUÇ\n")
+        f.write("=" * 80 + "\n")
+        f.write(f"Makeup'ın parse edebilmesi için Introduction ve Main Analysis tag'leri ZORUNLU.\n")
+        f.write(f"Bunlar olmadan split_article_content() çalışmaz ve content boş kalır.\n\n")
+        
+        if not_parseable > 0:
+            f.write(f"⚠️ {not_parseable} dosyada Introduction veya Main Analysis tag'i EKSİK.\n")
+            f.write(f"Bu dosyalar Publisher'da 'içi boş' görünecektir.\n")
+        else:
+            f.write(f"✅ Tüm dosyalar parse edilebilir durumda.\n")
     
-    # Özet JSON çıktısı
-    print("\n" + "=" * 80)
-    print("📋 ÖZET JSON (anomaliler)")
-    print("=" * 80)
-    summary = {
-        "generated": datetime.now().isoformat(),
-        "total_files": total_count,
-        "valid_files": valid_count,
-        "total_hashes": len(grouped),
-        "complete_hashes": complete_hashes,
-        "anomalies": anomalies[:50]  # İlk 50 anomali
-    }
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    print(f"📄 Rapor kaydedildi: {output_path}")
 
 def diagnostic_bot():
-    """Ana teşhis botu"""
     print("\n" + "=" * 80)
-    print("🔬 RAW-ARTICLES TANI BOTU V1")
-    print("   Amaç: Makeup/Publisher'ın neden parse edemediğini tespit etmek")
+    print("🔬 RAW-ARTICLES TANI BOTU V2 - MAKEPERSPEKTİFİ")
+    print("   Sadece Makeup'ın parse etmesi için gerekenleri kontrol eder")
     print("=" * 80)
     
     print("\n📂 R2'den dosyalar listeleniyor...")
-    files = list_all_html_files()
+    files = list_all_files()
     print(f"   Toplam {len(files)} HTML dosyası bulundu.")
     
     print("\n🔍 Dosyalar analiz ediliyor...")
     analyses = []
-    for i, file_key in enumerate(files):
+    for i, f in enumerate(files):
         if i % 100 == 0 and i > 0:
             print(f"   İlerleme: {i}/{len(files)}")
-        analysis = analyze_single_file(file_key)
+        analysis = analyze_file(f)
         if analysis:
             analyses.append(analysis)
     
-    print(f"\n   Analiz tamamlandı. {len(analyses)} dosya başarıyla işlendi.")
+    print(f"\n   Analiz tamamlandı. {len(analyses)} dosya işlendi.")
     
-    # Hash bazında grupla
-    grouped = group_by_hash(analyses)
+    # Rapor yaz
+    output_path = "diagnostic_report.txt"
+    write_report(analyses, output_path)
     
-    # Anomali tespiti
-    anomalies = detect_anomalies(grouped)
-    
-    # Rapor yazdır
-    print_report(analyses, grouped, anomalies)
-    
-    print("\n" + "=" * 80)
-    print("🏁 TANI BOTU TAMAMLANDI!")
-    print("   Yukarıdaki anomaliler, Makeup/Publisher'ın neden parse edemediğini gösterir.")
-    print("=" * 80)
+    # Özeti ekrana yazdır
+    parseable = sum(1 for a in analyses if a['can_parse'])
+    print(f"\n📊 ÖZET:")
+    print(f"   Toplam: {len(analyses)}")
+    print(f"   Parse edilebilir: {parseable}")
+    print(f"   Parse edilemez: {len(analyses) - parseable}")
+    print(f"\n📄 Rapor: {output_path}")
 
 if __name__ == "__main__":
     diagnostic_bot()
