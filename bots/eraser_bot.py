@@ -1,11 +1,8 @@
-import os
 import sys
-import json
 import boto3
 from datetime import datetime
 from botocore.client import Config
 
-# ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
@@ -20,7 +17,6 @@ s3 = boto3.client(
     region_name='auto'
 )
 
-# ================= 36 HATALI HASH (TÜM DİLLERDE SİLİNECEK) =================
 BAD_HASHES = [
     '158c7c69', '25aee45b', '4c988f7d', '525ab926', '63d0286d', '6c77c4fa',
     '8a39223e', '96e4ebc6', '9a47e00a', '9cd3e5e0', 'a76fe9e8', '3a005196',
@@ -31,183 +27,70 @@ BAD_HASHES = [
     '8209c1b4'
 ]
 
-# TÜM DİLLER (EN, ES, DE, FR)
 ALL_LANGS = ['en', 'es', 'de', 'fr']
-
-# Kategoriler
 CATEGORIES = ['wellness', 'tech', 'future-economy', 'eco', 'elearning']
+YEAR, MONTH = '2026', '04'
 
-# Yıl/Ay
-YEAR = '2026'
-MONTH = '04'
-
-
-def log(msg, level="INFO"):
-    timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-    print(f"[{timestamp}] [{level}] {msg}")
-
+def log(msg):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
 
 def delete_file(key):
     try:
         s3.delete_object(Bucket=R2_BUCKET, Key=key)
-        log(f"   🗑️ Silindi: {key}")
+        log(f"🗑️ {key}")
         return True
-    except Exception as e:
-        log(f"   ⚠️ Silinemedi: {key} - {e}", "WARN")
+    except:
         return False
 
-
-def list_files_with_prefix(prefix):
-    files = []
-    continuation_token = None
-    try:
-        while True:
-            if continuation_token:
-                response = s3.list_objects_v2(
-                    Bucket=R2_BUCKET, 
-                    Prefix=prefix, 
-                    ContinuationToken=continuation_token
-                )
-            else:
-                response = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
-            
-            if 'Contents' not in response:
-                break
-                
-            for obj in response['Contents']:
-                files.append(obj['Key'])
-            
-            if response.get('IsTruncated'):
-                continuation_token = response.get('NextContinuationToken')
-            else:
-                break
-    except Exception as e:
-        log(f"Listeleme hatası ({prefix}): {e}", "WARN")
-    
-    return files
-
-
 def delete_raw_articles():
-    log("\n" + "=" * 60)
-    log("📁 RAW-ARTICLES TEMİZLİĞİ (TÜM DİLLER)")
-    log("=" * 60)
-    
-    deleted_count = 0
-    
-    for hash_id in BAD_HASHES:
+    deleted = 0
+    for h in BAD_HASHES:
         for lang in ALL_LANGS:
-            for category in CATEGORIES:
-                prefixes = [
-                    f"raw-articles/{lang}/{category}/{YEAR}/{MONTH}/",
-                    f"raw-articles/{lang}/{category}/"
-                ]
-                
-                for prefix in prefixes:
-                    files = list_files_with_prefix(prefix)
-                    for key in files:
-                        filename = key.split('/')[-1]
-                        if filename.startswith(hash_id) and filename.endswith('.html'):
-                            delete_file(key)
-                            deleted_count += 1
-                            break
-    
-    log(f"\n📊 RAW-ARTICLES: {deleted_count} dosya silindi")
-    return deleted_count
-
+            for cat in CATEGORIES:
+                for prefix in [f"raw-articles/{lang}/{cat}/{YEAR}/{MONTH}/", f"raw-articles/{lang}/{cat}/"]:
+                    try:
+                        resp = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+                        if 'Contents' not in resp: continue
+                        for obj in resp['Contents']:
+                            if obj['Key'].split('/')[-1].startswith(h) and obj['Key'].endswith('.html'):
+                                if delete_file(obj['Key']): deleted += 1
+                    except: pass
+    return deleted
 
 def delete_images():
-    log("\n" + "=" * 60)
-    log("📁 IMAGES TEMİZLİĞİ (TÜM DİLLER)")
-    log("=" * 60)
-    
-    deleted_count = 0
-    image_types = ['kapak', 'icerik_1', 'icerik_2']
-    
-    for hash_id in BAD_HASHES:
-        for category in CATEGORIES:
-            for img_type in image_types:
-                key = f"images/{YEAR}/{MONTH}/{category}/{hash_id}_{img_type}.webp"
+    deleted = 0
+    for h in BAD_HASHES:
+        for cat in CATEGORIES:
+            for typ in ['kapak', 'icerik_1', 'icerik_2']:
+                key = f"images/{YEAR}/{MONTH}/{cat}/{h}_{typ}.webp"
                 try:
                     s3.head_object(Bucket=R2_BUCKET, Key=key)
-                    delete_file(key)
-                    deleted_count += 1
-                except:
-                    pass
-    
-    log(f"\n📊 IMAGES: {deleted_count} dosya silindi")
-    return deleted_count
-
+                    if delete_file(key): deleted += 1
+                except: pass
+    return deleted
 
 def delete_articles():
-    log("\n" + "=" * 60)
-    log("📁 ARTICLES TEMİZLİĞİ (TÜM DİLLER)")
-    log("=" * 60)
-    
-    deleted_count = 0
-    
-    for hash_id in BAD_HASHES:
+    deleted = 0
+    for h in BAD_HASHES:
         for lang in ALL_LANGS:
-            for category in CATEGORIES:
-                prefixes = [
-                    f"articles/{lang}/{category}/{YEAR}/{MONTH}/",
-                    f"articles/{lang}/{category}/"
-                ]
-                
-                for prefix in prefixes:
-                    files = list_files_with_prefix(prefix)
-                    for key in files:
-                        filename = key.split('/')[-1]
-                        if filename.startswith(hash_id) and filename.endswith('.html'):
-                            delete_file(key)
-                            deleted_count += 1
-                            break
-    
-    log(f"\n📊 ARTICLES: {deleted_count} dosya silindi")
-    return deleted_count
+            for cat in CATEGORIES:
+                for prefix in [f"articles/{lang}/{cat}/{YEAR}/{MONTH}/", f"articles/{lang}/{cat}/"]:
+                    try:
+                        resp = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=prefix)
+                        if 'Contents' not in resp: continue
+                        for obj in resp['Contents']:
+                            if obj['Key'].split('/')[-1].startswith(h) and obj['Key'].endswith('.html'):
+                                if delete_file(obj['Key']): deleted += 1
+                    except: pass
+    return deleted
 
-
-def generate_report(deleted_raw, deleted_images, deleted_articles):
-    log("\n" + "=" * 60)
-    log("📊 TEMİZLİK RAPORU")
-    log("=" * 60)
-    log(f"   raw-articles/ silinen: {deleted_raw}")
-    log(f"   images/ silinen: {deleted_images}")
-    log(f"   articles/ silinen: {deleted_articles}")
-    log(f"   TOPLAM silinen: {deleted_raw + deleted_images + deleted_articles}")
-    log("=" * 60)
-
-
-def eraser_bot():
-    print("\n" + "=" * 70)
-    print("🧹 ERASER BOT - HATALI MAKALE TEMİZLİĞİ")
-    print(f"   Toplam hash: {len(BAD_HASHES)}")
-    print(f"   Silinecek diller: {', '.join(ALL_LANGS)} (TÜM DİLLER)")
-    print(f"   Kategoriler: {', '.join(CATEGORIES)}")
-    print("=" * 70)
-    
-    log("⚠️ DİKKAT! Bu bot aşağıdaki dosyaları silecek:")
-    log(f"   - {len(BAD_HASHES)} hash için raw-articles/ dosyaları (TÜM DİLLER)")
-    log(f"   - images/ altındaki görseller (TÜM DİLLER)")
-    log(f"   - articles/ altındaki dosyalar (TÜM DİLLER)")
-    log("")
-    
-    if len(sys.argv) > 1 and sys.argv[1] == '--force':
-        log("🚀 FORCE modu ile çalışılıyor, hemen siliniyor...")
-    else:
-        log("❓ Devam etmek için 'yes' yazın: ")
-        confirm = input()
-        if confirm.lower() != 'yes':
-            log("İşlem iptal edildi.")
-            sys.exit(0)
-    
-    deleted_raw = delete_raw_articles()
-    deleted_images = delete_images()
-    deleted_articles = delete_articles()
-    
-    generate_report(deleted_raw, deleted_images, deleted_articles)
-    
-    log("\n✅ ERASER BOT TAMAMLANDI!")
-
+def main():
+    print("🧹 ERASER BOT - ONAYSIZ SİLİNİYOR")
+    print(f"37 hash, tüm diller, tüm kategoriler\n")
+    d1 = delete_raw_articles()
+    d2 = delete_images()
+    d3 = delete_articles()
+    print(f"\n✅ Silindi: raw:{d1}, images:{d2}, articles:{d3}, TOPLAM:{d1+d2+d3}")
 
 if __name__ == "__main__":
-    eraser_bot()
+    main()
