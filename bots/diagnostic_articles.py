@@ -4,6 +4,7 @@ import boto3
 from datetime import datetime
 from botocore.client import Config
 
+# ================= KONFIGURASYON =================
 R2_ID = os.getenv('R2_ACCOUNT_ID')
 R2_ACCESS_KEY = os.getenv('R2_ACCESS_KEY_ID')
 R2_SECRET_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
@@ -20,9 +21,35 @@ s3 = boto3.client(
 
 LANGUAGES = ['en', 'es', 'de', 'fr']
 
-# NOKTA ATIŞI KRİTERLERİ
-MIN_P_TAG_COUNT = 2        # En az 2 paragraf
-MIN_P_TEXT_LEN = 300       # Paragraf içi metin toplamı 300 karakter altı = BOŞ
+# ================= DİL BAZLI BÖLÜM PATTERN'LERİ =================
+SECTION_PATTERNS = {
+    'en': {
+        'intro': r'<h2>Introduction</h2>',
+        'main': r'<h2>Main Analysis</h2>',
+        'practical': r'<h2>Practical Implications</h2>',
+        'conclusion': r'<h2>Conclusion</h2>'
+    },
+    'es': {
+        'intro': r'<h2>Introducción</h2>',
+        'main': r'<h2>Análisis Principal</h2>',
+        'practical': r'<h2>Implicaciones Prácticas</h2>',
+        'conclusion': r'<h2>Conclusión</h2>'
+    },
+    'de': {
+        'intro': r'<h2>Einleitung</h2>',
+        'main': r'<h2>Hauptanalyse</h2>',
+        'practical': r'<h2>Praktische Auswirkungen</h2>',
+        'conclusion': r'<h2>Fazit</h2>'
+    },
+    'fr': {
+        'intro': r'<h2>Introduction</h2>',
+        'main': r'<h2>Analyse principale</h2>',
+        'practical': r'<h2>Implications pratiques</h2>',
+        'conclusion': r'<h2>Conclusion</h2>'
+    }
+}
+
+SECTION_NAMES = ['intro', 'main', 'practical', 'conclusion']
 
 
 def list_all_articles():
@@ -74,27 +101,38 @@ def analyze_article(key):
     lang = extract_lang_from_key(key)
     category = extract_category_from_key(key)
     
-    # Tüm <p> tag'lerini bul
-    p_tags = re.findall(r'<p>(.*?)</p>', content, re.DOTALL)
-    p_count = len(p_tags)
+    # Dil bazlı pattern'leri al
+    patterns = SECTION_PATTERNS.get(lang, SECTION_PATTERNS['en'])
     
-    # <p> tag'leri içindeki metin uzunluğu (tag'siz)
-    p_text = " ".join(p_tags)
-    p_text_clean = re.sub(r'<[^>]+>', ' ', p_text)
-    p_text_clean = re.sub(r'\s+', ' ', p_text_clean).strip()
-    p_text_len = len(p_text_clean)
+    # Her bölümü kontrol et
+    sections_found = {}
+    for section, pattern in patterns.items():
+        found = re.search(pattern, content, re.IGNORECASE) is not None
+        sections_found[section] = found
     
-    # Ayrıca <div class="sources"> içindeki metni sayma (kaynaklar içerik değil)
-    # Kaynakları temizle
+    section_count = sum(1 for v in sections_found.values() if v)
     
-    # BOŞ MAKALE KRİTERİ
-    is_empty = p_count < MIN_P_TAG_COUNT or p_text_len < MIN_P_TEXT_LEN
+    # Durum belirleme
+    if section_count == 0:
+        status = "COK_BOS"
+        action = "SIL"
+    elif section_count == 1:
+        status = "BOS"
+        action = "SIL"
+    elif section_count == 2:
+        status = "EKSIK"
+        action = "INCELE"
+    elif section_count == 3:
+        status = "YETERLI"
+        action = "KORU"
+    else:
+        status = "TAM"
+        action = "KORU"
     
-    reason = ""
-    if p_count < MIN_P_TAG_COUNT:
-        reason = f"paragraf:{p_count}<{MIN_P_TAG_COUNT}"
-    elif p_text_len < MIN_P_TEXT_LEN:
-        reason = f"paragraf_metni:{p_text_len}<{MIN_P_TEXT_LEN}"
+    # Temiz metin (içerik kontrolü için)
+    text_clean = re.sub(r'<[^>]+>', ' ', content)
+    text_clean = re.sub(r'\s+', ' ', text_clean).strip()
+    clean_text_len = len(text_clean)
     
     return {
         'key': key,
@@ -102,60 +140,125 @@ def analyze_article(key):
         'lang': lang,
         'category': category,
         'size_kb': round(size_kb, 2),
-        'p_count': p_count,
-        'p_text_len': p_text_len,
-        'is_empty': is_empty,
-        'reason': reason,
-        'first_p_text': p_tags[0][:200] if p_tags else "(no paragraph)"
+        'clean_text_len': clean_text_len,
+        'sections_found': sections_found,
+        'section_count': section_count,
+        'status': status,
+        'action': action
     }
 
 
-def write_report(analyses, output_path):
+def group_by_hash(analyses):
+    grouped = {}
+    for analysis in analyses:
+        if not analysis:
+            continue
+        hash_id = analysis['hash']
+        if hash_id not in grouped:
+            grouped[hash_id] = []
+        grouped[hash_id].append(analysis)
+    return grouped
+
+
+def write_report(analyses, grouped, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write("=" * 100 + "\n")
-        f.write("ARTICLES DENETİM BOTU V8 - NOKTA ATIŞI\n")
+        f.write("ARTICLES DENETİM BOTU V8 - BÖLÜM BAZLI ANALİZ\n")
         f.write(f"Oluşturulma: {datetime.now().isoformat()}\n")
         f.write("=" * 100 + "\n\n")
         
-        f.write("📋 NOKTA ATIŞI KRİTERLERİ:\n")
-        f.write(f"   - Paragraf sayısı (<p> tag) < {MIN_P_TAG_COUNT}\n")
-        f.write(f"   - veya Paragraf içi metin < {MIN_P_TEXT_LEN} karakter\n\n")
+        f.write("📋 BÖLÜM KRİTERLERİ:\n")
+        f.write("   - 4 bölüm: TAM (KORU)\n")
+        f.write("   - 3 bölüm: YETERLİ (KORU)\n")
+        f.write("   - 2 bölüm: EKSİK (İNCELE)\n")
+        f.write("   - 1 bölüm: BOŞ (SİL)\n")
+        f.write("   - 0 bölüm: ÇOK BOŞ (SİL)\n\n")
+        
+        f.write("📌 BÖLÜMLER: intro, main, practical, conclusion\n\n")
         
         total = len(analyses)
-        empty = len([a for a in analyses if a['is_empty']])
-        healthy = total - empty
+        total_tam = len([a for a in analyses if a['status'] == 'TAM'])
+        total_yeterli = len([a for a in analyses if a['status'] == 'YETERLI'])
+        total_eksik = len([a for a in analyses if a['status'] == 'EKSIK'])
+        total_bos = len([a for a in analyses if a['status'] == 'BOS'])
+        total_cok_bos = len([a for a in analyses if a['status'] == 'COK_BOS'])
         
         f.write("📊 GENEL İSTATİSTİKLER\n")
         f.write("-" * 50 + "\n")
         f.write(f"Toplam makale: {total}\n")
-        f.write(f"✅ DOLU: {healthy}\n")
-        f.write(f"❌ BOŞ: {empty}\n\n")
+        f.write(f"✅ TAM (4 bölüm): {total_tam}\n")
+        f.write(f"✅ YETERLİ (3 bölüm): {total_yeterli}\n")
+        f.write(f"⚠️ EKSİK (2 bölüm): {total_eksik}\n")
+        f.write(f"❌ BOŞ (1 bölüm): {total_bos}\n")
+        f.write(f"❌ ÇOK BOŞ (0 bölüm): {total_cok_bos}\n\n")
         
         # Dil bazında
         f.write("📊 DİL BAZINDA DURUM\n")
         f.write("-" * 50 + "\n")
         for lang in LANGUAGES:
             lang_articles = [a for a in analyses if a['lang'] == lang]
-            lang_empty = len([a for a in lang_articles if a['is_empty']])
-            f.write(f"{lang.upper()}: Toplam {len(lang_articles)} | ❌ Boş: {lang_empty}\n")
+            lang_tam = len([a for a in lang_articles if a['status'] == 'TAM'])
+            lang_yeterli = len([a for a in lang_articles if a['status'] == 'YETERLI'])
+            lang_eksik = len([a for a in lang_articles if a['status'] == 'EKSIK'])
+            lang_bos = len([a for a in lang_articles if a['status'] == 'BOS'])
+            lang_cok_bos = len([a for a in lang_articles if a['status'] == 'COK_BOS'])
+            f.write(f"{lang.upper()}: Toplam {len(lang_articles)} | ✅ TAM:{lang_tam} YETERLI:{lang_yeterli} | ⚠️ EKSIK:{lang_eksik} | ❌ BOS:{lang_bos} COK_BOS:{lang_cok_bos}\n")
         f.write("\n")
         
-        # BOŞ MAKALELER (DETAYLI)
+        # HASH BAZLI DETAYLI RAPOR
         f.write("=" * 100 + "\n")
-        f.write("❌ BOŞ MAKALELER (SİLİNMELİ)\n")
+        f.write("🔑 HASH BAZLI DETAYLI ANALİZ\n")
         f.write("=" * 100 + "\n\n")
         
-        empty_files = [a for a in analyses if a['is_empty']]
-        if empty_files:
-            for a in empty_files:
+        for hash_id, items in grouped.items():
+            f.write(f"🔑 HASH: {hash_id}\n")
+            for a in items:
+                # Bölüm sembolleri
+                symbols = ""
+                for section in SECTION_NAMES:
+                    if a['sections_found'].get(section, False):
+                        symbols += "✅"
+                    else:
+                        symbols += "❌"
+                
+                status_symbol = "✅" if a['action'] == "KORU" else "⚠️" if a['action'] == "INCELE" else "❌"
+                f.write(f"   {status_symbol} {a['lang'].upper()}: {symbols} ({a['section_count']}/4) | {a['size_kb']} KB | {a['clean_text_len']} karakter\n")
+            f.write("\n")
+        
+        # SİLİNMESİ GEREKENLER (BOŞ ve ÇOK BOŞ)
+        f.write("=" * 100 + "\n")
+        f.write("❌ SİLİNMESİ GEREKEN MAKALELER (BOŞ / ÇOK BOŞ)\n")
+        f.write("=" * 100 + "\n\n")
+        
+        to_delete = [a for a in analyses if a['status'] in ['BOS', 'COK_BOS']]
+        if to_delete:
+            for a in to_delete:
                 f.write(f"📁 {a['key']}\n")
                 f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
-                f.write(f"   Boyut: {a['size_kb']} KB | Paragraf sayısı: {a['p_count']} | Paragraf metni: {a['p_text_len']} karakter\n")
-                f.write(f"   İlk paragraf: {a['first_p_text'][:150]}...\n")
-                f.write(f"   ❌ Sebep: {a['reason']}\n")
-                f.write("\n" + "-" * 80 + "\n\n")
+                f.write(f"   Bölüm sayısı: {a['section_count']}/4 | Boyut: {a['size_kb']} KB\n")
+                missing = [s for s in SECTION_NAMES if not a['sections_found'].get(s, False)]
+                f.write(f"   Eksik bölümler: {', '.join(missing)}\n")
+                f.write("\n")
         else:
-            f.write("   ✅ BOŞ MAKALE YOK\n\n")
+            f.write("   ✅ SİLİNECEK MAKALE YOK\n\n")
+        
+        # İNCELENMESİ GEREKENLER (EKSİK)
+        f.write("=" * 100 + "\n")
+        f.write("⚠️ İNCELENMESİ GEREKEN MAKALELER (2 BÖLÜM)\n")
+        f.write("=" * 100 + "\n\n")
+        
+        to_review = [a for a in analyses if a['status'] == 'EKSIK']
+        if to_review:
+            for a in to_review[:50]:  # İlk 50
+                f.write(f"📁 {a['key']}\n")
+                f.write(f"   Hash: {a['hash']} | Dil: {a['lang'].upper()} | Kategori: {a['category']}\n")
+                missing = [s for s in SECTION_NAMES if not a['sections_found'].get(s, False)]
+                f.write(f"   Eksik bölümler: {', '.join(missing)}\n")
+                f.write("\n")
+            if len(to_review) > 50:
+                f.write(f"... ve {len(to_review) - 50} dosya daha\n\n")
+        else:
+            f.write("   ⚠️ İNCELENECEK MAKALE YOK\n\n")
         
         f.write("=" * 100 + "\n")
         f.write("🏁 RAPOR SONU\n")
@@ -164,8 +267,8 @@ def write_report(analyses, output_path):
 
 def diagnostic_articles():
     print("\n" + "=" * 100)
-    print("🔬 ARTICLES DENETİM BOTU V8 - NOKTA ATIŞI")
-    print(f"   KRİTER: Paragraf sayısı < {MIN_P_TAG_COUNT} veya paragraf metni < {MIN_P_TEXT_LEN} karakter")
+    print("🔬 ARTICLES DENETİM BOTU V8 - BÖLÜM BAZLI ANALİZ")
+    print("   TAM: 4 bölüm | YETERLİ: 3 bölüm | EKSİK: 2 bölüm | BOŞ: 1 bölüm | ÇOK BOŞ: 0 bölüm")
     print("=" * 100)
     
     print("\n📂 R2'den makaleler listeleniyor...")
@@ -184,12 +287,21 @@ def diagnostic_articles():
     print(f"\n   Analiz tamamlandı. {len(analyses)} makale işlendi.")
     
     output_path = "articles_diagnostic_report.txt"
-    write_report(analyses, output_path)
+    write_report(analyses, group_by_hash(analyses), output_path)
     
-    empty = len([a for a in analyses if a['is_empty']])
+    tam = len([a for a in analyses if a['status'] == 'TAM'])
+    yeterli = len([a for a in analyses if a['status'] == 'YETERLI'])
+    eksik = len([a for a in analyses if a['status'] == 'EKSIK'])
+    bos = len([a for a in analyses if a['status'] == 'BOS'])
+    cok_bos = len([a for a in analyses if a['status'] == 'COK_BOS'])
+    
     print(f"\n📊 ÖZET:")
     print(f"   Toplam makale: {len(analyses)}")
-    print(f"   ❌ BOŞ (paragraf < {MIN_P_TAG_COUNT} veya metin < {MIN_P_TEXT_LEN}): {empty}")
+    print(f"   ✅ TAM (4 bölüm): {tam}")
+    print(f"   ✅ YETERLİ (3 bölüm): {yeterli}")
+    print(f"   ⚠️ EKSİK (2 bölüm): {eksik}")
+    print(f"   ❌ BOŞ (1 bölüm): {bos}")
+    print(f"   ❌ ÇOK BOŞ (0 bölüm): {cok_bos}")
     print(f"\n📄 Rapor: {output_path}")
 
 
