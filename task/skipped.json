@@ -94,5 +94,29 @@
         "hash_updated_at": "2026-04-28T20:11:42.928944",
         "skipped_at": "2026-04-28T21:02:20.379675",
         "skip_reason": "hash_exists_but_pending"
+    },
+    {
+        "task_id": "0148",
+        "category": "eco",
+        "cluster_id": "eco_09",
+        "topic": "Living Color: How 2026 Algae-Based Inks Create Carbon-Negative, Photosynthetic Dyes for Fashion",
+        "reference_link": "https://www.vogue.com/algae-dyes-2026",
+        "language": "en",
+        "author_persona": "Bio-Fabrication Designer & Sustainable Colorist",
+        "special_instructions": "Focus on the dyeing process using live algae that absorb CO2. Discuss \"living\" garments.",
+        "visuals": {
+            "kapak": "A beautiful white t-shirt slowly changing color to green under sunlight, with tiny glowing algae cells visible on the fabric, 8k, photorealistic",
+            "icerik_1": "A microscope view of algae cells producing vibrant blue/green pigment, carbon bubbles being absorbed, photorealistic",
+            "icerik_2": "A person holding up a t-shirt with a \"Photosynthetic Active\" QR code tag, wearing it in a park, soft light, photorealistic"
+        },
+        "status": "pending",
+        "hash": "fd8dcf30",
+        "created_at": "2026-04-28",
+        "date": "2026-04-28",
+        "display_date": "28 April 2026",
+        "processed_at": "",
+        "hash_updated_at": "2026-04-29T19:54:57.903632",
+        "skipped_at": "2026-04-29T20:05:47.100084",
+        "skip_reason": "hash_exists_but_pending"
     }
 ]
