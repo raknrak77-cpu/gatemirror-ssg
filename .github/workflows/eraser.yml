@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 30
     
     steps:
-      - name: 📦 Checkout repository
+      - name: 📦 Checkout
         uses: actions/checkout@v4
       
       - name: 🐍 Setup Python
@@ -36,14 +36,13 @@ jobs:
           if [[ "${{ github.event.inputs.force }}" == "true" ]]; then
             python bots/eraser_bot.py --force
           else
-            echo "yes | python bots/eraser_bot.py"
+            echo "yes" | python bots/eraser_bot.py
           fi
       
-      - name: 📤 Upload eraser report
+      - name: 📤 Upload report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eraser-report-${{ github.run_id }}
-          path: |
-            eraser_report.txt
+          path: eraser_report.txt
           retention-days: 7
