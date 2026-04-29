@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0146",
-        "category": "eco",
-        "cluster_id": "eco_07",
-        "topic": "Biochar 2.0: How AI-Optimized Pyrolysis Boosts Soil Carbon Sequestration by 40% in 2026",
-        "reference_link": "https://www.agriculture.com/biochar-ai-2026",
-        "language": "en",
-        "author_persona": "Soil Carbon Scientist & Pyrolysis Technologist",
-        "special_instructions": "Explain how AI tunes temperature and feedstock mix. Focus on long-term carbon stability.",
-        "visuals": {
-            "kapak": "A cross-section of rich dark soil with glowing black biochar particles, roots weaving through them, sunlight from above, 8k, photorealistic",
-            "icerik_1": "A dashboard showing \"Pyrolysis Temp: 550C Optimized. Biochar Stability: 1000 years. Carbon Credits Earned: 50 tons.\" photorealistic",
-            "icerik_2": "A farmer spreading black biochar on a field with a high-tech spreader, drone view, golden hour, photorealistic"
-        },
-        "status": "pending",
-        "hash": "7613879d",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T16:48:59.026440"
-    },
-    {
         "task_id": "0147",
         "category": "eco",
         "cluster_id": "eco_08",
