@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0139",
-        "category": "eco",
-        "cluster_id": "eco_06",
-        "topic": "Silent Seabed Sweepers: How 2026 Passive Traps Collect Microplastics Without Harming Plankton",
-        "reference_link": "https://www.theoceancleanup.com/seabed-2026",
-        "language": "en",
-        "author_persona": "Marine Microplastics Researcher & Fluid Dynamics Engineer",
-        "special_instructions": "Explain the use of biodegradable biopolymer nets and ocean currents.",
-        "visuals": {
-            "kapak": "An underwater view of a gentle conical net resting on the seabed, microplastics flowing in, a fish swimming safely above it, sunbeams, 8k",
-            "icerik_1": "A split screen: left side \"Microplastics on Seabed\"; right side \"Collected in Trap\", with a size comparison to a plankton, photorealistic",
-            "icerik_2": "A research vessel dashboard showing \"Trap 7: Full. Est. 500kg microplastics. Retrieving.\" clean marine UI, photorealistic"
-        },
-        "status": "pending",
-        "hash": "96e4ebc6",
-        "created_at": "2026-04-28",
-        "date": "2026-04-28",
-        "display_date": "28 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-29T10:05:53.502972"
-    },
-    {
         "task_id": "0140",
         "category": "wellness",
         "cluster_id": "wl_06",
