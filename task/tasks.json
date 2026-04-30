@@ -1,27 +1,5 @@
 [
     {
-        "task_id": "0155",
-        "category": "elearning",
-        "cluster_id": "el_02",
-        "topic": "Executive MBA 2026: Real ROI vs Opportunity Cost (Is It Worth $100K+?)",
-        "reference_link": "https://www.ft.com/executive-mba-ranking",
-        "language": "en",
-        "author_persona": "Executive Career Strategist & Leadership Development Consultant",
-        "special_instructions": "Break down full cost ($80K–$200K), salary growth, promotion probability, and network value. Include opportunity cost (lost income, time). Compare top programs (INSEAD, Wharton, LBS). Provide ROI timeline and payback period. End with \"Who Should (and Should NOT) Get an EMBA\".",
-        "visuals": {
-            "kapak": "High-level executive networking event in an elite business school setting, professionals exchanging ideas with subtle luxury atmosphere, cinematic lighting, photorealistic",
-            "icerik_1": "Split scene: left side stagnant mid-career professional; right side post-EMBA executive leading teams, photorealistic",
-            "icerik_2": "ROI dashboard showing \"Tuition Cost\", \"Salary Increase %\", \"Promotion Rate\", \"Payback Period\", premium business analytics UI, photorealistic"
-        },
-        "status": "pending",
-        "hash": "a68360b0",
-        "created_at": "2026-04-29",
-        "date": "2026-04-29",
-        "display_date": "29 April 2026",
-        "processed_at": "",
-        "hash_updated_at": "2026-04-30T02:04:51.867050"
-    },
-    {
         "task_id": "0156",
         "category": "elearning",
         "cluster_id": "el_01",
