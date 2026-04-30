@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0157",
+        "category": "future-economy",
+        "cluster_id": "fe_02",
+        "topic": "The Tokenization of Everything: Why Real-World Assets (RWA) are the Backbone of 2026 Finance",
+        "reference_link": "https://www.coindesk.com/rwa-tokenization-2026",
+        "language": "en",
+        "author_persona": "Blockchain Economist & Asset Tokenization Consultant",
+        "special_instructions": "Focus on real estate and fine art tokenization. Discuss liquidity in previously illiquid markets.",
+        "visuals": {
+            "kapak": "A holographic golden skyscraper icon hovering above a tablet, with hundreds of tiny glowing \"digital share\" tokens flowing from it, financial district background, 8k, photorealistic",
+            "icerik_1": "A split screen: left side \"Slow Paper Deeds\"; right side \"Instant Tokenized Transfer\" on a smartphone, clean UI, photorealistic",
+            "icerik_2": "A digital dashboard showing \"Portfolio: 5% of Van Gogh Painting, 2% of London Office Building\", modern clean finance UI, photorealistic"
+        },
+        "status": "processed",
+        "hash": "42759643",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-04-30 15:39:26",
+        "hash_updated_at": "2026-04-30T15:27:33.363424"
+    },
+    {
         "task_id": "0156",
         "category": "elearning",
         "cluster_id": "el_01",
