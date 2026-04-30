@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0156",
+        "category": "elearning",
+        "cluster_id": "el_01",
+        "topic": "Coding Bootcamp ROI 2026: Which Programs Actually Lead to $80K+ Jobs (Data-Backed Analysis)",
+        "reference_link": "https://www.coursereport.com/coding-bootcamp-ranking",
+        "language": "en",
+        "author_persona": "EdTech Market Analyst & Tech Career Placement Strategist",
+        "special_instructions": "Analyze real bootcamp outcomes (job placement rate, average salary, time to hire). Compare top programs (Le Wagon, General Assembly, Flatiron). Include cost ($5K–$20K), duration, and ROI timeline. Break down frontend vs backend vs data paths. End with \"Best Bootcamp Path by Career Goal (Fast Hire, High Salary, Remote Work)\".",
+        "visuals": {
+            "kapak": "A focused student coding intensely while multiple job offers appear as glowing holographic notifications around them, modern tech environment, cinematic lighting, ultra-detailed, photorealistic",
+            "icerik_1": "Split scene: left side self-learning confusion with scattered tutorials; right side structured bootcamp journey with clear milestones and mentorship, photorealistic",
+            "icerik_2": "Career dashboard showing \"Program Cost\", \"Placement Rate %\", \"Avg Salary\", \"Time to Hire (months)\", clean edtech analytics UI, photorealistic"
+        },
+        "status": "processed",
+        "hash": "06ab3265",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-04-30 12:15:35",
+        "hash_updated_at": "2026-04-30T12:06:16.119783"
+    },
+    {
         "task_id": "0155",
         "category": "elearning",
         "cluster_id": "el_02",
