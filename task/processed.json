@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0158",
+        "category": "future-economy",
+        "cluster_id": "fe_05",
+        "topic": "$1M Portfolio Strategy 2026: Asset Allocation, Risk Management, and AI vs Human Advisor Performance",
+        "reference_link": "https://www.barrons.com/wealth-management-ranking",
+        "language": "en",
+        "author_persona": "Private Wealth Manager & Portfolio Optimization Specialist",
+        "special_instructions": "Build a $1M portfolio allocation (equities, bonds, alternatives, crypto). Compare robo-advisors vs human advisors on fees (AUM), performance, and personalization. Include Sharpe ratio, drawdown scenarios, and tax efficiency. End with hybrid allocation model.",
+        "visuals": {
+            "kapak": "Luxury wealth management office with holographic portfolio allocations floating in the air, asset classes visualized as glowing segments, elegant lighting, cinematic, photorealistic",
+            "icerik_1": "Split scene: left side DIY investor overwhelmed with scattered assets; right side structured diversified portfolio managed professionally, photorealistic",
+            "icerik_2": "Portfolio analytics dashboard showing \"Asset Allocation %\", \"Sharpe Ratio\", \"Max Drawdown\", \"Annual Return %\", \"Advisor Fee %\", ultra-clean professional UI, photorealistic"
+        },
+        "status": "processed",
+        "hash": "15a65fb5",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-05-01 12:59:52",
+        "hash_updated_at": "2026-05-01T12:50:12.043629"
+    },
+    {
         "task_id": "0157",
         "category": "future-economy",
         "cluster_id": "fe_02",
