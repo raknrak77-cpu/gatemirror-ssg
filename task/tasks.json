@@ -14,11 +14,12 @@
             "icerik_2": "Portfolio analytics dashboard showing \"Asset Allocation %\", \"Sharpe Ratio\", \"Max Drawdown\", \"Annual Return %\", \"Advisor Fee %\", ultra-clean professional UI, photorealistic"
         },
         "status": "pending",
-        "hash": null,
+        "hash": "15a65fb5",
         "created_at": "2026-04-29",
         "date": "2026-04-29",
         "display_date": "29 April 2026",
-        "processed_at": ""
+        "processed_at": "",
+        "hash_updated_at": "2026-05-01T12:50:12.043629"
     },
     {
         "task_id": "0159",
