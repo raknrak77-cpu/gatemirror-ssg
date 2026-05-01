@@ -1,5 +1,27 @@
 [
     {
+        "task_id": "0159",
+        "category": "future-economy",
+        "cluster_id": "fe_04",
+        "topic": "DeFi Yield Truth 2026: Sustainable APY vs Inflationary Rewards (Risk-Adjusted Return Analysis)",
+        "reference_link": "https://www.defirate.com/staking-rewards",
+        "language": "en",
+        "author_persona": "DeFi Protocol Analyst & Smart Contract Risk Auditor",
+        "special_instructions": "Separate real yield (protocol revenue) vs token inflation rewards. Compare Lido, Rocket Pool, Aave. Include APY vs real return, lock-up periods, smart contract risk, and slashing risks. Provide risk-adjusted yield framework. Mandatory disclaimer on capital risk. End with optimal allocation strategy.",
+        "visuals": {
+            "kapak": "A DeFi network visualized with multiple yield streams, some stable glowing green and others unstable flashing red, blockchain nodes interconnected, cinematic depth, photorealistic",
+            "icerik_1": "Split scene: left side unsustainable high APY collapsing (tokens inflating rapidly); right side stable yield backed by real protocol revenue, photorealistic",
+            "icerik_2": "DeFi analytics dashboard showing \"APY\", \"Real Yield %\", \"Risk Score\", \"TVL\", \"Lock-up Period\", dark mode crypto UI, photorealistic"
+        },
+        "status": "processed",
+        "hash": "259d2e02",
+        "created_at": "2026-04-29",
+        "date": "2026-04-29",
+        "display_date": "29 April 2026",
+        "processed_at": "2026-05-01 13:45:24",
+        "hash_updated_at": "2026-05-01T13:30:46.493234"
+    },
+    {
         "task_id": "0158",
         "category": "future-economy",
         "cluster_id": "fe_05",
